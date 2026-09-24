@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="cobalt_primary">#FF0033CC</color>
+    <color name="cobalt_accent">#FF00B4FF</color>
+    <color name="page_background">#FFF8FAFC</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+</resources>

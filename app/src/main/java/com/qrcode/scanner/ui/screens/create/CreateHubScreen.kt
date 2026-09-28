@@ -32,12 +32,17 @@ import androidx.compose.material.icons.outlined.Cancel
 import androidx.compose.material.icons.outlined.Chat
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.GraphicEq
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.MusicNote
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.PhotoCamera
+import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.QrCode2
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.SearchOff
+import androidx.compose.material.icons.outlined.SentimentSatisfied
 import androidx.compose.material.icons.outlined.Sms
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.Wifi
@@ -152,10 +157,45 @@ fun CreateHubScreen(
                     }
                 )
             } else {
-                CategoryGrid(
-                    categories = visibleCategories,
-                    onCategoryClick = onCategoryClick
-                )
+                val standard = visibleCategories.filter { !it.social && !it.barcode }
+                val social = visibleCategories.filter { it.social }.sortedBy { it.socialOrder }
+                val barcodes = visibleCategories.filter { it.barcode }.sortedBy { it.barcodeOrder }
+                if (standard.isNotEmpty()) {
+                    CategoryGrid(
+                        categories = standard,
+                        onCategoryClick = onCategoryClick
+                    )
+                }
+                if (social.isNotEmpty()) {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Text(
+                            text = "Social",
+                            color = CreateColors.TextMain,
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        SocialGrid(
+                            categories = social,
+                            onCategoryClick = onCategoryClick
+                        )
+                    }
+                }
+                if (barcodes.isNotEmpty()) {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Text(
+                            text = "Barcode",
+                            color = CreateColors.TextMain,
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                        BarcodeGrid(
+                            categories = barcodes,
+                            onCategoryClick = onCategoryClick
+                        )
+                    }
+                }
             }
         }
     }
@@ -345,6 +385,160 @@ private fun FilterChipsRow(
 }
 
 @Composable
+private fun SocialGrid(
+    categories: List<CreateCategory>,
+    onCategoryClick: (QrCategoryType) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        categories.chunked(2).forEach { rowItems ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                rowItems.forEach { category ->
+                    SocialCard(
+                        category = category,
+                        onClick = { onCategoryClick(category.categoryType) },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                if (rowItems.size == 1) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun SocialCard(
+    category: CreateCategory,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .height(64.dp)
+            .background(White, RoundedCornerShape(18.dp))
+            .border(1.dp, CreateColors.Border, RoundedCornerShape(18.dp))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
+            .padding(horizontal = 14.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(10.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .then(
+                    if (category.mark == null && category.categoryType == QrCategoryType.SNAPCHAT) {
+                        Modifier.background(category.iconBg, CircleShape)
+                    } else {
+                        Modifier
+                    }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            val mark = category.mark
+            if (mark != null) {
+                Text(
+                    text = mark,
+                    color = category.iconTint,
+                    fontFamily = PlusJakartaSans,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = if (mark.length > 1) 13.sp else 18.sp
+                )
+            } else {
+                Icon(
+                    imageVector = category.icon,
+                    contentDescription = null,
+                    tint = category.iconTint,
+                    modifier = Modifier.size(26.dp)
+                )
+            }
+        }
+        Text(
+            text = category.title,
+            color = CreateColors.TextMain,
+            fontFamily = PlusJakartaSans,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.SemiBold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
+private fun BarcodeGrid(
+    categories: List<CreateCategory>,
+    onCategoryClick: (QrCategoryType) -> Unit
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        categories.chunked(3).forEach { rowItems ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                rowItems.forEach { category ->
+                    BarcodeCard(
+                        category = category,
+                        onClick = { onCategoryClick(category.categoryType) },
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+                repeat(3 - rowItems.size) {
+                    Spacer(modifier = Modifier.weight(1f))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun BarcodeCard(
+    category: CreateCategory,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .heightIn(min = 108.dp)
+            .background(White, RoundedCornerShape(16.dp))
+            .border(1.dp, CreateColors.Border, RoundedCornerShape(16.dp))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onClick
+            )
+            .padding(horizontal = 8.dp, vertical = 14.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Icon(
+            imageVector = category.icon,
+            contentDescription = null,
+            tint = CobaltPrimary,
+            modifier = Modifier.size(28.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = category.title,
+            color = CreateColors.TextMain,
+            fontFamily = PlusJakartaSans,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
 private fun CategoryGrid(
     categories: List<CreateCategory>,
     onCategoryClick: (QrCategoryType) -> Unit
@@ -520,7 +714,12 @@ private enum class CreateCategory(
     val iconBg: Color,
     val iconBorder: Color,
     val iconTint: Color,
-    val categoryType: QrCategoryType
+    val categoryType: QrCategoryType,
+    val social: Boolean = false,
+    val mark: String? = null,
+    val socialOrder: Int = 0,
+    val barcode: Boolean = false,
+    val barcodeOrder: Int = 0
 ) {
     Website(
         title = "Website URL",
@@ -595,12 +794,14 @@ private enum class CreateCategory(
     WhatsApp(
         title = "WhatsApp",
         subtitle = "Direct WhatsApp chat link",
-        filter = CreateFilter.Comms,
+        filter = CreateFilter.Web,
         icon = Icons.Outlined.Chat,
         iconBg = Color(0xFFF0FDFA),
         iconBorder = Color(0xFFCCFBF1),
-        iconTint = Color(0xFF0D9488),
-        categoryType = QrCategoryType.WHATSAPP
+        iconTint = Color(0xFF25D366),
+        categoryType = QrCategoryType.WHATSAPP,
+        social = true,
+        socialOrder = 1
     ),
     Location(
         title = "Location",
@@ -632,15 +833,261 @@ private enum class CreateCategory(
         iconTint = Color(0xFF7C3AED),
         categoryType = QrCategoryType.APP_LINK
     ),
-    Barcode(
-        title = "Barcode / EAN",
-        subtitle = "EAN-13, UPC, Code 128 formats",
+    Facebook(
+        title = "Facebook",
+        subtitle = "Profile or page",
+        filter = CreateFilter.Web,
+        icon = Icons.Outlined.Language,
+        iconBg = Color(0xFFEFF6FF),
+        iconBorder = Color(0xFFDBEAFE),
+        iconTint = Color(0xFF1877F2),
+        categoryType = QrCategoryType.FACEBOOK,
+        social = true,
+        mark = "f",
+        socialOrder = 0
+    ),
+    YouTube(
+        title = "YouTube",
+        subtitle = "Channel or video",
+        filter = CreateFilter.Web,
+        icon = Icons.Outlined.PlayArrow,
+        iconBg = Color(0xFFFEF2F2),
+        iconBorder = Color(0xFFFEE2E2),
+        iconTint = Color(0xFFFF0000),
+        categoryType = QrCategoryType.YOUTUBE,
+        social = true,
+        socialOrder = 2
+    ),
+    Twitter(
+        title = "Twitter",
+        subtitle = "Profile",
+        filter = CreateFilter.Web,
+        icon = Icons.Outlined.Language,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.TWITTER,
+        social = true,
+        mark = "X",
+        socialOrder = 3
+    ),
+    TikTok(
+        title = "TikTok",
+        subtitle = "Profile",
+        filter = CreateFilter.Web,
+        icon = Icons.Outlined.MusicNote,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.TIKTOK,
+        social = true,
+        socialOrder = 4
+    ),
+    Instagram(
+        title = "Instagram",
+        subtitle = "Profile",
+        filter = CreateFilter.Web,
+        icon = Icons.Outlined.PhotoCamera,
+        iconBg = Color(0xFFFDF2F8),
+        iconBorder = Color(0xFFFCE7F3),
+        iconTint = Color(0xFFE1306C),
+        categoryType = QrCategoryType.INSTAGRAM,
+        social = true,
+        socialOrder = 5
+    ),
+    Paypal(
+        title = "PayPal",
+        subtitle = "PayPal.me link",
+        filter = CreateFilter.Web,
+        icon = Icons.Outlined.Language,
+        iconBg = Color(0xFFEFF6FF),
+        iconBorder = Color(0xFFDBEAFE),
+        iconTint = Color(0xFF003087),
+        categoryType = QrCategoryType.PAYPAL,
+        social = true,
+        mark = "P",
+        socialOrder = 6
+    ),
+    Snapchat(
+        title = "Snapchat",
+        subtitle = "Add friend",
+        filter = CreateFilter.Web,
+        icon = Icons.Outlined.SentimentSatisfied,
+        iconBg = Color(0xFFFEF9C3),
+        iconBorder = Color(0xFFFEF08A),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.SNAPCHAT,
+        social = true,
+        socialOrder = 7
+    ),
+    LinkedIn(
+        title = "LinkedIn",
+        subtitle = "Profile",
+        filter = CreateFilter.Web,
+        icon = Icons.Outlined.Language,
+        iconBg = Color(0xFFEFF6FF),
+        iconBorder = Color(0xFFDBEAFE),
+        iconTint = Color(0xFF0A66C2),
+        categoryType = QrCategoryType.LINKEDIN,
+        social = true,
+        mark = "in",
+        socialOrder = 8
+    ),
+    Spotify(
+        title = "Spotify",
+        subtitle = "Profile or playlist",
+        filter = CreateFilter.Web,
+        icon = Icons.Outlined.GraphicEq,
+        iconBg = Color(0xFFECFDF5),
+        iconBorder = Color(0xFFD1FAE5),
+        iconTint = Color(0xFF1DB954),
+        categoryType = QrCategoryType.SPOTIFY,
+        social = true,
+        socialOrder = 9
+    ),
+    Code128(
+        title = "Code 128",
+        subtitle = "Barcode",
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
-        iconBg = Color(0xFFECFEFF),
-        iconBorder = Color(0xFFCFFAFE),
-        iconTint = Color(0xFF0891B2),
-        categoryType = QrCategoryType.BARCODE
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.CODE_128,
+        barcode = true,
+        barcodeOrder = 0
+    ),
+    DataMatrix(
+        title = "Data Matrix",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.DATA_MATRIX,
+        barcode = true,
+        barcodeOrder = 1
+    ),
+    Pdf417(
+        title = "PDF 417",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.PDF_417,
+        barcode = true,
+        barcodeOrder = 2
+    ),
+    Aztec(
+        title = "Aztec",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.AZTEC,
+        barcode = true,
+        barcodeOrder = 3
+    ),
+    Ean13(
+        title = "EAN 13",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.EAN_13,
+        barcode = true,
+        barcodeOrder = 4
+    ),
+    Ean8(
+        title = "EAN 8",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.EAN_8,
+        barcode = true,
+        barcodeOrder = 5
+    ),
+    UpcE(
+        title = "UPC E",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.UPC_E,
+        barcode = true,
+        barcodeOrder = 6
+    ),
+    UpcA(
+        title = "UPC A",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.UPC_A,
+        barcode = true,
+        barcodeOrder = 7
+    ),
+    Code93(
+        title = "Code 93",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.CODE_93,
+        barcode = true,
+        barcodeOrder = 8
+    ),
+    Code39(
+        title = "Code 39",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.CODE_39,
+        barcode = true,
+        barcodeOrder = 9
+    ),
+    Codabar(
+        title = "Codabar",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.CODABAR,
+        barcode = true,
+        barcodeOrder = 10
+    ),
+    Itf(
+        title = "ITF",
+        subtitle = "Barcode",
+        filter = CreateFilter.Utilities,
+        icon = Icons.Outlined.QrCode2,
+        iconBg = Color(0xFFF1F5F9),
+        iconBorder = Color(0xFFE2E8F0),
+        iconTint = Color(0xFF111111),
+        categoryType = QrCategoryType.ITF,
+        barcode = true,
+        barcodeOrder = 11
     )
 }
 

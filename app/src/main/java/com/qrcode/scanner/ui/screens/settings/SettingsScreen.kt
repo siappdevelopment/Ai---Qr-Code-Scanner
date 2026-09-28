@@ -32,7 +32,6 @@ import androidx.compose.material.icons.outlined.QrCode2
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Security
 import androidx.compose.material.icons.outlined.Vibration
-import androidx.compose.material.icons.outlined.ViewStream
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -159,21 +158,11 @@ fun SettingsScreen(
                 SettingsRowDivider()
                 SettingsToggleRow(
                     title = "Auto-Open URLs",
-                    subtitle = "Checks link safety first via Google Safe Browsing",
+                    subtitle = "Opens website links in the browser after a scan",
                     icon = Icons.Outlined.OpenInBrowser,
                     checked = preferences.autoOpenUrls,
                     onCheckedChange = { enabled ->
                         scope.launch { repository.setAutoOpenUrls(enabled) }
-                    }
-                )
-                SettingsRowDivider()
-                SettingsToggleRow(
-                    title = "Continuous Batch Scan",
-                    subtitle = "Scan multiple payloads without pause",
-                    icon = Icons.Outlined.ViewStream,
-                    checked = preferences.continuousBatchScan,
-                    onCheckedChange = { enabled ->
-                        scope.launch { repository.setContinuousBatchScan(enabled) }
                     }
                 )
             }

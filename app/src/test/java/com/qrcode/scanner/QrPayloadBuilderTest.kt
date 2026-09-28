@@ -256,6 +256,68 @@ class QrPayloadBuilderTest {
     }
 
     @Test
+    fun social_usernameAndFullLink() {
+        val facebook = QrPayloadBuilder.build(
+            QrCategoryType.FACEBOOK,
+            QrPayloadBuilder.FormInput(primary = "@Scan.Pulse")
+        )
+        assertEquals("https://www.facebook.com/Scan.Pulse", facebook.payload)
+
+        val youtube = QrPayloadBuilder.build(
+            QrCategoryType.YOUTUBE,
+            QrPayloadBuilder.FormInput(primary = "https://www.youtube.com/watch?v=abc")
+        )
+        assertEquals("https://www.youtube.com/watch?v=abc", youtube.payload)
+
+        val tiktok = QrPayloadBuilder.build(
+            QrCategoryType.TIKTOK,
+            QrPayloadBuilder.FormInput(primary = "creator")
+        )
+        assertEquals("https://www.tiktok.com/@creator", tiktok.payload)
+
+        assertNotNull(
+            QrPayloadBuilder.validate(QrCategoryType.INSTAGRAM, QrPayloadBuilder.FormInput())
+        )
+    }
+
+    @Test
+    fun barcodeFormats_normalizeAndEncode() {
+        val ean = QrPayloadBuilder.build(
+            QrCategoryType.EAN_13,
+            QrPayloadBuilder.FormInput(primary = "590123412345")
+        )
+        assertEquals("5901234123457", ean.payload)
+        assertEquals(ScanPayloadMapper.TYPE_BARCODE, ean.detectedType)
+
+        val itf = QrPayloadBuilder.build(
+            QrCategoryType.ITF,
+            QrPayloadBuilder.FormInput(primary = "1234")
+        )
+        assertEquals("1234", itf.payload)
+
+        assertNotNull(
+            QrPayloadBuilder.validate(
+                QrCategoryType.ITF,
+                QrPayloadBuilder.FormInput(primary = "123")
+            )
+        )
+        assertNotNull(
+            QrPayloadBuilder.validate(
+                QrCategoryType.CODE_39,
+                QrPayloadBuilder.FormInput(primary = "hello!")
+            )
+        )
+
+        val matrix = com.google.zxing.MultiFormatWriter().encode(
+            "SCAN",
+            com.google.zxing.BarcodeFormat.CODE_128,
+            200,
+            80
+        )
+        assertTrue(matrix.width > 0)
+    }
+
+    @Test
     fun barcode_blocked() {
         assertNotNull(
             QrPayloadBuilder.validate(QrCategoryType.BARCODE, QrPayloadBuilder.FormInput())

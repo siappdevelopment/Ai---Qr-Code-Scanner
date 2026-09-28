@@ -1,5 +1,6 @@
 package com.qrcode.scanner.ui.navigation
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -40,6 +41,7 @@ fun ScanPulseNavHost(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val showBottomBar = currentRoute.showsBottomNavigation()
+    val isScan = currentRoute == AppDestination.Scan.route
     var tabBeforeScan by remember { mutableStateOf(AppDestination.Home.route) }
     LaunchedEffect(currentRoute) {
         if (
@@ -62,7 +64,7 @@ fun ScanPulseNavHost(
     }
 
     Scaffold(
-        containerColor = PageBackground,
+        containerColor = if (isScan) Color.Transparent else PageBackground,
         contentColor = Color.Unspecified,
         bottomBar = {
             if (showBottomBar) {
@@ -77,7 +79,11 @@ fun ScanPulseNavHost(
         NavHost(
             navController = navController,
             startDestination = AppDestination.Splash.route,
-            modifier = Modifier.padding(innerPadding)
+            modifier = if (isScan) {
+                Modifier.fillMaxSize()
+            } else {
+                Modifier.padding(innerPadding)
+            }
         ) {
             composable(AppDestination.Splash.route) {
                 SplashScreen(
@@ -137,7 +143,10 @@ fun ScanPulseNavHost(
                     )
                 }
                 composable(AppDestination.Scan.route) {
-                    ScanScreen(onClose = { openRootTab(tabBeforeScan) })
+                    ScanScreen(
+                        onClose = { openRootTab(tabBeforeScan) },
+                        safeContentPadding = innerPadding
+                    )
                 }
                 composable(AppDestination.Settings.route) {
                     SettingsScreen(

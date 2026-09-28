@@ -231,7 +231,7 @@ private fun QrPreviewScreen(
         }
     }
 
-    LaunchedEffect(payload, ecc, style, logoBmp) {
+    LaunchedEffect(payload, ecc, style, logoBmp, category) {
         if (payload.isBlank()) {
             encodeError = "Nothing to preview"
             bitmap = null
@@ -239,6 +239,21 @@ private fun QrPreviewScreen(
             return@LaunchedEffect
         }
         encodeError = null
+        if (BarcodeSymbology.isBarcode(category)) {
+            val rendered = withContext(Dispatchers.Default) {
+                runCatching { BarcodeBitmapEncoder.encode(payload, category) }
+            }
+            rendered.onSuccess { image ->
+                encodeError = null
+                bitmap = image
+                exportBitmap = image
+            }.onFailure { error ->
+                encodeError = error.message ?: "Unable to encode barcode"
+                bitmap = null
+                exportBitmap = null
+            }
+            return@LaunchedEffect
+        }
         val preview = withContext(Dispatchers.Default) {
             QrStyledRenderer.render(
                 payload = payload,
@@ -497,7 +512,11 @@ private fun QrPreviewScreen(
                     )
                     Spacer(modifier = Modifier.size(6.dp))
                     Text(
-                        text = "Valid QR payload • UTF-8 • ${style.paletteName}",
+                        text = if (BarcodeSymbology.isBarcode(category)) {
+                            "Valid ${category.displayTitle} barcode"
+                        } else {
+                            "Valid QR payload • UTF-8 • ${style.paletteName}"
+                        },
                         color = TextSecondary,
                         fontFamily = PlusJakartaSans,
                         fontSize = 12.sp,
@@ -507,6 +526,7 @@ private fun QrPreviewScreen(
                 }
             }
 
+            if (!BarcodeSymbology.isBarcode(category)) {
             // Customize Style & Colors
             Box(
                 modifier = Modifier
@@ -550,8 +570,7 @@ private fun QrPreviewScreen(
                     )
                 }
             }
-
-            // Export grid — Stitch Preview & Export.
+            }
             // Settings default format is listed first and marked preferred; both actions remain.
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -591,7 +610,11 @@ private fun QrPreviewScreen(
                             scope.launch {
                                 try {
                                     val svg = withContext(Dispatchers.Default) {
-                                        QrStyledRenderer.toSvg(payload, style, ecc, 1024)
+                                        if (BarcodeSymbology.isBarcode(category)) {
+                                            BarcodeBitmapEncoder.toSvg(payload, category)
+                                        } else {
+                                            QrStyledRenderer.toSvg(payload, style, ecc, 1024)
+                                        }
                                     }
                                     val result = withContext(Dispatchers.IO) {
                                         QrExportHelper.saveSvgToCache(context, svg)
@@ -629,7 +652,11 @@ private fun QrPreviewScreen(
                             scope.launch {
                                 try {
                                     val svg = withContext(Dispatchers.Default) {
-                                        QrStyledRenderer.toSvg(payload, style, ecc, 1024)
+                                        if (BarcodeSymbology.isBarcode(category)) {
+                                            BarcodeBitmapEncoder.toSvg(payload, category)
+                                        } else {
+                                            QrStyledRenderer.toSvg(payload, style, ecc, 1024)
+                                        }
                                     }
                                     val result = withContext(Dispatchers.IO) {
                                         QrExportHelper.saveSvgToCache(context, svg)

@@ -106,8 +106,7 @@ fun WifiQrFormScreen(
     var hidden by remember { mutableStateOf(false) }
     var showPassword by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
-    var eccOverride by remember { mutableStateOf<QrBitmapEncoder.EccLevel?>(null) }
-    val ecc = eccOverride ?: settingsPrefs.defaultQrEcc.toEncoderLevel()
+    val ecc = settingsPrefs.defaultQrEcc.toEncoderLevel()
 
     val previewLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -452,37 +451,6 @@ fun WifiQrFormScreen(
                     fontWeight = FontWeight.Medium,
                     fontSize = 13.sp
                 )
-            }
-
-            // ECC (compact)
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                QrBitmapEncoder.EccLevel.entries.forEach { level ->
-                    val selected = ecc == level
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(if (selected) CobaltPrimary else NestedSurface)
-                            .border(1.dp, BorderSubtle, RoundedCornerShape(10.dp))
-                            .clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) { eccOverride = level }
-                            .padding(vertical = 8.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = "ECC ${level.label}",
-                            color = if (selected) White else TextSecondary,
-                            fontFamily = PlusJakartaSans,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 11.sp
-                        )
-                    }
-                }
             }
 
             Box(

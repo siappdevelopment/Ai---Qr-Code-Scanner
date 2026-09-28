@@ -82,17 +82,19 @@ fun ScanPulseBottomBar(
     ) {
         Spacer(modifier = Modifier.fillMaxWidth().height(fabOverhang))
 
-        Column(
+            Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(CardSurface)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .background(Color(0xFFE2E8F0))
-            )
+            if (currentRoute != AppDestination.Scan.route) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(Color(0xFFE2E8F0))
+                )
+            }
 
             Row(
                 modifier = Modifier

@@ -294,7 +294,7 @@ private fun QrCustomizationScreen(
             }
 
             Text(
-                text = "Level ${ecc.label} ECC · Live preview",
+                text = "Live preview",
                 color = TextTertiary,
                 fontFamily = PlusJakartaSans,
                 fontSize = 12.sp

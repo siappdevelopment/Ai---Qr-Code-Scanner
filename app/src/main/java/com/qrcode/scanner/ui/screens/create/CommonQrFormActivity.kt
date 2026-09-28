@@ -112,9 +112,7 @@ fun CommonQrFormScreen(
     var secondary by remember { mutableStateOf("") }
     var tertiary by remember { mutableStateOf("") }
     var quaternary by remember { mutableStateOf("") }
-    // Null = use Settings default; explicit chip tap locks user choice for this form visit.
-    var eccOverride by remember { mutableStateOf<QrBitmapEncoder.EccLevel?>(null) }
-    val ecc = eccOverride ?: settingsPrefs.defaultQrEcc.toEncoderLevel()
+    val ecc = settingsPrefs.defaultQrEcc.toEncoderLevel()
     var error by remember { mutableStateOf<String?>(null) }
 
     val previewLauncher = rememberLauncherForActivityResult(
@@ -309,82 +307,6 @@ fun CommonQrFormScreen(
                 )
             }
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(CardSurface, RoundedCornerShape(16.dp))
-                    .border(1.dp, BorderSubtle, RoundedCornerShape(16.dp))
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = "Technical Parameters",
-                        color = TextPrimary,
-                        fontFamily = PlusJakartaSans,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = "${primary.length} chars",
-                        color = TextSecondary,
-                        fontFamily = PlusJakartaSans,
-                        fontSize = 12.sp
-                    )
-                }
-                Text(
-                    text = "Error Correction Level (Damage Recovery)",
-                    color = TextSecondary,
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 12.sp
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    QrBitmapEncoder.EccLevel.entries.forEach { level ->
-                        val selected = ecc == level
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(if (selected) CobaltPrimary else NestedSurface)
-                                .clickable(
-                                    indication = null,
-                                    interactionSource = remember { MutableInteractionSource() }
-                                ) { eccOverride = level }
-                                .padding(vertical = 10.dp),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    text = level.label,
-                                    color = if (selected) White else TextPrimary,
-                                    fontFamily = PlusJakartaSans,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp
-                                )
-                                Text(
-                                    text = when (level) {
-                                        QrBitmapEncoder.EccLevel.L -> "7%"
-                                        QrBitmapEncoder.EccLevel.M -> "15%"
-                                        QrBitmapEncoder.EccLevel.Q -> "25%"
-                                        QrBitmapEncoder.EccLevel.H -> "30%"
-                                    },
-                                    color = if (selected) White.copy(alpha = 0.85f) else TextSecondary,
-                                    fontFamily = PlusJakartaSans,
-                                    fontSize = 11.sp
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -525,11 +447,46 @@ private data class FormLabels(
                 secondaryLabel = "Display Title / Note",
                 secondaryPlaceholder = "Optional label"
             )
+            QrCategoryType.FACEBOOK -> socialForm("Facebook", "username or https://facebook.com/…")
+            QrCategoryType.YOUTUBE -> socialForm("YouTube", "@channel or https://youtube.com/…")
+            QrCategoryType.TWITTER -> socialForm("Twitter", "username or https://x.com/…")
+            QrCategoryType.TIKTOK -> socialForm("TikTok", "@username or https://tiktok.com/…")
+            QrCategoryType.INSTAGRAM -> socialForm("Instagram", "username or https://instagram.com/…")
+            QrCategoryType.PAYPAL -> socialForm("PayPal", "paypal.me name or https://paypal.me/…")
+            QrCategoryType.SNAPCHAT -> socialForm("Snapchat", "username or https://snapchat.com/add/…")
+            QrCategoryType.LINKEDIN -> socialForm("LinkedIn", "profile name or https://linkedin.com/in/…")
+            QrCategoryType.SPOTIFY -> socialForm("Spotify", "user id or https://open.spotify.com/…")
+            QrCategoryType.CODE_128 -> barcodeForm("Code 128 value", "Text or numbers")
+            QrCategoryType.DATA_MATRIX -> barcodeForm("Data Matrix value", "Text or numbers")
+            QrCategoryType.PDF_417 -> barcodeForm("PDF 417 value", "Text or numbers")
+            QrCategoryType.AZTEC -> barcodeForm("Aztec value", "Text or numbers")
+            QrCategoryType.EAN_13 -> barcodeForm("EAN 13 digits", "12 digits, or 13 with check digit")
+            QrCategoryType.EAN_8 -> barcodeForm("EAN 8 digits", "7 digits, or 8 with check digit")
+            QrCategoryType.UPC_E -> barcodeForm("UPC E digits", "7 or 8 digits")
+            QrCategoryType.UPC_A -> barcodeForm("UPC A digits", "11 digits, or 12 with check digit")
+            QrCategoryType.CODE_93 -> barcodeForm("Code 93 value", "Letters, digits")
+            QrCategoryType.CODE_39 -> barcodeForm("Code 39 value", "Letters, digits")
+            QrCategoryType.CODABAR -> barcodeForm("Codabar value", "Digits, optional A–D start/stop")
+            QrCategoryType.ITF -> barcodeForm("ITF digits", "Even number of digits")
             else -> FormLabels(
                 primaryLabel = "Payload",
                 primaryPlaceholder = "Enter value"
             )
         }
+
+        private fun socialForm(name: String, example: String) = FormLabels(
+            primaryLabel = "$name username or link",
+            primaryPlaceholder = example,
+            secondaryLabel = "Display title (optional)",
+            secondaryPlaceholder = "Optional label"
+        )
+
+        private fun barcodeForm(label: String, example: String) = FormLabels(
+            primaryLabel = label,
+            primaryPlaceholder = example,
+            secondaryLabel = "Display title (optional)",
+            secondaryPlaceholder = "Optional label"
+        )
     }
 }
 

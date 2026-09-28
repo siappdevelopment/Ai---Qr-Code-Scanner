@@ -2,6 +2,7 @@ package com.qrcode.scanner.ui.screens.scan
 
 import android.Manifest
 import android.app.Activity
+import androidx.activity.ComponentActivity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -35,6 +36,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -107,6 +109,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 private const val TAG = "ScannerViewfinder"
@@ -120,7 +123,8 @@ fun ScannerViewfinderScreen(
     onBack: () -> Unit,
     onBarcodeDetected: (rawValue: String, format: Int, formatName: String) -> Unit,
     onFinishContinuousBatch: (List<ContinuousBatchItem>) -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    safeContentPadding: PaddingValues? = null
 ) {
     val context = LocalContext.current
     val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
@@ -131,7 +135,8 @@ fun ScannerViewfinderScreen(
     }
     val prefs = settingsPreferences
     val preferencesReady = prefs != null
-    val continuousBatchScan = prefs?.continuousBatchScan == true
+    // Setting removed. A saved ON value must not swallow scans with no result screen.
+    val continuousBatchScan = false
 
     var hasCameraPermission by remember {
         mutableStateOf(
@@ -163,9 +168,9 @@ fun ScannerViewfinderScreen(
     val continuousSession = remember { ContinuousBatchSession() }
     val continuousFinishStarted = remember { AtomicBoolean(false) }
     val continuousItems by continuousSession.items.collectAsStateWithLifecycle()
-    val lifecycleOwner = LocalLifecycleOwner.current
     val latestContinuousBatchScan by rememberUpdatedState(continuousBatchScan)
     val latestOnFinishContinuousBatch by rememberUpdatedState(onFinishContinuousBatch)
+    val lifecycleOwner = (context as? ComponentActivity) ?: LocalLifecycleOwner.current
 
     fun finishContinuousBatchSession() {
         // Idempotent: double Done/Back must not open an empty batch or finish twice.
@@ -247,7 +252,7 @@ fun ScannerViewfinderScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(PageBackground)
+            .background(if (hasCameraPermission) Color.Black else PageBackground)
     ) {
         when {
             hasCameraPermission -> {
@@ -257,14 +262,14 @@ fun ScannerViewfinderScreen(
                     continuousBatchScan = continuousBatchScan,
                     continuousSession = continuousSession,
                     detectionHandled = detectionHandled,
-                    detectionEnabled = preferencesReady,
+                    detectionEnabled = true,
                     onCameraReady = { camera = it },
                     onBarcodeDetected = { raw, format, name ->
                         // Single-shot OFF path — unchanged once prefs are ready.
                         if (detectionHandled.compareAndSet(false, true)) {
                             DetectionFeedback.onAcceptedDetection(
                                 context = context,
-                                vibrateEnabled = prefs?.vibrateOnDetection == true,
+                                vibrateEnabled = prefs?.vibrateOnDetection != false,
                                 beepEnabled = prefs?.beepOnDetection == true
                             )
                             onBarcodeDetected(raw, format, name)
@@ -325,6 +330,7 @@ fun ScannerViewfinderScreen(
 
         if (hasCameraPermission) {
             ScannerHudOverlay(
+                safeContentPadding = safeContentPadding,
                 torchEnabled = torchEnabled,
                 zoomRatio = zoomRatio,
                 onToggleTorch = {
@@ -371,8 +377,9 @@ private fun CameraPreviewHost(
     onContinuousAccepted: (String, Int, String) -> Unit
 ) {
     val context = LocalContext.current
-    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycleOwner = (context as? ComponentActivity) ?: LocalLifecycleOwner.current
     val analysisExecutor = remember { Executors.newSingleThreadExecutor() }
+    val cameraProviderHolder = remember { mutableStateOf<ProcessCameraProvider?>(null) }
     val latestOnBarcodeDetected by rememberUpdatedState(onBarcodeDetected)
     val latestOnContinuousAccepted by rememberUpdatedState(onContinuousAccepted)
     val latestContinuousBatchScan by rememberUpdatedState(continuousBatchScan)
@@ -381,11 +388,13 @@ private fun CameraPreviewHost(
         PreviewView(context).apply {
             scaleType = PreviewView.ScaleType.FILL_CENTER
             implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+            setBackgroundColor(android.graphics.Color.BLACK)
         }
     }
 
     DisposableEffect(Unit) {
         onDispose {
+            cameraProviderHolder.value?.unbindAll()
             analysisExecutor.shutdown()
             onCameraReady(null)
         }
@@ -393,6 +402,8 @@ private fun CameraPreviewHost(
 
     LaunchedEffect(lensFacing, scanMode, lifecycleOwner) {
         val cameraProvider = context.getCameraProvider()
+        if (!isActive) return@LaunchedEffect
+        cameraProviderHolder.value = cameraProvider
         cameraProvider.unbindAll()
         onCameraReady(null)
 
@@ -403,6 +414,7 @@ private fun CameraPreviewHost(
         val scanner = BarcodeScanning.getClient(barcodeOptionsFor(scanMode))
         val analysis = ImageAnalysis.Builder()
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
+            .setOutputImageFormat(ImageAnalysis.OUTPUT_IMAGE_FORMAT_YUV_420_888)
             .build()
 
         analysis.setAnalyzer(analysisExecutor) { imageProxy ->
@@ -422,6 +434,7 @@ private fun CameraPreviewHost(
             )
         }
 
+        if (!isActive) return@LaunchedEffect
         try {
             val selector = CameraSelector.Builder()
                 .requireLensFacing(lensFacing)
@@ -432,6 +445,10 @@ private fun CameraPreviewHost(
                 preview,
                 analysis
             )
+            if (!isActive) {
+                cameraProvider.unbindAll()
+                return@LaunchedEffect
+            }
             onCameraReady(bound)
         } catch (t: Throwable) {
             Log.e(TAG, "Failed to bind camera", t)
@@ -570,6 +587,7 @@ private fun formatName(format: Int): String = when (format) {
 
 @Composable
 private fun ScannerHudOverlay(
+    safeContentPadding: PaddingValues?,
     torchEnabled: Boolean,
     zoomRatio: Float,
     onToggleTorch: () -> Unit,
@@ -580,8 +598,15 @@ private fun ScannerHudOverlay(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .statusBarsPadding()
-            .navigationBarsPadding()
+            .then(
+                if (safeContentPadding != null) {
+                    Modifier.padding(safeContentPadding)
+                } else {
+                    Modifier
+                        .statusBarsPadding()
+                        .navigationBarsPadding()
+                }
+            )
     ) {
         Row(
             modifier = Modifier
@@ -596,17 +621,20 @@ private fun ScannerHudOverlay(
                 } else {
                     Icons.Outlined.FlashlightOff
                 },
+                label = "FLASH",
                 contentDescription = "Toggle flashlight",
                 selected = torchEnabled,
                 onClick = onToggleTorch
             )
             HudIconButton(
                 icon = Icons.Outlined.PhotoLibrary,
+                label = "GALLERY",
                 contentDescription = "Scan image from gallery",
                 onClick = onOpenGallery
             )
             HudIconButton(
                 icon = Icons.Outlined.FlipCameraAndroid,
+                label = "FLIP",
                 contentDescription = "Flip camera lens",
                 onClick = onFlipCamera
             )
@@ -753,32 +781,44 @@ private fun ReticleCorners() {
 @Composable
 private fun HudIconButton(
     icon: ImageVector,
+    label: String,
     contentDescription: String,
     onClick: () -> Unit,
     selected: Boolean = false
 ) {
-    Box(
-        modifier = Modifier
-            .size(52.dp)
-            .clip(CircleShape)
-            .background(if (selected) CobaltPrimary else CardSurface)
-            .border(
-                1.dp,
-                if (selected) CobaltPrimary else BorderSubtle,
-                CircleShape
-            )
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = onClick
-            ),
-        contentAlignment = Alignment.Center
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable(
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() },
+            onClick = onClick
+        )
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription,
-            tint = if (selected) White else CobaltPrimary,
-            modifier = Modifier.size(24.dp)
+        Box(
+            modifier = Modifier
+                .size(52.dp)
+                .clip(CircleShape)
+                .background(
+                    if (selected) Color.White.copy(alpha = 0.32f) else Color.Black.copy(alpha = 0.45f)
+                )
+                .border(1.dp, Color.White.copy(alpha = 0.55f), CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = icon,
+                contentDescription = contentDescription,
+                tint = White,
+                modifier = Modifier.size(22.dp)
+            )
+        }
+        Text(
+            text = label,
+            color = White,
+            fontFamily = PlusJakartaSans,
+            fontWeight = FontWeight.Bold,
+            fontSize = 11.sp,
+            letterSpacing = 0.4.sp,
+            modifier = Modifier.padding(top = 6.dp)
         )
     }
 }

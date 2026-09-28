@@ -2,17 +2,38 @@ package com.qrcode.scanner.ui.screens.create
 
 import com.qrcode.scanner.data.history.ScanPayloadMapper
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.APP_LINK
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.AZTEC
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.BARCODE
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.CALENDAR
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.CODABAR
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.CODE_128
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.CODE_39
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.CODE_93
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.CONTACT
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.DATA_MATRIX
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.EAN_13
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.EAN_8
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.EMAIL
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.FACEBOOK
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.INSTAGRAM
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.ITF
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.LINKEDIN
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.LOCATION
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.PAYPAL
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.PDF_417
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.PHONE
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.PLAIN_TEXT
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.SMS
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.SNAPCHAT
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.SPOTIFY
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.TIKTOK
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.TWITTER
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.UPC_A
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.UPC_E
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.WEBSITE
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.WHATSAPP
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.WIFI
+import com.qrcode.scanner.ui.screens.create.QrCategoryType.YOUTUBE
 import java.util.Calendar
 import java.util.Locale
 
@@ -118,6 +139,10 @@ object QrPayloadBuilder {
                     else -> "Enter a store URL or package like com.example.app"
                 }
             }
+            FACEBOOK, YOUTUBE, TWITTER, TIKTOK, INSTAGRAM, PAYPAL, SNAPCHAT, LINKEDIN, SPOTIFY ->
+                validateSocialHandle(input.primary)
+            CODE_128, DATA_MATRIX, PDF_417, AZTEC, EAN_13, EAN_8, UPC_E, UPC_A, CODE_93, CODE_39,
+            CODABAR, ITF -> BarcodeSymbology.validate(type, input.primary)
             WIFI -> {
                 when {
                     input.primary.trim().isEmpty() -> "Enter a network name (SSID)"
@@ -286,6 +311,24 @@ object QrPayloadBuilder {
                     detectedType = ScanPayloadMapper.TYPE_WEBSITE
                 )
             }
+            FACEBOOK -> socialProfile(input, "https://www.facebook.com/", atHandle = false, note = note)
+            YOUTUBE -> socialProfile(input, "https://www.youtube.com/", atHandle = true, note = note)
+            TWITTER -> socialProfile(input, "https://x.com/", atHandle = false, note = note)
+            TIKTOK -> socialProfile(input, "https://www.tiktok.com/", atHandle = true, note = note)
+            INSTAGRAM -> socialProfile(input, "https://www.instagram.com/", atHandle = false, note = note)
+            PAYPAL -> socialProfile(input, "https://www.paypal.me/", atHandle = false, note = note)
+            SNAPCHAT -> socialProfile(input, "https://www.snapchat.com/add/", atHandle = false, note = note)
+            LINKEDIN -> socialProfile(input, "https://www.linkedin.com/in/", atHandle = false, note = note)
+            SPOTIFY -> socialProfile(input, "https://open.spotify.com/user/", atHandle = false, note = note)
+            CODE_128, DATA_MATRIX, PDF_417, AZTEC, EAN_13, EAN_8, UPC_E, UPC_A, CODE_93, CODE_39,
+            CODABAR, ITF -> {
+                val normalized = BarcodeSymbology.normalize(type, input.primary)
+                BuildResult(
+                    payload = normalized,
+                    displayTitle = note ?: normalized,
+                    detectedType = ScanPayloadMapper.TYPE_BARCODE
+                )
+            }
             WIFI -> {
                 val ssid = input.primary.trim()
                 val password = input.secondary.trim()
@@ -374,6 +417,47 @@ object QrPayloadBuilder {
     private fun looksLikeUrl(value: String): Boolean =
         ScanPayloadMapper.looksLikeUrl(value) ||
             value.contains('.') && !value.contains(' ')
+
+    private fun validateSocialHandle(raw: String): String? {
+        val value = raw.trim()
+        return when {
+            value.isEmpty() -> "Enter a username or a full link"
+            isDirectLink(value) -> null
+            value.any { it.isWhitespace() } -> "Enter a username or a full link"
+            else -> null
+        }
+    }
+
+    private fun socialProfile(
+        input: FormInput,
+        profileBase: String,
+        atHandle: Boolean,
+        note: String?
+    ): BuildResult {
+        val value = input.primary.trim()
+        val payload = if (isDirectLink(value) || value.startsWith("spotify:", ignoreCase = true)) {
+            if (value.startsWith("www.", ignoreCase = true)) {
+                ScanPayloadMapper.normalizeUrl(value)
+            } else {
+                value
+            }
+        } else {
+            val handle = value.removePrefix("@").trim().trim('/')
+            val prefixed = if (atHandle) "@$handle" else handle
+            profileBase + prefixed
+        }
+        val handleLabel = value.removePrefix("@").trim().trim('/').take(40)
+        return BuildResult(
+            payload = payload,
+            displayTitle = note ?: handleLabel,
+            detectedType = ScanPayloadMapper.TYPE_WEBSITE
+        )
+    }
+
+    private fun isDirectLink(value: String): Boolean =
+        value.startsWith("http://", ignoreCase = true) ||
+            value.startsWith("https://", ignoreCase = true) ||
+            value.startsWith("www.", ignoreCase = true)
 
     private fun parseLatLng(raw: String): Pair<Double, Double>? {
         val parts = raw.split(',').map { it.trim() }

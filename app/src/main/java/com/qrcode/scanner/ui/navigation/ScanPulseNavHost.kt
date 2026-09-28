@@ -3,7 +3,11 @@ package com.qrcode.scanner.ui.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -38,7 +42,26 @@ fun ScanPulseNavHost(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val showBottomBar = currentRoute.showsBottomNavigation()
-    val context = LocalContext.current
+    var tabBeforeScan by remember { mutableStateOf(AppDestination.Home.route) }
+    LaunchedEffect(currentRoute) {
+        if (
+            currentRoute != null &&
+            currentRoute != AppDestination.Scan.route &&
+            currentRoute in rootDestinations
+        ) {
+            tabBeforeScan = currentRoute
+        }
+    }
+
+    fun openRootTab(route: String) {
+        navController.navigate(route) {
+            popUpTo(MAIN_GRAPH_ROUTE) {
+                saveState = true
+            }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
 
     Scaffold(
         containerColor = PageBackground,
@@ -47,19 +70,8 @@ fun ScanPulseNavHost(
             if (showBottomBar) {
                 ScanPulseBottomBar(
                     currentRoute = currentRoute,
-                    onNavigate = { destination ->
-                        navController.navigate(destination.route) {
-                            popUpTo(MAIN_GRAPH_ROUTE) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    },
-                    onScanClick = {
-                        // Single launch path: Intent → ScannerActivity (stay on current root tab).
-                        context.startActivity(ScanIntents.openScanner(context))
-                    }
+                    onNavigate = { destination -> openRootTab(destination.route) },
+                    onScanClick = { openRootTab(AppDestination.Scan.route) }
                 )
             }
         }
@@ -144,7 +156,7 @@ fun ScanPulseNavHost(
                     )
                 }
                 composable(AppDestination.Scan.route) {
-                    ScanScreen()
+                    ScanScreen(onClose = { openRootTab(tabBeforeScan) })
                 }
                 composable(AppDestination.History.route) {
                     val context = LocalContext.current

@@ -120,7 +120,7 @@ fun ScanPulseBottomBar(
                         onClick = { onNavigate(AppDestination.Create) }
                     )
 
-                    // Center Scan — launches ScannerActivity directly (no Scan tab screen).
+                    // Center Scan — same root content switch as Create (no new Activity).
                     ScanFabTab(
                         selected = currentRoute == AppDestination.Scan.route,
                         overhang = fabOverhang,

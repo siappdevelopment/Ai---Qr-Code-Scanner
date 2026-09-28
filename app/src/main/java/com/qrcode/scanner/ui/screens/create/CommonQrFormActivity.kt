@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
@@ -50,6 +51,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -215,32 +217,6 @@ fun CommonQrFormScreen(
                 )
             }
 
-            // Payload summary strip
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(CardSurface, RoundedCornerShape(14.dp))
-                    .border(1.dp, BorderSubtle, RoundedCornerShape(14.dp))
-                    .padding(12.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = primary.ifBlank { "Awaiting input payload…" },
-                    color = if (primary.isBlank()) TextTertiary else TextPrimary,
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 13.sp,
-                    maxLines = 2,
-                    modifier = Modifier.weight(1f)
-                )
-                Text(
-                    text = "${primary.length} chars",
-                    color = CobaltPrimary,
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 12.sp
-                )
-            }
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -253,14 +229,27 @@ fun CommonQrFormScreen(
                     label = labels.primaryLabel,
                     value = primary,
                     onValueChange = {
-                        primary = it
+                        primary = if (BarcodeSymbology.isBarcode(category)) {
+                            BarcodeSymbology.filterInput(category, it)
+                        } else {
+                            it
+                        }
                         if (error != null) error = null
                     },
                     placeholder = labels.primaryPlaceholder,
+                    keyboardType = if (BarcodeSymbology.isNumericInput(category)) {
+                        KeyboardType.Number
+                    } else {
+                        KeyboardType.Unspecified
+                    },
                     trailingPaste = {
                         val text = clipboard.getText()?.text
                         if (!text.isNullOrBlank()) {
-                            primary = text
+                            primary = if (BarcodeSymbology.isBarcode(category)) {
+                                BarcodeSymbology.filterInput(category, text)
+                            } else {
+                                text
+                            }
                             error = null
                         } else {
                             Toast.makeText(context, "Clipboard is empty", Toast.LENGTH_SHORT).show()
@@ -325,7 +314,11 @@ fun CommonQrFormScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "Generate & Preview QR",
+                        text = if (BarcodeSymbology.isBarcode(category)) {
+                            "Generate & Preview"
+                        } else {
+                            "Generate & Preview QR"
+                        },
                         color = White,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
@@ -464,9 +457,9 @@ private data class FormLabels(
             QrCategoryType.EAN_8 -> barcodeForm("EAN 8 digits", "7 digits, or 8 with check digit")
             QrCategoryType.UPC_E -> barcodeForm("UPC E digits", "7 or 8 digits")
             QrCategoryType.UPC_A -> barcodeForm("UPC A digits", "11 digits, or 12 with check digit")
-            QrCategoryType.CODE_93 -> barcodeForm("Code 93 value", "Letters, digits")
-            QrCategoryType.CODE_39 -> barcodeForm("Code 39 value", "Letters, digits")
-            QrCategoryType.CODABAR -> barcodeForm("Codabar value", "Digits, optional A–D start/stop")
+            QrCategoryType.CODE_93 -> barcodeForm("Code 93 value", "ASCII text")
+            QrCategoryType.CODE_39 -> barcodeForm("Code 39 value", "Text or numbers")
+            QrCategoryType.CODABAR -> barcodeForm("Codabar value", "Digits, optional start/stop")
             QrCategoryType.ITF -> barcodeForm("ITF digits", "Even number of digits")
             else -> FormLabels(
                 primaryLabel = "Payload",
@@ -483,9 +476,7 @@ private data class FormLabels(
 
         private fun barcodeForm(label: String, example: String) = FormLabels(
             primaryLabel = label,
-            primaryPlaceholder = example,
-            secondaryLabel = "Display title (optional)",
-            secondaryPlaceholder = "Optional label"
+            primaryPlaceholder = example
         )
     }
 }
@@ -533,6 +524,7 @@ internal fun FormTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     optional: Boolean = false,
+    keyboardType: KeyboardType = KeyboardType.Unspecified,
     trailingPaste: (() -> Unit)? = null,
     onClear: (() -> Unit)? = null
 ) {
@@ -543,7 +535,11 @@ internal fun FormTextField(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = if (optional) "$label (Optional)" else label,
+                text = if (optional && !label.contains("optional", ignoreCase = true)) {
+                    "$label (Optional)"
+                } else {
+                    label
+                },
                 color = TextPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -589,6 +585,7 @@ internal fun FormTextField(
                 value = value,
                 onValueChange = onValueChange,
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
                 cursorBrush = SolidColor(CobaltPrimary),
                 textStyle = TextStyle(
                     color = TextPrimary,

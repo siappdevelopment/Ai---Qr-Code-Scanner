@@ -301,10 +301,16 @@ class QrPayloadBuilderTest {
                 QrPayloadBuilder.FormInput(primary = "123")
             )
         )
-        assertNotNull(
+        assertNull(
             QrPayloadBuilder.validate(
                 QrCategoryType.CODE_39,
                 QrPayloadBuilder.FormInput(primary = "hello!")
+            )
+        )
+        assertNotNull(
+            QrPayloadBuilder.validate(
+                QrCategoryType.CODE_39,
+                QrPayloadBuilder.FormInput(primary = "*")
             )
         )
 

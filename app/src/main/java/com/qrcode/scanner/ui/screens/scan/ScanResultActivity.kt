@@ -590,44 +590,6 @@ fun ScanResultScreen(
                     onClick = { toggleFavorite() }
                 )
             }
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(CardSurface, RoundedCornerShape(12.dp))
-                    .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Text(
-                    text = "PAYLOAD TECHNICALS",
-                    color = TextSecondary,
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 12.sp,
-                    letterSpacing = 0.6.sp
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    TechCell(
-                        label = "Format",
-                        value = formatName,
-                        modifier = Modifier.weight(1f)
-                    )
-                    TechCell(
-                        label = "Type",
-                        value = detectedType.take(12),
-                        modifier = Modifier.weight(1f)
-                    )
-                    TechCell(
-                        label = "Length",
-                        value = "${rawValue.length} chars",
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-            }
         }
     }
 }
@@ -702,38 +664,6 @@ private fun SecondaryAction(
             text = label,
             color = TextPrimary,
             fontFamily = PlusJakartaSans,
-            fontWeight = FontWeight.Medium,
-            fontSize = 12.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
-
-@Composable
-private fun TechCell(
-    label: String,
-    value: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(8.dp))
-            .background(NestedSurface)
-            .padding(vertical = 8.dp, horizontal = 4.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = label,
-            color = TextTertiary,
-            fontFamily = PlusJakartaSans,
-            fontSize = 12.sp
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        Text(
-            text = value,
-            color = TextPrimary,
-            fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Medium,
             fontSize = 12.sp,
             maxLines = 1,

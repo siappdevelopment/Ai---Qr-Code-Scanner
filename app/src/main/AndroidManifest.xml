@@ -47,6 +47,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.screens.create.CreateActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRCodeScanner" />
+        <activity
             android:name=".ui.screens.create.CommonQrFormActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
@@ -81,6 +85,14 @@
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name=".ui.screens.scan.DetectionErrorActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRCodeScanner" />
+        <activity
+            android:name=".ui.screens.history.FavoritesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRCodeScanner" />
+        <activity
+            android:name=".ui.screens.history.HistoryActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity

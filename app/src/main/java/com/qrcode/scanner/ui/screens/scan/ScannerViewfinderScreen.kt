@@ -44,6 +44,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.activity.compose.BackHandler
 import androidx.compose.material.icons.Icons
@@ -71,6 +72,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -155,7 +157,7 @@ fun ScannerViewfinderScreen(
     var lensFacing by remember { mutableIntStateOf(CameraSelector.LENS_FACING_BACK) }
     var torchEnabled by remember { mutableStateOf(false) }
     var zoomRatio by remember { mutableFloatStateOf(1f) }
-    var scanMode by remember { mutableStateOf(ScanMode.Qr) }
+    val scanMode = ScanMode.Batch
     var camera by remember { mutableStateOf<Camera?>(null) }
     val detectionHandled = remember { AtomicBoolean(false) }
     val continuousSession = remember { ContinuousBatchSession() }
@@ -324,18 +326,7 @@ fun ScannerViewfinderScreen(
         if (hasCameraPermission) {
             ScannerHudOverlay(
                 torchEnabled = torchEnabled,
-                scanMode = scanMode,
                 zoomRatio = zoomRatio,
-                continuousBatchScan = continuousBatchScan,
-                acceptedCount = continuousItems.size,
-                onBack = {
-                    if (continuousBatchScan && continuousItems.isNotEmpty()) {
-                        finishContinuousBatchSession()
-                    } else {
-                        onBack()
-                    }
-                },
-                onDoneContinuousBatch = { finishContinuousBatchSession() },
                 onToggleTorch = {
                     if (camera?.cameraInfo?.hasFlashUnit() == true) {
                         torchEnabled = !torchEnabled
@@ -350,22 +341,13 @@ fun ScannerViewfinderScreen(
                     }
                     detectionHandled.set(false)
                 },
-                onModeSelected = { mode ->
-                    scanMode = mode
-                    detectionHandled.set(false)
-                },
                 onZoomSelected = { zoomRatio = it },
                 onOpenGallery = {
-                    val modeExtra = when (scanMode) {
-                        ScanMode.Qr -> ScanIntents.MODE_QR
-                        ScanMode.Barcode -> ScanIntents.MODE_BARCODE
-                        ScanMode.Batch -> ScanIntents.MODE_BATCH
-                    }
                     context.startActivity(
                         ScanIntents.openGalleryCrop(
                             context = context,
                             imageUri = null,
-                            scanMode = modeExtra
+                            scanMode = ScanIntents.MODE_BATCH
                         )
                     )
                 }
@@ -589,15 +571,9 @@ private fun formatName(format: Int): String = when (format) {
 @Composable
 private fun ScannerHudOverlay(
     torchEnabled: Boolean,
-    scanMode: ScanMode,
     zoomRatio: Float,
-    continuousBatchScan: Boolean,
-    acceptedCount: Int,
-    onBack: () -> Unit,
-    onDoneContinuousBatch: () -> Unit,
     onToggleTorch: () -> Unit,
     onFlipCamera: () -> Unit,
-    onModeSelected: (ScanMode) -> Unit,
     onZoomSelected: (Float) -> Unit,
     onOpenGallery: () -> Unit
 ) {
@@ -610,48 +586,29 @@ private fun ScannerHudOverlay(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .padding(horizontal = 28.dp, vertical = 12.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
             HudIconButton(
-                icon = Icons.AutoMirrored.Outlined.ArrowBack,
-                contentDescription = "Go back",
-                size = 44.dp,
-                onClick = onBack
+                icon = if (torchEnabled) {
+                    Icons.Outlined.FlashlightOn
+                } else {
+                    Icons.Outlined.FlashlightOff
+                },
+                contentDescription = "Toggle flashlight",
+                selected = torchEnabled,
+                onClick = onToggleTorch
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                HudIconButton(
-                    icon = if (torchEnabled) {
-                        Icons.Outlined.FlashlightOn
-                    } else {
-                        Icons.Outlined.FlashlightOff
-                    },
-                    contentDescription = "Toggle flashlight",
-                    selected = torchEnabled,
-                    onClick = onToggleTorch
-                )
-                HudIconButton(
-                    icon = Icons.Outlined.PhotoLibrary,
-                    contentDescription = "Scan image from gallery",
-                    onClick = onOpenGallery
-                )
-                HudIconButton(
-                    icon = Icons.Outlined.FlipCameraAndroid,
-                    contentDescription = "Flip camera lens",
-                    onClick = onFlipCamera
-                )
-            }
-        }
-
-        if (continuousBatchScan) {
-            ContinuousBatchSessionBar(
-                acceptedCount = acceptedCount,
-                onDone = onDoneContinuousBatch,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 8.dp)
+            HudIconButton(
+                icon = Icons.Outlined.PhotoLibrary,
+                contentDescription = "Scan image from gallery",
+                onClick = onOpenGallery
+            )
+            HudIconButton(
+                icon = Icons.Outlined.FlipCameraAndroid,
+                contentDescription = "Flip camera lens",
+                onClick = onFlipCamera
             )
         }
 
@@ -660,115 +617,47 @@ private fun ScannerHudOverlay(
         Box(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .size(260.dp),
+                .size(268.dp),
             contentAlignment = Alignment.Center
         ) {
             ReticleCorners()
-            Box(
-                modifier = Modifier
-                    .width(24.dp)
-                    .height(1.dp)
-                    .background(CobaltPrimary.copy(alpha = 0.35f))
-            )
-            Box(
-                modifier = Modifier
-                    .width(1.dp)
-                    .height(24.dp)
-                    .background(CobaltPrimary.copy(alpha = 0.35f))
-            )
             ScanLine()
         }
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.weight(1f))
 
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-                .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 20.dp)
+                .background(CardSurface, RoundedCornerShape(999.dp))
+                .border(1.dp, BorderSubtle, RoundedCornerShape(999.dp))
+                .padding(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            ModePill(
-                label = "QR Code",
-                icon = Icons.Outlined.QrCode,
-                selected = scanMode == ScanMode.Qr,
-                onClick = { onModeSelected(ScanMode.Qr) }
-            )
-            ModePill(
-                label = "Barcode",
-                icon = Icons.Outlined.ViewWeek,
-                selected = scanMode == ScanMode.Barcode,
-                onClick = { onModeSelected(ScanMode.Barcode) }
-            )
-            ModePill(
-                label = "Batch Scan",
-                icon = Icons.Outlined.Layers,
-                selected = scanMode == ScanMode.Batch,
-                onClick = { onModeSelected(ScanMode.Batch) }
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 16.dp)
-                .background(CardSurface, RoundedCornerShape(16.dp))
-                .border(1.dp, BorderSubtle, RoundedCornerShape(16.dp))
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.CenterFocusStrong,
-                    contentDescription = null,
-                    tint = CobaltPrimary,
-                    modifier = Modifier.size(22.dp)
-                )
-                Text(
-                    text = "Align QR code or barcode inside the frame to scan automatically",
-                    color = TextSecondary,
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 13.sp,
-                    modifier = Modifier.weight(1f)
-                )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                listOf(1f, 2f, 5f).forEach { z ->
-                    val selected = zoomRatio == z
-                    Box(
-                        modifier = Modifier
-                            .background(
-                                if (selected) CobaltSoft else NestedSurface,
-                                RoundedCornerShape(8.dp)
-                            )
-                            .border(
-                                1.dp,
-                                if (selected) CobaltPrimary else BorderSubtle,
-                                RoundedCornerShape(8.dp)
-                            )
-                            .clickable(
-                                indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) { onZoomSelected(z) }
-                            .padding(horizontal = 14.dp, vertical = 8.dp)
-                    ) {
-                        Text(
-                            text = "${z.toInt()}x",
-                            color = if (selected) CobaltPrimary else TextSecondary,
-                            fontFamily = PlusJakartaSans,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 13.sp
+            listOf(1f, 2f, 5f).forEach { z ->
+                val selected = zoomRatio == z
+                Box(
+                    modifier = Modifier
+                        .size(width = 64.dp, height = 40.dp)
+                        .background(
+                            if (selected) CobaltPrimary else Color.Transparent,
+                            RoundedCornerShape(999.dp)
                         )
-                    }
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = { onZoomSelected(z) }
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "${z.toInt()}x",
+                        color = if (selected) White else TextSecondary,
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 15.sp
+                    )
                 }
             }
         }
@@ -862,65 +751,21 @@ private fun ReticleCorners() {
 }
 
 @Composable
-private fun ContinuousBatchSessionBar(
-    acceptedCount: Int,
-    onDone: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .background(CardSurface, RoundedCornerShape(12.dp))
-            .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
-            .padding(horizontal = 12.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = if (acceptedCount == 1) "1 scanned" else "$acceptedCount scanned",
-            color = TextPrimary,
-            fontFamily = PlusJakartaSans,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 14.sp
-        )
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .background(CobaltPrimary)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = onDone
-                )
-                .padding(horizontal = 14.dp, vertical = 8.dp)
-        ) {
-            Text(
-                text = "Done",
-                color = White,
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 13.sp
-            )
-        }
-    }
-}
-
-@Composable
 private fun HudIconButton(
     icon: ImageVector,
     contentDescription: String,
     onClick: () -> Unit,
-    selected: Boolean = false,
-    size: androidx.compose.ui.unit.Dp = 40.dp
+    selected: Boolean = false
 ) {
     Box(
         modifier = Modifier
-            .size(size)
-            .clip(RoundedCornerShape(12.dp))
+            .size(52.dp)
+            .clip(CircleShape)
             .background(if (selected) CobaltPrimary else CardSurface)
             .border(
                 1.dp,
                 if (selected) CobaltPrimary else BorderSubtle,
-                RoundedCornerShape(12.dp)
+                CircleShape
             )
             .clickable(
                 indication = null,
@@ -932,49 +777,8 @@ private fun HudIconButton(
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            tint = if (selected) White else TextPrimary,
-            modifier = Modifier.size(22.dp)
-        )
-    }
-}
-
-@Composable
-private fun ModePill(
-    label: String,
-    icon: ImageVector,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(999.dp))
-            .background(if (selected) CobaltSoft else CardSurface)
-            .border(
-                1.dp,
-                if (selected) CobaltPrimary else BorderSubtle,
-                RoundedCornerShape(999.dp)
-            )
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = onClick
-            )
-            .padding(horizontal = 14.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = if (selected) CobaltPrimary else TextSecondary,
-            modifier = Modifier.size(16.dp)
-        )
-        Text(
-            text = label,
-            color = if (selected) CobaltPrimary else TextSecondary,
-            fontFamily = PlusJakartaSans,
-            fontWeight = FontWeight.Medium,
-            fontSize = 13.sp
+            tint = if (selected) White else CobaltPrimary,
+            modifier = Modifier.size(24.dp)
         )
     }
 }

@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,6 +39,7 @@ import androidx.compose.ui.zIndex
 import com.qrcode.scanner.ui.navigation.AppDestination
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
+import com.qrcode.scanner.ui.theme.CobaltSoft
 import com.qrcode.scanner.ui.theme.InactiveNav
 import com.qrcode.scanner.ui.theme.White
 
@@ -71,26 +73,20 @@ fun ScanPulseBottomBar(
     onScanClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Stitch FAB uses relative -top-5 and paints above the nav surface.
-    // Transparent overhang (not white) so the FAB floats over page content
-    // instead of sitting inside an expanded white slab (previous bug).
-    val fabOverhang = 20.dp // -top-5
+    val fabOverhang = 28.dp
 
     Column(
         modifier = modifier
             .fillMaxWidth()
             .windowInsetsPadding(WindowInsets.navigationBars)
     ) {
-        // Transparent space so FAB can draw above the white nav without clipping
         Spacer(modifier = Modifier.fillMaxWidth().height(fabOverhang))
 
-        // White nav surface — matches Stitch <nav> box (starts at border-t)
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(CardSurface)
         ) {
-            // border-t border-slate-200
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -98,53 +94,33 @@ fun ScanPulseBottomBar(
                     .background(Color(0xFFE2E8F0))
             )
 
-            // px-4 pt-2 pb-6 + justify-around items-center
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 24.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    NavTab(
-                        label = "Home",
-                        selected = currentRoute == AppDestination.Home.route,
-                        icon = ScanPulseIcons.Home,
-                        onClick = { onNavigate(AppDestination.Home) }
-                    )
-                    NavTab(
-                        label = "Create",
-                        selected = currentRoute == AppDestination.Create.route,
-                        icon = ScanPulseIcons.Create,
-                        onClick = { onNavigate(AppDestination.Create) }
-                    )
-
-                    // Center Scan — same root content switch as Create (no new Activity).
-                    ScanFabTab(
-                        selected = currentRoute == AppDestination.Scan.route,
-                        overhang = fabOverhang,
-                        onClick = onScanClick
-                    )
-
-                    NavTab(
-                        label = "History",
-                        selected = currentRoute == AppDestination.History.route,
-                        icon = if (currentRoute == AppDestination.History.route) {
-                            ScanPulseIcons.HistoryActive
-                        } else {
-                            ScanPulseIcons.History
-                        },
-                        showActiveDot = currentRoute == AppDestination.History.route,
-                        onClick = { onNavigate(AppDestination.History) }
-                    )
-                    NavTab(
-                        label = "Settings",
-                        selected = currentRoute == AppDestination.Settings.route,
-                        icon = ScanPulseIcons.Settings,
-                        onClick = { onNavigate(AppDestination.Settings) }
-                    )
-                }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 28.dp)
+                    .padding(top = 6.dp, bottom = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                NavTab(
+                    label = "Home",
+                    selected = currentRoute == AppDestination.Home.route,
+                    icon = ScanPulseIcons.Home,
+                    onClick = { onNavigate(AppDestination.Home) },
+                    modifier = Modifier.weight(1f)
+                )
+                ScanFabTab(
+                    selected = currentRoute == AppDestination.Scan.route,
+                    overhang = fabOverhang,
+                    onClick = onScanClick,
+                    modifier = Modifier.weight(1f)
+                )
+                NavTab(
+                    label = "Settings",
+                    selected = currentRoute == AppDestination.Settings.route,
+                    icon = ScanPulseIcons.Settings,
+                    onClick = { onNavigate(AppDestination.Settings) },
+                    modifier = Modifier.weight(1f)
+                )
             }
         }
     }
@@ -156,16 +132,13 @@ private fun NavTab(
     selected: Boolean,
     icon: ImageVector,
     onClick: () -> Unit,
-    showActiveDot: Boolean = false
+    modifier: Modifier = Modifier
 ) {
     val color = if (selected) CobaltPrimary else InactiveNav
-    // Stitch: inactive font-medium; active font-bold
     val weight = if (selected) FontWeight.Bold else FontWeight.Medium
 
     Column(
-        modifier = Modifier
-            .width(56.dp) // w-14
-            .padding(vertical = 4.dp) // py-1
+        modifier = modifier
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
@@ -174,33 +147,29 @@ private fun NavTab(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Box {
+        Box(
+            modifier = Modifier
+                .size(width = 64.dp, height = 36.dp)
+                .background(
+                    if (selected) CobaltSoft else Color.Transparent,
+                    RoundedCornerShape(999.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
             Icon(
                 imageVector = icon,
                 contentDescription = label,
                 tint = color,
-                modifier = Modifier.size(20.dp) // w-5 h-5
+                modifier = Modifier.size(26.dp)
             )
-            if (showActiveDot) {
-                // absolute -top-0.5 (-2dp) -right-1 (-4dp) → from top-end: x=+4dp, y=-2dp
-                // w-1.5 h-1.5 = 6dp
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .offset(x = 4.dp, y = (-2).dp)
-                        .size(6.dp)
-                        .background(CobaltPrimary, CircleShape)
-                )
-            }
         }
-        // mb-1 on icon ⇒ 4dp gap before label; tracking-tight
         Text(
             text = label,
             color = color,
-            fontSize = 10.sp,
+            fontSize = 13.sp,
             fontWeight = weight,
             letterSpacing = (-0.1).sp,
-            lineHeight = 12.sp,
+            lineHeight = 16.sp,
             modifier = Modifier.padding(top = 4.dp)
         )
     }
@@ -208,14 +177,15 @@ private fun NavTab(
 
 @Composable
 private fun ScanFabTab(
-    @Suppress("UNUSED_PARAMETER") selected: Boolean,
+    selected: Boolean,
     overhang: androidx.compose.ui.unit.Dp,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .zIndex(1f)
-            .offset(y = -overhang) // relative -top-5
+            .offset(y = -overhang)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
@@ -223,30 +193,39 @@ private fun ScanFabTab(
             ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // w-14 h-14 rounded-full bg-[#0033CC] border-2 border-white
         Box(
             modifier = Modifier
-                .size(56.dp)
-                .background(CobaltPrimary, CircleShape)
-                .border(width = 2.dp, color = White, shape = CircleShape),
+                .size(72.dp)
+                .background(if (selected) CobaltSoft else CardSurface, CircleShape)
+                .border(
+                    width = 1.dp,
+                    color = if (selected) CobaltPrimary else Color(0xFFE2E8F0),
+                    shape = CircleShape
+                ),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = ScanPulseIcons.ScanReticle,
-                contentDescription = "Quick Scan",
-                tint = White,
-                modifier = Modifier.size(28.dp) // w-7 h-7
-            )
+            Box(
+                modifier = Modifier
+                    .size(58.dp)
+                    .background(CobaltPrimary, CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = ScanPulseIcons.ScanReticle,
+                    contentDescription = "Quick Scan",
+                    tint = White,
+                    modifier = Modifier.size(28.dp)
+                )
+            }
         }
-        // mt-1 text-[10px] font-bold text-[#0033CC] tracking-tight
         Text(
             text = "Scan",
             color = CobaltPrimary,
-            fontSize = 10.sp,
+            fontSize = 13.sp,
             fontWeight = FontWeight.Bold,
             letterSpacing = (-0.1).sp,
-            lineHeight = 12.sp,
-            modifier = Modifier.padding(top = 4.dp)
+            lineHeight = 16.sp,
+            modifier = Modifier.padding(top = 2.dp)
         )
     }
 }

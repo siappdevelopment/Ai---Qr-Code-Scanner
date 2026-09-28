@@ -12,6 +12,8 @@ class HistoryRepository(
 
     fun observeAll(): Flow<List<HistoryEntity>> = dao.observeAll()
 
+    fun observeFavorites(): Flow<List<HistoryEntity>> = dao.observeFavorites()
+
     fun observeRecent(limit: Int = RECENT_HOME_LIMIT): Flow<List<HistoryEntity>> =
         dao.observeRecent(limit)
 

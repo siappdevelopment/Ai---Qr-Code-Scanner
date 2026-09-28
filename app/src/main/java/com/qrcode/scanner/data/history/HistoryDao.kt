@@ -15,6 +15,9 @@ interface HistoryDao {
     @Query("SELECT * FROM scan_history ORDER BY timestamp DESC")
     fun observeAll(): Flow<List<HistoryEntity>>
 
+    @Query("SELECT * FROM scan_history WHERE isFavorite = 1 ORDER BY timestamp DESC")
+    fun observeFavorites(): Flow<List<HistoryEntity>>
+
     @Query("SELECT * FROM scan_history ORDER BY timestamp DESC")
     suspend fun getAll(): List<HistoryEntity>
 

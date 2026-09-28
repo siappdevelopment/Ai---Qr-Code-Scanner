@@ -28,9 +28,7 @@ sealed class AppDestination(val route: String) {
 
 val rootDestinations: Set<String> = setOf(
     AppDestination.Home.route,
-    AppDestination.Create.route,
     AppDestination.Scan.route,
-    AppDestination.History.route,
     AppDestination.Settings.route
 )
 

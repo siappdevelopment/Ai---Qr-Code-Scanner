@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -26,25 +25,19 @@ import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.AddToPhotos
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.DocumentScanner
-import androidx.compose.material.icons.outlined.FilterNone
-import androidx.compose.material.icons.outlined.FlashlightOff
-import androidx.compose.material.icons.outlined.FlashlightOn
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Language
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.QrCode2
-import androidx.compose.material.icons.outlined.QrCodeScanner
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.ViewWeek
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -52,17 +45,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.qrcode.scanner.R
 import com.qrcode.scanner.data.history.HistoryEntity
 import com.qrcode.scanner.data.history.HistoryRepository
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
-import com.qrcode.scanner.ui.theme.CobaltAccent
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
@@ -85,19 +79,18 @@ fun HomeScreen(
     onScanBarcode: () -> Unit = {},
     onScanGallery: () -> Unit = {},
     onCreateQr: () -> Unit = {},
-    onBatchScanner: () -> Unit = {},
+    onOpenHistory: () -> Unit = {},
+    onOpenFavorites: () -> Unit = {},
     onViewAllHistory: () -> Unit = {},
     onRecentItemClick: (Long) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    var flashlightOn by remember { mutableStateOf(false) }
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(HomeColors.Page)
     ) {
-        HomeTopBar()
+        HomeTopBar(onOpenFavorites = onOpenFavorites)
 
         Column(
             modifier = Modifier
@@ -107,16 +100,12 @@ fun HomeScreen(
                 .padding(top = 12.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            BrandUtilityRow(
-                flashlightOn = flashlightOn,
-                onToggleFlashlight = { flashlightOn = !flashlightOn }
-            )
             InstantScannerHero(onOpenScanner = onOpenScanner)
             QuickToolsSection(
                 onScanBarcode = onScanBarcode,
                 onScanGallery = onScanGallery,
                 onCreateQr = onCreateQr,
-                onBatchScanner = onBatchScanner
+                onOpenHistory = onOpenHistory
             )
             RecentScansSection(
                 onViewAll = onViewAllHistory,
@@ -127,7 +116,7 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeTopBar() {
+private fun HomeTopBar(onOpenFavorites: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -141,35 +130,34 @@ private fun HomeTopBar() {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            Text(
+                text = stringResource(R.string.app_name),
+                color = HomeColors.OnSurface,
+                fontFamily = PlusJakartaSans,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                lineHeight = 24.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = onOpenFavorites
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .background(HomeColors.IconWell, RoundedCornerShape(8.dp))
-                        .border(1.dp, HomeColors.IconWellBorder, RoundedCornerShape(8.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.QrCodeScanner,
-                        contentDescription = null,
-                        tint = CobaltPrimary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-                Text(
-                    text = "Home",
-                    color = HomeColors.OnSurface,
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    lineHeight = 24.sp
+                Icon(
+                    imageVector = Icons.Outlined.Star,
+                    contentDescription = "Favorites",
+                    tint = CobaltPrimary,
+                    modifier = Modifier.size(24.dp)
                 )
             }
-            // Ask AI (auto_awesome) intentionally omitted.
-            Spacer(modifier = Modifier.size(44.dp))
         }
         Box(
             modifier = Modifier
@@ -177,102 +165,6 @@ private fun HomeTopBar() {
                 .height(1.dp)
                 .background(HomeColors.Outline)
         )
-    }
-}
-
-@Composable
-private fun BrandUtilityRow(
-    flashlightOn: Boolean,
-    onToggleFlashlight: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            Text(
-                text = "ScanPulse",
-                color = HomeColors.OnSurface,
-                fontFamily = PlusJakartaSans,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.SemiBold,
-                lineHeight = 24.sp
-            )
-            // Stitch PRO / Premium badge (only subscription-related UI on this Home screen)
-            Box(
-                modifier = Modifier
-                    .background(HomeColors.ProBadgeBg, RoundedCornerShape(999.dp))
-                    .border(1.dp, CobaltAccent.copy(alpha = 0.4f), RoundedCornerShape(999.dp))
-                    .padding(horizontal = 8.dp, vertical = 2.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "PRO",
-                    color = CobaltPrimary,
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 0.8.sp,
-                    lineHeight = 14.sp
-                )
-            }
-        }
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            UtilityIconButton(
-                onClick = onToggleFlashlight,
-                background = if (flashlightOn) CobaltPrimary else CardSurface
-            ) {
-                Icon(
-                    imageVector = if (flashlightOn) Icons.Outlined.FlashlightOn else Icons.Outlined.FlashlightOff,
-                    contentDescription = "Flashlight",
-                    tint = if (flashlightOn) White else HomeColors.OnSurfaceVariant,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
-            Box {
-                UtilityIconButton(onClick = {}) {
-                    Icon(
-                        imageVector = Icons.Outlined.Notifications,
-                        contentDescription = "Notifications",
-                        tint = HomeColors.OnSurfaceVariant,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.TopEnd)
-                        .padding(top = 10.dp, end = 10.dp)
-                        .size(8.dp)
-                        .background(CobaltPrimary, CircleShape)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun UtilityIconButton(
-    onClick: () -> Unit,
-    background: Color = White,
-    content: @Composable () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .size(40.dp)
-            .background(background, RoundedCornerShape(12.dp))
-            .border(1.dp, HomeColors.Outline, RoundedCornerShape(12.dp))
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        content()
     }
 }
 
@@ -394,7 +286,7 @@ private fun QuickToolsSection(
     onScanBarcode: () -> Unit,
     onScanGallery: () -> Unit,
     onCreateQr: () -> Unit,
-    onBatchScanner: () -> Unit
+    onOpenHistory: () -> Unit
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
@@ -438,10 +330,10 @@ private fun QuickToolsSection(
                     modifier = Modifier.weight(1f)
                 )
                 QuickToolCard(
-                    title = "Batch Scanner",
-                    subtitle = "Multi-code mode",
-                    icon = Icons.Outlined.FilterNone,
-                    onClick = onBatchScanner,
+                    title = "History",
+                    subtitle = "Saved scans & codes",
+                    icon = Icons.Outlined.History,
+                    onClick = onOpenHistory,
                     modifier = Modifier.weight(1f)
                 )
             }

@@ -11,6 +11,9 @@ object CreateQrIntents {
     const val EXTRA_STYLE = "extra_qr_style"
     const val RESULT_SAVED_HISTORY_ID = "result_saved_history_id"
 
+    fun openHub(context: Context): Intent =
+        Intent(context, CreateActivity::class.java)
+
     fun openCategory(context: Context, type: QrCategoryType): Intent {
         return if (type.usesDedicatedWifiActivity) {
             Intent(context, WifiQrActivity::class.java).apply {

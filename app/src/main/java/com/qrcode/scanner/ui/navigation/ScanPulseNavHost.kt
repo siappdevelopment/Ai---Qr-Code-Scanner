@@ -19,10 +19,8 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.qrcode.scanner.ui.components.ScanPulseBottomBar
 import com.qrcode.scanner.ui.screens.common.PlaceholderScreen
-import com.qrcode.scanner.ui.screens.create.CreateHubScreen
 import com.qrcode.scanner.ui.screens.create.CreateQrIntents
 import com.qrcode.scanner.ui.screens.history.HistoryIntents
-import com.qrcode.scanner.ui.screens.history.HistoryScreen
 import com.qrcode.scanner.ui.screens.home.HomeScreen
 import com.qrcode.scanner.ui.screens.scan.ScanIntents
 import com.qrcode.scanner.ui.screens.scan.ScanScreen
@@ -93,7 +91,7 @@ fun ScanPulseNavHost(
 
             navigation(
                 route = MAIN_GRAPH_ROUTE,
-                startDestination = AppDestination.Home.route
+                startDestination = AppDestination.Scan.route
             ) {
                 composable(AppDestination.Home.route) {
                     val context = LocalContext.current
@@ -122,52 +120,24 @@ fun ScanPulseNavHost(
                             )
                         },
                         onCreateQr = {
-                            navController.navigate(AppDestination.Create.route) {
-                                popUpTo(MAIN_GRAPH_ROUTE) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                            context.startActivity(CreateQrIntents.openHub(context))
                         },
-                        onBatchScanner = {
-                            navController.navigate(AppDestination.Scan.route) {
-                                popUpTo(MAIN_GRAPH_ROUTE) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                        onOpenHistory = {
+                            context.startActivity(HistoryIntents.openHistory(context))
+                        },
+                        onOpenFavorites = {
+                            context.startActivity(HistoryIntents.openFavorites(context))
                         },
                         onViewAllHistory = {
-                            navController.navigate(AppDestination.History.route) {
-                                popUpTo(MAIN_GRAPH_ROUTE) { saveState = true }
-                                launchSingleTop = true
-                                restoreState = true
-                            }
+                            context.startActivity(HistoryIntents.openHistory(context))
                         },
                         onRecentItemClick = { historyId ->
                             context.startActivity(HistoryIntents.openDetail(context, historyId))
                         }
                     )
                 }
-                composable(AppDestination.Create.route) {
-                    val context = LocalContext.current
-                    CreateHubScreen(
-                        onCategoryClick = { type ->
-                            context.startActivity(CreateQrIntents.openCategory(context, type))
-                        }
-                    )
-                }
                 composable(AppDestination.Scan.route) {
                     ScanScreen(onClose = { openRootTab(tabBeforeScan) })
-                }
-                composable(AppDestination.History.route) {
-                    val context = LocalContext.current
-                    HistoryScreen(
-                        onOpenScanner = {
-                            context.startActivity(ScanIntents.openScanner(context))
-                        },
-                        onOpenDetail = { historyId ->
-                            context.startActivity(HistoryIntents.openDetail(context, historyId))
-                        }
-                    )
                 }
                 composable(AppDestination.Settings.route) {
                     SettingsScreen(

@@ -63,6 +63,7 @@ import com.qrcode.scanner.data.history.HistoryRepository
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
 import com.qrcode.scanner.ui.theme.CobaltAccent
+import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.White
@@ -130,7 +131,7 @@ private fun HomeTopBar() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(White)
+            .background(CardSurface)
     ) {
         Row(
             modifier = Modifier
@@ -223,7 +224,7 @@ private fun BrandUtilityRow(
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             UtilityIconButton(
                 onClick = onToggleFlashlight,
-                background = if (flashlightOn) CobaltPrimary else White
+                background = if (flashlightOn) CobaltPrimary else CardSurface
             ) {
                 Icon(
                     imageVector = if (flashlightOn) Icons.Outlined.FlashlightOn else Icons.Outlined.FlashlightOff,
@@ -280,7 +281,7 @@ private fun InstantScannerHero(onOpenScanner: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(White, RoundedCornerShape(24.dp))
+            .background(CardSurface, RoundedCornerShape(24.dp))
             .border(1.dp, HomeColors.Outline, RoundedCornerShape(24.dp))
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -463,7 +464,7 @@ private fun QuickToolCard(
     Column(
         modifier = modifier
             .heightIn(min = 96.dp)
-            .background(White, RoundedCornerShape(18.dp))
+            .background(CardSurface, RoundedCornerShape(18.dp))
             .border(1.dp, HomeColors.Outline, RoundedCornerShape(18.dp))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -566,7 +567,7 @@ private fun RecentScansSection(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(White, RoundedCornerShape(18.dp))
+                    .background(CardSurface, RoundedCornerShape(18.dp))
                     .border(1.dp, HomeColors.Outline, RoundedCornerShape(18.dp))
                     .padding(horizontal = 20.dp, vertical = 24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -609,7 +610,7 @@ private fun RecentScansSection(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(White, RoundedCornerShape(18.dp))
+                    .background(CardSurface, RoundedCornerShape(18.dp))
                     .border(1.dp, HomeColors.Outline, RoundedCornerShape(18.dp))
                     .padding(vertical = 4.dp),
                 verticalArrangement = Arrangement.spacedBy(0.dp)

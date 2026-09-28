@@ -52,6 +52,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.qrcode.scanner.data.settings.SettingsPreferences
+import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -100,11 +103,18 @@ fun CommonQrFormScreen(
     val context = LocalContext.current
     val clipboard = LocalClipboardManager.current
     val labels = remember(category) { FormLabels.forCategory(category) }
+    val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
+    val settingsPrefs by settingsRepository.preferences.collectAsStateWithLifecycle(
+        initialValue = SettingsPreferences()
+    )
 
     var primary by remember { mutableStateOf("") }
     var secondary by remember { mutableStateOf("") }
     var tertiary by remember { mutableStateOf("") }
-    var ecc by remember { mutableStateOf(QrBitmapEncoder.EccLevel.H) }
+    var quaternary by remember { mutableStateOf("") }
+    // Null = use Settings default; explicit chip tap locks user choice for this form visit.
+    var eccOverride by remember { mutableStateOf<QrBitmapEncoder.EccLevel?>(null) }
+    val ecc = eccOverride ?: settingsPrefs.defaultQrEcc.toEncoderLevel()
     var error by remember { mutableStateOf<String?>(null) }
 
     val previewLauncher = rememberLauncherForActivityResult(
@@ -119,7 +129,8 @@ fun CommonQrFormScreen(
         val input = QrPayloadBuilder.FormInput(
             primary = primary,
             secondary = secondary,
-            tertiary = tertiary
+            tertiary = tertiary,
+            quaternary = quaternary
         )
         val validation = QrPayloadBuilder.validate(category, input)
         if (validation != null) {
@@ -268,6 +279,15 @@ fun CommonQrFormScreen(
                         optional = labels.secondaryOptional
                     )
                 }
+                if (labels.quaternaryLabel != null) {
+                    FormTextField(
+                        label = labels.quaternaryLabel,
+                        value = quaternary,
+                        onValueChange = { quaternary = it },
+                        placeholder = labels.quaternaryPlaceholder.orEmpty(),
+                        optional = labels.quaternaryOptional
+                    )
+                }
                 if (labels.tertiaryLabel != null) {
                     FormTextField(
                         label = labels.tertiaryLabel,
@@ -336,7 +356,7 @@ fun CommonQrFormScreen(
                                 .clickable(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() }
-                                ) { ecc = level }
+                                ) { eccOverride = level }
                                 .padding(vertical = 10.dp),
                             contentAlignment = Alignment.Center
                         ) {
@@ -432,7 +452,10 @@ private data class FormLabels(
     val secondaryPlaceholder: String? = null,
     val secondaryOptional: Boolean = true,
     val tertiaryLabel: String? = null,
-    val tertiaryPlaceholder: String? = null
+    val tertiaryPlaceholder: String? = null,
+    val quaternaryLabel: String? = null,
+    val quaternaryPlaceholder: String? = null,
+    val quaternaryOptional: Boolean = true
 ) {
     companion object {
         fun forCategory(type: QrCategoryType): FormLabels = when (type) {
@@ -449,10 +472,12 @@ private data class FormLabels(
                 secondaryPlaceholder = "Optional label"
             )
             QrCategoryType.CONTACT -> FormLabels(
-                primaryLabel = "Full Name & Title",
-                primaryPlaceholder = "Enter contact identity",
-                secondaryLabel = "Email or Title (optional)",
-                secondaryPlaceholder = "name@email.com or Job title",
+                primaryLabel = "Full Name",
+                primaryPlaceholder = "Enter contact name",
+                secondaryLabel = "Email (optional)",
+                secondaryPlaceholder = "name@email.com",
+                quaternaryLabel = "Job Title (optional)",
+                quaternaryPlaceholder = "e.g., Product Manager",
                 tertiaryLabel = "Phone (optional)",
                 tertiaryPlaceholder = "+1 555 0100"
             )

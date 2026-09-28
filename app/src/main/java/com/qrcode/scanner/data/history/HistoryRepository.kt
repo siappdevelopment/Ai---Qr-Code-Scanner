@@ -33,6 +33,7 @@ class HistoryRepository(
     /**
      * Inserts a scan once. If an identical rawValue+format was saved within
      * [DUPLICATE_WINDOW_MS], returns that row's id instead (lifecycle re-entry safe).
+     * Used by normal Scanner OFF, Gallery, and Create flows.
      */
     suspend fun insertScanAvoidingDuplicate(
         rawValue: String,
@@ -50,6 +51,33 @@ class HistoryRepository(
         )
         if (existing != null) return existing.id
 
+        return dao.insert(
+            HistoryEntity(
+                rawValue = rawValue,
+                barcodeFormat = barcodeFormat,
+                barcodeFormatName = barcodeFormatName,
+                detectedType = detectedType,
+                timestamp = timestamp,
+                isFavorite = isFavorite,
+                source = source
+            )
+        )
+    }
+
+    /**
+     * Always inserts a new History row (no 5-second duplicate window).
+     * Used by Continuous Batch so each accepted session item is persisted once
+     * even when an identical code already exists in History.
+     */
+    suspend fun insertScan(
+        rawValue: String,
+        barcodeFormat: Int,
+        barcodeFormatName: String,
+        detectedType: String,
+        timestamp: Long = System.currentTimeMillis(),
+        isFavorite: Boolean = false,
+        source: String = HistoryEntity.SOURCE_SCANNED
+    ): Long {
         return dao.insert(
             HistoryEntity(
                 rawValue = rawValue,

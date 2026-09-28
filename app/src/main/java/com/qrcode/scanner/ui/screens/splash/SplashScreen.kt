@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qrcode.scanner.ui.theme.BorderSubtle
+import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.NestedSurface
 import com.qrcode.scanner.ui.theme.PageBackground
@@ -84,7 +85,7 @@ fun SplashScreen(
                 Box(
                     modifier = Modifier
                         .size(36.dp)
-                        .background(White, RoundedCornerShape(10.dp))
+                        .background(CardSurface, RoundedCornerShape(10.dp))
                         .border(2.dp, CobaltPrimary, RoundedCornerShape(10.dp))
                 )
             }

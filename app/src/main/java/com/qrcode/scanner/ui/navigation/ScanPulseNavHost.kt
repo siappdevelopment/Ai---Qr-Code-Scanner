@@ -22,6 +22,9 @@ import com.qrcode.scanner.ui.screens.history.HistoryScreen
 import com.qrcode.scanner.ui.screens.home.HomeScreen
 import com.qrcode.scanner.ui.screens.scan.ScanIntents
 import com.qrcode.scanner.ui.screens.scan.ScanScreen
+import com.qrcode.scanner.ui.screens.settings.AboutScreen
+import com.qrcode.scanner.ui.screens.settings.AppLanguage
+import com.qrcode.scanner.ui.screens.settings.LanguageScreen
 import com.qrcode.scanner.ui.screens.settings.SettingsScreen
 import com.qrcode.scanner.ui.screens.splash.SplashScreen
 import com.qrcode.scanner.ui.theme.PageBackground
@@ -35,6 +38,7 @@ fun ScanPulseNavHost(
     val backStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry?.destination?.route
     val showBottomBar = currentRoute.showsBottomNavigation()
+    val context = LocalContext.current
 
     Scaffold(
         containerColor = PageBackground,
@@ -51,6 +55,10 @@ fun ScanPulseNavHost(
                             launchSingleTop = true
                             restoreState = true
                         }
+                    },
+                    onScanClick = {
+                        // Single launch path: Intent → ScannerActivity (stay on current root tab).
+                        context.startActivity(ScanIntents.openScanner(context))
                     }
                 )
             }
@@ -93,7 +101,13 @@ fun ScanPulseNavHost(
                             }
                         },
                         onScanGallery = {
-                            navController.navigate(AppDestination.GalleryCrop.route)
+                            context.startActivity(
+                                ScanIntents.openGalleryCrop(
+                                    context = context,
+                                    imageUri = null,
+                                    scanMode = ScanIntents.MODE_BATCH
+                                )
+                            )
                         },
                         onCreateQr = {
                             navController.navigate(AppDestination.Create.route) {
@@ -144,7 +158,14 @@ fun ScanPulseNavHost(
                     )
                 }
                 composable(AppDestination.Settings.route) {
-                    SettingsScreen()
+                    SettingsScreen(
+                        onOpenAbout = {
+                            navController.navigate(AppDestination.About.route)
+                        },
+                        onOpenLanguage = {
+                            navController.navigate(AppDestination.Language.route)
+                        }
+                    )
                 }
             }
 
@@ -152,26 +173,25 @@ fun ScanPulseNavHost(
             composable(AppDestination.CameraPermission.route) {
                 PlaceholderScreen(title = "Camera Permission")
             }
-            composable(AppDestination.GalleryCrop.route) {
-                PlaceholderScreen(title = "Gallery Crop")
-            }
-            composable(AppDestination.DetectionError.route) {
-                PlaceholderScreen(title = "Detection Error")
-            }
-            composable(AppDestination.ScanResult.route) {
-                PlaceholderScreen(title = "Scan Result / Detail")
-            }
+            // Gallery crop / detection error / scan result use Activities (Phase 4–9)
             composable(AppDestination.QrCustomization.route) {
                 PlaceholderScreen(title = "QR Customization")
             }
             composable(AppDestination.QrPreviewExport.route) {
                 PlaceholderScreen(title = "QR Preview & Export")
             }
-            composable(AppDestination.HistoryDetail.route) {
-                PlaceholderScreen(title = "History Detail")
-            }
             composable(AppDestination.Language.route) {
-                PlaceholderScreen(title = "Language")
+                LanguageScreen(
+                    onBack = { navController.popBackStack() },
+                    onApply = { language ->
+                        // Return to Settings first so recreation restores Settings, not Language.
+                        navController.popBackStack()
+                        AppLanguage.apply(language)
+                    }
+                )
+            }
+            composable(AppDestination.About.route) {
+                AboutScreen(onBack = { navController.popBackStack() })
             }
         }
     }

@@ -60,8 +60,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CobaltPrimary
+import com.qrcode.scanner.ui.theme.NestedSurface
+import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
+import com.qrcode.scanner.ui.theme.TextPrimary
+import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.White
 
 /**
@@ -640,11 +645,11 @@ private enum class CreateCategory(
 }
 
 private object CreateColors {
-    val SurfaceBg = Color(0xFFF8FAFC)
-    val SurfaceSubtle = Color(0xFFF1F5F9)
-    val Border = Color(0xFFE2E8F0)
-    val TextMain = Color(0xFF0F172A)
-    val TextMuted = Color(0xFF475569)
-    val TextSecondary = Color(0xFF64748B)
-    val ChipInactiveText = Color(0xFF334155)
+    val SurfaceBg get() = PageBackground
+    val SurfaceSubtle get() = NestedSurface
+    val Border get() = BorderSubtle
+    val TextMain get() = TextPrimary
+    val TextMuted get() = TextSecondary
+    val TextSecondary get() = com.qrcode.scanner.ui.theme.TextSecondary
+    val ChipInactiveText get() = TextPrimary
 }

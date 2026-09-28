@@ -8,6 +8,7 @@ object CreateQrIntents {
     const val EXTRA_DISPLAY_TITLE = "extra_qr_display_title"
     const val EXTRA_DETECTED_TYPE = "extra_qr_detected_type"
     const val EXTRA_ECC_LEVEL = "extra_qr_ecc_level"
+    const val EXTRA_STYLE = "extra_qr_style"
     const val RESULT_SAVED_HISTORY_ID = "result_saved_history_id"
 
     fun openCategory(context: Context, type: QrCategoryType): Intent {
@@ -36,5 +37,17 @@ object CreateQrIntents {
             putExtra(EXTRA_DISPLAY_TITLE, displayTitle)
             putExtra(EXTRA_DETECTED_TYPE, detectedType)
             putExtra(EXTRA_ECC_LEVEL, eccLevel)
+        }
+
+    fun openCustomization(
+        context: Context,
+        payload: String,
+        eccLevel: String,
+        style: QrStyleConfig
+    ): Intent =
+        Intent(context, QrCustomizationActivity::class.java).apply {
+            putExtra(EXTRA_PAYLOAD, payload)
+            putExtra(EXTRA_ECC_LEVEL, eccLevel)
+            putExtra(EXTRA_STYLE, style)
         }
 }

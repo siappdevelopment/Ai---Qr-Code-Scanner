@@ -37,6 +37,7 @@ import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Language
@@ -49,6 +50,8 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material.icons.outlined.ViewWeek
 import androidx.compose.material.icons.outlined.Wifi
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -72,10 +75,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
+import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.CobaltSoft
+import com.qrcode.scanner.ui.theme.Destructive
 import com.qrcode.scanner.ui.theme.NestedSurface
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
@@ -87,6 +92,8 @@ import com.qrcode.scanner.ui.theme.White
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.atomic.AtomicBoolean
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 /**
@@ -97,11 +104,18 @@ import kotlinx.coroutines.launch
 class ScanResultActivity : ComponentActivity() {
 
     private var savedHistoryId: Long = -1L
+    private var autoOpenConsumed: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        savedHistoryId = savedInstanceState?.getLong(KEY_HISTORY_ID, -1L) ?: -1L
+        savedHistoryId = if (savedInstanceState != null) {
+            savedInstanceState.getLong(KEY_HISTORY_ID, -1L)
+        } else {
+            intent.getLongExtra(ScanIntents.EXTRA_HISTORY_ID, -1L)
+        }
+        autoOpenConsumed = savedInstanceState?.getBoolean(KEY_AUTO_OPEN_CONSUMED, false) ?: false
+        val skipAutoOpen = intent.getBooleanExtra(ScanIntents.EXTRA_SKIP_AUTO_OPEN, false)
         val rawValue = intent.getStringExtra(ScanIntents.EXTRA_RAW_VALUE).orEmpty()
         val formatName = intent.getStringExtra(ScanIntents.EXTRA_BARCODE_FORMAT_NAME)
             ?: "UNKNOWN"
@@ -113,7 +127,10 @@ class ScanResultActivity : ComponentActivity() {
                     formatName = formatName,
                     format = format,
                     initialHistoryId = savedHistoryId,
+                    autoOpenConsumed = autoOpenConsumed,
+                    skipAutoOpen = skipAutoOpen,
                     onHistoryIdAssigned = { savedHistoryId = it },
+                    onAutoOpenConsumed = { autoOpenConsumed = true },
                     onBack = { finish() }
                 )
             }
@@ -123,10 +140,12 @@ class ScanResultActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong(KEY_HISTORY_ID, savedHistoryId)
+        outState.putBoolean(KEY_AUTO_OPEN_CONSUMED, autoOpenConsumed)
     }
 
     companion object {
         private const val KEY_HISTORY_ID = "key_history_id"
+        private const val KEY_AUTO_OPEN_CONSUMED = "key_auto_open_consumed"
     }
 }
 
@@ -136,16 +155,22 @@ private fun ScanResultRoute(
     formatName: String,
     format: Int,
     initialHistoryId: Long,
+    autoOpenConsumed: Boolean,
+    skipAutoOpen: Boolean,
     onHistoryIdAssigned: (Long) -> Unit,
+    onAutoOpenConsumed: () -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
     val repository = remember { HistoryRepositoryProvider.get(context) }
+    val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
     val scope = rememberCoroutineScope()
     var historyId by remember { mutableLongStateOf(initialHistoryId) }
     var favorite by remember { mutableStateOf(false) }
     var scannedAtMillis by remember { mutableLongStateOf(System.currentTimeMillis()) }
     var ready by remember { mutableStateOf(initialHistoryId > 0L) }
+    // Compose-level guard so recomposition cannot re-fire before Activity state updates.
+    val autoOpenAttempted = remember { AtomicBoolean(autoOpenConsumed) }
 
     val detectedType = remember(rawValue, format, formatName) {
         ScanPayloadMapper.detectType(rawValue, format, formatName)
@@ -179,6 +204,19 @@ private fun ScanResultRoute(
             scannedAtMillis = saved.timestamp
         }
         ready = true
+    }
+
+    // One-shot auto-open after History is persisted and Result is ready.
+    // Continuous Batch detail passes skipAutoOpen — Batch Results stays the review point.
+    LaunchedEffect(ready, rawValue, detectedType, skipAutoOpen) {
+        if (!ready || rawValue.isBlank()) return@LaunchedEffect
+        if (!autoOpenAttempted.compareAndSet(false, true)) return@LaunchedEffect
+        onAutoOpenConsumed()
+        if (skipAutoOpen) return@LaunchedEffect
+        if (!ScanPayloadMapper.isEligibleForAutoOpen(rawValue, detectedType)) return@LaunchedEffect
+        val prefs = settingsRepository.preferences.first()
+        if (!prefs.autoOpenUrls) return@LaunchedEffect
+        openUrl(context, rawValue)
     }
 
     if (!ready) {
@@ -242,7 +280,8 @@ fun ScanResultScreen(
     initialFavorite: Boolean = false,
     scannedAtMillis: Long = System.currentTimeMillis(),
     title: String = "Scan Result",
-    onFavoriteChange: (Boolean) -> Unit = {}
+    onFavoriteChange: (Boolean) -> Unit = {},
+    onDeleteRequest: (() -> Unit)? = null
 ) {
     val context = LocalContext.current
     val detectedType = remember(rawValue, format, formatName) {
@@ -251,6 +290,7 @@ fun ScanResultScreen(
     val kind = remember(detectedType) { resolveKind(detectedType) }
     val isUrl = kind == ResultKind.Website
     var favorite by remember(historyId) { mutableStateOf(initialFavorite) }
+    var moreMenuOpen by remember { mutableStateOf(false) }
     LaunchedEffect(initialFavorite) { favorite = initialFavorite }
     val scannedAt = remember(scannedAtMillis) {
         SimpleDateFormat("MMM d, HH:mm", Locale.getDefault()).format(Date(scannedAtMillis))
@@ -307,11 +347,45 @@ fun ScanResultScreen(
                     contentDescription = "Share result",
                     onClick = { shareResult(context, displayValue, isUrl) }
                 )
-                HeaderIconButton(
-                    icon = Icons.Outlined.MoreVert,
-                    contentDescription = "More options",
-                    onClick = { /* Stitch control retained */ }
-                )
+                Box {
+                    HeaderIconButton(
+                        icon = Icons.Outlined.MoreVert,
+                        contentDescription = "More options",
+                        onClick = {
+                            if (onDeleteRequest != null) {
+                                moreMenuOpen = true
+                            }
+                        }
+                    )
+                    if (onDeleteRequest != null) {
+                        DropdownMenu(
+                            expanded = moreMenuOpen,
+                            onDismissRequest = { moreMenuOpen = false },
+                            containerColor = White
+                        ) {
+                            DropdownMenuItem(
+                                text = {
+                                    Text(
+                                        text = "Delete",
+                                        color = Destructive,
+                                        fontFamily = PlusJakartaSans
+                                    )
+                                },
+                                onClick = {
+                                    moreMenuOpen = false
+                                    onDeleteRequest()
+                                },
+                                leadingIcon = {
+                                    Icon(
+                                        Icons.Outlined.Delete,
+                                        contentDescription = null,
+                                        tint = Destructive
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
             }
         }
 

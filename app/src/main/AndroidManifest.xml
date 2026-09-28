@@ -3,6 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"
+        tools:ignore="ScopedStorage" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -17,9 +22,19 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.QRCodeScanner">
+        <!-- AppCompat persists application locales on API &lt; 33. -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -44,18 +59,44 @@
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
+            android:name=".ui.screens.create.QrCustomizationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRCodeScanner" />
+        <activity
             android:name=".ui.screens.scan.ScannerActivity"
             android:exported="false"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.QRCodeScanner" />
+        <activity
+            android:name=".ui.screens.scan.ContinuousBatchResultActivity"
+            android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name=".ui.screens.scan.ScanResultActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
+            android:name=".ui.screens.scan.GalleryCropActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRCodeScanner" />
+        <activity
+            android:name=".ui.screens.scan.DetectionErrorActivity"
+            android:exported="false"
+            android:theme="@style/Theme.QRCodeScanner" />
+        <activity
             android:name=".ui.screens.history.HistoryDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

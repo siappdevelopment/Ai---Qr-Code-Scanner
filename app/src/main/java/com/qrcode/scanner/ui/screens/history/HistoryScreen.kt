@@ -117,6 +117,7 @@ fun HistoryScreen(
     var query by remember { mutableStateOf("") }
     var filter by remember { mutableStateOf(HistoryFilter.All) }
     var showClearDialog by remember { mutableStateOf(false) }
+    var pendingDeleteId by remember { mutableStateOf<Long?>(null) }
 
     val filtered = remember(allItems, query, filter) {
         allItems
@@ -153,32 +154,32 @@ fun HistoryScreen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(White)
+                .background(CardSurface)
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(
-                    text = "Scan History",
-                    color = TextPrimary,
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp,
-                    letterSpacing = (-0.2).sp
-                )
-                Text(
-                    text = if (isEmpty) {
-                        "Offline Vault Active · 0 Scans Recorded"
-                    } else {
-                        "${allItems.size} items stored locally"
-                    },
-                    color = TextSecondary,
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.Medium,
-                    fontSize = 12.sp
-                )
-            }
+//            Column {
+//                Text(
+//                    text = "Scan History",
+//                    color = TextPrimary,
+//                    fontFamily = PlusJakartaSans,
+//                    fontWeight = FontWeight.SemiBold,
+//                    fontSize = 18.sp,
+//                    letterSpacing = (-0.2).sp
+//                )
+//                Text(
+//                    text = if (isEmpty) {
+//                        "Offline Vault Active · 0 Scans Recorded"
+//                    } else {
+//                        "${allItems.size} items stored locally"
+//                    },
+//                    color = TextSecondary,
+//                    fontFamily = PlusJakartaSans,
+//                    fontWeight = FontWeight.Medium,
+//                    fontSize = 12.sp
+//                )
+//            }
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
@@ -201,34 +202,40 @@ fun HistoryScreen(
             }
         }
 
-        if (isEmpty) {
-            HistoryEmptyState(onLaunchScanner = onOpenScanner)
-        } else {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                SearchField(
-                    query = query,
-                    onQueryChange = { query = it },
-                    enabled = true
-                )
-                FilterTabs(
-                    filter = filter,
-                    allCount = allItems.size,
-                    scannedCount = scannedCount,
-                    createdCount = createdCount,
-                    onFilterChange = { filter = it }
+        // Chrome stays visible when empty (Stitch empty-state intent); Search/Clear disabled.
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(top = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            SearchField(
+                query = if (isEmpty) "" else query,
+                onQueryChange = { if (!isEmpty) query = it },
+                enabled = !isEmpty
+            )
+            FilterTabs(
+                filter = filter,
+                allCount = allItems.size,
+                scannedCount = scannedCount,
+                createdCount = createdCount,
+                onFilterChange = { filter = it }
+            )
+        }
+
+        when {
+            isEmpty -> {
+                HistoryEmptyState(
+                    onLaunchScanner = onOpenScanner,
+                    modifier = Modifier.weight(1f)
                 )
             }
-
-            if (filtered.isEmpty()) {
+            filtered.isEmpty() -> {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .weight(1f)
+                        .fillMaxWidth()
                         .padding(32.dp),
                     contentAlignment = Alignment.Center
                 ) {
@@ -240,9 +247,10 @@ fun HistoryScreen(
                         textAlign = TextAlign.Center
                     )
                 }
-            } else {
+            }
+            else -> {
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier.weight(1f),
                     contentPadding = PaddingValues(
                         start = 16.dp,
                         end = 16.dp,
@@ -284,9 +292,7 @@ fun HistoryScreen(
                                     Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
                                 },
                                 onShare = { shareText(context, entity.rawValue) },
-                                onDelete = {
-                                    scope.launch { repository.deleteById(entity.id) }
-                                },
+                                onDelete = { pendingDeleteId = entity.id },
                                 onToggleFavorite = {
                                     scope.launch {
                                         repository.updateFavorite(entity.id, !entity.isFavorite)
@@ -313,6 +319,19 @@ fun HistoryScreen(
             onDismiss = { showClearDialog = false }
         )
     }
+
+    pendingDeleteId?.let { deleteId ->
+        DeleteHistoryItemDialog(
+            onConfirm = {
+                pendingDeleteId = null
+                scope.launch {
+                    repository.deleteById(deleteId)
+                    Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
+                }
+            },
+            onDismiss = { pendingDeleteId = null }
+        )
+    }
 }
 
 @Composable
@@ -326,7 +345,7 @@ private fun SearchField(
             .fillMaxWidth()
             .height(48.dp)
             .clip(RoundedCornerShape(14.dp))
-            .background(White)
+            .background(CardSurface)
             .border(1.dp, BorderSubtle, RoundedCornerShape(14.dp))
             .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -668,10 +687,13 @@ private fun CardActionChip(
 }
 
 @Composable
-private fun HistoryEmptyState(onLaunchScanner: () -> Unit) {
+private fun HistoryEmptyState(
+    onLaunchScanner: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
+            .fillMaxWidth()
             .padding(horizontal = 24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -680,7 +702,7 @@ private fun HistoryEmptyState(onLaunchScanner: () -> Unit) {
             modifier = Modifier
                 .size(120.dp)
                 .clip(RoundedCornerShape(24.dp))
-                .background(White)
+                .background(CardSurface)
                 .border(1.dp, BorderSubtle, RoundedCornerShape(24.dp)),
             contentAlignment = Alignment.Center
         ) {
@@ -691,15 +713,15 @@ private fun HistoryEmptyState(onLaunchScanner: () -> Unit) {
                 modifier = Modifier.size(48.dp)
             )
         }
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = "Offline Vault Active · 0 Scans Recorded",
-            color = TextSecondary,
-            fontFamily = PlusJakartaSans,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 11.sp,
-            letterSpacing = 0.4.sp
-        )
+//        Spacer(modifier = Modifier.height(20.dp))
+//        Text(
+//            text = "Offline Vault Active · 0 Scans Recorded",
+//            color = TextSecondary,
+//            fontFamily = PlusJakartaSans,
+//            fontWeight = FontWeight.SemiBold,
+//            fontSize = 11.sp,
+//            letterSpacing = 0.4.sp
+//        )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "No Scan History Yet",
@@ -710,14 +732,14 @@ private fun HistoryEmptyState(onLaunchScanner: () -> Unit) {
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = "QR codes and barcodes you scan with the camera, or custom codes you generate, will automatically be saved here securely for quick offline access.",
-            color = TextSecondary,
-            fontFamily = PlusJakartaSans,
-            fontSize = 14.sp,
-            lineHeight = 20.sp,
-            textAlign = TextAlign.Center
-        )
+//        Text(
+//            text = "QR codes and barcodes you scan with the camera, or custom codes you generate, will automatically be saved here securely for quick offline access.",
+//            color = TextSecondary,
+//            fontFamily = PlusJakartaSans,
+//            fontSize = 14.sp,
+//            lineHeight = 20.sp,
+//            textAlign = TextAlign.Center
+//        )
         Spacer(modifier = Modifier.height(24.dp))
         Box(
             modifier = Modifier
@@ -756,7 +778,139 @@ private fun HistoryEmptyState(onLaunchScanner: () -> Unit) {
 }
 
 @Composable
-private fun ClearHistoryDialog(
+internal fun DeleteHistoryItemDialog(
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0x660F172A))
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onDismiss
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(20.dp))
+                    .background(CardSurface)
+                    .border(1.dp, BorderSubtle, RoundedCornerShape(20.dp))
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = {}
+                    )
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Box(
+                        modifier = Modifier
+                            .size(44.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(Color(0xFFFEE2E2)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Delete,
+                            contentDescription = null,
+                            tint = Destructive,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            text = "Delete this history item?",
+                            color = TextPrimary,
+                            fontFamily = PlusJakartaSans,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp
+                        )
+                        Text(
+                            text = "This action cannot be undone",
+                            color = TextSecondary,
+                            fontFamily = PlusJakartaSans,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+                Text(
+                    text = "This will permanently remove this item from your local device history.",
+                    color = TextSecondary,
+                    fontFamily = PlusJakartaSans,
+                    fontSize = 14.sp,
+                    lineHeight = 20.sp
+                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(Destructive)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = onConfirm
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(6.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.DeleteForever,
+                            contentDescription = null,
+                            tint = White,
+                            modifier = Modifier.size(20.dp)
+                        )
+                        Text(
+                            text = "Delete",
+                            color = White,
+                            fontFamily = PlusJakartaSans,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 16.sp
+                        )
+                    }
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(NestedSurface)
+                        .clickable(
+                            indication = null,
+                            interactionSource = remember { MutableInteractionSource() },
+                            onClick = onDismiss
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Cancel",
+                        color = TextPrimary,
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+internal fun ClearHistoryDialog(
     itemCount: Int,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
@@ -781,7 +935,7 @@ private fun ClearHistoryDialog(
                     .padding(horizontal = 24.dp)
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(20.dp))
-                    .background(White)
+                    .background(CardSurface)
                     .border(1.dp, BorderSubtle, RoundedCornerShape(20.dp))
                     .clickable(
                         indication = null,

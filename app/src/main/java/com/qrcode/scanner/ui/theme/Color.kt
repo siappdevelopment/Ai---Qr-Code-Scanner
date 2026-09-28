@@ -1,22 +1,96 @@
 package com.qrcode.scanner.ui.theme
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 
-/** Electric Cobalt Utility — White / Light Theme (solid colors only). */
+/**
+ * ScanPulse color tokens for Light / Dark.
+ * Screens read the top-level vals below; [ScanPulseThemeState] swaps the active palette.
+ */
+data class ScanPulsePalette(
+    val cobaltPrimary: Color,
+    val cobaltAccent: Color,
+    val cobaltDark: Color,
+    val cobaltSoft: Color,
+    val white: Color,
+    val pageBackground: Color,
+    val cardSurface: Color,
+    val nestedSurface: Color,
+    val borderSubtle: Color,
+    val textPrimary: Color,
+    val textSecondary: Color,
+    val textTertiary: Color,
+    val inactiveNav: Color,
+    val destructive: Color
+) {
+    companion object {
+        /** Existing White + Electric Cobalt product palette (unchanged). */
+        val Light = ScanPulsePalette(
+            cobaltPrimary = Color(0xFF0033CC),
+            cobaltAccent = Color(0xFF00B4FF),
+            cobaltDark = Color(0xFF002080),
+            cobaltSoft = Color(0xFFEEF4FF),
+            white = Color(0xFFFFFFFF),
+            pageBackground = Color(0xFFF8FAFC),
+            cardSurface = Color(0xFFFFFFFF),
+            nestedSurface = Color(0xFFF1F5F9),
+            borderSubtle = Color(0xFFE2E8F0),
+            textPrimary = Color(0xFF0F172A),
+            textSecondary = Color(0xFF64748B),
+            textTertiary = Color(0xFF94A3B8),
+            inactiveNav = Color(0xFF64748B),
+            destructive = Color(0xFFDC2626)
+        )
 
-val CobaltPrimary = Color(0xFF0033CC)
-val CobaltAccent = Color(0xFF00B4FF)
-val CobaltDark = Color(0xFF002080)
-val CobaltSoft = Color(0xFFEEF4FF)
+        /**
+         * Dark Electric Cobalt — not a simple invert.
+         * Cobalt stays the brand accent; surfaces are deep navy/slate with clear hierarchy.
+         */
+        val Dark = ScanPulsePalette(
+            cobaltPrimary = Color(0xFF3B6CFF),
+            cobaltAccent = Color(0xFF00B4FF),
+            cobaltDark = Color(0xFF9DB7FF),
+            cobaltSoft = Color(0xFF1A2744),
+            white = Color(0xFFFFFFFF),
+            pageBackground = Color(0xFF0B1220),
+            cardSurface = Color(0xFF141C2E),
+            nestedSurface = Color(0xFF1C2740),
+            borderSubtle = Color(0xFF2A3650),
+            textPrimary = Color(0xFFF1F5F9),
+            textSecondary = Color(0xFF94A3B8),
+            textTertiary = Color(0xFF64748B),
+            inactiveNav = Color(0xFF94A3B8),
+            destructive = Color(0xFFEF4444)
+        )
+    }
+}
 
-val White = Color(0xFFFFFFFF)
-val PageBackground = Color(0xFFF8FAFC)
-val CardSurface = Color(0xFFFFFFFF)
-val NestedSurface = Color(0xFFF1F5F9)
+/**
+ * Snapshot-backed active palette so existing `PageBackground` / `TextPrimary` reads
+ * recompose when the user changes Theme (without per-screen theme branches).
+ */
+object ScanPulseThemeState {
+    var palette: ScanPulsePalette by mutableStateOf(ScanPulsePalette.Light)
+        internal set
+}
 
-val BorderSubtle = Color(0xFFE2E8F0)
-val TextPrimary = Color(0xFF0F172A)
-val TextSecondary = Color(0xFF64748B)
-val TextTertiary = Color(0xFF94A3B8)
-val InactiveNav = Color(0xFF64748B)
-val Destructive = Color(0xFFDC2626)
+/** Electric Cobalt Utility — theme-aware tokens (solid colors only). */
+
+val CobaltPrimary: Color get() = ScanPulseThemeState.palette.cobaltPrimary
+val CobaltAccent: Color get() = ScanPulseThemeState.palette.cobaltAccent
+val CobaltDark: Color get() = ScanPulseThemeState.palette.cobaltDark
+val CobaltSoft: Color get() = ScanPulseThemeState.palette.cobaltSoft
+
+val White: Color get() = ScanPulseThemeState.palette.white
+val PageBackground: Color get() = ScanPulseThemeState.palette.pageBackground
+val CardSurface: Color get() = ScanPulseThemeState.palette.cardSurface
+val NestedSurface: Color get() = ScanPulseThemeState.palette.nestedSurface
+
+val BorderSubtle: Color get() = ScanPulseThemeState.palette.borderSubtle
+val TextPrimary: Color get() = ScanPulseThemeState.palette.textPrimary
+val TextSecondary: Color get() = ScanPulseThemeState.palette.textSecondary
+val TextTertiary: Color get() = ScanPulseThemeState.palette.textTertiary
+val InactiveNav: Color get() = ScanPulseThemeState.palette.inactiveNav
+val Destructive: Color get() = ScanPulseThemeState.palette.destructive

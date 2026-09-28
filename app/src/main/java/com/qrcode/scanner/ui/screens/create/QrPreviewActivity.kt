@@ -3,11 +3,15 @@ package com.qrcode.scanner.ui.screens.create
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -34,7 +38,11 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Link
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Print
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarBorder
@@ -66,7 +74,11 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.qrcode.scanner.data.history.HistoryEntity
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
+import com.qrcode.scanner.data.settings.QrDefaultOutputFormat
+import com.qrcode.scanner.data.settings.SettingsPreferences
+import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.ui.theme.BorderSubtle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.CobaltSoft
@@ -85,11 +97,13 @@ import kotlinx.coroutines.withContext
 /**
  * Stitch: QR Preview & Export (White Theme) — 49aeabcad7d145c785c519fd8794262b
  *
- * Phase 7: real QR bitmap + Save to History. Customize / PNG / SVG / Print omitted.
+ * Phase 7: real QR + Save to History.
+ * Phase 8: Customize → styled render + PNG / SVG / Print / Share.
  */
 class QrPreviewActivity : ComponentActivity() {
 
     private var savedHistoryId: Long = -1L
+    private var styleForSave: QrStyleConfig = QrStyleConfig.Default
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,6 +122,10 @@ class QrPreviewActivity : ComponentActivity() {
         val ecc = QrBitmapEncoder.EccLevel.entries
             .firstOrNull { it.name == eccName }
             ?: QrBitmapEncoder.EccLevel.H
+        @Suppress("DEPRECATION")
+        val restoredStyle = savedInstanceState?.getSerializable(KEY_STYLE) as? QrStyleConfig
+            ?: QrStyleConfig.Default
+        styleForSave = restoredStyle
 
         setContent {
             QRCodeScannerTheme {
@@ -117,8 +135,10 @@ class QrPreviewActivity : ComponentActivity() {
                     displayTitle = title.ifBlank { category.displayTitle },
                     detectedType = detectedType,
                     ecc = ecc,
+                    initialStyle = restoredStyle,
                     initialHistoryId = savedHistoryId,
                     onHistoryIdAssigned = { savedHistoryId = it },
+                    onStyleChanged = { /* persisted via Activity saveInstance below through callback state */ },
                     onBack = { finish() },
                     onSavedAndDone = { historyId ->
                         setResult(
@@ -126,7 +146,8 @@ class QrPreviewActivity : ComponentActivity() {
                             Intent().putExtra(CreateQrIntents.RESULT_SAVED_HISTORY_ID, historyId)
                         )
                         finish()
-                    }
+                    },
+                    onPersistStyle = { styleForSave = it }
                 )
             }
         }
@@ -135,10 +156,12 @@ class QrPreviewActivity : ComponentActivity() {
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putLong(KEY_HISTORY_ID, savedHistoryId)
+        outState.putSerializable(KEY_STYLE, styleForSave)
     }
 
     companion object {
         private const val KEY_HISTORY_ID = "key_preview_history_id"
+        private const val KEY_STYLE = "key_preview_style"
     }
 }
 
@@ -149,32 +172,99 @@ private fun QrPreviewScreen(
     displayTitle: String,
     detectedType: String,
     ecc: QrBitmapEncoder.EccLevel,
+    initialStyle: QrStyleConfig,
     initialHistoryId: Long,
     onHistoryIdAssigned: (Long) -> Unit,
+    onStyleChanged: (QrStyleConfig) -> Unit,
     onBack: () -> Unit,
-    onSavedAndDone: (Long) -> Unit
+    onSavedAndDone: (Long) -> Unit,
+    onPersistStyle: (QrStyleConfig) -> Unit
 ) {
     val context = LocalContext.current
     val repository = remember { HistoryRepositoryProvider.get(context) }
+    val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
+    val settingsPrefs by settingsRepository.preferences.collectAsStateWithLifecycle(
+        initialValue = SettingsPreferences()
+    )
+    val preferredOutput = settingsPrefs.defaultQrOutputFormat
     val scope = rememberCoroutineScope()
 
+    var style by remember { mutableStateOf(initialStyle) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
+    var exportBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var encodeError by remember { mutableStateOf<String?>(null) }
     var historyId by remember { mutableLongStateOf(initialHistoryId) }
     var favorite by remember { mutableStateOf(false) }
     var saving by remember { mutableStateOf(false) }
+    var exporting by remember { mutableStateOf(false) }
+    var logoBmp by remember { mutableStateOf<Bitmap?>(null) }
 
-    LaunchedEffect(payload, ecc) {
+    LaunchedEffect(style) {
+        onStyleChanged(style)
+        onPersistStyle(style)
+    }
+
+    val customizeLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode != Activity.RESULT_OK) return@rememberLauncherForActivityResult
+        @Suppress("DEPRECATION")
+        val next = result.data?.getSerializableExtra(CreateQrIntents.EXTRA_STYLE) as? QrStyleConfig
+            ?: return@rememberLauncherForActivityResult
+        style = next
+    }
+
+    LaunchedEffect(style.customLogoUri, style.centerIcon) {
+        if (style.centerIcon != QrStyleConfig.CenterIcon.CUSTOM) {
+            logoBmp = null
+            return@LaunchedEffect
+        }
+        val uriStr = style.customLogoUri ?: return@LaunchedEffect
+        logoBmp = withContext(Dispatchers.IO) {
+            runCatching {
+                context.contentResolver.openInputStream(Uri.parse(uriStr))?.use { stream ->
+                    BitmapFactory.decodeStream(stream)?.let {
+                        QrStyledRenderer.prepareLogo(it, 256)
+                    }
+                }
+            }.getOrNull()
+        }
+    }
+
+    LaunchedEffect(payload, ecc, style, logoBmp) {
         if (payload.isBlank()) {
             encodeError = "Nothing to preview"
+            bitmap = null
+            exportBitmap = null
             return@LaunchedEffect
         }
         encodeError = null
-        bitmap = withContext(Dispatchers.Default) {
-            runCatching { QrBitmapEncoder.encode(payload, sizePx = 512, ecc = ecc) }
-                .onFailure { encodeError = it.message ?: "Unable to generate QR" }
-                .getOrNull()
+        val preview = withContext(Dispatchers.Default) {
+            QrStyledRenderer.render(
+                payload = payload,
+                style = style,
+                ecc = ecc,
+                sizePx = 512,
+                centerLogo = if (style.centerIcon == QrStyleConfig.CenterIcon.CUSTOM) logoBmp else null
+            )
         }
+        encodeError = preview.errorMessage
+        bitmap = preview.bitmap
+
+        if (preview.isSuccess) {
+            exportBitmap = withContext(Dispatchers.Default) {
+                QrStyledRenderer.render(
+                    payload = payload,
+                    style = style,
+                    ecc = ecc,
+                    sizePx = 1024,
+                    centerLogo = if (style.centerIcon == QrStyleConfig.CenterIcon.CUSTOM) logoBmp else null
+                ).bitmap
+            }
+        } else {
+            exportBitmap = null
+        }
+
         if (historyId > 0L) {
             favorite = repository.getById(historyId)?.isFavorite == true
         }
@@ -184,6 +274,15 @@ private fun QrPreviewScreen(
         ScanPayloadMapper.TYPE_WIFI -> Icons.Outlined.Wifi
         ScanPayloadMapper.TYPE_WEBSITE -> Icons.Outlined.Link
         else -> Icons.Outlined.CheckCircle
+    }
+
+    fun withExportBmp(block: (Bitmap) -> Unit) {
+        val bmp = exportBitmap ?: bitmap
+        if (bmp == null) {
+            Toast.makeText(context, "QR not ready", Toast.LENGTH_SHORT).show()
+            return
+        }
+        block(bmp)
     }
 
     Column(
@@ -219,12 +318,12 @@ private fun QrPreviewScreen(
                 icon = Icons.Outlined.Share,
                 contentDescription = "Share",
                 onClick = {
-                    val send = Intent(Intent.ACTION_SEND).apply {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, payload)
-                        putExtra(Intent.EXTRA_TITLE, displayTitle)
+                    withExportBmp { bmp ->
+                        val result = QrExportHelper.shareBitmap(context, bmp, displayTitle)
+                        if (!result.success) {
+                            Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                        }
                     }
-                    context.startActivity(Intent.createChooser(send, "Share QR payload"))
                 }
             )
         }
@@ -253,7 +352,7 @@ private fun QrPreviewScreen(
                             .padding(horizontal = 12.dp, vertical = 6.dp)
                     ) {
                         Text(
-                            text = "Ready to Save",
+                            text = "Ready to Export",
                             color = CobaltPrimary,
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.SemiBold,
@@ -398,15 +497,228 @@ private fun QrPreviewScreen(
                     )
                     Spacer(modifier = Modifier.size(6.dp))
                     Text(
-                        text = "Valid QR payload • UTF-8",
+                        text = "Valid QR payload • UTF-8 • ${style.paletteName}",
                         color = TextSecondary,
                         fontFamily = PlusJakartaSans,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                 }
             }
 
-            // Primary Save — Phase 7 persistence (Customize/export excluded)
+            // Customize Style & Colors
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(NestedSurface)
+                    .border(1.dp, BorderSubtle, RoundedCornerShape(14.dp))
+                    .clickable(
+                        enabled = payload.isNotBlank() && encodeError == null,
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        customizeLauncher.launch(
+                            CreateQrIntents.openCustomization(
+                                context = context,
+                                payload = payload,
+                                eccLevel = ecc.name,
+                                style = style
+                            )
+                        )
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        Icons.Outlined.Palette,
+                        contentDescription = null,
+                        tint = CobaltPrimary,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Text(
+                        text = "Customize Style & Colors",
+                        color = TextPrimary,
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 15.sp
+                    )
+                }
+            }
+
+            // Export grid — Stitch Preview & Export.
+            // Settings default format is listed first and marked preferred; both actions remain.
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                if (preferredOutput == QrDefaultOutputFormat.PNG) {
+                    ExportTile(
+                        title = "Save PNG",
+                        subtitle = "1024×1024",
+                        icon = Icons.Outlined.Image,
+                        modifier = Modifier.weight(1f),
+                        enabled = bitmap != null && !exporting,
+                        preferred = true,
+                        onClick = {
+                            withExportBmp { bmp ->
+                                exporting = true
+                                scope.launch {
+                                    val result = withContext(Dispatchers.IO) {
+                                        QrExportHelper.savePngToGallery(context, bmp)
+                                    }
+                                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT)
+                                        .show()
+                                    exporting = false
+                                }
+                            }
+                        }
+                    )
+                    ExportTile(
+                        title = "Export Vector",
+                        subtitle = "Scalable SVG",
+                        icon = Icons.Outlined.Description,
+                        modifier = Modifier.weight(1f),
+                        enabled = bitmap != null && !exporting,
+                        preferred = false,
+                        onClick = {
+                            exporting = true
+                            scope.launch {
+                                try {
+                                    val svg = withContext(Dispatchers.Default) {
+                                        QrStyledRenderer.toSvg(payload, style, ecc, 1024)
+                                    }
+                                    val result = withContext(Dispatchers.IO) {
+                                        QrExportHelper.saveSvgToCache(context, svg)
+                                    }
+                                    if (result.success && result.uri != null) {
+                                        QrExportHelper.shareSvg(context, result.uri, displayTitle)
+                                        Toast.makeText(context, "SVG ready", Toast.LENGTH_SHORT)
+                                            .show()
+                                    } else {
+                                        Toast.makeText(context, result.message, Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        context,
+                                        e.message ?: "SVG export failed",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } finally {
+                                    exporting = false
+                                }
+                            }
+                        }
+                    )
+                } else {
+                    ExportTile(
+                        title = "Export Vector",
+                        subtitle = "Scalable SVG",
+                        icon = Icons.Outlined.Description,
+                        modifier = Modifier.weight(1f),
+                        enabled = bitmap != null && !exporting,
+                        preferred = true,
+                        onClick = {
+                            exporting = true
+                            scope.launch {
+                                try {
+                                    val svg = withContext(Dispatchers.Default) {
+                                        QrStyledRenderer.toSvg(payload, style, ecc, 1024)
+                                    }
+                                    val result = withContext(Dispatchers.IO) {
+                                        QrExportHelper.saveSvgToCache(context, svg)
+                                    }
+                                    if (result.success && result.uri != null) {
+                                        QrExportHelper.shareSvg(context, result.uri, displayTitle)
+                                        Toast.makeText(context, "SVG ready", Toast.LENGTH_SHORT)
+                                            .show()
+                                    } else {
+                                        Toast.makeText(context, result.message, Toast.LENGTH_SHORT)
+                                            .show()
+                                    }
+                                } catch (e: Exception) {
+                                    Toast.makeText(
+                                        context,
+                                        e.message ?: "SVG export failed",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } finally {
+                                    exporting = false
+                                }
+                            }
+                        }
+                    )
+                    ExportTile(
+                        title = "Save PNG",
+                        subtitle = "1024×1024",
+                        icon = Icons.Outlined.Image,
+                        modifier = Modifier.weight(1f),
+                        enabled = bitmap != null && !exporting,
+                        preferred = false,
+                        onClick = {
+                            withExportBmp { bmp ->
+                                exporting = true
+                                scope.launch {
+                                    val result = withContext(Dispatchers.IO) {
+                                        QrExportHelper.savePngToGallery(context, bmp)
+                                    }
+                                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT)
+                                        .show()
+                                    exporting = false
+                                }
+                            }
+                        }
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                ExportTile(
+                    title = "Print Card",
+                    subtitle = "System print",
+                    icon = Icons.Outlined.Print,
+                    modifier = Modifier.weight(1f),
+                    enabled = bitmap != null && !exporting,
+                    onClick = {
+                        withExportBmp { bmp ->
+                            runCatching {
+                                QrExportHelper.printBitmap(context, bmp, displayTitle)
+                            }.onFailure {
+                                Toast.makeText(
+                                    context,
+                                    it.message ?: "Print failed",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                )
+                ExportTile(
+                    title = "Send Code",
+                    subtitle = "Sharesheet",
+                    icon = Icons.Outlined.Share,
+                    modifier = Modifier.weight(1f),
+                    enabled = bitmap != null && !exporting,
+                    onClick = {
+                        withExportBmp { bmp ->
+                            val result = QrExportHelper.shareBitmap(context, bmp, displayTitle)
+                            if (!result.success) {
+                                Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    }
+                )
+            }
+
+            // Primary Save — Phase 7 persistence (payload unchanged by style)
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -488,15 +800,65 @@ private fun QrPreviewScreen(
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(modifier = Modifier.fillMaxWidth()) {
                     SpecCell("Symbology", "QR Model 2", Modifier.weight(1f))
-                    SpecCell("Matrix", "512 × 512", Modifier.weight(1f))
+                    SpecCell("Export", "1024 × 1024", Modifier.weight(1f))
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(modifier = Modifier.fillMaxWidth()) {
                     SpecCell("Redundancy", "Level ${ecc.label}", Modifier.weight(1f))
-                    SpecCell("Encoding", "Byte / UTF-8", Modifier.weight(1f))
+                    SpecCell("Style", style.bodyPattern.label, Modifier.weight(1f))
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ExportTile(
+    title: String,
+    subtitle: String,
+    icon: ImageVector,
+    enabled: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    preferred: Boolean = false
+) {
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(14.dp))
+            .background(if (preferred) CobaltSoft else CardSurface)
+            .border(
+                1.dp,
+                if (preferred) CobaltPrimary else BorderSubtle,
+                RoundedCornerShape(14.dp)
+            )
+            .clickable(
+                enabled = enabled,
+                indication = null,
+                interactionSource = remember { MutableInteractionSource() },
+                onClick = onClick
+            )
+            .padding(14.dp),
+        verticalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            tint = if (enabled) CobaltPrimary else TextTertiary,
+            modifier = Modifier.size(22.dp)
+        )
+        Text(
+            text = title,
+            color = if (enabled) TextPrimary else TextTertiary,
+            fontFamily = PlusJakartaSans,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 13.sp
+        )
+        Text(
+            text = if (preferred) "Preferred · $subtitle" else subtitle,
+            color = TextSecondary,
+            fontFamily = PlusJakartaSans,
+            fontSize = 11.sp
+        )
     }
 }
 
@@ -514,7 +876,9 @@ private fun SpecCell(label: String, value: String, modifier: Modifier = Modifier
             color = TextPrimary,
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.Medium,
-            fontSize = 14.sp
+            fontSize = 14.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
         )
     }
 }

@@ -4,7 +4,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.lifecycle.lifecycleScope
+import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import kotlinx.coroutines.launch
 
 /**
  * Full-screen camera scanner.
@@ -30,6 +33,28 @@ class ScannerActivity : ComponentActivity() {
                             )
                         )
                         // Keep Scanner on the back stack so Back from Result returns here.
+                    },
+                    onFinishContinuousBatch = { items ->
+                        if (items.isEmpty()) {
+                            finish()
+                        } else {
+                            // Persist History once per accepted item, then open review UI.
+                            lifecycleScope.launch {
+                                val repository = HistoryRepositoryProvider.get(this@ScannerActivity)
+                                val persisted = ContinuousBatchHistory.persistAcceptedItems(
+                                    repository = repository,
+                                    items = items
+                                )
+                                startActivity(
+                                    ScanIntents.openContinuousBatchResult(
+                                        context = this@ScannerActivity,
+                                        items = persisted
+                                    )
+                                )
+                                // End scanner session so CameraX is torn down under results.
+                                finish()
+                            }
+                        }
                     }
                 )
             }

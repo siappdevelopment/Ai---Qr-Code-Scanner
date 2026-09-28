@@ -22,8 +22,8 @@ sealed class AppDestination(val route: String) {
     data object ScanResult : AppDestination("scan_result")
     data object QrCustomization : AppDestination("qr_customization")
     data object QrPreviewExport : AppDestination("qr_preview_export")
-    data object HistoryDetail : AppDestination("history_detail")
     data object Language : AppDestination("language")
+    data object About : AppDestination("about")
 }
 
 val rootDestinations: Set<String> = setOf(

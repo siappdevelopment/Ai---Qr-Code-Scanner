@@ -52,6 +52,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.qrcode.scanner.data.settings.SettingsPreferences
+import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -93,13 +96,18 @@ fun WifiQrFormScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
+    val settingsPrefs by settingsRepository.preferences.collectAsStateWithLifecycle(
+        initialValue = SettingsPreferences()
+    )
     var ssid by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var security by remember { mutableStateOf(QrPayloadBuilder.WifiSecurity.WPA) }
     var hidden by remember { mutableStateOf(false) }
     var showPassword by remember { mutableStateOf(false) }
     var error by remember { mutableStateOf<String?>(null) }
-    var ecc by remember { mutableStateOf(QrBitmapEncoder.EccLevel.H) }
+    var eccOverride by remember { mutableStateOf<QrBitmapEncoder.EccLevel?>(null) }
+    val ecc = eccOverride ?: settingsPrefs.defaultQrEcc.toEncoderLevel()
 
     val previewLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -235,7 +243,7 @@ fun WifiQrFormScreen(
                     Box(
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
-                            .background(White)
+                            .background(CardSurface)
                             .border(1.dp, CobaltSoft, RoundedCornerShape(8.dp))
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
@@ -252,7 +260,7 @@ fun WifiQrFormScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(12.dp))
-                        .background(White)
+                        .background(CardSurface)
                         .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
                         .padding(4.dp),
                     horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -263,7 +271,7 @@ fun WifiQrFormScreen(
                             modifier = Modifier
                                 .weight(1f)
                                 .clip(RoundedCornerShape(10.dp))
-                                .background(if (selected) CobaltPrimary else White)
+                                .background(if (selected) CobaltPrimary else CardSurface)
                                 .clickable(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() }
@@ -311,7 +319,7 @@ fun WifiQrFormScreen(
                             .fillMaxWidth()
                             .height(48.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(White)
+                            .background(CardSurface)
                             .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
                             .padding(horizontal = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -408,7 +416,7 @@ fun WifiQrFormScreen(
                         modifier = Modifier
                             .size(20.dp)
                             .clip(RoundedCornerShape(999.dp))
-                            .background(White)
+                            .background(CardSurface)
                     )
                 }
             }
@@ -462,7 +470,7 @@ fun WifiQrFormScreen(
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }
-                            ) { ecc = level }
+                            ) { eccOverride = level }
                             .padding(vertical = 8.dp),
                         contentAlignment = Alignment.Center
                     ) {

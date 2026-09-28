@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.qrcode.scanner.ui.navigation.AppDestination
+import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.InactiveNav
 import com.qrcode.scanner.ui.theme.White
@@ -67,6 +68,7 @@ import com.qrcode.scanner.ui.theme.White
 fun ScanPulseBottomBar(
     currentRoute: String?,
     onNavigate: (AppDestination) -> Unit,
+    onScanClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     // Stitch FAB uses relative -top-5 and paints above the nav surface.
@@ -86,7 +88,7 @@ fun ScanPulseBottomBar(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(White)
+                .background(CardSurface)
         ) {
             // border-t border-slate-200
             Box(
@@ -118,11 +120,11 @@ fun ScanPulseBottomBar(
                         onClick = { onNavigate(AppDestination.Create) }
                     )
 
-                    // Center Scan — layout stays in-row; visual -top-5 into overhang
+                    // Center Scan — launches ScannerActivity directly (no Scan tab screen).
                     ScanFabTab(
                         selected = currentRoute == AppDestination.Scan.route,
                         overhang = fabOverhang,
-                        onClick = { onNavigate(AppDestination.Scan) }
+                        onClick = onScanClick
                     )
 
                     NavTab(

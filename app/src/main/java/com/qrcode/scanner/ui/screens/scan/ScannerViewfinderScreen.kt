@@ -45,6 +45,7 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.activity.compose.BackHandler
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.CenterFocusStrong
@@ -65,6 +66,7 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -81,11 +83,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.mlkit.vision.barcode.BarcodeScanner
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.qrcode.scanner.data.settings.SettingsPreferences
+import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -112,9 +117,20 @@ private const val TAG = "ScannerViewfinder"
 fun ScannerViewfinderScreen(
     onBack: () -> Unit,
     onBarcodeDetected: (rawValue: String, format: Int, formatName: String) -> Unit,
+    onFinishContinuousBatch: (List<ContinuousBatchItem>) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
+    // Null until first DataStore emission — avoids treating Continuous as OFF while prefs load.
+    var settingsPreferences by remember { mutableStateOf<SettingsPreferences?>(null) }
+    LaunchedEffect(settingsRepository) {
+        settingsRepository.preferences.collect { settingsPreferences = it }
+    }
+    val prefs = settingsPreferences
+    val preferencesReady = prefs != null
+    val continuousBatchScan = prefs?.continuousBatchScan == true
+
     var hasCameraPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
@@ -142,13 +158,68 @@ fun ScannerViewfinderScreen(
     var scanMode by remember { mutableStateOf(ScanMode.Qr) }
     var camera by remember { mutableStateOf<Camera?>(null) }
     val detectionHandled = remember { AtomicBoolean(false) }
+    val continuousSession = remember { ContinuousBatchSession() }
+    val continuousFinishStarted = remember { AtomicBoolean(false) }
+    val continuousItems by continuousSession.items.collectAsStateWithLifecycle()
     val lifecycleOwner = LocalLifecycleOwner.current
+    val latestContinuousBatchScan by rememberUpdatedState(continuousBatchScan)
+    val latestOnFinishContinuousBatch by rememberUpdatedState(onFinishContinuousBatch)
+
+    fun finishContinuousBatchSession() {
+        // Idempotent: double Done/Back must not open an empty batch or finish twice.
+        if (!continuousFinishStarted.compareAndSet(false, true)) return
+        val snapshot = continuousSession.snapshot()
+        continuousSession.clear()
+        latestOnFinishContinuousBatch(snapshot)
+    }
+
+    // Continuous session lives for this Scanner visit only (not DataStore / Room).
+    DisposableEffect(Unit) {
+        onDispose { continuousSession.clear() }
+    }
+
+    // Deterministic Continuous preference transitions (after prefs are ready).
+    var previousContinuous by remember { mutableStateOf<Boolean?>(null) }
+    LaunchedEffect(preferencesReady, continuousBatchScan) {
+        if (!preferencesReady) return@LaunchedEffect
+        val prev = previousContinuous
+        previousContinuous = continuousBatchScan
+        when {
+            prev == null && continuousBatchScan -> {
+                // First resolved value is ON — start with an empty session.
+                continuousSession.clear()
+                detectionHandled.set(false)
+            }
+            prev == false && continuousBatchScan -> {
+                // OFF → ON: fresh continuous session.
+                continuousSession.clear()
+                detectionHandled.set(false)
+            }
+            prev == true && !continuousBatchScan -> {
+                // ON → OFF: review accepted items; do not silently discard.
+                if (continuousSession.size() > 0) {
+                    finishContinuousBatchSession()
+                } else {
+                    continuousSession.clear()
+                    detectionHandled.set(false)
+                }
+            }
+        }
+    }
+
+    // Continuous ON + accepted codes: Back finishes/reviews the batch instead of dropping it.
+    BackHandler(enabled = continuousBatchScan && continuousItems.isNotEmpty()) {
+        finishContinuousBatchSession()
+    }
 
     // After returning from ScanResult / Settings, reset detection gate and re-check permission.
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
-                detectionHandled.set(false)
+                // Single-shot gate only; Continuous session is retained across resume.
+                if (!latestContinuousBatchScan) {
+                    detectionHandled.set(false)
+                }
                 val granted = ContextCompat.checkSelfPermission(
                     context,
                     Manifest.permission.CAMERA
@@ -181,12 +252,33 @@ fun ScannerViewfinderScreen(
                 CameraPreviewHost(
                     lensFacing = lensFacing,
                     scanMode = scanMode,
+                    continuousBatchScan = continuousBatchScan,
+                    continuousSession = continuousSession,
                     detectionHandled = detectionHandled,
+                    detectionEnabled = preferencesReady,
                     onCameraReady = { camera = it },
                     onBarcodeDetected = { raw, format, name ->
+                        // Single-shot OFF path — unchanged once prefs are ready.
                         if (detectionHandled.compareAndSet(false, true)) {
+                            DetectionFeedback.onAcceptedDetection(
+                                context = context,
+                                vibrateEnabled = prefs?.vibrateOnDetection == true,
+                                beepEnabled = prefs?.beepOnDetection == true
+                            )
                             onBarcodeDetected(raw, format, name)
                         }
+                    },
+                    onContinuousAccepted = { raw, format, name ->
+                        // Continuous ON — stay on scanner; no Result navigation.
+                        DetectionFeedback.onAcceptedDetection(
+                            context = context,
+                            vibrateEnabled = prefs?.vibrateOnDetection == true,
+                            beepEnabled = prefs?.beepOnDetection == true
+                        )
+                        Log.i(
+                            TAG,
+                            "continuous accept format=$name rawLen=${raw.length} session=${continuousSession.size()}"
+                        )
                     }
                 )
             }
@@ -234,7 +326,16 @@ fun ScannerViewfinderScreen(
                 torchEnabled = torchEnabled,
                 scanMode = scanMode,
                 zoomRatio = zoomRatio,
-                onBack = onBack,
+                continuousBatchScan = continuousBatchScan,
+                acceptedCount = continuousItems.size,
+                onBack = {
+                    if (continuousBatchScan && continuousItems.isNotEmpty()) {
+                        finishContinuousBatchSession()
+                    } else {
+                        onBack()
+                    }
+                },
+                onDoneContinuousBatch = { finishContinuousBatchSession() },
                 onToggleTorch = {
                     if (camera?.cameraInfo?.hasFlashUnit() == true) {
                         torchEnabled = !torchEnabled
@@ -253,7 +354,21 @@ fun ScannerViewfinderScreen(
                     scanMode = mode
                     detectionHandled.set(false)
                 },
-                onZoomSelected = { zoomRatio = it }
+                onZoomSelected = { zoomRatio = it },
+                onOpenGallery = {
+                    val modeExtra = when (scanMode) {
+                        ScanMode.Qr -> ScanIntents.MODE_QR
+                        ScanMode.Barcode -> ScanIntents.MODE_BARCODE
+                        ScanMode.Batch -> ScanIntents.MODE_BATCH
+                    }
+                    context.startActivity(
+                        ScanIntents.openGalleryCrop(
+                            context = context,
+                            imageUri = null,
+                            scanMode = modeExtra
+                        )
+                    )
+                }
             )
         }
     }
@@ -265,13 +380,21 @@ private enum class ScanMode { Qr, Barcode, Batch }
 private fun CameraPreviewHost(
     lensFacing: Int,
     scanMode: ScanMode,
+    continuousBatchScan: Boolean,
+    continuousSession: ContinuousBatchSession,
     detectionHandled: AtomicBoolean,
+    detectionEnabled: Boolean,
     onCameraReady: (Camera?) -> Unit,
-    onBarcodeDetected: (String, Int, String) -> Unit
+    onBarcodeDetected: (String, Int, String) -> Unit,
+    onContinuousAccepted: (String, Int, String) -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val analysisExecutor = remember { Executors.newSingleThreadExecutor() }
+    val latestOnBarcodeDetected by rememberUpdatedState(onBarcodeDetected)
+    val latestOnContinuousAccepted by rememberUpdatedState(onContinuousAccepted)
+    val latestContinuousBatchScan by rememberUpdatedState(continuousBatchScan)
+    val latestDetectionEnabled by rememberUpdatedState(detectionEnabled)
     val previewView = remember {
         PreviewView(context).apply {
             scaleType = PreviewView.ScaleType.FILL_CENTER
@@ -304,8 +427,16 @@ private fun CameraPreviewHost(
             processImageProxy(
                 imageProxy = imageProxy,
                 scanner = scanner,
+                continuousBatchScan = latestContinuousBatchScan,
+                continuousSession = continuousSession,
                 detectionHandled = detectionHandled,
-                onBarcodeDetected = onBarcodeDetected
+                detectionEnabled = latestDetectionEnabled,
+                onBarcodeDetected = { raw, format, name ->
+                    latestOnBarcodeDetected(raw, format, name)
+                },
+                onContinuousAccepted = { raw, format, name ->
+                    latestOnContinuousAccepted(raw, format, name)
+                }
             )
         }
 
@@ -388,10 +519,20 @@ private fun barcodeOptionsFor(mode: ScanMode): BarcodeScannerOptions {
 private fun processImageProxy(
     imageProxy: ImageProxy,
     scanner: BarcodeScanner,
+    continuousBatchScan: Boolean,
+    continuousSession: ContinuousBatchSession,
     detectionHandled: AtomicBoolean,
-    onBarcodeDetected: (String, Int, String) -> Unit
+    detectionEnabled: Boolean,
+    onBarcodeDetected: (String, Int, String) -> Unit,
+    onContinuousAccepted: (String, Int, String) -> Unit
 ) {
-    if (detectionHandled.get()) {
+    // Wait for Settings prefs before accepting any detection (Continuous path must be correct).
+    if (!detectionEnabled) {
+        imageProxy.close()
+        return
+    }
+    // Single-shot only: skip further ML work after the first accepted detection.
+    if (!continuousBatchScan && detectionHandled.get()) {
         imageProxy.close()
         return
     }
@@ -403,11 +544,22 @@ private fun processImageProxy(
     val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
     scanner.process(image)
         .addOnSuccessListener { barcodes ->
-            if (detectionHandled.get()) return@addOnSuccessListener
-            val hit = barcodes.firstOrNull { !it.rawValue.isNullOrBlank() }
-                ?: return@addOnSuccessListener
-            val raw = hit.rawValue ?: return@addOnSuccessListener
-            onBarcodeDetected(raw, hit.format, formatName(hit.format))
+            if (continuousBatchScan) {
+                for (barcode in barcodes) {
+                    val raw = barcode.rawValue ?: continue
+                    if (raw.isBlank()) continue
+                    val name = formatName(barcode.format)
+                    if (continuousSession.tryAccept(raw, barcode.format, name)) {
+                        onContinuousAccepted(raw, barcode.format, name)
+                    }
+                }
+            } else {
+                if (detectionHandled.get()) return@addOnSuccessListener
+                val hit = barcodes.firstOrNull { !it.rawValue.isNullOrBlank() }
+                    ?: return@addOnSuccessListener
+                val raw = hit.rawValue ?: return@addOnSuccessListener
+                onBarcodeDetected(raw, hit.format, formatName(hit.format))
+            }
         }
         .addOnFailureListener { e ->
             Log.w(TAG, "Barcode analyze failed", e)
@@ -439,11 +591,15 @@ private fun ScannerHudOverlay(
     torchEnabled: Boolean,
     scanMode: ScanMode,
     zoomRatio: Float,
+    continuousBatchScan: Boolean,
+    acceptedCount: Int,
     onBack: () -> Unit,
+    onDoneContinuousBatch: () -> Unit,
     onToggleTorch: () -> Unit,
     onFlipCamera: () -> Unit,
     onModeSelected: (ScanMode) -> Unit,
-    onZoomSelected: (Float) -> Unit
+    onZoomSelected: (Float) -> Unit,
+    onOpenGallery: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -478,7 +634,7 @@ private fun ScannerHudOverlay(
                 HudIconButton(
                     icon = Icons.Outlined.PhotoLibrary,
                     contentDescription = "Scan image from gallery",
-                    onClick = { /* Gallery scan deferred to a later phase */ }
+                    onClick = onOpenGallery
                 )
                 HudIconButton(
                     icon = Icons.Outlined.FlipCameraAndroid,
@@ -486,6 +642,17 @@ private fun ScannerHudOverlay(
                     onClick = onFlipCamera
                 )
             }
+        }
+
+        if (continuousBatchScan) {
+            ContinuousBatchSessionBar(
+                acceptedCount = acceptedCount,
+                onDone = onDoneContinuousBatch,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 8.dp)
+            )
         }
 
         Spacer(modifier = Modifier.weight(1f))
@@ -695,6 +862,49 @@ private fun ReticleCorners() {
 }
 
 @Composable
+private fun ContinuousBatchSessionBar(
+    acceptedCount: Int,
+    onDone: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .background(CardSurface, RoundedCornerShape(12.dp))
+            .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
+            .padding(horizontal = 12.dp, vertical = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = if (acceptedCount == 1) "1 scanned" else "$acceptedCount scanned",
+            color = TextPrimary,
+            fontFamily = PlusJakartaSans,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp
+        )
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(8.dp))
+                .background(CobaltPrimary)
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = onDone
+                )
+                .padding(horizontal = 14.dp, vertical = 8.dp)
+        ) {
+            Text(
+                text = "Done",
+                color = White,
+                fontFamily = PlusJakartaSans,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 13.sp
+            )
+        }
+    }
+}
+
+@Composable
 private fun HudIconButton(
     icon: ImageVector,
     contentDescription: String,
@@ -706,7 +916,7 @@ private fun HudIconButton(
         modifier = Modifier
             .size(size)
             .clip(RoundedCornerShape(12.dp))
-            .background(if (selected) CobaltPrimary else White)
+            .background(if (selected) CobaltPrimary else CardSurface)
             .border(
                 1.dp,
                 if (selected) CobaltPrimary else BorderSubtle,
@@ -738,7 +948,7 @@ private fun ModePill(
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(999.dp))
-            .background(if (selected) CobaltSoft else White)
+            .background(if (selected) CobaltSoft else CardSurface)
             .border(
                 1.dp,
                 if (selected) CobaltPrimary else BorderSubtle,

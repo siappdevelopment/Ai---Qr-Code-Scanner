@@ -13,6 +13,7 @@ import com.qrcode.scanner.ui.screens.create.QrCategoryType.SMS
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.WEBSITE
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.WHATSAPP
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.WIFI
+import java.util.Calendar
 import java.util.Locale
 
 /**
@@ -25,6 +26,8 @@ object QrPayloadBuilder {
         val primary: String = "",
         val secondary: String = "",
         val tertiary: String = "",
+        /** Contact job title (and reserved for future 4th fields). */
+        val quaternary: String = "",
         val wifiSecurity: WifiSecurity = WifiSecurity.WPA,
         val wifiHidden: Boolean = false
     )
@@ -84,7 +87,7 @@ object QrPayloadBuilder {
                 }
             }
             WHATSAPP -> {
-                val phone = digitsPhone(input.primary)
+                val phone = digitsOnlyPhone(input.primary)
                 when {
                     input.primary.trim().isEmpty() -> "Enter a WhatsApp number (with country code)"
                     phone.length < 8 -> "Enter a valid WhatsApp number with country code"
@@ -99,7 +102,14 @@ object QrPayloadBuilder {
                     else -> null
                 }
             }
-            CALENDAR -> if (input.primary.trim().isEmpty()) "Enter an event title" else null
+            CALENDAR -> {
+                if (input.primary.trim().isEmpty()) return "Enter an event title"
+                val start = input.secondary.trim()
+                if (start.isNotEmpty() && normalizeCalendarStamp(start) == null) {
+                    return "Enter start as YYYYMMDDTHHMMSS (e.g. 20260921T090000)"
+                }
+                null
+            }
             APP_LINK -> {
                 val v = input.primary.trim()
                 when {
@@ -124,7 +134,10 @@ object QrPayloadBuilder {
         validate(type, input)?.let { error ->
             throw IllegalArgumentException(error)
         }
-        val note = input.secondary.trim().takeIf { type != WIFI && type != SMS && it.isNotEmpty() }
+        val note = input.secondary.trim().takeIf {
+            type != WIFI && type != SMS && type != CONTACT && type != EMAIL &&
+                type != CALENDAR && type != WHATSAPP && it.isNotEmpty()
+        }
         return when (type) {
             WEBSITE -> {
                 val url = ScanPayloadMapper.normalizeUrl(input.primary.trim())
@@ -144,20 +157,16 @@ object QrPayloadBuilder {
             }
             CONTACT -> {
                 val name = input.primary.trim()
+                val email = input.secondary.trim().takeIf { it.isNotEmpty() }
+                val title = input.quaternary.trim().takeIf { it.isNotEmpty() }
                 val phone = input.tertiary.trim().takeIf { it.isNotEmpty() }
-                val email = input.secondary.trim().takeIf {
-                    it.isNotEmpty() && it.contains('@')
-                }
-                val titleNote = input.secondary.trim().takeIf {
-                    it.isNotEmpty() && !it.contains('@')
-                }
                 val vcard = buildString {
                     append("BEGIN:VCARD\n")
                     append("VERSION:3.0\n")
                     append("FN:").append(escapeVcard(name)).append('\n')
-                    if (titleNote != null) append("TITLE:").append(escapeVcard(titleNote)).append('\n')
-                    if (phone != null) append("TEL:").append(escapeVcard(phone)).append('\n')
                     if (email != null) append("EMAIL:").append(escapeVcard(email)).append('\n')
+                    if (title != null) append("TITLE:").append(escapeVcard(title)).append('\n')
+                    if (phone != null) append("TEL:").append(escapeVcard(phone)).append('\n')
                     append("END:VCARD")
                 }
                 BuildResult(
@@ -187,17 +196,17 @@ object QrPayloadBuilder {
                 }
                 BuildResult(
                     payload = payload,
-                    displayTitle = note.takeUnless { it == subject } ?: email,
+                    displayTitle = email,
                     detectedType = ScanPayloadMapper.TYPE_QR_CODE
                 )
             }
             SMS -> {
                 val phone = digitsPhone(input.primary)
-                val message = input.secondary.trim()
+                val message = input.secondary
                 val payload = if (message.isEmpty()) {
-                    "SMSTO:$phone"
+                    "sms:$phone"
                 } else {
-                    "SMSTO:$phone:$message"
+                    "sms:$phone?body=${encodeQuery(message)}"
                 }
                 BuildResult(
                     payload = payload,
@@ -206,7 +215,7 @@ object QrPayloadBuilder {
                 )
             }
             WHATSAPP -> {
-                val phone = digitsPhone(input.primary)
+                val phone = digitsOnlyPhone(input.primary)
                 val text = input.secondary.trim()
                 val payload = if (text.isEmpty()) {
                     "https://wa.me/$phone"
@@ -215,7 +224,7 @@ object QrPayloadBuilder {
                 }
                 BuildResult(
                     payload = payload,
-                    displayTitle = note ?: "WhatsApp $phone",
+                    displayTitle = "WhatsApp $phone",
                     detectedType = ScanPayloadMapper.TYPE_WEBSITE
                 )
             }
@@ -236,13 +245,20 @@ object QrPayloadBuilder {
             CALENDAR -> {
                 val title = input.primary.trim()
                 val whenText = input.secondary.trim()
-                val stamp = whenText.ifEmpty { "20260101T090000" }
+                val stamp = if (whenText.isEmpty()) {
+                    DEFAULT_CALENDAR_STAMP
+                } else {
+                    normalizeCalendarStamp(whenText)
+                        ?: throw IllegalArgumentException(
+                            "Enter start as YYYYMMDDTHHMMSS (e.g. 20260921T090000)"
+                        )
+                }
                 val payload = buildString {
                     append("BEGIN:VCALENDAR\n")
                     append("VERSION:2.0\n")
                     append("BEGIN:VEVENT\n")
                     append("SUMMARY:").append(escapeIcal(title)).append('\n')
-                    append("DTSTART:").append(stamp.filter { it.isLetterOrDigit() }.uppercase(Locale.US)).append('\n')
+                    append("DTSTART:").append(stamp).append('\n')
                     append("END:VEVENT\n")
                     append("END:VCALENDAR")
                 }
@@ -255,9 +271,14 @@ object QrPayloadBuilder {
             APP_LINK -> {
                 val v = input.primary.trim()
                 val payload = when {
-                    looksLikeUrl(v) -> ScanPayloadMapper.normalizeUrl(v)
                     v.startsWith("market:", ignoreCase = true) -> v
-                    else -> "market://details?id=$v"
+                    v.startsWith("http://", ignoreCase = true) ||
+                        v.startsWith("https://", ignoreCase = true) -> v
+                    v.startsWith("www.", ignoreCase = true) -> ScanPayloadMapper.normalizeUrl(v)
+                    // Package IDs look like dotted hosts; keep market:// details deep-link.
+                    v.contains('.') && !v.contains('/') && !v.contains(' ') ->
+                        "market://details?id=$v"
+                    else -> ScanPayloadMapper.normalizeUrl(v)
                 }
                 BuildResult(
                     payload = payload,
@@ -288,12 +309,71 @@ object QrPayloadBuilder {
         }
     }
 
+    /** Digits and optional leading-style '+'; used for tel:/sms: path. */
+    fun digitsPhone(raw: String): String =
+        raw.filter { it.isDigit() || it == '+' }
+
+    /** Digits only — required for wa.me path (country code kept, '+' / spaces / dashes removed). */
+    fun digitsOnlyPhone(raw: String): String =
+        raw.filter { it.isDigit() }
+
+    /**
+     * Normalizes calendar start to `YYYYMMDDTHHMMSS`, or null if invalid.
+     * Accepts optional separators: `2026-09-21T09:00:00`, `20260921T090000`, etc.
+     */
+    fun normalizeCalendarStamp(raw: String): String? {
+        val compact = raw.trim()
+            .uppercase(Locale.US)
+            .filter { it.isDigit() || it == 'T' }
+        val normalized = when {
+            compact.matches(Regex("""^\d{8}T\d{6}$""")) -> compact
+            compact.matches(Regex("""^\d{8}$""")) -> compact + "T000000"
+            compact.matches(Regex("""^\d{8}T\d{2}$""")) -> compact + "0000"
+            compact.matches(Regex("""^\d{8}T\d{4}$""")) -> compact + "00"
+            else -> return null
+        }
+        val year = normalized.substring(0, 4).toIntOrNull() ?: return null
+        val month = normalized.substring(4, 6).toIntOrNull() ?: return null
+        val day = normalized.substring(6, 8).toIntOrNull() ?: return null
+        val hour = normalized.substring(9, 11).toIntOrNull() ?: return null
+        val minute = normalized.substring(11, 13).toIntOrNull() ?: return null
+        val second = normalized.substring(13, 15).toIntOrNull() ?: return null
+        if (month !in 1..12) return null
+        if (hour !in 0..23 || minute !in 0..59 || second !in 0..59) return null
+        if (year !in 1970..2100) return null
+        val cal = Calendar.getInstance(Locale.US).apply {
+            isLenient = false
+            set(Calendar.YEAR, year)
+            set(Calendar.MONTH, month - 1)
+            set(Calendar.DAY_OF_MONTH, day)
+            set(Calendar.HOUR_OF_DAY, hour)
+            set(Calendar.MINUTE, minute)
+            set(Calendar.SECOND, second)
+            set(Calendar.MILLISECOND, 0)
+        }
+        return try {
+            // Force validation under non-lenient calendar rules.
+            cal.timeInMillis
+            if (cal.get(Calendar.YEAR) != year ||
+                cal.get(Calendar.MONTH) != month - 1 ||
+                cal.get(Calendar.DAY_OF_MONTH) != day ||
+                cal.get(Calendar.HOUR_OF_DAY) != hour ||
+                cal.get(Calendar.MINUTE) != minute ||
+                cal.get(Calendar.SECOND) != second
+            ) {
+                return null
+            }
+            normalized
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    const val DEFAULT_CALENDAR_STAMP = "20260101T090000"
+
     private fun looksLikeUrl(value: String): Boolean =
         ScanPayloadMapper.looksLikeUrl(value) ||
             value.contains('.') && !value.contains(' ')
-
-    private fun digitsPhone(raw: String): String =
-        raw.filter { it.isDigit() || it == '+' }
 
     private fun parseLatLng(raw: String): Pair<Double, Double>? {
         val parts = raw.split(',').map { it.trim() }
@@ -310,15 +390,15 @@ object QrPayloadBuilder {
         url.take(40)
     }
 
-    private fun escapeVcard(value: String): String =
+    fun escapeVcard(value: String): String =
         value.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
 
-    private fun escapeIcal(value: String): String =
+    fun escapeIcal(value: String): String =
         value.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
 
-    private fun escapeWifi(value: String): String =
+    fun escapeWifi(value: String): String =
         value.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\"", "\\\"")
 
-    private fun encodeQuery(value: String): String =
+    fun encodeQuery(value: String): String =
         java.net.URLEncoder.encode(value, Charsets.UTF_8.name())
 }

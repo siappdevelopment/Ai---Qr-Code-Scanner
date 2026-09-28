@@ -66,6 +66,8 @@ private fun HistoryDetailRoute(
     val context = LocalContext.current
     val repository = remember { HistoryRepositoryProvider.get(context) }
     val scope = rememberCoroutineScope()
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var deleting by remember { mutableStateOf(false) }
 
     if (historyId <= 0L) {
         MissingHistory(onBack = onBack)
@@ -91,7 +93,15 @@ private fun HistoryDetailRoute(
                 CircularProgressIndicator(color = CobaltPrimary)
             }
         }
-        entity == null -> MissingHistory(onBack = onBack)
+        entity == null && !deleting -> MissingHistory(onBack = onBack)
+        entity == null -> {
+            // Deletion in progress — avoid flashing "not found" before finish().
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(PageBackground)
+            )
+        }
         else -> {
             val item = entity!!
             ScanResultScreen(
@@ -112,9 +122,25 @@ private fun HistoryDetailRoute(
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                }
+                },
+                onDeleteRequest = { showDeleteDialog = true }
             )
         }
+    }
+
+    if (showDeleteDialog) {
+        DeleteHistoryItemDialog(
+            onConfirm = {
+                showDeleteDialog = false
+                deleting = true
+                scope.launch {
+                    repository.deleteById(historyId)
+                    Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
+                    onBack()
+                }
+            },
+            onDismiss = { showDeleteDialog = false }
+        )
     }
 }
 

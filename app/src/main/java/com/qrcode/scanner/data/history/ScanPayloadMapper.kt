@@ -18,6 +18,20 @@ object ScanPayloadMapper {
         val trimmed = rawValue.trim()
         if (trimmed.startsWith("WIFI:", ignoreCase = true)) return TYPE_WIFI
         if (looksLikeUrl(trimmed)) return TYPE_WEBSITE
+
+        // Structured QR payloads already produced by Create — keep existing type constants.
+        val upper = trimmed.uppercase()
+        when {
+            upper.startsWith("BEGIN:VCARD") -> return TYPE_QR_CODE
+            upper.startsWith("BEGIN:VCALENDAR") || upper.startsWith("BEGIN:VEVENT") ->
+                return TYPE_QR_CODE
+            trimmed.startsWith("mailto:", ignoreCase = true) -> return TYPE_QR_CODE
+            trimmed.startsWith("tel:", ignoreCase = true) -> return TYPE_QR_CODE
+            trimmed.startsWith("SMSTO:", ignoreCase = true) -> return TYPE_QR_CODE
+            trimmed.startsWith("sms:", ignoreCase = true) -> return TYPE_QR_CODE
+            trimmed.startsWith("geo:", ignoreCase = true) -> return TYPE_QR_CODE
+        }
+
         return when (format) {
             Barcode.FORMAT_QR_CODE,
             Barcode.FORMAT_AZTEC,
@@ -110,18 +124,91 @@ object ScanPayloadMapper {
         ) v else "https://$v"
     }
 
-    private fun extractWifiSsid(raw: String): String? {
+    /**
+     * Phase 12.5: eligible for Auto-Open URLs when classified as Website and the
+     * normalized destination is http(s) only (www. → https:// via [normalizeUrl]).
+     */
+    fun isEligibleForAutoOpen(rawValue: String, detectedType: String): Boolean {
+        if (detectedType != TYPE_WEBSITE) return false
+        if (!looksLikeUrl(rawValue)) return false
+        val normalized = normalizeUrl(rawValue)
+        return normalized.startsWith("http://", ignoreCase = true) ||
+            normalized.startsWith("https://", ignoreCase = true)
+    }
+
+    fun extractWifiSsid(raw: String): String? {
         return extractWifiParam(raw, "S")?.takeIf { it.isNotBlank() }
     }
 
-    private fun extractWifiParam(raw: String, key: String): String? {
-        // WIFI:T:WPA;S:Network;P:pass;;
-        val body = raw.removePrefix("WIFI:").removePrefix("wifi:")
-        val parts = body.split(';')
-        val prefix = "$key:"
-        return parts.firstOrNull { it.startsWith(prefix, ignoreCase = true) }
-            ?.substringAfter(':')
-            ?.trim()
-            ?.takeIf { it.isNotEmpty() }
+    fun extractWifiPassword(raw: String): String? {
+        return extractWifiParam(raw, "P")
+    }
+
+    fun extractWifiParam(raw: String, key: String): String? {
+        val fields = parseWifiFields(raw)
+        return fields[key.uppercase()]
+    }
+
+    /**
+     * Parses `WIFI:T:…;S:…;P:…;H:…;;` splitting only on unescaped `;`,
+     * then unescaping `\`, `;`, `,`, `"`.
+     */
+    fun parseWifiFields(raw: String): Map<String, String> {
+        val trimmed = raw.trim()
+        if (!trimmed.startsWith("WIFI:", ignoreCase = true)) return emptyMap()
+        val body = trimmed.substring(5) // after "WIFI:"
+        val segments = splitUnescaped(body, ';')
+        val out = linkedMapOf<String, String>()
+        for (segment in segments) {
+            if (segment.isEmpty()) continue
+            val colon = segment.indexOf(':')
+            if (colon <= 0) continue
+            val k = segment.substring(0, colon).uppercase()
+            val v = unescapeWifi(segment.substring(colon + 1))
+            out[k] = v
+        }
+        return out
+    }
+
+    /** Split [input] on [delimiter] that are not preceded by an odd number of backslashes. */
+    fun splitUnescaped(input: String, delimiter: Char): List<String> {
+        val parts = mutableListOf<String>()
+        val current = StringBuilder()
+        var i = 0
+        while (i < input.length) {
+            val c = input[i]
+            if (c == '\\' && i + 1 < input.length) {
+                current.append(c)
+                current.append(input[i + 1])
+                i += 2
+                continue
+            }
+            if (c == delimiter) {
+                parts.add(current.toString())
+                current.clear()
+                i++
+                continue
+            }
+            current.append(c)
+            i++
+        }
+        parts.add(current.toString())
+        return parts
+    }
+
+    fun unescapeWifi(value: String): String {
+        val out = StringBuilder()
+        var i = 0
+        while (i < value.length) {
+            val c = value[i]
+            if (c == '\\' && i + 1 < value.length) {
+                out.append(value[i + 1])
+                i += 2
+            } else {
+                out.append(c)
+                i++
+            }
+        }
+        return out.toString()
     }
 }

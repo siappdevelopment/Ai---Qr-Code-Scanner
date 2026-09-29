@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/surfaceSecondaryColor"
+    android:background="@color/surface_secondary"
     android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="@dimen/_10sdp">
@@ -23,7 +23,7 @@
                 android:id="@+id/qzShimmer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="?attr/surfaceSecondaryColor"
+                android:background="@color/surface_secondary"
                 android:visibility="gone"
                 app:shimmer_auto_start="false"
                 app:shimmer_base_alpha="0.9"
@@ -75,7 +75,7 @@
                         android:id="@+id/qzShimmerIcon"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="?attr/surfaceSecondaryColor"
+                        android:background="@color/surface_secondary"
                         android:visibility="gone"
                         app:shimmer_auto_start="false"
                         app:shimmer_base_alpha="0.9"
@@ -112,7 +112,7 @@
                     android:includeFontPadding="false"
                     android:maxLines="2"
                     android:text="App Title"
-                    android:textColor="?attr/textPrimaryColor"
+                    android:textColor="@color/text_primary"
                     android:textSize="@dimen/_11sdp"
                     tools:ignore="HardcodedText" />
 
@@ -127,7 +127,7 @@
                 android:includeFontPadding="false"
                 android:maxLines="3"
                 android:text="App Description"
-                android:textColor="?attr/textSecondaryColor"
+                android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_10sdp"
                 tools:ignore="HardcodedText" />
 

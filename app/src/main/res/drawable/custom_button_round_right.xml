@@ -4,5 +4,5 @@
     <corners
         android:bottomRightRadius="@dimen/_100sdp"
         android:topRightRadius="@dimen/_100sdp" />
-    <solid android:color="?attr/launcherBackgroundColor" />
+    <solid android:color="@color/launcher_bg" />
 </shape>

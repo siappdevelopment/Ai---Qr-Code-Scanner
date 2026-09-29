@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/surface_primary"
     android:fillViewport="true"
     android:scrollbars="none">
 
@@ -36,7 +36,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
                 android:text="Sorry, I can't talk right now."
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 
@@ -72,7 +72,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
                 android:text="Can I call you back later?"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 
@@ -109,7 +109,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
                 android:text="In a meeting right now."
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 
@@ -136,7 +136,7 @@
                 android:layout_height="@dimen/_20sdp"
                 android:padding="@dimen/_2sdp"
                 android:src="@drawable/ic_edit_pen"
-                android:tint="?attr/textSecondaryColor" />
+                android:tint="@color/text_secondary" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etCustomMessage"
@@ -148,8 +148,8 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:hint="Write personal message..."
                 android:paddingBottom="@dimen/_1sdp"
-                android:textColor="?attr/textPrimaryColor"
-                android:textColorHint="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 

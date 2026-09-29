@@ -3,7 +3,7 @@
         <shape android:shape="rectangle">
             <size android:height="@dimen/_2sdp" />
             <corners android:radius="@dimen/_100sdp" />
-            <solid android:color="?attr/textSecondaryColor" />
+            <solid android:color="@color/text_secondary" />
         </shape>
     </item>
     <item android:id="@android:id/progress">

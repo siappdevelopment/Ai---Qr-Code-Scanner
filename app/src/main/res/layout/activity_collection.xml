@@ -1,8 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/surface_primary"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -35,7 +35,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:lineSpacingExtra="@dimen/_2sdp"
                 android:text="@string/collection_intro_1"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -45,7 +45,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:lineSpacingExtra="@dimen/_2sdp"
                 android:text="@string/collection_intro_2"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -54,7 +54,7 @@
                 android:layout_marginTop="@dimen/_16sdp"
                 android:fontFamily="@font/sans_trial_medium"
                 android:text="@string/collection_what_we_use"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_14sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -64,7 +64,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:lineSpacingExtra="@dimen/_2sdp"
                 android:text="@string/collection_bullet_1"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -74,7 +74,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:lineSpacingExtra="@dimen/_2sdp"
                 android:text="@string/collection_bullet_2"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -84,7 +84,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:lineSpacingExtra="@dimen/_2sdp"
                 android:text="@string/collection_bullet_3"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -94,7 +94,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:lineSpacingExtra="@dimen/_2sdp"
                 android:text="@string/collection_bullet_4"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -105,7 +105,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:lineSpacingExtra="@dimen/_2sdp"
                 android:text="@string/collection_footer"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp" />
 
         </LinearLayout>
@@ -132,7 +132,7 @@
             android:fontFamily="@font/sans_trial_medium"
             android:paddingBottom="@dimen/_2sdp"
             android:text="@string/collection_agree_checkbox"
-            android:textColor="?attr/textPrimaryColor"
+            android:textColor="@color/text_primary"
             android:textSize="@dimen/_12sdp" />
 
     </LinearLayout>

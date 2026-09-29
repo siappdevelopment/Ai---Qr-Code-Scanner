@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/surface_primary"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sans_trial_semi_bold"
                 android:text="@string/create_custom_qr_codes"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_16sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -41,7 +41,7 @@
                 android:layout_marginTop="@dimen/_2sdp"
                 android:fontFamily="@font/sans_trial_regular"
                 android:text="@string/create_custom_qr_codes_for_different_purposes_and_share_them_instantly"
-                android:textColor="?attr/textSecondaryColor"
+                android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_12sdp" />
 
         </LinearLayout>
@@ -81,7 +81,7 @@
         android:id="@+id/rlAdView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/surfaceSecondaryColor">
+        android:background="@color/surface_secondary">
 
         <RelativeLayout
             android:id="@+id/rlBannerAdView"
@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_60sdp"
                 android:layout_centerInParent="true"
-                android:background="?attr/surfaceSecondaryColor"
+                android:background="@color/surface_secondary"
                 app:shimmer_auto_start="true"
                 app:shimmer_base_alpha="0.9"
                 app:shimmer_highlight_alpha="1.0">
@@ -123,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_110sdp"
                 android:layout_centerInParent="true"
-                android:background="?attr/surfaceSecondaryColor"
+                android:background="@color/surface_secondary"
                 app:shimmer_auto_start="true"
                 app:shimmer_base_alpha="0.9"
                 app:shimmer_highlight_alpha="1.0">

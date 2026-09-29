@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/surface_primary"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -29,7 +29,7 @@
             android:paddingBottom="@dimen/_2sdp"
             android:singleLine="true"
             android:text="@string/app_widgets"
-            android:textColor="?attr/textPrimaryColor"
+            android:textColor="@color/text_primary"
             android:textSize="@dimen/_13sdp" />
 
     </RelativeLayout>
@@ -66,7 +66,7 @@
                     android:lineSpacingExtra="@dimen/_2sdp"
                     android:paddingBottom="@dimen/_2sdp"
                     android:text="@string/choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen"
-                    android:textColor="?attr/textSecondaryColor"
+                    android:textColor="@color/text_secondary"
                     android:textSize="@dimen/_12sdp" />
 
             </LinearLayout>
@@ -78,7 +78,7 @@
                 android:fontFamily="@font/sans_trial_medium"
                 android:singleLine="true"
                 android:text="@string/quick_access"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_14sdp" />
 
             <LinearLayout
@@ -103,7 +103,7 @@
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="@string/app_icon_1x1"
-                        android:textColor="?attr/textPrimaryColor"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/_13sdp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -112,7 +112,7 @@
                         android:layout_marginTop="@dimen/_2sdp"
                         android:fontFamily="@font/sans_trial_regular"
                         android:text="@string/qr_scanner_generator"
-                        android:textColor="?attr/textSecondaryColor"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/_12sdp" />
 
                 </LinearLayout>
@@ -131,7 +131,7 @@
                 android:fontFamily="@font/sans_trial_medium"
                 android:singleLine="true"
                 android:text="@string/create_qr"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_14sdp" />
 
             <LinearLayout
@@ -163,7 +163,7 @@
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="@string/create_1_x_1"
-                        android:textColor="?attr/textPrimaryColor"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/_13sdp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -172,7 +172,7 @@
                         android:layout_marginTop="@dimen/_2sdp"
                         android:fontFamily="@font/sans_trial_regular"
                         android:text="@string/style_a"
-                        android:textColor="?attr/textSecondaryColor"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/_12sdp" />
 
                 </LinearLayout>
@@ -200,7 +200,7 @@
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="@string/create_1_x_1"
-                        android:textColor="?attr/textPrimaryColor"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/_13sdp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -209,7 +209,7 @@
                         android:layout_marginTop="@dimen/_2sdp"
                         android:fontFamily="@font/sans_trial_regular"
                         android:text="@string/style_b"
-                        android:textColor="?attr/textSecondaryColor"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/_12sdp" />
 
                 </LinearLayout>
@@ -245,7 +245,7 @@
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="@string/create_1_x_1"
-                        android:textColor="?attr/textPrimaryColor"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/_13sdp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -254,7 +254,7 @@
                         android:layout_marginTop="@dimen/_2sdp"
                         android:fontFamily="@font/sans_trial_regular"
                         android:text="@string/style_c"
-                        android:textColor="?attr/textSecondaryColor"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/_12sdp" />
 
                 </LinearLayout>
@@ -275,7 +275,7 @@
                 android:fontFamily="@font/sans_trial_medium"
                 android:singleLine="true"
                 android:text="@string/scan_qr"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_14sdp" />
 
             <LinearLayout
@@ -307,7 +307,7 @@
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="@string/create_1_x_1"
-                        android:textColor="?attr/textPrimaryColor"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/_13sdp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -316,7 +316,7 @@
                         android:layout_marginTop="@dimen/_2sdp"
                         android:fontFamily="@font/sans_trial_regular"
                         android:text="@string/style_a"
-                        android:textColor="?attr/textSecondaryColor"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/_12sdp" />
 
                 </LinearLayout>
@@ -344,7 +344,7 @@
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="@string/create_1_x_1"
-                        android:textColor="?attr/textPrimaryColor"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/_13sdp" />
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -353,7 +353,7 @@
                         android:layout_marginTop="@dimen/_2sdp"
                         android:fontFamily="@font/sans_trial_regular"
                         android:text="@string/style_b"
-                        android:textColor="?attr/textSecondaryColor"
+                        android:textColor="@color/text_secondary"
                         android:textSize="@dimen/_12sdp" />
 
                 </LinearLayout>
@@ -373,14 +373,14 @@
             android:id="@+id/rlBannerAdView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_60sdp"
-            android:background="?attr/surfaceSecondaryColor">
+            android:background="@color/surface_secondary">
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/slBannerShimmer"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_60sdp"
                 android:layout_centerInParent="true"
-                android:background="?attr/surfaceSecondaryColor"
+                android:background="@color/surface_secondary"
                 app:shimmer_auto_start="true"
                 app:shimmer_base_alpha="0.9"
                 app:shimmer_highlight_alpha="1.0">
@@ -422,7 +422,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
-                        android:background="?attr/surfaceSecondaryColor"
+                        android:background="@color/surface_secondary"
                         app:shimmer_auto_start="true"
                         app:shimmer_base_alpha="0.9"
                         app:shimmer_highlight_alpha="1.0">

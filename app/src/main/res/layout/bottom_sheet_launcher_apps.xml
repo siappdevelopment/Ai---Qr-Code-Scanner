@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/surface_primary"
     android:orientation="vertical">
 
     <LinearLayout
@@ -34,8 +34,8 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:paddingBottom="@dimen/_2sdp"
-            android:textColor="?attr/textPrimaryColor"
-            android:textColorHint="?attr/textSecondaryColor"
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_secondary"
             android:textSize="@dimen/_13sdp"
             tools:ignore="HardcodedText" />
 
@@ -72,7 +72,7 @@
             android:fontFamily="@font/sans_trial_medium"
             android:singleLine="true"
             android:text="Set as Default"
-            android:textColor="?attr/textPrimaryColor"
+            android:textColor="@color/text_primary"
             android:textSize="@dimen/_13sdp"
             tools:ignore="HardcodedText" />
 
@@ -120,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/sans_trial_medium"
                 android:text="@string/app_name"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_13sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -134,7 +134,7 @@
                 android:paddingBottom="@dimen/_2sdp"
                 android:singleLine="true"
                 android:text="SEARCH FOR MORE APPS"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_11sdp"
                 tools:ignore="HardcodedText" />
 
@@ -163,7 +163,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
-                        android:background="?attr/surfaceSecondaryColor"
+                        android:background="@color/surface_secondary"
                         android:visibility="gone"
                         app:shimmer_auto_start="false"
                         app:shimmer_base_alpha="0.9"

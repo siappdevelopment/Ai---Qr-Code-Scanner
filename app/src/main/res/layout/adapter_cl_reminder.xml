@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/_8sdp"
     android:background="@drawable/custom_radius_12"
-    android:backgroundTint="?attr/surfaceSecondaryColor"
+    android:backgroundTint="@color/surface_secondary"
     android:gravity="center_vertical"
     android:padding="@dimen/_12sdp">
 
@@ -36,7 +36,7 @@
                 android:paddingBottom="@dimen/_2sdp"
                 android:singleLine="true"
                 android:text="@string/app_name"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp" />
 
         </LinearLayout>
@@ -52,7 +52,7 @@
                 android:layout_height="@dimen/_12sdp"
                 android:padding="@dimen/_1sdp"
                 android:src="@drawable/ic_calendar_more_option"
-                android:tint="?attr/textSecondaryColor" />
+                android:tint="@color/text_secondary" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvDate"
@@ -61,7 +61,7 @@
                 android:layout_marginStart="@dimen/_6sdp"
                 android:fontFamily="@font/sans_trial_regular"
                 android:text="Date"
-                android:textColor="?attr/textSecondaryColor"
+                android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_10sdp"
                 tools:ignore="HardcodedText" />
 
@@ -71,7 +71,7 @@
                 android:layout_marginStart="@dimen/_12sdp"
                 android:padding="@dimen/_1sdp"
                 android:src="@drawable/ic_reminder_time"
-                android:tint="?attr/textSecondaryColor" />
+                android:tint="@color/text_secondary" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvTime"
@@ -80,7 +80,7 @@
                 android:layout_marginStart="@dimen/_6sdp"
                 android:fontFamily="@font/sans_trial_regular"
                 android:text="Time"
-                android:textColor="?attr/textSecondaryColor"
+                android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_10sdp"
                 tools:ignore="HardcodedText" />
 

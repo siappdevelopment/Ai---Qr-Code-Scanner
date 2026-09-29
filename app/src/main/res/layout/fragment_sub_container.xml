@@ -52,7 +52,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
-                app:cardBackgroundColor="?attr/launcherBackgroundColor"
+                app:cardBackgroundColor="@color/launcher_bg"
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="0dp">
 
@@ -77,7 +77,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardBackgroundColor="?attr/surfaceSecondaryColor"
+                app:cardBackgroundColor="@color/surface_secondary"
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="0dp">
 
@@ -90,7 +90,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_250sdp"
                         android:layout_centerInParent="true"
-                        android:background="?attr/surfaceSecondaryColor"
+                        android:background="@color/surface_secondary"
                         app:shimmer_auto_start="true"
                         app:shimmer_base_alpha="0.9"
                         app:shimmer_highlight_alpha="1.0">

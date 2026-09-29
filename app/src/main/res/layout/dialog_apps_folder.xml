@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/_20sdp"
     android:elevation="@dimen/_10sdp"
-    app:cardBackgroundColor="?attr/launcherBackgroundColor"
+    app:cardBackgroundColor="@color/launcher_bg"
     app:cardCornerRadius="@dimen/_16sdp">
 
     <LinearLayout
@@ -22,7 +22,7 @@
             android:fontFamily="@font/sans_trial_semi_bold"
             android:singleLine="true"
             android:text="@string/app_name"
-            android:textColor="?attr/textPrimaryColor"
+            android:textColor="@color/text_primary"
             android:textSize="@dimen/_13sdp" />
 
         <androidx.recyclerview.widget.RecyclerView

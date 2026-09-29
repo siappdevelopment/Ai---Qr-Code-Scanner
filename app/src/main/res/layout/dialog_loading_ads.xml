@@ -21,7 +21,7 @@
         android:gravity="center"
         android:singleLine="true"
         android:text="@string/loading_ads_title"
-        android:textColor="?attr/textPrimaryColor"
+        android:textColor="@color/text_primary"
         android:textSize="@dimen/_14sdp"
         tools:ignore="HardcodedText" />
 
@@ -32,7 +32,7 @@
         android:fontFamily="@font/sans_trial_regular"
         android:gravity="center"
         android:text="@string/loading_ads_desc"
-        android:textColor="?attr/textSecondaryColor"
+        android:textColor="@color/text_secondary"
         android:textSize="@dimen/_11sdp"
         tools:ignore="HardcodedText" />
 

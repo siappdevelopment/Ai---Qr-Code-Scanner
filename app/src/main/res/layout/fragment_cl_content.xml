@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/surface_primary"
     android:fillViewport="true"
     android:scrollbars="none">
 
@@ -120,7 +120,7 @@
                     android:fontFamily="@font/sans_trial_medium"
                     android:singleLine="true"
                     android:text="History"
-                    android:textColor="?attr/textPrimaryColor"
+                    android:textColor="@color/text_primary"
                     android:textSize="@dimen/_13sdp"
                     tools:ignore="HardcodedText" />
 
@@ -131,7 +131,7 @@
                     android:fontFamily="@font/sans_trial_regular"
                     android:singleLine="true"
                     android:text="View Your Scanned &amp; Created QR History"
-                    android:textColor="?attr/textSecondaryColor"
+                    android:textColor="@color/text_secondary"
                     android:textSize="@dimen/_11sdp"
                     tools:ignore="HardcodedText" />
 
@@ -176,7 +176,7 @@
                     android:fontFamily="@font/sans_trial_medium"
                     android:singleLine="true"
                     android:text="App Widgets"
-                    android:textColor="?attr/textPrimaryColor"
+                    android:textColor="@color/text_primary"
                     android:textSize="@dimen/_13sdp"
                     tools:ignore="HardcodedText" />
 
@@ -187,7 +187,7 @@
                     android:fontFamily="@font/sans_trial_regular"
                     android:singleLine="true"
                     android:text="Quick Access QR Tools to Home"
-                    android:textColor="?attr/textSecondaryColor"
+                    android:textColor="@color/text_secondary"
                     android:textSize="@dimen/_11sdp"
                     tools:ignore="HardcodedText" />
 

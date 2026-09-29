@@ -19,7 +19,7 @@
             android:layout_width="@dimen/_18sdp"
             android:layout_height="@dimen/_18sdp"
             android:src="@drawable/ic_launcher_app_info"
-            android:tint="?attr/textPrimaryColor" />
+            android:tint="@color/text_primary" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
@@ -28,7 +28,7 @@
             android:fontFamily="@font/sans_trial_medium"
             android:paddingBottom="@dimen/_2sdp"
             android:text="App Info"
-            android:textColor="?attr/textPrimaryColor"
+            android:textColor="@color/text_primary"
             android:textSize="@dimen/_12sdp"
             tools:ignore="HardcodedText" />
 
@@ -45,7 +45,7 @@
             android:layout_width="@dimen/_18sdp"
             android:layout_height="@dimen/_18sdp"
             android:src="@drawable/ic_launcher_app_uninstall"
-            android:tint="?attr/textPrimaryColor" />
+            android:tint="@color/text_primary" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
@@ -54,7 +54,7 @@
             android:fontFamily="@font/sans_trial_medium"
             android:paddingBottom="@dimen/_2sdp"
             android:text="Uninstall"
-            android:textColor="?attr/textPrimaryColor"
+            android:textColor="@color/text_primary"
             android:textSize="@dimen/_12sdp"
             tools:ignore="HardcodedText" />
 

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/surface_primary"
     android:orientation="vertical">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -49,7 +49,7 @@
                 android:layout_height="@dimen/_18sdp"
                 android:padding="@dimen/_1sdp"
                 android:src="@drawable/ic_edit_pen"
-                android:tint="?attr/textSecondaryColor" />
+                android:tint="@color/text_secondary" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/etAbout"
@@ -61,8 +61,8 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:hint="Remind me about"
                 android:paddingBottom="@dimen/_2sdp"
-                android:textColor="?attr/textSecondaryColor"
-                android:textColorHint="?attr/textSecondaryColor"
+                android:textColor="@color/text_secondary"
+                android:textColorHint="@color/text_secondary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 
@@ -81,7 +81,7 @@
                 android:layout_height="@dimen/_18sdp"
                 android:padding="@dimen/_2sdp"
                 android:src="@drawable/ic_reminder_time"
-                android:tint="?attr/textSecondaryColor" />
+                android:tint="@color/text_secondary" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tvTime"
@@ -92,7 +92,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
                 android:text="Select date &amp; time"
-                android:textColor="?attr/textSecondaryColor"
+                android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 
@@ -204,7 +204,7 @@
                 android:paddingBottom="@dimen/_2sdp"
                 android:singleLine="true"
                 android:text="No"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 
@@ -220,7 +220,7 @@
                 android:paddingBottom="@dimen/_2sdp"
                 android:singleLine="true"
                 android:text="Yes"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 

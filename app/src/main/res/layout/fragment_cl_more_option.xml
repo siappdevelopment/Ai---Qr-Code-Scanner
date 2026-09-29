@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
+    android:background="@color/surface_primary"
     android:fillViewport="true"
     android:scrollbars="none">
 
@@ -35,7 +35,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
                 android:text="Add to Contact"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 
@@ -64,7 +64,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
                 android:text="Send Message"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 
@@ -93,7 +93,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
                 android:text="Send Mail"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 
@@ -122,7 +122,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
                 android:text="Calendar"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 
@@ -151,7 +151,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
                 android:text="Web"
-                android:textColor="?attr/textPrimaryColor"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
 

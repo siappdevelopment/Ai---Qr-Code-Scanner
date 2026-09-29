@@ -4,6 +4,9 @@
     <color name="primary_light">#333E68B0</color>
     <color name="text_primary">@color/text_primary_dark</color>
     <color name="text_secondary">@color/text_secondary_dark</color>
+    <color name="surface_primary">@color/surface_primary_dark</color>
+    <color name="surface_secondary">@color/surface_secondary_dark</color>
+    <color name="launcher_bg">@color/launcher_bg_dark</color>
     <color name="dock_scan">#9EBFEE</color>
     <color name="dock_scan_fill">#339EBFEE</color>
     <color name="dock_create">#C4A6EE</color>

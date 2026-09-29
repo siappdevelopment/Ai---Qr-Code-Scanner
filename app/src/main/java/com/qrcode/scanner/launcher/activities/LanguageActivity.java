@@ -1,5 +1,7 @@
 package com.qrcode.scanner.launcher.activities;
 
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -7,6 +9,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,8 +42,20 @@ public class LanguageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        applyNavigationBarColor();
         setContentView(R.layout.activity_language);
         findIDs();
+    }
+
+    private void applyNavigationBarColor() {
+        boolean isNight = (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        int color = ContextCompat.getColor(this, isNight ? R.color.surface_primary_dark : R.color.surface_primary_light);
+        getWindow().setNavigationBarColor(color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            getWindow().setNavigationBarContrastEnforced(false);
+        }
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+        controller.setAppearanceLightNavigationBars(!isNight);
     }
 
     private void findIDs() {
@@ -162,7 +179,7 @@ public class LanguageActivity extends AppCompatActivity {
         arrayListCode.add("af");
 
         selectedIndex = getAppliedLanguageIndex();
-        updateTitleForSelection(selectedIndex);
+//        updateTitleForSelection(selectedIndex);
 
         languageAdapter = new LanguageAdapter(this, arrayListIcon, arrayListName, arrayListSubName, arrayListCode);
         rvLanguage.setLayoutManager(new LinearLayoutManager(this));
@@ -170,7 +187,7 @@ public class LanguageActivity extends AppCompatActivity {
         languageAdapter.setSelectedPosition(selectedIndex);
         languageAdapter.setOnLanguageClickListener(position -> {
             selectedIndex = position;
-            updateTitleForSelection(position);
+//            updateTitleForSelection(position);
             languageAdapter.setSelectedPosition(position);
         });
     }
@@ -185,9 +202,9 @@ public class LanguageActivity extends AppCompatActivity {
         return 0;
     }
 
-    private void updateTitleForSelection(int index) {
-        tvTitle.setText(AppUtils.getStringForLanguage(this, arrayListCode.get(index), R.string.choose_your_language));
-    }
+//    private void updateTitleForSelection(int index) {
+//        tvTitle.setText(AppUtils.getStringForLanguage(this, arrayListCode.get(index), R.string.choose_your_language));
+//    }
 
     private void applySelectedLanguageAndContinue() {
         if (languageFlowInProgress) {

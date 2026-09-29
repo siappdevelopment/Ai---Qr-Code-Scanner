@@ -12,6 +12,9 @@
     <color name="text_secondary_dark">#C2C7D0</color>
     <color name="text_primary">@color/text_primary_light</color>
     <color name="text_secondary">@color/text_secondary_light</color>
+    <color name="surface_primary">@color/surface_primary_light</color>
+    <color name="surface_secondary">@color/surface_secondary_light</color>
+    <color name="launcher_bg">@color/launcher_bg_light</color>
     <color name="border_light">#EAEAEA</color>
     <color name="border_dark">#343944</color>
     <color name="launcher_bg_light">#E6E0E0E0</color>

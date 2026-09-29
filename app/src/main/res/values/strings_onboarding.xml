@@ -28,8 +28,14 @@
     <string name="permission_gallery_title">Gallery Alternative</string>
     <string name="permission_gallery_desc">Import photos directly from your library anytime without camera privileges.</string>
     <string name="allow_permission">Allow Permission</string>
-    <string name="default_title">Set as Default Home App</string>
-    <string name="default_description">Set this app as your default Home launcher for fast, accurate, and seamless QR code scanning.</string>
+    <string name="default_title">Make ScanPulse Your Default Home Launcher</string>
+    <string name="default_description">Instant QR scanner access with a single swipe right from your home screen, custom widget controls, and organized app drawers.</string>
+    <string name="default_swipe_title">Swipe Right to Scan</string>
+    <string name="default_swipe_desc">Launch viewfinder instantly from anywhere on your home screen with zero latency.</string>
+    <string name="default_widgets_title">Smart Quick Widgets</string>
+    <string name="default_widgets_desc">Pin QR generator shortcuts, clipboard monitors, and battery intelligence right on home.</string>
+    <string name="default_drawer_title">Custom App Drawer &amp; Folders</string>
+    <string name="default_drawer_desc">Organize apps, hide labels, customize grid columns, and switch between light and dark themes.</string>
     <string name="set_as_default">Set as Default</string>
     <string name="quick_qr_scanning">Quick QR Scanning</string>
     <string name="fast_simple_and_accurate_qr_scanning_whenever_you_need_it">Fast, simple, and accurate QR scanning whenever you need it.</string>

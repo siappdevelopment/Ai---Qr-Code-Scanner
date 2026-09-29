@@ -8,8 +8,10 @@
     <color name="surface_secondary_dark">#1A1D24</color>
     <color name="text_primary_light">#1B1B1B</color>
     <color name="text_primary_dark">#FFFFFF</color>
-    <color name="text_secondary_light">#A9A9A9</color>
+    <color name="text_secondary_light">#434655</color>
     <color name="text_secondary_dark">#C2C7D0</color>
+    <color name="text_primary">@color/text_primary_light</color>
+    <color name="text_secondary">@color/text_secondary_light</color>
     <color name="border_light">#EAEAEA</color>
     <color name="border_dark">#343944</color>
     <color name="launcher_bg_light">#E6E0E0E0</color>

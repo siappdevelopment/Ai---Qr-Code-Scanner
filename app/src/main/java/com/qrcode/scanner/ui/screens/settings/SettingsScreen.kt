@@ -51,6 +51,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
+import com.qrcode.scanner.launcher.common.AppUtils
 import com.qrcode.scanner.ui.screens.history.ClearHistoryDialog
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
@@ -129,7 +130,7 @@ fun SettingsScreen(
                 SettingsNavRow(
                     title = "Language",
                     // Only English UI is shipped; preference (system vs en-US) is set on Language screen.
-                    subtitle = "English (US)",
+                    subtitle = currentLanguageLabel(context),
                     icon = Icons.Outlined.Language,
                     enabled = true,
                     onClick = onOpenLanguage
@@ -416,5 +417,29 @@ private fun SettingsFooter() {
             fontFamily = PlusJakartaSans,
             fontSize = 11.sp
         )
+    }
+}
+
+private fun currentLanguageLabel(context: android.content.Context): String {
+    return when (AppUtils.getLanguage(context)) {
+        "hi" -> "Hindi"
+        "ru" -> "Russian"
+        "it" -> "Italian"
+        "fr" -> "French"
+        "es" -> "Spanish"
+        "ja" -> "Japanese"
+        "ko" -> "Korean"
+        "de" -> "German"
+        "zh" -> "Chinese"
+        "th" -> "Thai"
+        "el" -> "Greek"
+        "pt" -> "Portuguese (Portugal)"
+        "pt-BR" -> "Portuguese (Brazil)"
+        "nl" -> "Dutch"
+        "fil" -> "Filipino"
+        "tr" -> "Turkish"
+        "id" -> "Indonesian"
+        "af" -> "Afrikaans"
+        else -> "English"
     }
 }

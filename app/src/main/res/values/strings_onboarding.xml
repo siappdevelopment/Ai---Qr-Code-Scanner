@@ -19,8 +19,14 @@
     <string name="utm_source_apps_facebook_com">utm_source=apps.facebook.com</string>
     <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
     <string name="utm_source_marketing">utm_source=marketing</string>
-    <string name="permission_title">Required Permission</string>
-    <string name="permission_description">Allow camera permission to scan QR codes and barcodes quickly.</string>
+    <string name="permission_title">Camera Access Required</string>
+    <string name="permission_description">ScanPulse needs camera access to instantly scan QR codes, Wi-Fi credentials, and barcodes directly in real time.</string>
+    <string name="permission_local_title">Instant Local Scanning</string>
+    <string name="permission_local_desc">Scans are processed completely on-device with zero server latency.</string>
+    <string name="permission_privacy_title">100% Privacy Preserved</string>
+    <string name="permission_privacy_desc">No video frames or raw captures are ever uploaded or cataloged.</string>
+    <string name="permission_gallery_title">Gallery Alternative</string>
+    <string name="permission_gallery_desc">Import photos directly from your library anytime without camera privileges.</string>
     <string name="allow_permission">Allow Permission</string>
     <string name="default_title">Set as Default Home App</string>
     <string name="default_description">Set this app as your default Home launcher for fast, accurate, and seamless QR code scanning.</string>

@@ -57,7 +57,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.ViewHo
         holder.ivLanguageIcon.setImageResource(arrayListIcon.get(position));
         holder.tvLanguageName.setText(arrayListName.get(position));
         holder.tvLanguageSubName.setText(arrayListSubName.get(position));
-        holder.ivSelect.setImageResource(position == selectedPosition ? R.drawable.ic_checkbox_checked : R.drawable.ic_checkbox_unchecked);
+        holder.ivSelect.setImageResource(position == selectedPosition ? R.drawable.ic_language_radio_selected : R.drawable.ic_language_radio_unselected);
         holder.itemView.setOnClickListener(view -> {
             int adapterPosition = holder.getBindingAdapterPosition();
             if (adapterPosition != RecyclerView.NO_POSITION && listener != null) {

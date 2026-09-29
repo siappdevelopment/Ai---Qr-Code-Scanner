@@ -22,6 +22,8 @@
 
     <style name="Theme.LauncherSettings" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
+        <item name="android:statusBarColor">@color/surface_primary_light</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="colorSurface">@color/surface_primary_light</item>
         <item name="surfaceSecondaryColor">@color/surface_secondary_light</item>
         <item name="textPrimaryColor">@color/text_primary_light</item>

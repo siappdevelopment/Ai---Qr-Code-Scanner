@@ -3,6 +3,7 @@ package com.qrcode.scanner.ui.navigation
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.view.View
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -22,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.qrcode.scanner.launcher.activities.LanguageActivity
 import com.qrcode.scanner.launcher.common.StartupFlow
 import com.qrcode.scanner.launcher.common.StartupNavigation
 import com.qrcode.scanner.launcher.common.WidgetNavigation
@@ -33,8 +35,6 @@ import com.qrcode.scanner.ui.screens.home.HomeScreen
 import com.qrcode.scanner.ui.screens.scan.ScanIntents
 import com.qrcode.scanner.ui.screens.scan.ScanScreen
 import com.qrcode.scanner.ui.screens.settings.AboutScreen
-import com.qrcode.scanner.ui.screens.settings.AppLanguage
-import com.qrcode.scanner.ui.screens.settings.LanguageScreen
 import com.qrcode.scanner.ui.screens.settings.SettingsScreen
 import com.qrcode.scanner.ui.screens.splash.SplashScreen
 import com.qrcode.scanner.ui.theme.PageBackground
@@ -181,12 +181,16 @@ fun ScanPulseNavHost(
                     )
                 }
                 composable(AppDestination.Settings.route) {
+                    val context = LocalContext.current
                     SettingsScreen(
                         onOpenAbout = {
                             navController.navigate(AppDestination.About.route)
                         },
                         onOpenLanguage = {
-                            navController.navigate(AppDestination.Language.route)
+                            context.startActivity(
+                                Intent(context, LanguageActivity::class.java)
+                                    .putExtra(LanguageActivity.EXTRA_FROM_APP_SETTINGS, true)
+                            )
                         }
                     )
                 }
@@ -202,16 +206,6 @@ fun ScanPulseNavHost(
             }
             composable(AppDestination.QrPreviewExport.route) {
                 PlaceholderScreen(title = "QR Preview & Export")
-            }
-            composable(AppDestination.Language.route) {
-                LanguageScreen(
-                    onBack = { navController.popBackStack() },
-                    onApply = { language ->
-                        // Return to Settings first so recreation restores Settings, not Language.
-                        navController.popBackStack()
-                        AppLanguage.apply(language)
-                    }
-                )
             }
             composable(AppDestination.About.route) {
                 AboutScreen(onBack = { navController.popBackStack() })

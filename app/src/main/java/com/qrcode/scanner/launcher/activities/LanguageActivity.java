@@ -23,6 +23,8 @@ import com.qrcode.scanner.launcher.remote.ScreenFlowConfig;
 import java.util.ArrayList;
 
 public class LanguageActivity extends AppCompatActivity {
+    public static final String EXTRA_FROM_APP_SETTINGS = "extra_from_app_settings";
+
     private AppCompatTextView tvTitle;
     private LanguageAdapter languageAdapter;
     private int selectedIndex;
@@ -220,6 +222,9 @@ public class LanguageActivity extends AppCompatActivity {
     }
 
     private boolean isOpenedFromSettings() {
+        if (getIntent().getBooleanExtra(EXTRA_FROM_APP_SETTINGS, false)) {
+            return true;
+        }
         return AppUtils.getLanguageFlowCompleted(this) && !getIntent().getBooleanExtra(ScreenFlowNavigation.EXTRA_LANGUAGE_FLOW_STARTING, false);
     }
 }

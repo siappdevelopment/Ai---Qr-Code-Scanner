@@ -224,17 +224,9 @@ public final class StartupFlow {
     }
 
     private static void showAfterSplashAd(Activity activity) {
-        View root = adRoot.get();
-        LinearLayout llContainAds = root == null ? null : root.findViewById(R.id.llContainAds);
         if (!AdPlacement.getAfterSplashAdShow()) {
-            if (llContainAds != null) {
-                llContainAds.setVisibility(GONE);
-            }
             deliverFinished(generation);
             return;
-        }
-        if (llContainAds != null) {
-            llContainAds.setVisibility(VISIBLE);
         }
         int token = generation;
         if ("inter".equalsIgnoreCase(AdPlacement.getAfterSplashAdType())) {

@@ -6,11 +6,12 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.qrcode.scanner.launcher.fragments.LauncherHomeFragment;
+import com.qrcode.scanner.launcher.fragments.LauncherQrPageFragment;
 import com.qrcode.scanner.launcher.fragments.SubContainerFragment;
 
 /**
- * Home sits between a right-swipe slot and the sub page, matching the source pager indexes.
- * The right-swipe slot is not the source second-app UI. Selecting it opens Compose MainActivity.
+ * Home sits between the QR page and the sub page, matching the source pager indexes.
+ * A right swipe reveals the existing Compose QR UI in this pager. It does not open another activity.
  */
 public class LauncherPagerAdapter extends FragmentStateAdapter {
     public static final int PAGE_COUNT = 3;
@@ -29,7 +30,7 @@ public class LauncherPagerAdapter extends FragmentStateAdapter {
             return new SubContainerFragment();
         }
         if (position == PAGE_RIGHT) {
-            return new Fragment();
+            return new LauncherQrPageFragment();
         }
         return new LauncherHomeFragment();
     }

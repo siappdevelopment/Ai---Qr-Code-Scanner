@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.qrcode.scanner.MainActivity;
 import com.qrcode.scanner.R;
 import com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter;
 import com.qrcode.scanner.launcher.dialogs.LauncherAppsBottomSheet;
@@ -172,13 +171,12 @@ public class LauncherHomeActivity extends AppCompatActivity {
     }
 
     public void openQrShell() {
-        AdPlacement.loadRightSwipeInterstitialAd(this, () -> {
-            if (!isFinishing() && !isDestroyed()) {
-                Intent intent = new Intent(this, MainActivity.class);
-                com.qrcode.scanner.launcher.helpers.DefaultHomePopupHost.markRightSwipeQrVisible(intent);
-                startActivity(intent);
-            }
-        });
+        if (vpLauncher == null || isFinishing() || isDestroyed()) {
+            return;
+        }
+        if (vpLauncher.getCurrentItem() != LauncherPagerAdapter.PAGE_RIGHT) {
+            vpLauncher.setCurrentItem(LauncherPagerAdapter.PAGE_RIGHT, true);
+        }
     }
 
     public void openScanner() {
@@ -355,8 +353,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
                         ? LauncherPagerAdapter.PAGE_SUB
                         : LauncherPagerAdapter.PAGE_HOME;
             }
-            if (restoreLauncherPage < 0 || restoreLauncherPage >= LauncherPagerAdapter.PAGE_COUNT
-                    || restoreLauncherPage == LauncherPagerAdapter.PAGE_RIGHT) {
+            if (restoreLauncherPage < 0 || restoreLauncherPage >= LauncherPagerAdapter.PAGE_COUNT) {
                 restoreLauncherPage = LauncherPagerAdapter.PAGE_HOME;
             }
         }
@@ -382,8 +379,15 @@ public class LauncherHomeActivity extends AppCompatActivity {
                     navigatingToHome = false;
                     if (pendingRightSwipeOpen && vpLauncher.getCurrentItem() == LauncherPagerAdapter.PAGE_RIGHT) {
                         pendingRightSwipeOpen = false;
-                        vpLauncher.setCurrentItem(LauncherPagerAdapter.PAGE_HOME, false);
-                        openQrShell();
+                        AdPlacement.loadRightSwipeInterstitialAd(LauncherHomeActivity.this, () -> {
+                            if (isFinishing() || isDestroyed()) {
+                                return;
+                            }
+                            LauncherHomeFragment homeFragment = findLauncherHomeFragment();
+                            if (homeFragment != null) {
+                                homeFragment.maybeShowDefaultHomePopup();
+                            }
+                        });
                     }
                 }
             }

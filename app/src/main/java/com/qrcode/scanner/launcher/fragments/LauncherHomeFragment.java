@@ -350,6 +350,13 @@ public class LauncherHomeFragment extends Fragment {
         }
     }
 
+    public void maybeShowDefaultHomePopup() {
+        if (!isAdded()) {
+            return;
+        }
+        defaultHomePromptHelper.maybeShowDefaultHomePopup();
+    }
+
     public void onRightSwipeNavigationCompleted() {
         if (!isAdded()) {
             return;

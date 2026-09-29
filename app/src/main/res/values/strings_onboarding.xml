@@ -38,6 +38,6 @@
     <string name="create_custom_qr_codes">Create Custom QR Codes</string>
     <string name="create_custom_qr_codes_for_different_purposes_and_share_them_instantly">Create custom QR codes for different purposes and share them instantly.</string>
     <string name="next">Next</string>
-    <string name="loading_ads_title">Loading Advertisement</string>
-    <string name="loading_ads_desc">An advertisement is loading and will be displayed shortly.</string>
+    <string name="loading_ads_title">Loading Ads</string>
+    <string name="loading_ads_desc">Please wait Ads will appear...</string>
 </resources>

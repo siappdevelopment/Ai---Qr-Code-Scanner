@@ -4,27 +4,37 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.qrcode.scanner.R;
@@ -111,7 +121,7 @@ public final class QuizAds {
             if (itemCount <= 0 || activity == null || activity.isFinishing()) {
                 return false;
             }
-            Dialog dialog = fullscreenDialog(activity, R.layout.qz_interstitial_ad);
+            Dialog dialog = fullscreenDialog(activity, R.layout.qz_interstitial_ad, R.style.Theme_QuizInterstitial);
             View root = ((android.view.ViewGroup) dialog.getWindow().getDecorView()).getChildAt(0);
             int index = new Random().nextInt(itemCount);
             bindText(root, index, RemoteConfigValues.getQuizInterstitialTitleList(), RemoteConfigValues.getQuizInterstitialDescriptionList());
@@ -158,6 +168,10 @@ public final class QuizAds {
                 });
             }
             wireLink(activity, root, root.findViewById(R.id.btnQZClick));
+            final int previousStatusColor = activity.getWindow().getStatusBarColor();
+            final int previousNavigationColor = activity.getWindow().getNavigationBarColor();
+            dialog.setOnShowListener(shown -> matchQuizSystemBars(activity, dialog.getWindow()));
+            dialog.setOnDismissListener(dismissed -> restoreHostSystemBars(activity, previousStatusColor, previousNavigationColor));
             new CountDownTimer(CLOSE_DELAY_MS, 1000L) {
                 @Override
                 public void onTick(long millisUntilFinished) {
@@ -348,14 +362,91 @@ public final class QuizAds {
         return R.layout.qz_native_small_ad;
     }
 
+    private static void matchQuizSystemBars(Activity activity, @Nullable Window window) {
+        if (activity == null || window == null) {
+            return;
+        }
+        boolean isNight = (activity.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        int color = ContextCompat.getColor(activity, R.color.surface_primary);
+        WindowCompat.setDecorFitsSystemWindows(window, false);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.setBackgroundDrawable(new ColorDrawable(color));
+        window.setStatusBarColor(color);
+        window.setNavigationBarColor(color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.setStatusBarContrastEnforced(false);
+            window.setNavigationBarContrastEnforced(false);
+        }
+        View layout = quizInterstitialRoot(window);
+        if (layout != null) {
+            layout.setBackgroundColor(color);
+            if (!(layout.getTag() instanceof int[])) {
+                layout.setTag(new int[]{layout.getPaddingLeft(), layout.getPaddingTop(), layout.getPaddingRight(), layout.getPaddingBottom()});
+            }
+            final int[] basePadding = (int[]) layout.getTag();
+            ViewCompat.setOnApplyWindowInsetsListener(layout, (view, insets) -> {
+                Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                view.setBackgroundColor(color);
+                view.setPadding(basePadding[0], basePadding[1] + bars.top, basePadding[2], basePadding[3] + bars.bottom);
+                return WindowInsetsCompat.CONSUMED;
+            });
+            ViewCompat.requestApplyInsets(layout);
+        }
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(window, window.getDecorView());
+        controller.setAppearanceLightStatusBars(!isNight);
+        controller.setAppearanceLightNavigationBars(!isNight);
+        Window host = activity.getWindow();
+        host.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        host.setStatusBarColor(color);
+        host.setNavigationBarColor(color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            host.setStatusBarContrastEnforced(false);
+            host.setNavigationBarContrastEnforced(false);
+        }
+        WindowInsetsControllerCompat hostController = WindowCompat.getInsetsController(host, host.getDecorView());
+        hostController.setAppearanceLightStatusBars(!isNight);
+        hostController.setAppearanceLightNavigationBars(!isNight);
+    }
+
+    private static void restoreHostSystemBars(Activity activity, int statusColor, int navigationColor) {
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+        Window host = activity.getWindow();
+        host.setStatusBarColor(statusColor);
+        host.setNavigationBarColor(navigationColor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            host.setStatusBarContrastEnforced(true);
+            host.setNavigationBarContrastEnforced(true);
+        }
+    }
+
+    @Nullable
+    private static View quizInterstitialRoot(@NonNull Window window) {
+        View content = window.findViewById(android.R.id.content);
+        if (content instanceof ViewGroup && ((ViewGroup) content).getChildCount() > 0) {
+            return ((ViewGroup) content).getChildAt(0);
+        }
+        return content;
+    }
+
     private static Dialog fullscreenDialog(Activity activity, int layout) {
-        Dialog dialog = new Dialog(activity);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        return fullscreenDialog(activity, layout, 0);
+    }
+
+    private static Dialog fullscreenDialog(Activity activity, int layout, int themeRes) {
+        Dialog dialog = themeRes == 0 ? new Dialog(activity) : new Dialog(activity, themeRes);
+        if (themeRes == 0) {
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        }
         dialog.setContentView(layout);
         dialog.setCancelable(false);
         if (dialog.getWindow() != null) {
             dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            if (themeRes == 0) {
+                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
         }
         return dialog;
     }

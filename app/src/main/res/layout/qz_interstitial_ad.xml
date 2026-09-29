@@ -51,7 +51,7 @@
                 android:layout_height="@dimen/_24sdp"
                 android:background="@drawable/custom_circle"
                 android:backgroundTint="@color/surface_secondary"
-                android:padding="@dimen/_4sdp"
+                android:padding="8dp"
                 android:src="@drawable/ic_close"
                 android:visibility="gone" />
 

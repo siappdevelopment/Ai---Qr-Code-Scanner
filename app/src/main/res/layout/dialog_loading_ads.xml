@@ -8,8 +8,10 @@
     android:padding="@dimen/_20sdp">
 
     <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_32sdp"
+        android:layout_height="@dimen/_12sdp"
+        android:indeterminate="true"
         android:indeterminateTint="@color/primary"
         android:indeterminateTintMode="src_in" />
 
@@ -22,7 +24,7 @@
         android:singleLine="true"
         android:text="@string/loading_ads_title"
         android:textColor="@color/text_primary"
-        android:textSize="@dimen/_14sdp"
+        android:textSize="@dimen/_15sdp"
         tools:ignore="HardcodedText" />
 
     <androidx.appcompat.widget.AppCompatTextView

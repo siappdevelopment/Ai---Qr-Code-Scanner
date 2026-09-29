@@ -1,5 +1,8 @@
 package com.qrcode.scanner.ui.screens.splash
 
+import android.app.Activity
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
@@ -17,20 +20,27 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.view.WindowCompat
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.R
-import com.qrcode.scanner.ui.theme.CobaltPrimary
-import com.qrcode.scanner.ui.theme.NestedSurface
-import com.qrcode.scanner.ui.theme.PageBackground
+import com.qrcode.scanner.data.settings.SettingsPreferences
+import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
+import com.qrcode.scanner.launcher.common.ThemeUtils
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
-import com.qrcode.scanner.ui.theme.TextPrimary
-import com.qrcode.scanner.ui.theme.TextSecondary
+import com.qrcode.scanner.ui.theme.ScanPulsePalette
 
 /**
  * Existing Compose splash. Startup timing is owned by StartupFlow, not by a second splash screen.
@@ -40,10 +50,40 @@ fun SplashScreen(
     onAdRootReady: (View) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+    val view = LocalView.current
+    val repository = remember { SettingsRepositoryProvider.get(context) }
+    val preferences by repository.preferences.collectAsStateWithLifecycle(
+        initialValue = SettingsPreferences()
+    )
+    val deviceDark = remember {
+        val night = Resources.getSystem().configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        night == Configuration.UI_MODE_NIGHT_YES
+    }
+    val launcherDark = when (ThemeUtils.getTheme(context)) {
+        ThemeUtils.THEME_DARK -> true
+        ThemeUtils.THEME_LIGHT -> false
+        else -> deviceDark
+    }
+    val dark = preferences.appTheme.resolveDark(deviceDark) || launcherDark
+    val palette = if (dark) ScanPulsePalette.Dark else ScanPulsePalette.Light
+
+    SideEffect {
+        val window = (view.context as? Activity)?.window ?: return@SideEffect
+        val insets = WindowCompat.getInsetsController(window, view)
+        insets.isAppearanceLightStatusBars = !dark
+        insets.isAppearanceLightNavigationBars = !dark
+        val background = palette.pageBackground.toArgb()
+        @Suppress("DEPRECATION")
+        window.statusBarColor = background
+        @Suppress("DEPRECATION")
+        window.navigationBarColor = background
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(PageBackground)
+            .background(palette.pageBackground)
     ) {
         Column(
             modifier = Modifier
@@ -68,7 +108,7 @@ fun SplashScreen(
 
             Text(
                 text = "ScanPulse",
-                color = TextPrimary,
+                color = palette.textPrimary,
                 fontFamily = PlusJakartaSans,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
@@ -76,7 +116,7 @@ fun SplashScreen(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = "Instant QR & Barcode Intelligence",
-                color = TextSecondary,
+                color = palette.textSecondary,
                 fontFamily = PlusJakartaSans,
                 fontSize = 14.sp
             )
@@ -88,8 +128,8 @@ fun SplashScreen(
                     .fillMaxWidth(0.72f)
                     .height(6.dp)
                     .clip(RoundedCornerShape(999.dp)),
-                color = CobaltPrimary,
-                trackColor = NestedSurface
+                color = palette.cobaltPrimary,
+                trackColor = palette.nestedSurface
             )
         }
 

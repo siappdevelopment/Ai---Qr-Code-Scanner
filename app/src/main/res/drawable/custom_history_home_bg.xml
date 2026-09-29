@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="#33099C63" />
+    <solid android:color="@color/dock_history_fill" />
     <stroke
         android:width="@dimen/_1sdp"
-        android:color="#099C63" />
+        android:color="@color/dock_history" />
     <corners android:radius="@dimen/_12sdp" />
 </shape>

@@ -158,7 +158,7 @@
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="Scan"
-                        android:textColor="#0882D3"
+                        android:textColor="@color/dock_scan"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="HardcodedText" />
 
@@ -188,7 +188,7 @@
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="Create"
-                        android:textColor="#6E1BC0"
+                        android:textColor="@color/dock_create"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="HardcodedText" />
 
@@ -226,7 +226,7 @@
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="History"
-                        android:textColor="#099C63"
+                        android:textColor="@color/dock_history"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="HardcodedText" />
 
@@ -256,7 +256,7 @@
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="Setting"
-                        android:textColor="#D85400"
+                        android:textColor="@color/dock_settings"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="HardcodedText" />
 

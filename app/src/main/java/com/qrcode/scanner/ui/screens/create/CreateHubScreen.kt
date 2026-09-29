@@ -66,6 +66,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qrcode.scanner.ui.theme.BorderSubtle
+import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.NestedSurface
 import com.qrcode.scanner.ui.theme.PageBackground
@@ -73,6 +74,7 @@ import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.White
+import com.qrcode.scanner.ui.theme.forDarkUi
 
 /**
  * Stitch source: Create QR Category Hub (White Theme)
@@ -206,7 +208,7 @@ private fun CreateTopBar(onTuneClick: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(White)
+            .background(CardSurface)
     ) {
         Row(
             modifier = Modifier
@@ -245,7 +247,7 @@ private fun CreateTopBar(onTuneClick: () -> Unit) {
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .background(White, RoundedCornerShape(12.dp))
+                    .background(CardSurface, RoundedCornerShape(12.dp))
                     .border(1.dp, CreateColors.Border, RoundedCornerShape(12.dp))
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
@@ -281,7 +283,7 @@ private fun SearchField(
         modifier = Modifier
             .fillMaxWidth()
             .height(44.dp)
-            .background(White, RoundedCornerShape(12.dp))
+            .background(CardSurface, RoundedCornerShape(12.dp))
             .border(1.dp, CreateColors.Border, RoundedCornerShape(12.dp))
             .padding(horizontal = 14.dp),
         contentAlignment = Alignment.CenterStart
@@ -419,7 +421,7 @@ private fun SocialCard(
     Row(
         modifier = modifier
             .height(64.dp)
-            .background(White, RoundedCornerShape(18.dp))
+            .background(CardSurface, RoundedCornerShape(18.dp))
             .border(1.dp, CreateColors.Border, RoundedCornerShape(18.dp))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -435,7 +437,7 @@ private fun SocialCard(
                 .size(32.dp)
                 .then(
                     if (category.mark == null && category.categoryType == QrCategoryType.SNAPCHAT) {
-                        Modifier.background(category.iconBg, CircleShape)
+                        Modifier.background(category.iconBg.forDarkUi(), CircleShape)
                     } else {
                         Modifier
                     }
@@ -446,7 +448,7 @@ private fun SocialCard(
             if (mark != null) {
                 Text(
                     text = mark,
-                    color = category.iconTint,
+                    color = category.iconTint.forDarkUi(),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = if (mark.length > 1) 13.sp else 18.sp
@@ -455,7 +457,7 @@ private fun SocialCard(
                 Icon(
                     imageVector = category.icon,
                     contentDescription = null,
-                    tint = category.iconTint,
+                    tint = category.iconTint.forDarkUi(),
                     modifier = Modifier.size(26.dp)
                 )
             }
@@ -507,7 +509,7 @@ private fun BarcodeCard(
     Column(
         modifier = modifier
             .heightIn(min = 108.dp)
-            .background(White, RoundedCornerShape(16.dp))
+            .background(CardSurface, RoundedCornerShape(16.dp))
             .border(1.dp, CreateColors.Border, RoundedCornerShape(16.dp))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -573,7 +575,7 @@ private fun CategoryCard(
     Column(
         modifier = modifier
             .heightIn(min = 112.dp)
-            .background(White, RoundedCornerShape(16.dp))
+            .background(CardSurface, RoundedCornerShape(16.dp))
             .border(1.dp, CreateColors.Border, RoundedCornerShape(16.dp))
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
@@ -591,14 +593,14 @@ private fun CategoryCard(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .background(category.iconBg, RoundedCornerShape(12.dp))
-                    .border(1.dp, category.iconBorder, RoundedCornerShape(12.dp)),
+                    .background(category.iconBg.forDarkUi(), RoundedCornerShape(12.dp))
+                    .border(1.dp, category.iconBorder.forDarkUi(), RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = category.icon,
                     contentDescription = null,
-                    tint = category.iconTint,
+                    tint = category.iconTint.forDarkUi(),
                     modifier = Modifier.size(22.dp)
                 )
             }
@@ -640,7 +642,7 @@ private fun NoFormatsFound(onReset: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(White, RoundedCornerShape(16.dp))
+            .background(CardSurface, RoundedCornerShape(16.dp))
             .border(1.dp, CreateColors.Border, RoundedCornerShape(16.dp))
             .padding(32.dp),
         horizontalAlignment = Alignment.CenterHorizontally

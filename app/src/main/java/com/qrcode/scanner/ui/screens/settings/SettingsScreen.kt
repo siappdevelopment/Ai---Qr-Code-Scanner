@@ -62,6 +62,7 @@ import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
+import com.qrcode.scanner.ui.theme.forDarkUi
 import kotlinx.coroutines.launch
 
 /**
@@ -204,7 +205,7 @@ fun SettingsScreen(
                     icon = Icons.Outlined.DeleteSweep,
                     titleColor = Destructive,
                     iconTint = Destructive,
-                    iconBackground = Color(0xFFFEE2E2),
+                    iconBackground = Color(0xFFFEE2E2).forDarkUi(),
                     showChevron = false,
                     enabled = true,
                     onClick = { showClearDialog = true }

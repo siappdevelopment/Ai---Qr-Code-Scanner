@@ -45,24 +45,24 @@ data class ScanPulsePalette(
         )
 
         /**
-         * Dark Electric Cobalt — not a simple invert.
-         * Cobalt stays the brand accent; surfaces are deep navy/slate with clear hierarchy.
+         * Dark surfaces stay neutral charcoal. The accent is a muted steel blue,
+         * not the light theme's electric cobalt or cyan.
          */
         val Dark = ScanPulsePalette(
-            cobaltPrimary = Color(0xFF3B6CFF),
-            cobaltAccent = Color(0xFF00B4FF),
-            cobaltDark = Color(0xFF9DB7FF),
-            cobaltSoft = Color(0xFF1A2744),
+            cobaltPrimary = Color(0xFF4A78C8),
+            cobaltAccent = Color(0xFF9BB6E3),
+            cobaltDark = Color(0xFFD7E4F8),
+            cobaltSoft = Color(0xFF1A2433),
             white = Color(0xFFFFFFFF),
-            pageBackground = Color(0xFF0B1220),
-            cardSurface = Color(0xFF141C2E),
-            nestedSurface = Color(0xFF1C2740),
-            borderSubtle = Color(0xFF2A3650),
-            textPrimary = Color(0xFFF1F5F9),
-            textSecondary = Color(0xFF94A3B8),
-            textTertiary = Color(0xFF64748B),
-            inactiveNav = Color(0xFF94A3B8),
-            destructive = Color(0xFFEF4444)
+            pageBackground = Color(0xFF101114),
+            cardSurface = Color(0xFF1A1D24),
+            nestedSurface = Color(0xFF242830),
+            borderSubtle = Color(0xFF343944),
+            textPrimary = Color(0xFFF3F5F8),
+            textSecondary = Color(0xFFC2C7D0),
+            textTertiary = Color(0xFF8E949F),
+            inactiveNav = Color(0xFFA8AEB8),
+            destructive = Color(0xFFF07178)
         )
     }
 }
@@ -94,3 +94,27 @@ val TextSecondary: Color get() = ScanPulseThemeState.palette.textSecondary
 val TextTertiary: Color get() = ScanPulseThemeState.palette.textTertiary
 val InactiveNav: Color get() = ScanPulseThemeState.palette.inactiveNav
 val Destructive: Color get() = ScanPulseThemeState.palette.destructive
+
+/**
+ * Light colors pass through unchanged. In dark mode, pale fills become muted wells
+ * and darker brand colors are lifted so they stay readable on charcoal.
+ */
+fun Color.forDarkUi(): Color {
+    if (ScanPulseThemeState.palette !== ScanPulsePalette.Dark) return this
+    val luminance = (0.2126f * red) + (0.7152f * green) + (0.0722f * blue)
+    return if (luminance >= 0.65f) {
+        Color(
+            red = (red * 0.16f + 0.12f).coerceIn(0f, 1f),
+            green = (green * 0.16f + 0.13f).coerceIn(0f, 1f),
+            blue = (blue * 0.16f + 0.16f).coerceIn(0f, 1f),
+            alpha = alpha
+        )
+    } else {
+        Color(
+            red = (red * 0.42f + 0.58f).coerceIn(0f, 1f),
+            green = (green * 0.42f + 0.58f).coerceIn(0f, 1f),
+            blue = (blue * 0.42f + 0.58f).coerceIn(0f, 1f),
+            alpha = alpha
+        )
+    }
+}

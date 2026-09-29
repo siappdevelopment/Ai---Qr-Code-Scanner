@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.qrcode.scanner.ui.navigation.AppDestination
+import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.CobaltSoft
@@ -92,7 +93,7 @@ fun ScanPulseBottomBar(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
-                        .background(Color(0xFFE2E8F0))
+                        .background(BorderSubtle)
                 )
             }
 
@@ -201,7 +202,7 @@ private fun ScanFabTab(
                 .background(if (selected) CobaltSoft else CardSurface, CircleShape)
                 .border(
                     width = 1.dp,
-                    color = if (selected) CobaltPrimary else Color(0xFFE2E8F0),
+                    color = if (selected) CobaltPrimary else BorderSubtle,
                     shape = CircleShape
                 ),
             contentAlignment = Alignment.Center

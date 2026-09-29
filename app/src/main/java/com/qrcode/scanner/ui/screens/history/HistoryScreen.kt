@@ -83,6 +83,7 @@ import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
 import com.qrcode.scanner.ui.theme.White
+import com.qrcode.scanner.ui.theme.forDarkUi
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -817,7 +818,7 @@ internal fun DeleteHistoryItemDialog(
                         modifier = Modifier
                             .size(44.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(Color(0xFFFEE2E2)),
+                            .background(Color(0xFFFEE2E2).forDarkUi()),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -950,7 +951,7 @@ internal fun ClearHistoryDialog(
                         modifier = Modifier
                             .size(44.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(Color(0xFFFEE2E2)),
+                            .background(Color(0xFFFEE2E2).forDarkUi()),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(

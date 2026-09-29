@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#3E68B0</color>
+    <color name="primary_light">#333E68B0</color>
+    <color name="dock_scan">#9EBFEE</color>
+    <color name="dock_scan_fill">#339EBFEE</color>
+    <color name="dock_create">#C4A6EE</color>
+    <color name="dock_create_fill">#33C4A6EE</color>
+    <color name="dock_history">#7DCCAE</color>
+    <color name="dock_history_fill">#337DCCAE</color>
+    <color name="dock_settings">#F0A36A</color>
+    <color name="dock_settings_fill">#33F0A36A</color>
+</resources>

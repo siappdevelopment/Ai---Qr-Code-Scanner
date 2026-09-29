@@ -58,8 +58,11 @@ import com.qrcode.scanner.data.history.HistoryRepository
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
 import com.qrcode.scanner.ui.theme.CardSurface
+import com.qrcode.scanner.ui.theme.CobaltAccent
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
+import com.qrcode.scanner.ui.theme.ScanPulsePalette
+import com.qrcode.scanner.ui.theme.ScanPulseThemeState
 import com.qrcode.scanner.ui.theme.White
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -242,8 +245,8 @@ private fun ScannerReticle() {
             val stroke = 3.dp.toPx()
             val arm = 20.dp.toPx()
             val inset = 4.dp.toPx()
-            val cobalt = Color(0xFF0033CC)
-            val cyan = Color(0xFF00B4FF)
+            val cobalt = CobaltPrimary
+            val cyan = CobaltAccent
 
             fun corner(x: Float, y: Float, dx1: Float, dy1: Float, dx2: Float, dy2: Float, color: Color) {
                 drawLine(color, Offset(x, y), Offset(x + dx1, y + dy1), stroke, StrokeCap.Round)
@@ -601,12 +604,13 @@ private fun RecentScanRow(
 }
 
 private object HomeColors {
-    val Page = Color(0xFFF7F9FA)
-    val OnSurface = Color(0xFF111827)
-    val OnSurfaceVariant = Color(0xFF4B5563)
-    val Outline = Color(0xFFE5E8EB)
-    val IconWell = Color(0xFFF0F5FF)
-    val IconWellBorder = Color(0xFFD0E2FF)
-    val ProBadgeBg = Color(0xFFEBF3FF)
-    val Meta = Color(0xFF6B7280)
+    private val dark get() = ScanPulseThemeState.palette === ScanPulsePalette.Dark
+    val Page get() = if (dark) Color(0xFF101114) else Color(0xFFF7F9FA)
+    val OnSurface get() = if (dark) Color(0xFFF3F5F8) else Color(0xFF111827)
+    val OnSurfaceVariant get() = if (dark) Color(0xFFC2C7D0) else Color(0xFF4B5563)
+    val Outline get() = if (dark) Color(0xFF343944) else Color(0xFFE5E8EB)
+    val IconWell get() = if (dark) Color(0xFF1A2433) else Color(0xFFF0F5FF)
+    val IconWellBorder get() = if (dark) Color(0xFF314056) else Color(0xFFD0E2FF)
+    val ProBadgeBg get() = if (dark) Color(0xFF1A2433) else Color(0xFFEBF3FF)
+    val Meta get() = if (dark) Color(0xFFA8AEB8) else Color(0xFF6B7280)
 }

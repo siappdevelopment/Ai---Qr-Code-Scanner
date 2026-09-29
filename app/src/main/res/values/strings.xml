@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">QR Code &amp; Scanner</string>
+    <string name="reminder_notification_title">Reminder</string>
+    <string name="reminder_notification_channel_desc">Scheduled reminder alerts</string>
 </resources>

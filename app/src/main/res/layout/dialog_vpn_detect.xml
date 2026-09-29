@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/custom_radius_16"
+    android:orientation="vertical"
+    android:padding="@dimen/_20sdp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="@dimen/_120sdp"
+        android:layout_height="@dimen/_120sdp"
+        android:layout_gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        android:src="@drawable/img_vpn_detect" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:fontFamily="@font/sans_trial_semi_bold"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="VPN Detected"
+        android:textColor="?attr/textPrimaryColor"
+        android:textSize="@dimen/_14sdp"
+        tools:ignore="HardcodedText" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_2sdp"
+        android:fontFamily="@font/sans_trial_regular"
+        android:gravity="center"
+        android:text="A VPN connection has been detected. Please disable your VPN and tap Recheck to continue."
+        android:textColor="?attr/textSecondaryColor"
+        android:textSize="@dimen/_11sdp"
+        tools:ignore="HardcodedText" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/btnReCheck"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_42sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/custom_radius_12"
+        android:backgroundTint="@color/primary"
+        android:fontFamily="@font/sans_trial_medium"
+        android:gravity="center"
+        android:paddingBottom="@dimen/_2sdp"
+        android:text="Recheck"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_13sdp"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>

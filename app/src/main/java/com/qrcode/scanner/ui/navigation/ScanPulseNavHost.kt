@@ -1,5 +1,9 @@
 package com.qrcode.scanner.ui.navigation
 
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
+import android.view.View
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -18,6 +22,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
+import com.qrcode.scanner.launcher.common.StartupFlow
+import com.qrcode.scanner.launcher.common.StartupNavigation
+import com.qrcode.scanner.launcher.common.WidgetNavigation
 import com.qrcode.scanner.ui.components.ScanPulseBottomBar
 import com.qrcode.scanner.ui.screens.common.PlaceholderScreen
 import com.qrcode.scanner.ui.screens.create.CreateQrIntents
@@ -34,8 +41,20 @@ import com.qrcode.scanner.ui.theme.PageBackground
 
 private const val MAIN_GRAPH_ROUTE = "main_graph"
 
+private fun Context.findHostActivity(): Activity? {
+    var current: Context = this
+    while (current is ContextWrapper) {
+        if (current is Activity) {
+            return current
+        }
+        current = current.baseContext
+    }
+    return null
+}
+
 @Composable
 fun ScanPulseNavHost(
+    showStartupSplash: Boolean = true,
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -78,7 +97,11 @@ fun ScanPulseNavHost(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = AppDestination.Splash.route,
+            startDestination = if (showStartupSplash) {
+                AppDestination.Splash.route
+            } else {
+                MAIN_GRAPH_ROUTE
+            },
             modifier = if (isScan) {
                 Modifier.fillMaxSize()
             } else {
@@ -86,13 +109,22 @@ fun ScanPulseNavHost(
             }
         ) {
             composable(AppDestination.Splash.route) {
-                SplashScreen(
-                    onFinished = {
-                        navController.navigate(MAIN_GRAPH_ROUTE) {
-                            popUpTo(AppDestination.Splash.route) { inclusive = true }
+                val context = LocalContext.current
+                var adRoot by remember { mutableStateOf<View?>(null) }
+                SplashScreen(onAdRootReady = { adRoot = it })
+                LaunchedEffect(adRoot) {
+                    val root = adRoot ?: return@LaunchedEffect
+                    val activity = context.findHostActivity() ?: return@LaunchedEffect
+                    StartupFlow.begin(activity, root) {
+                        val stayInQrApp = StartupNavigation.continueAfterVisibleSplash(activity)
+                        if (stayInQrApp) {
+                            WidgetNavigation.openPendingComposeDestination(activity)
+                            navController.navigate(MAIN_GRAPH_ROUTE) {
+                                popUpTo(AppDestination.Splash.route) { inclusive = true }
+                            }
                         }
                     }
-                )
+                }
             }
 
             navigation(

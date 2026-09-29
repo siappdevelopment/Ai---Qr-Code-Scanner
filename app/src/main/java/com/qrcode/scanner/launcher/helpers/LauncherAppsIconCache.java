@@ -1,0 +1,69 @@
+package com.qrcode.scanner.launcher.helpers;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.collection.LruCache;
+import androidx.core.graphics.drawable.RoundedBitmapDrawable;
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
+
+import com.qrcode.scanner.launcher.models.LauncherAppsModel;
+
+import java.util.List;
+
+public final class LauncherAppsIconCache {
+    private static final LruCache<String, Drawable> CACHE = new LruCache<>(512);
+
+    private LauncherAppsIconCache() {
+    }
+
+    @Nullable
+    public static Drawable get(@NonNull String packageName, int sizePx) {
+        return CACHE.get(cacheKey(packageName, sizePx));
+    }
+
+    public static void warm(@NonNull Context context, @Nullable List<LauncherAppsModel> apps, int sizePx, int cornerRadiusPx) {
+        if (apps == null || apps.isEmpty() || sizePx <= 0) {
+            return;
+        }
+        Context appContext = context.getApplicationContext();
+        for (LauncherAppsModel app : apps) {
+            if (app == null) {
+                continue;
+            }
+            String packageName = app.getPackageName();
+            if (packageName == null || packageName.isEmpty() || CACHE.get(cacheKey(packageName, sizePx)) != null) {
+                continue;
+            }
+            Drawable displayIcon = createDisplayIcon(appContext, app.getAppIcon(), sizePx, cornerRadiusPx);
+            if (displayIcon != null) {
+                CACHE.put(cacheKey(packageName, sizePx), displayIcon);
+            }
+        }
+    }
+
+    @Nullable
+    public static Drawable createDisplayIcon(@NonNull Context context, @Nullable Drawable source, int sizePx, int cornerRadiusPx) {
+        if (source == null) {
+            return null;
+        }
+        Bitmap bitmap = Bitmap.createBitmap(sizePx, sizePx, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        source.setBounds(0, 0, sizePx, sizePx);
+        source.draw(canvas);
+        RoundedBitmapDrawable rounded = RoundedBitmapDrawableFactory.create(context.getResources(), bitmap);
+        rounded.setCornerRadius(cornerRadiusPx);
+        rounded.setAntiAlias(true);
+        rounded.setFilterBitmap(true);
+        return rounded;
+    }
+
+    @NonNull
+    private static String cacheKey(@NonNull String packageName, int sizePx) {
+        return packageName + "@" + sizePx;
+    }
+}

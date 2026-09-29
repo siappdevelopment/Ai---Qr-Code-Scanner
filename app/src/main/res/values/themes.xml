@@ -3,4 +3,68 @@
 
     <!-- AppCompat parent required for AppCompatDelegate per-app locales (Phase 12.19). -->
     <style name="Theme.QRCodeScanner" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <!-- Device HOME only. Do not apply this theme to Compose activities. -->
+    <style name="Theme.Home" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorControlActivated">@color/primary</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowShowWallpaper">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="colorSurface">@color/surface_primary_light</item>
+        <item name="surfaceSecondaryColor">@color/surface_secondary_light</item>
+        <item name="textPrimaryColor">@color/text_primary_light</item>
+        <item name="textSecondaryColor">@color/text_secondary_light</item>
+        <item name="launcherBackgroundColor">@color/launcher_bg_light</item>
+    </style>
+
+    <style name="Theme.LauncherSettings" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorSurface">@color/surface_primary_light</item>
+        <item name="surfaceSecondaryColor">@color/surface_secondary_light</item>
+        <item name="textPrimaryColor">@color/text_primary_light</item>
+        <item name="textSecondaryColor">@color/text_secondary_light</item>
+        <item name="launcherBackgroundColor">@color/launcher_bg_light</item>
+    </style>
+
+    <style name="LauncherAppsBottomSheetTheme" parent="Theme.Material3.DayNight.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustNothing</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimAmount">0.25</item>
+        <item name="colorSurface">@color/surface_primary_light</item>
+        <item name="textPrimaryColor">@color/text_primary_light</item>
+        <item name="textSecondaryColor">@color/text_secondary_light</item>
+        <item name="launcherBackgroundColor">@color/launcher_bg_light</item>
+        <item name="bottomSheetStyle">@style/LauncherAppsBottomSheetStyle</item>
+    </style>
+
+    <style name="LauncherAppsBottomSheetStyle" parent="Widget.Material3.BottomSheet.Modal">
+        <item name="android:background">@null</item>
+        <item name="backgroundTint">@null</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.LauncherAppsBottomSheet</item>
+        <item name="elevation">0dp</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="ShapeAppearance.LauncherAppsBottomSheet" parent="ShapeAppearance.Material3.LargeComponent">
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="Theme.ClEnd" parent="Theme.LauncherSettings">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
 </resources>

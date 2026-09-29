@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llAddToContact"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/custom_radius_12"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_12sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:padding="@dimen/_1sdp"
+                android:src="@drawable/ic_add_contact_more_option" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="Add to Contact"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSendMessage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/custom_radius_12"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_12sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_send_message_more_option" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="Send Message"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llSendMail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/custom_radius_12"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_12sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_send_mail_more_option" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="Send Mail"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/custom_radius_12"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_12sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_calendar_more_option" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="Calendar"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llWeb"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginVertical="@dimen/_8sdp"
+            android:background="@drawable/custom_radius_12"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_12sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_web_more_option" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="Web"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

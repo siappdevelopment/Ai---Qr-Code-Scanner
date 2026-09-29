@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_42sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/custom_radius_12"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/ic_search" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etSearch"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:fontFamily="@font/sans_trial_medium"
+            android:hint="Search"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:paddingBottom="@dimen/_2sdp"
+            android:textColor="?attr/textPrimaryColor"
+            android:textColorHint="?attr/textSecondaryColor"
+            android:textSize="@dimen/_13sdp"
+            tools:ignore="HardcodedText" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivMore"
+            android:layout_width="@dimen/_22sdp"
+            android:layout_height="@dimen/_22sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:padding="@dimen/_3sdp"
+            android:src="@drawable/ic_more" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llDefault"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/custom_radius_12"
+        android:gravity="center_vertical"
+        android:padding="@dimen/_12sdp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_38sdp"
+            android:src="@drawable/ic_app_logo" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_weight="1"
+            android:fontFamily="@font/sans_trial_medium"
+            android:singleLine="true"
+            android:text="Set as Default"
+            android:textColor="?attr/textPrimaryColor"
+            android:textSize="@dimen/_13sdp"
+            tools:ignore="HardcodedText" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/btnSetNow"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_32sdp"
+            android:background="@drawable/custom_radius_12"
+            android:backgroundTint="@color/primary"
+            android:fontFamily="@font/sans_trial_medium"
+            android:gravity="center"
+            android:paddingBottom="@dimen/_2sdp"
+            android:text="Set Now"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_11sdp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvApps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/_10sdp" />
+
+        <LinearLayout
+            android:id="@+id/llNoApps"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="@dimen/_12sdp"
+            android:visibility="gone">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvNoApps"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sans_trial_medium"
+                android:text="@string/app_name"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_13sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvMoreApps"
+                android:layout_width="@dimen/_180sdp"
+                android:layout_height="@dimen/_42sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:background="@drawable/custom_radius_12"
+                android:fontFamily="@font/sans_trial_medium"
+                android:gravity="center"
+                android:paddingBottom="@dimen/_2sdp"
+                android:singleLine="true"
+                android:text="SEARCH FOR MORE APPS"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_11sdp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlNativeListAdView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/launcher_native_list_ad_height"
+            android:layout_gravity="bottom"
+            android:layout_margin="@dimen/launcher_native_list_margin"
+            android:visibility="gone">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="0dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/slNativeListShimmer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:background="?attr/surfaceSecondaryColor"
+                        android:visibility="gone"
+                        app:shimmer_auto_start="false"
+                        app:shimmer_base_alpha="0.9"
+                        app:shimmer_highlight_alpha="1.0">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/flNativeListAd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</LinearLayout>

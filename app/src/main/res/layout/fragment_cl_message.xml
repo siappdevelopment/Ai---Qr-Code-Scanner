@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llMessage1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@drawable/custom_radius_12"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_12sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivSelectMessage1"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/ic_checkbox_checked" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:fontFamily="@font/sans_trial_regular"
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="Sorry, I can't talk right now."
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivSendMessage1"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:src="@drawable/ic_send_message" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llMessage2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/custom_radius_12"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_12sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivSelectMessage2"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/ic_checkbox_unchecked" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:fontFamily="@font/sans_trial_regular"
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="Can I call you back later?"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivSendMessage2"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:src="@drawable/ic_send_message"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llMessage3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/custom_radius_12"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="@dimen/_12sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivSelectMessage3"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:src="@drawable/ic_checkbox_unchecked" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:fontFamily="@font/sans_trial_regular"
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="In a meeting right now."
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivSendMessage3"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:src="@drawable/ic_send_message"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llMessageCustom"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_84sdp"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginVertical="@dimen/_8sdp"
+            android:background="@drawable/custom_radius_12"
+            android:padding="@dimen/_12sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_edit_pen"
+                android:tint="?attr/textSecondaryColor" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/etCustomMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:fontFamily="@font/sans_trial_regular"
+                android:hint="Write personal message..."
+                android:paddingBottom="@dimen/_1sdp"
+                android:textColor="?attr/textPrimaryColor"
+                android:textColorHint="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivSendCustomMessage"
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:layout_gravity="bottom"
+                android:src="@drawable/ic_send_message"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

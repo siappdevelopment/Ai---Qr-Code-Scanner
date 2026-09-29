@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="choose_your_language">Choose Your Language</string>
+    <string name="collection_title">A Quick Note About Your Privacy</string>
+    <string name="collection_intro_1">We use limited device and app information to keep QR Scanner fast, secure, and reliable, provide QR code scanning and generation features, show ads that help keep the app free, and improve your overall experience.</string>
+    <string name="collection_intro_2">Your scanned content, personal files, photos, videos, and other private data are not collected for analytics or advertising and remain under your control.</string>
+    <string name="collection_what_we_use">What we use and why:</string>
+    <string name="collection_bullet_1">⦿ Camera access - to scan QR codes and barcodes accurately and provide instant results.</string>
+    <string name="collection_bullet_2">⦿ App usage information - such as the scanning and QR generation features you use and screens you open - to improve app performance, stability, and user experience.</string>
+    <string name="collection_bullet_3">⦿ Device and app identifiers - to save your preferences, improve app stability, prevent errors, and support essential app functionality.</string>
+    <string name="collection_bullet_4">⦿ Advertising identifiers - to display and measure ads that help keep the app free.</string>
+    <string name="collection_footer">By tapping Agree &amp; Continue, you acknowledge our Privacy Policy. We use only the information necessary to provide QR code scanning, QR code generation, app security, and other essential features, improve the app, and support advertising. Your scanned content and private data remain under your control.</string>
+    <string name="collection_agree_checkbox">I agree to this data collection</string>
+    <string name="collection_agree_continue">Agree &amp; Continue</string>
+    <string name="collection_agree_toast">Please agree to data collection to continue.</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="this_action_may_contain_ads">This action may contain Ads</string>
+    <string name="marketing_converter1">gclid</string>
+    <string name="utm_source_apps_facebook_com">utm_source=apps.facebook.com</string>
+    <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
+    <string name="utm_source_marketing">utm_source=marketing</string>
+    <string name="permission_title">Required Permission</string>
+    <string name="permission_description">Allow camera permission to scan QR codes and barcodes quickly.</string>
+    <string name="allow_permission">Allow Permission</string>
+    <string name="default_title">Set as Default Home App</string>
+    <string name="default_description">Set this app as your default Home launcher for fast, accurate, and seamless QR code scanning.</string>
+    <string name="set_as_default">Set as Default</string>
+    <string name="quick_qr_scanning">Quick QR Scanning</string>
+    <string name="fast_simple_and_accurate_qr_scanning_whenever_you_need_it">Fast, simple, and accurate QR scanning whenever you need it.</string>
+    <string name="fast_amp_accurate_scanning">Fast &amp; Accurate Scanning</string>
+    <string name="scan_any_barcode_with_ease_and_get_instant_results_every_time">Scan any barcode with ease and get instant results every time.</string>
+    <string name="create_custom_qr_codes">Create Custom QR Codes</string>
+    <string name="create_custom_qr_codes_for_different_purposes_and_share_them_instantly">Create custom QR codes for different purposes and share them instantly.</string>
+    <string name="next">Next</string>
+    <string name="loading_ads_title">Loading Advertisement</string>
+    <string name="loading_ads_desc">An advertisement is loading and will be displayed shortly.</string>
+</resources>

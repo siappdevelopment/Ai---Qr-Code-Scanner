@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:padding="@dimen/_10sdp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sans_trial_medium"
+                android:text="@string/collection_title"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/_16sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:text="@string/collection_intro_1"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:text="@string/collection_intro_2"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:fontFamily="@font/sans_trial_medium"
+                android:text="@string/collection_what_we_use"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_14sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:text="@string/collection_bullet_1"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:text="@string/collection_bullet_2"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:text="@string/collection_bullet_3"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:text="@string/collection_bullet_4"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvFooter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:lineSpacingExtra="@dimen/_2sdp"
+                android:text="@string/collection_footer"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:gravity="center_vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivSelect"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:src="@drawable/ic_checkbox_unchecked" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_weight="1"
+            android:fontFamily="@font/sans_trial_medium"
+            android:paddingBottom="@dimen/_2sdp"
+            android:text="@string/collection_agree_checkbox"
+            android:textColor="?attr/textPrimaryColor"
+            android:textSize="@dimen/_12sdp" />
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/btnAgreeContinue"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@drawable/custom_radius_12"
+        android:backgroundTint="@color/primary"
+        android:fontFamily="@font/sans_trial_medium"
+        android:gravity="center"
+        android:paddingBottom="@dimen/_2sdp"
+        android:singleLine="true"
+        android:text="@string/collection_agree_continue"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_13sdp" />
+
+</LinearLayout>

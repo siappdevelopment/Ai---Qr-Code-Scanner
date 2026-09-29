@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/launcher_native_list_ad_height"
+    android:layout_marginHorizontal="@dimen/launcher_native_list_margin">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/launcher_native_list_ad_height"
+        android:layout_gravity="center"
+        app:cardCornerRadius="@dimen/_13sdp"
+        app:cardElevation="0dp">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/slNativeListItemShimmer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/surfaceSecondaryColor"
+            android:visibility="gone"
+            app:shimmer_auto_start="false"
+            app:shimmer_base_alpha="0.9"
+            app:shimmer_highlight_alpha="1.0">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>

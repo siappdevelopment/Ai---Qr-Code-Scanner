@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivBack"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/ic_back" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:fontFamily="@font/sans_trial_medium"
+            android:paddingBottom="@dimen/_2sdp"
+            android:singleLine="true"
+            android:text="@string/app_widgets"
+            android:textColor="?attr/textPrimaryColor"
+            android:textSize="@dimen/_13sdp" />
+
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    android:paddingTop="@dimen/_1sdp"
+                    android:src="@drawable/ic_info" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_6sdp"
+                    android:fontFamily="@font/sans_trial_regular"
+                    android:lineSpacingExtra="@dimen/_2sdp"
+                    android:paddingBottom="@dimen/_2sdp"
+                    android:text="@string/choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:textSize="@dimen/_12sdp" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:fontFamily="@font/sans_trial_medium"
+                android:singleLine="true"
+                android:text="@string/quick_access"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_14sdp" />
+
+            <LinearLayout
+                android:id="@+id/llWidgetAppIcon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:background="@drawable/custom_radius_12"
+                android:gravity="center_vertical"
+                android:padding="@dimen/_12sdp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sans_trial_medium"
+                        android:singleLine="true"
+                        android:text="@string/app_icon_1x1"
+                        android:textColor="?attr/textPrimaryColor"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/sans_trial_regular"
+                        android:text="@string/qr_scanner_generator"
+                        android:textColor="?attr/textSecondaryColor"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_50sdp"
+                    android:layout_height="@dimen/_50sdp"
+                    android:src="@drawable/ic_widget_app_logo" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:fontFamily="@font/sans_trial_medium"
+                android:singleLine="true"
+                android:text="@string/create_qr"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_14sdp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:id="@+id/llWidgetCreateQRA"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_radius_12"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:src="@drawable/ic_widget_create_qr_1" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:fontFamily="@font/sans_trial_medium"
+                        android:singleLine="true"
+                        android:text="@string/create_1_x_1"
+                        android:textColor="?attr/textPrimaryColor"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/sans_trial_regular"
+                        android:text="@string/style_a"
+                        android:textColor="?attr/textSecondaryColor"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llWidgetCreateQRB"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_radius_12"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:src="@drawable/ic_widget_create_qr_2" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:fontFamily="@font/sans_trial_medium"
+                        android:singleLine="true"
+                        android:text="@string/create_1_x_1"
+                        android:textColor="?attr/textPrimaryColor"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/sans_trial_regular"
+                        android:text="@string/style_b"
+                        android:textColor="?attr/textSecondaryColor"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:id="@+id/llWidgetCreateQRC"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_radius_12"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:src="@drawable/ic_widget_create_qr_3" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:fontFamily="@font/sans_trial_medium"
+                        android:singleLine="true"
+                        android:text="@string/create_1_x_1"
+                        android:textColor="?attr/textPrimaryColor"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/sans_trial_regular"
+                        android:text="@string/style_c"
+                        android:textColor="?attr/textSecondaryColor"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_weight="1"
+                    tools:ignore="UselessLeaf" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:fontFamily="@font/sans_trial_medium"
+                android:singleLine="true"
+                android:text="@string/scan_qr"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_14sdp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:id="@+id/llWidgetScanQRA"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_radius_12"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:src="@drawable/ic_widget_scan_qr_1" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:fontFamily="@font/sans_trial_medium"
+                        android:singleLine="true"
+                        android:text="@string/create_1_x_1"
+                        android:textColor="?attr/textPrimaryColor"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/sans_trial_regular"
+                        android:text="@string/style_a"
+                        android:textColor="?attr/textSecondaryColor"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llWidgetScanQRB"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/custom_radius_12"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/_12sdp">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
+                        android:src="@drawable/ic_widget_scan_qr_2" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_6sdp"
+                        android:fontFamily="@font/sans_trial_medium"
+                        android:singleLine="true"
+                        android:text="@string/create_1_x_1"
+                        android:textColor="?attr/textPrimaryColor"
+                        android:textSize="@dimen/_13sdp" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/sans_trial_regular"
+                        android:text="@string/style_b"
+                        android:textColor="?attr/textSecondaryColor"
+                        android:textSize="@dimen/_12sdp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        android:id="@+id/rlAdView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:id="@+id/rlBannerAdView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_60sdp"
+            android:background="?attr/surfaceSecondaryColor">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/slBannerShimmer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_60sdp"
+                android:layout_centerInParent="true"
+                android:background="?attr/surfaceSecondaryColor"
+                app:shimmer_auto_start="true"
+                app:shimmer_base_alpha="0.9"
+                app:shimmer_highlight_alpha="1.0">
+
+                <include layout="@layout/shimmer_small_ad" />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <LinearLayout
+                android:id="@+id/llBannerAd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlNativeAdView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_195sdp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:visibility="gone">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="0dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/slNativeShimmer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:background="?attr/surfaceSecondaryColor"
+                        app:shimmer_auto_start="true"
+                        app:shimmer_base_alpha="0.9"
+                        app:shimmer_highlight_alpha="1.0">
+
+                        <include layout="@layout/shimmer_medium_ad" />
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/flNativeAd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

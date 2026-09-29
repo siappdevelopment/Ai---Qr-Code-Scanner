@@ -2,8 +2,52 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.DIAL" />
+            <data android:scheme="tel" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="smsto" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <data android:scheme="mailto" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.INSERT" />
+            <data android:mimeType="vnd.android.cursor.dir/contact" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.APP_CALENDAR" />
+        </intent>
+        <package android:name="com.google.android.calendar" />
+        <package android:name="com.google.android.googlequicksearchbox" />
+    </queries>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28"
@@ -13,10 +57,14 @@
         android:name="android.hardware.camera"
         android:required="false" />
     <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+    <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="false" />
 
     <application
+        android:name=".QrScannerApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -46,6 +94,67 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".launcher.activities.LauncherHomeActivity"
+            android:clearTaskOnLaunch="true"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:stateNotNeeded="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Home">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".launcher.activities.LanguageActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LauncherSettings" />
+        <activity
+            android:name=".launcher.activities.CollectionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LauncherSettings" />
+        <activity
+            android:name=".launcher.activities.PermissionActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LauncherSettings" />
+        <activity
+            android:name=".launcher.activities.DefaultActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LauncherSettings" />
+        <activity
+            android:name=".launcher.activities.Intro1Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LauncherSettings" />
+        <activity
+            android:name=".launcher.activities.Intro2Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LauncherSettings" />
+        <activity
+            android:name=".launcher.activities.Intro3Activity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LauncherSettings" />
+        <activity
+            android:name=".launcher.activities.LauncherSettingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LauncherSettings" />
+        <activity
+            android:name=".launcher.activities.AppWidgetsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LauncherSettings" />
         <activity
             android:name=".ui.screens.create.CreateActivity"
             android:exported="false"
@@ -100,6 +209,134 @@
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
 
+        <activity
+            android:name=".launcher.activities.ClEndActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:showOnLockScreen="false"
+            android:taskAffinity=""
+            android:theme="@style/Theme.ClEnd"
+            android:turnScreenOn="false"
+            android:windowSoftInputMode="adjustPan" />
+
+        <receiver
+            android:name=".launcher.services.PhoneCallStateService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="998">
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.example.autostart.ACTION_IMPLICIT_BROADCAST" />
+                <action android:name="com.example.autostart.ACTION_EXPLICIT_BROADCAST" />
+                <category android:name="com.example.autostart.CATEGORY_AUTOSTART" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".launcher.receivers.CallEndReceiver"
+            android:exported="true"
+            android:permission="android.permission.BIND_SCREENING_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.CallScreeningService" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".launcher.receivers.ReminderReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+        <service
+            android:name=".launcher.services.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <receiver
+            android:name=".launcher.widgets.AppIconWidgetProvider"
+            android:exported="true"
+            android:label="@string/app_icon_1x1">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_app_icon_info" />
+        </receiver>
+        <receiver
+            android:name=".launcher.widgets.CreateQrAWidgetProvider"
+            android:exported="true"
+            android:label="@string/style_a">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_create_qr_a_info" />
+        </receiver>
+        <receiver
+            android:name=".launcher.widgets.CreateQrBWidgetProvider"
+            android:exported="true"
+            android:label="@string/style_b">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_create_qr_b_info" />
+        </receiver>
+        <receiver
+            android:name=".launcher.widgets.CreateQrCWidgetProvider"
+            android:exported="true"
+            android:label="@string/style_c">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_create_qr_c_info" />
+        </receiver>
+        <receiver
+            android:name=".launcher.widgets.ScanQrAWidgetProvider"
+            android:exported="true"
+            android:label="@string/style_a">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_scan_qr_a_info" />
+        </receiver>
+        <receiver
+            android:name=".launcher.widgets.ScanQrBWidgetProvider"
+            android:exported="true"
+            android:label="@string/style_b">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_scan_qr_b_info" />
+        </receiver>
+
+        <receiver
+            android:name=".launcher.receivers.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -109,6 +346,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
+
     </application>
 
 </manifest>

@@ -13,14 +13,18 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import android.view.LayoutInflater
+import android.view.View
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.qrcode.scanner.R
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -30,23 +34,15 @@ import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
 import com.qrcode.scanner.ui.theme.White
-import kotlinx.coroutines.delay
 
 /**
- * Splash foundation â€” navigates to Home after a short delay.
- * Visual direction: White / Electric Cobalt (no gradients / shadows).
- * Full Stitch Splash pixel match can refine this screen later.
+ * Existing Compose splash. Startup timing is owned by StartupFlow, not by a second splash screen.
  */
 @Composable
 fun SplashScreen(
-    onFinished: () -> Unit,
+    onAdRootReady: (View) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    LaunchedEffect(Unit) {
-        delay(1_400)
-        onFinished()
-    }
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -151,7 +147,18 @@ fun SplashScreen(
             letterSpacing = 0.8.sp,
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .padding(bottom = 40.dp)
+                .padding(bottom = 108.dp)
+        )
+
+        AndroidView(
+            factory = { context ->
+                val themed = ContextThemeWrapper(context, R.style.Theme_LauncherSettings)
+                LayoutInflater.from(themed).inflate(R.layout.layout_splash_startup_ads, null, false)
+            },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(),
+            update = onAdRootReady
         )
     }
 }

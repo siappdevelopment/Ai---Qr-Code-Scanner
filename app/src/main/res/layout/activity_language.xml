@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="@dimen/_10sdp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/sans_trial_medium"
+            android:paddingBottom="@dimen/_2sdp"
+            android:singleLine="true"
+            android:text="@string/choose_your_language"
+            android:textColor="?attr/textPrimaryColor"
+            android:textSize="@dimen/_16sdp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivDone"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:padding="@dimen/_2sdp"
+            android:src="@drawable/ic_done" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvLanguage"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:id="@+id/rlAdView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/surfaceSecondaryColor">
+
+        <RelativeLayout
+            android:id="@+id/rlBannerAdView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/slBannerShimmer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="?attr/surfaceSecondaryColor"
+                app:shimmer_auto_start="true"
+                app:shimmer_base_alpha="0.9"
+                app:shimmer_highlight_alpha="1.0">
+
+                <View android:layout_width="match_parent" android:layout_height="match_parent" />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <LinearLayout
+                android:id="@+id/llBannerAd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlNativeAdView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_250sdp">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/slNativeShimmer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_250sdp"
+                android:layout_centerInParent="true"
+                android:background="?attr/surfaceSecondaryColor"
+                app:shimmer_auto_start="true"
+                app:shimmer_base_alpha="0.9"
+                app:shimmer_highlight_alpha="1.0">
+
+                <View android:layout_width="match_parent" android:layout_height="match_parent" />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <FrameLayout
+                android:id="@+id/flNativeAd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

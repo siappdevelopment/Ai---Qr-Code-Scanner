@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.gms.ads.nativead.NativeAdView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nativeAdView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorSurface"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="@dimen/_10sdp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivClose"
+                android:layout_width="@dimen/_24sdp"
+                android:layout_height="@dimen/_24sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/custom_circle"
+                android:backgroundTint="?attr/surfaceSecondaryColor"
+                android:padding="@dimen/_4sdp"
+                android:src="@drawable/ic_close" />
+
+            <com.google.android.gms.ads.nativead.MediaView
+                android:id="@+id/ad_media"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_10sdp"
+            android:baselineAligned="false"
+            android:gravity="center_vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ad_app_icon"
+                android:layout_width="@dimen/_40sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/ad_attribution"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/custom_label"
+                        android:fontFamily="@font/sans_trial_medium"
+                        android:includeFontPadding="false"
+                        android:paddingHorizontal="@dimen/_2sdp"
+                        android:paddingVertical="@dimen/_1sdp"
+                        android:text="AD"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/_7sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/ad_headline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:fontFamily="@font/sans_trial_medium"
+                        android:includeFontPadding="false"
+                        android:singleLine="true"
+                        android:text="Ad Headline"
+                        android:textColor="?attr/textPrimaryColor"
+                        android:textSize="@dimen/_11sdp"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/ad_body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sans_trial_regular"
+                    android:includeFontPadding="false"
+                    android:maxLines="2"
+                    android:text="Ad Body"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:textSize="@dimen/_10sdp"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/ad_call_to_action"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:background="@drawable/custom_radius_12"
+            android:backgroundTint="@color/primary"
+            android:elevation="0dp"
+            android:fontFamily="@font/sans_trial_medium"
+            android:gravity="center"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingBottom="@dimen/_1sdp"
+            android:singleLine="true"
+            android:stateListAnimator="@null"
+            android:text="Install"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_12sdp"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
+
+</com.google.android.gms.ads.nativead.NativeAdView>

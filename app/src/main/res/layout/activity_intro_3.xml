@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"
+            android:src="@drawable/img_intro_3" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginVertical="@dimen/_20sdp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sans_trial_semi_bold"
+                android:text="@string/create_custom_qr_codes"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_16sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:text="@string/create_custom_qr_codes_for_different_purposes_and_share_them_instantly"
+                android:textColor="?attr/textSecondaryColor"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp">
+
+            <LinearLayout
+                android:id="@+id/llIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:orientation="horizontal" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/btnNext"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/custom_radius_border_12"
+                android:backgroundTint="@color/primary"
+                android:fontFamily="@font/sans_trial_medium"
+                android:gravity="center"
+                android:paddingBottom="@dimen/_2sdp"
+                android:text="@string/next"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/_13sdp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlAdView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/surfaceSecondaryColor">
+
+        <RelativeLayout
+            android:id="@+id/rlBannerAdView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_60sdp"
+            android:visibility="gone">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/slBannerShimmer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_60sdp"
+                android:layout_centerInParent="true"
+                android:background="?attr/surfaceSecondaryColor"
+                app:shimmer_auto_start="true"
+                app:shimmer_base_alpha="0.9"
+                app:shimmer_highlight_alpha="1.0">
+
+                <View android:layout_width="match_parent" android:layout_height="match_parent" />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <LinearLayout
+                android:id="@+id/llBannerAd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlNativeAdView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_110sdp">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/slNativeShimmer"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_110sdp"
+                android:layout_centerInParent="true"
+                android:background="?attr/surfaceSecondaryColor"
+                app:shimmer_auto_start="true"
+                app:shimmer_base_alpha="0.9"
+                app:shimmer_highlight_alpha="1.0">
+
+                <View android:layout_width="match_parent" android:layout_height="match_parent" />
+
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <FrameLayout
+                android:id="@+id/flNativeAd"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

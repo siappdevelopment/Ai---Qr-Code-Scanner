@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvHourlyTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sans_trial_regular"
+        android:text="Now"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_9sdp"
+        tools:ignore="HardcodedText" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivHourlyIcon"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:src="@drawable/ic_weather_sunny" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvHourlyTemp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:fontFamily="@font/sans_trial_medium"
+        android:text="29°"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_10sdp"
+        tools:ignore="HardcodedText" />
+
+</LinearLayout>

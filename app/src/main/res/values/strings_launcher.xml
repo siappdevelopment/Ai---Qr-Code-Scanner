@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Launcher Settings</string>
+    <string name="serialize">Serialize</string>
+    <string name="by_name_asc_a_to_z">By Name ASC (A to Z)</string>
+    <string name="by_name_desc_z_to_a">By Name DESC (Z to A)</string>
+    <string name="by_installed_date">By Installed Date</string>
+    <string name="preview">Preview</string>
+    <string name="label_visibility">Label Visibility</string>
+    <string name="hide_app_name">Hide app name</string>
+    <string name="app_icon_size">App Icon Size</string>
+    <string name="app_label_size">App Label Size</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">App Widgets</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Choose a widget to quickly access your QR tools directly from your home screen.</string>
+    <string name="quick_access">Quick Access</string>
+    <string name="app_icon_1x1">App Icon 1 x 1</string>
+    <string name="qr_scanner_generator">QR Scanner &amp; Generator</string>
+    <string name="create_1_x_1">Create 1 x 1</string>
+    <string name="style_a">Style A</string>
+    <string name="style_b">Style B</string>
+    <string name="style_c">Style C</string>
+    <string name="scan_qr">Scan QR</string>
+    <string name="create_qr">Create QR</string>
+    <string name="widget_pin_not_supported">Widget pinning is not supported on this device</string>
+    <string name="widget_pin_failed">Unable to add widget. Please try again.</string>
+</resources>

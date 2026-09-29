@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llQRTemplates"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@drawable/custom_qr_template_border"
+            android:padding="@dimen/_4sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_radius_10"
+                android:backgroundTint="@color/primary"
+                android:padding="@dimen/_10sdp">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/custom_radius_12"
+                    android:backgroundTint="@color/white_light"
+                    android:padding="@dimen/_6sdp"
+                    android:src="@drawable/ic_qr_templates" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginHorizontal="@dimen/_6sdp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/_2sdp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sans_trial_medium"
+                        android:singleLine="true"
+                        android:text="QR Templates"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/_13sdp"
+                        tools:ignore="HardcodedText" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:fontFamily="@font/sans_trial_regular"
+                        android:singleLine="true"
+                        android:text="Create Unique QR Codes Instantly"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/_10sdp"
+                        tools:ignore="HardcodedText" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="@dimen/_66sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/custom_radius_10"
+                    android:backgroundTint="@android:color/white"
+                    android:fontFamily="@font/sans_trial_medium"
+                    android:gravity="center"
+                    android:paddingBottom="@dimen/_2sdp"
+                    android:singleLine="true"
+                    android:text="Create"
+                    android:textColor="@color/primary"
+                    android:textSize="@dimen/_12sdp"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/custom_radius_12"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_10sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_36sdp"
+                android:background="@drawable/custom_radius_12"
+                android:backgroundTint="@color/primary_light"
+                android:padding="@dimen/_9sdp"
+                android:src="@drawable/ic_save_history" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_2sdp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sans_trial_medium"
+                    android:singleLine="true"
+                    android:text="History"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:textSize="@dimen/_13sdp"
+                    tools:ignore="HardcodedText" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:fontFamily="@font/sans_trial_regular"
+                    android:singleLine="true"
+                    android:text="View Your Scanned &amp; Created QR History"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:textSize="@dimen/_11sdp"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:src="@drawable/ic_arrow" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llAppWidgets"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:background="@drawable/custom_radius_12"
+            android:gravity="center_vertical"
+            android:padding="@dimen/_10sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_36sdp"
+                android:background="@drawable/custom_radius_12"
+                android:backgroundTint="@color/primary_light"
+                android:padding="@dimen/_9sdp"
+                android:src="@drawable/ic_app_widgets" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/_2sdp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/sans_trial_medium"
+                    android:singleLine="true"
+                    android:text="App Widgets"
+                    android:textColor="?attr/textPrimaryColor"
+                    android:textSize="@dimen/_13sdp"
+                    tools:ignore="HardcodedText" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:fontFamily="@font/sans_trial_regular"
+                    android:singleLine="true"
+                    android:text="Quick Access QR Tools to Home"
+                    android:textColor="?attr/textSecondaryColor"
+                    android:textSize="@dimen/_11sdp"
+                    tools:ignore="HardcodedText" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_18sdp"
+                android:layout_height="@dimen/_18sdp"
+                android:src="@drawable/ic_arrow" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,21 +1,27 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# R8 keep rules for release builds.
+# Default Android optimize rules are included via optimization.keepRules.includeDefault.
+# Manifest components (activities, services, receivers, providers),
+# custom views and XML-referenced classes are kept automatically by AAPT-generated rules.
+# Firebase, Play Services Ads, ML Kit, CameraX, Gson, Lottie and Install Referrer ship their own consumer rules.
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# ---- Crash reports (Firebase Crashlytics) ----
+-keepattributes SourceFile,LineNumberTable
+-renamesourcefileattribute SourceFile
+-keep public class * extends java.lang.Exception
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# ---- Generic signatures / annotations needed by Gson TypeToken and SDK reflection ----
+-keepattributes Signature,InnerClasses,EnclosingMethod,*Annotation*
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# ---- Gson models ----
+# Field names are the JSON keys persisted in SharedPreferences, so they must not be renamed.
+-keep class com.qrcode.scanner.launcher.models.ReminderModel { <init>(...); <fields>; }
+
+# ---- Parcelable ----
+-keepclassmembers class com.qrcode.scanner.launcher.** implements android.os.Parcelable {
+    public static final ** CREATOR;
+}
+
+# ---- Meta Audience Network mediation (adapter is instantiated by class name) ----
+-keep class com.google.ads.mediation.facebook.** { *; }
+-keep class com.facebook.ads.** { *; }
+-dontwarn com.facebook.ads.**

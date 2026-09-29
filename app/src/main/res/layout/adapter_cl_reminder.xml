@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/_8sdp"
+    android:background="@drawable/custom_radius_12"
+    android:backgroundTint="?attr/surfaceSecondaryColor"
+    android:gravity="center_vertical"
+    android:padding="@dimen/_12sdp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivColor"
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:background="@drawable/custom_circle" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:fontFamily="@font/sans_trial_medium"
+                android:paddingBottom="@dimen/_2sdp"
+                android:singleLine="true"
+                android:text="@string/app_name"
+                android:textColor="?attr/textPrimaryColor"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:gravity="center_vertical">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:padding="@dimen/_1sdp"
+                android:src="@drawable/ic_calendar_more_option"
+                android:tint="?attr/textSecondaryColor" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:text="Date"
+                android:textColor="?attr/textSecondaryColor"
+                android:textSize="@dimen/_10sdp"
+                tools:ignore="HardcodedText" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_12sdp"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:padding="@dimen/_1sdp"
+                android:src="@drawable/ic_reminder_time"
+                android:tint="?attr/textSecondaryColor" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_6sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:text="Time"
+                android:textColor="?attr/textSecondaryColor"
+                android:textSize="@dimen/_10sdp"
+                tools:ignore="HardcodedText" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivDeleteReminder"
+        android:layout_width="@dimen/_26sdp"
+        android:layout_height="@dimen/_26sdp"
+        android:src="@drawable/ic_delete_reminder" />
+
+</LinearLayout>

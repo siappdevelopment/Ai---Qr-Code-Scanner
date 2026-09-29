@@ -4,6 +4,11 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+    apply(plugin = "com.google.firebase.crashlytics")
+}
+
 android {
     namespace = "com.qrcode.scanner"
     compileSdk {
@@ -24,11 +29,12 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            optimization {
+                enable = true
+                keepRules {
+                    files.add(file("proguard-rules.pro"))
+                }
+            }
         }
     }
     compileOptions {
@@ -44,6 +50,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.process)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -64,6 +71,22 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.zxing.core)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.material)
+    implementation(libs.androidx.fragment)
+    implementation(libs.androidx.viewpager2)
+    implementation(libs.sdp.android)
+    implementation(libs.lottie)
+    implementation(libs.shimmer)
+    implementation(libs.play.services.ads)
+    implementation(libs.facebook)
+    implementation(libs.audience.network.sdk)
+    implementation(libs.installreferrer)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.config)
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.gson)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

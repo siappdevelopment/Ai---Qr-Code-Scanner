@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+    android:overScrollMode="never"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/_12sdp">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvGreeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/sans_trial_medium"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/_16sdp" />
+
+        <include
+            android:id="@+id/weatherCard"
+            layout="@layout/view_weather_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp" />
+
+        <LinearLayout
+            android:id="@+id/llRecommendedApps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sans_trial_medium"
+                android:text="Recommended Apps"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/_12sdp"
+                tools:ignore="HardcodedText" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                app:cardBackgroundColor="?attr/launcherBackgroundColor"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="0dp">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvRecommendedApps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never"
+                    android:padding="@dimen/_4sdp" />
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlNativeAdView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_250sdp"
+            android:layout_marginTop="@dimen/_12sdp">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="?attr/surfaceSecondaryColor"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="0dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/slNativeShimmer"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_250sdp"
+                        android:layout_centerInParent="true"
+                        android:background="?attr/surfaceSecondaryColor"
+                        app:shimmer_auto_start="true"
+                        app:shimmer_base_alpha="0.9"
+                        app:shimmer_highlight_alpha="1.0">
+
+                        <include layout="@layout/shimmer_large_ad" />
+
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/flNativeAd"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+            </androidx.cardview.widget.CardView>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

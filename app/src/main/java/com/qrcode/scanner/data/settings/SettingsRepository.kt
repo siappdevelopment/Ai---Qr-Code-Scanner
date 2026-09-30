@@ -1,12 +1,15 @@
 package com.qrcode.scanner.data.settings
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.runBlocking
 
 private const val SETTINGS_DATASTORE_NAME = "scanpulse_settings"
 
@@ -75,6 +78,18 @@ class SettingsRepository(
         dataStore.edit { prefs ->
             prefs[SettingsKeys.APP_THEME] = theme.storageValue
         }
+    }
+}
+
+/** Night mode for AppCompat screens so they follow the Settings app theme, not the phone theme. */
+fun readAppNightMode(context: Context): Int {
+    val stored = runBlocking {
+        context.applicationContext.settingsDataStore.data.first()[SettingsKeys.APP_THEME]
+    }
+    return if (AppThemeMode.fromStored(stored) == AppThemeMode.DARK) {
+        AppCompatDelegate.MODE_NIGHT_YES
+    } else {
+        AppCompatDelegate.MODE_NIGHT_NO
     }
 }
 

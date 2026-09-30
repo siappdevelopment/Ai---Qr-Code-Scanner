@@ -12,11 +12,11 @@ import androidx.fragment.app.Fragment;
 import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.activities.AppWidgetsActivity;
 import com.qrcode.scanner.launcher.activities.ClEndActivity;
-import com.qrcode.scanner.ui.screens.create.CreateActivity;
 import com.qrcode.scanner.ui.screens.history.HistoryActivity;
+import com.qrcode.scanner.ui.screens.scan.ScannerActivity;
 
 public class ClContentFragment extends Fragment {
-    private LinearLayout llQRTemplates, llHistory, llAppWidgets;
+    private LinearLayout llScan, llHistory, llAppWidgets;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -26,14 +26,14 @@ public class ClContentFragment extends Fragment {
     }
 
     private void findIDs(View view) {
-        llQRTemplates = view.findViewById(R.id.llQRTemplates);
+        llScan = view.findViewById(R.id.llScan);
         llHistory = view.findViewById(R.id.llHistory);
         llAppWidgets = view.findViewById(R.id.llAppWidgets);
         initialClicks();
     }
 
     private void initialClicks() {
-        llQRTemplates.setOnClickListener(v -> openAndFinish(CreateActivity.class));
+        llScan.setOnClickListener(v -> openAndFinish(ScannerActivity.class));
         llHistory.setOnClickListener(v -> openAndFinish(HistoryActivity.class));
         llAppWidgets.setOnClickListener(v -> openAndFinish(AppWidgetsActivity.class));
     }

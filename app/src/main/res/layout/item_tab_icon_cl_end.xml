@@ -7,6 +7,7 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/ivTabIcon"
         android:layout_width="@dimen/_18sdp"
-        android:layout_height="@dimen/_18sdp" />
+        android:layout_height="@dimen/_18sdp"
+        android:tint="@color/primary" />
 
 </LinearLayout>

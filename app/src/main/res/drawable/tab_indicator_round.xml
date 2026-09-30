@@ -3,7 +3,7 @@
     android:insetLeft="@dimen/_16sdp"
     android:insetRight="@dimen/_16sdp">
     <shape>
-        <solid android:color="@android:color/white" />
+        <solid android:color="@color/primary" />
         <corners
             android:topLeftRadius="@dimen/_100sdp"
             android:topRightRadius="@dimen/_100sdp" />

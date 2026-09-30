@@ -79,18 +79,17 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tlOption"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_42sdp"
-            android:layout_marginHorizontal="@dimen/_12sdp"
-            android:background="@drawable/custom_radius_12"
-            android:backgroundTint="@color/primary"
+            android:layout_height="56dp"
+            android:background="@color/primary_light"
             app:tabGravity="fill"
             app:tabIndicator="@drawable/tab_indicator_round"
             app:tabIndicatorAnimationMode="elastic"
-            app:tabIndicatorColor="@android:color/white"
+            app:tabIndicatorColor="@color/primary"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorGravity="bottom"
             app:tabIndicatorHeight="@dimen/_2sdp"
             app:tabMode="fixed"
+            app:tabIconTint="@color/primary"
             app:tabRippleColor="@android:color/transparent" />
 
         <androidx.viewpager2.widget.ViewPager2

@@ -32,6 +32,7 @@ import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.data.settings.SettingsRepositoryKt;
 import com.qrcode.scanner.launcher.adapters.ClEndPagerAdapter;
 import com.qrcode.scanner.launcher.common.ADSNativeFullDisplay;
 import com.qrcode.scanner.launcher.common.AdPlacement;
@@ -71,6 +72,7 @@ public class ClEndActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        getDelegate().setLocalNightMode(SettingsRepositoryKt.readAppNightMode(this));
         super.onCreate(savedInstanceState);
         AdPlacement.ensureClEndConfig(this);
         setContentView(R.layout.activity_cl_end);

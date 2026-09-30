@@ -20,7 +20,7 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 

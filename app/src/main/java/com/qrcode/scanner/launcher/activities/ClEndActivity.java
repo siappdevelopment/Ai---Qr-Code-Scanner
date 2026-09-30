@@ -31,7 +31,7 @@ import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.adapters.ClEndPagerAdapter;
 import com.qrcode.scanner.launcher.common.ADSNativeFullDisplay;
 import com.qrcode.scanner.launcher.common.AdPlacement;
@@ -199,7 +199,13 @@ public class ClEndActivity extends AppCompatActivity {
     }
 
     private void showAd() {
-        if (!AdPlacement.isNetworkAvailable(this) || !AdPlacement.getClEndAdShow()) {
+        AdPlacement.initializeIfConfigured(this);
+        String bannerId = AdPlacement.getClEndBannerId() == null ? "" : AdPlacement.getClEndBannerId().trim();
+        String nativeId = AdPlacement.getClEndNativeId() == null ? "" : AdPlacement.getClEndNativeId().trim();
+        boolean preferBanner = "banner".equalsIgnoreCase(AdPlacement.getClEndAdType());
+        boolean showBanner = preferBanner ? !bannerId.isEmpty() : nativeId.isEmpty() && !bannerId.isEmpty();
+        boolean showNative = !showBanner && !nativeId.isEmpty();
+        if (!AdPlacement.isNetworkAvailable(this) || !AdPlacement.getClEndAdShow() || (!showBanner && !showNative)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 WindowInsetsController controller = getWindow().getInsetsController();
                 if (controller != null) {
@@ -214,7 +220,7 @@ public class ClEndActivity extends AppCompatActivity {
 
         rlAdView.setVisibility(View.VISIBLE);
 
-        if ("banner".equalsIgnoreCase(AdPlacement.getClEndAdType())) {
+        if (showBanner) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 WindowInsetsController controller = getWindow().getInsetsController();
                 if (controller != null) {
@@ -225,11 +231,11 @@ public class ClEndActivity extends AppCompatActivity {
 
             rlBannerAdView.setVisibility(View.VISIBLE);
             rlNativeAdView.setVisibility(View.GONE);
-            AdPlacement.loadAdaptiveBannerAd(this, AdPlacement.getClEndBannerId(), rlBannerAdView, slBannerShimmer, llBannerAd);
+            AdPlacement.loadAdaptiveBannerAd(this, bannerId, rlBannerAdView, slBannerShimmer, llBannerAd, true);
         } else {
             rlBannerAdView.setVisibility(View.GONE);
             rlNativeAdView.setVisibility(View.VISIBLE);
-            AdPlacement.loadNativeAd(this, AdPlacement.getClEndNativeId(), rlNativeAdView, slNativeShimmer, flNativeAd, "large");
+            AdPlacement.loadNativeAd(this, nativeId, rlNativeAdView, slNativeShimmer, flNativeAd, "large", true);
         }
     }
 

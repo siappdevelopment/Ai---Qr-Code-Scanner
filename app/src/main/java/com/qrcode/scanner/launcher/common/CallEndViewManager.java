@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 
 @SuppressLint("InflateParams")
 public class CallEndViewManager {

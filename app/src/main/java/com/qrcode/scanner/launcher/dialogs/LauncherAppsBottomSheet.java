@@ -54,7 +54,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.gms.ads.nativead.NativeAd;
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
 import com.qrcode.scanner.launcher.activities.LauncherSettingsActivity;
 import com.qrcode.scanner.launcher.adapters.LauncherAppsAdapter;

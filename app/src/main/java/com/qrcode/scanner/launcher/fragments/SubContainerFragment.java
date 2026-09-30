@@ -29,7 +29,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.ads.nativead.NativeAd;
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.adapters.LauncherAppsAdapter;
 import com.qrcode.scanner.launcher.common.AdPlacement;
 import com.qrcode.scanner.launcher.common.AppUtils;

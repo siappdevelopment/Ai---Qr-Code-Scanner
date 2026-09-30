@@ -37,7 +37,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 import java.io.InputStream;

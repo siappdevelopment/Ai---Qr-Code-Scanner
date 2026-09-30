@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Source Remote Config values that are not already applied to the migrated ad slots.
@@ -81,9 +82,11 @@ public final class RemoteConfigValues {
     private static String clEndNativeId = "";
     private static boolean clEndBackAdShow;
     private static String clEndBackAdType = "inter";
+    private static ArrayList<String[]> clEndBackAdSequence = new ArrayList<>();
     private static int clEndBackAdShowAfterDay;
     private static int clEndBackAdShowPerDay;
     private static String clEndBackAdInterstitialId = "";
+    private static String clEndBackAdNativeId = "";
     private static boolean clEndBackAdCountryIP;
     private static ArrayList<String> clEndBackAdShowCountryList = new ArrayList<>();
     private static int notificationInstallDays;
@@ -193,10 +196,12 @@ public final class RemoteConfigValues {
         clEndBannerId = clEndScreen.optString("ClEnd_Banner_Id", "");
         clEndNativeId = clEndScreen.optString("ClEnd_Native_Id", "");
         clEndBackAdShow = clEndScreen.optBoolean("ClEnd_Back_Ad_Show", false);
-        clEndBackAdType = clEndScreen.optString("ClEnd_Back_Ad_Type", "inter");
+        clEndBackAdType = clEndScreen.optString("ClEnd_Back_Ad_Type", "inter").trim();
+        clEndBackAdSequence = parseBackAdSequence(clEndScreen.optJSONArray("ClEnd_Back_Ad_Sequence"));
         clEndBackAdShowAfterDay = clEndScreen.optInt("ClEnd_Back_Ad_Show_After_Day", 0);
         clEndBackAdShowPerDay = clEndScreen.optInt("ClEnd_Back_Ad_Show_Per_Day", 0);
         clEndBackAdInterstitialId = clEndScreen.optString("ClEnd_Back_Ad_Interstitial_Id", "");
+        clEndBackAdNativeId = clEndScreen.optString("ClEnd_Back_Ad_Native_Id", "");
         clEndBackAdCountryIP = clEndScreen.optBoolean("ClEnd_Back_Ad_Country_IP", false);
         clEndBackAdShowCountryList = parseCountryArray(clEndScreen.optJSONArray("ClEnd_Back_Ad_Show_Country"));
         notificationInstallDays = clEndScreen.optInt("Notification_Install_Days", 0);
@@ -269,9 +274,11 @@ public final class RemoteConfigValues {
         clEndNativeId = preferences.getString("clEndNativeId", "");
         clEndBackAdShow = preferences.getBoolean("clEndBackAdShow", false);
         clEndBackAdType = preferences.getString("clEndBackAdType", "inter");
+        clEndBackAdSequence = parseStoredBackAdSequence(preferences.getString("clEndBackAdSequence", ""));
         clEndBackAdShowAfterDay = preferences.getInt("clEndBackAdShowAfterDay", 0);
         clEndBackAdShowPerDay = preferences.getInt("clEndBackAdShowPerDay", 0);
         clEndBackAdInterstitialId = preferences.getString("clEndBackAdInterstitialId", "");
+        clEndBackAdNativeId = preferences.getString("clEndBackAdNativeId", "");
         clEndBackAdCountryIP = preferences.getBoolean("clEndBackAdCountryIP", false);
         clEndBackAdShowCountryList = parseStoredCountryList(preferences.getString("clEndBackAdShowCountryList", ""));
         notificationInstallDays = preferences.getInt("notificationInstallDays", 0);
@@ -342,6 +349,21 @@ public final class RemoteConfigValues {
         return clEndBackAdType == null ? "" : clEndBackAdType;
     }
 
+    @NonNull
+    public static List<String[]> getClEndBackAdSequence() {
+        List<String[]> copy = new ArrayList<>();
+        if (clEndBackAdSequence == null) {
+            return copy;
+        }
+        for (String[] step : clEndBackAdSequence) {
+            if (step == null || step.length < 2) {
+                continue;
+            }
+            copy.add(new String[]{step[0], step[1]});
+        }
+        return copy;
+    }
+
     public static int getClEndBackAdShowAfterDay() {
         return clEndBackAdShowAfterDay;
     }
@@ -353,6 +375,11 @@ public final class RemoteConfigValues {
     @NonNull
     public static String getClEndBackAdInterstitialId() {
         return clEndBackAdInterstitialId == null ? "" : clEndBackAdInterstitialId;
+    }
+
+    @NonNull
+    public static String getClEndBackAdNativeId() {
+        return clEndBackAdNativeId == null ? "" : clEndBackAdNativeId;
     }
 
     public static boolean getClEndBackAdCountryIP() {
@@ -578,9 +605,11 @@ public final class RemoteConfigValues {
         editor.putString("clEndNativeId", clEndNativeId == null ? "" : clEndNativeId);
         editor.putBoolean("clEndBackAdShow", clEndBackAdShow);
         editor.putString("clEndBackAdType", clEndBackAdType == null ? "" : clEndBackAdType);
+        editor.putString("clEndBackAdSequence", formatBackAdSequence(clEndBackAdSequence));
         editor.putInt("clEndBackAdShowAfterDay", clEndBackAdShowAfterDay);
         editor.putInt("clEndBackAdShowPerDay", clEndBackAdShowPerDay);
         editor.putString("clEndBackAdInterstitialId", clEndBackAdInterstitialId == null ? "" : clEndBackAdInterstitialId);
+        editor.putString("clEndBackAdNativeId", clEndBackAdNativeId == null ? "" : clEndBackAdNativeId);
         editor.putBoolean("clEndBackAdCountryIP", clEndBackAdCountryIP);
         editor.putString("appOpenId", AdPlacement.getAppOpenId() == null ? "" : AdPlacement.getAppOpenId());
         editor.putString("nativeAdLabelColor", AdPlacement.getNativeAdLabelColor() == null ? "" : AdPlacement.getNativeAdLabelColor());
@@ -615,6 +644,101 @@ public final class RemoteConfigValues {
             }
         }
         return countryList;
+    }
+
+    private static ArrayList<String[]> parseBackAdSequence(@Nullable JSONArray sequence) {
+        ArrayList<String[]> steps = new ArrayList<>();
+        if (sequence == null) {
+            return steps;
+        }
+        for (int i = 0; i < sequence.length(); i++) {
+            JSONArray pair = sequence.optJSONArray(i);
+            if (pair == null || pair.length() < 2) {
+                continue;
+            }
+            String type = normalizeBackAdFormat(pair.optString(0, ""));
+            int count = parsePositiveCount(pair.opt(1));
+            if (type.isEmpty() || count <= 0) {
+                continue;
+            }
+            steps.add(new String[]{type, Integer.toString(count)});
+        }
+        return steps;
+    }
+
+    private static ArrayList<String[]> parseStoredBackAdSequence(@Nullable String stored) {
+        ArrayList<String[]> steps = new ArrayList<>();
+        if (stored == null || stored.trim().isEmpty()) {
+            return steps;
+        }
+        String[] parts = stored.split(";");
+        for (String part : parts) {
+            if (part == null || part.trim().isEmpty()) {
+                continue;
+            }
+            String[] pair = part.split(",", 2);
+            if (pair.length < 2) {
+                continue;
+            }
+            String type = normalizeBackAdFormat(pair[0]);
+            int count = parsePositiveCount(pair[1]);
+            if (type.isEmpty() || count <= 0) {
+                continue;
+            }
+            steps.add(new String[]{type, Integer.toString(count)});
+        }
+        return steps;
+    }
+
+    @NonNull
+    private static String formatBackAdSequence(@Nullable ArrayList<String[]> sequence) {
+        if (sequence == null || sequence.isEmpty()) {
+            return "";
+        }
+        StringBuilder builder = new StringBuilder();
+        for (String[] step : sequence) {
+            if (step == null || step.length < 2) {
+                continue;
+            }
+            if (builder.length() > 0) {
+                builder.append(';');
+            }
+            builder.append(step[0]).append(',').append(step[1]);
+        }
+        return builder.toString();
+    }
+
+    @NonNull
+    private static String normalizeBackAdFormat(@Nullable String type) {
+        if (type == null) {
+            return "";
+        }
+        String value = type.trim().toLowerCase(Locale.US);
+        if ("inter".equals(value) || "appopen".equals(value) || "native".equals(value)) {
+            return value;
+        }
+        return "";
+    }
+
+    private static int parsePositiveCount(@Nullable Object value) {
+        if (value == null || value == JSONObject.NULL) {
+            return 0;
+        }
+        try {
+            int count;
+            if (value instanceof Number) {
+                count = ((Number) value).intValue();
+            } else {
+                String raw = String.valueOf(value).trim();
+                if (raw.isEmpty()) {
+                    return 0;
+                }
+                count = Integer.parseInt(raw);
+            }
+            return count > 0 ? count : 0;
+        } catch (Exception ignored) {
+            return 0;
+        }
     }
 
     private static ArrayList<String> parseCountryArray(@Nullable JSONArray countryArray) {

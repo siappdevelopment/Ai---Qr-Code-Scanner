@@ -16,7 +16,7 @@ import android.widget.PopupWindow;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.common.AppUtils;
 import com.qrcode.scanner.launcher.helpers.LauncherAppsHelper;
 import com.qrcode.scanner.launcher.models.LauncherAppsModel;

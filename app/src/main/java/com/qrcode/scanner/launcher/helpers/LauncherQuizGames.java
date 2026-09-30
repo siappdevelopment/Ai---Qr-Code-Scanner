@@ -2,7 +2,7 @@ package com.qrcode.scanner.launcher.helpers;
 
 import androidx.annotation.NonNull;
 
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.models.QuizGameItem;
 
 public final class LauncherQuizGames {

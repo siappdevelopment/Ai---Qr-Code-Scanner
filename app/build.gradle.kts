@@ -10,7 +10,7 @@ if (file("google-services.json").exists()) {
 }
 
 android {
-    namespace = "com.qrcode.scanner"
+    namespace = "com.qrcode.scanner.app"
     compileSdk {
         version = release(37) {
             minorApiLevel = 0
@@ -18,7 +18,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.qrcode.scanner"
+        applicationId = "com.qrcode.scanner.app"
         minSdk = 24
         targetSdk = 36
         versionCode = 1

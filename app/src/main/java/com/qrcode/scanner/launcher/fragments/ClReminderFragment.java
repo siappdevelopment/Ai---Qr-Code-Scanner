@@ -23,7 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.adapters.ClReminderAdapter;
 import com.qrcode.scanner.launcher.helpers.ReminderAlarmHelper;
 import com.qrcode.scanner.launcher.interfaces.OnReminderDeleteListener;

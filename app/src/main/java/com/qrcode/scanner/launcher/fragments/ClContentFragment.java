@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.activities.AppWidgetsActivity;
 import com.qrcode.scanner.launcher.activities.ClEndActivity;
 import com.qrcode.scanner.ui.screens.create.CreateActivity;

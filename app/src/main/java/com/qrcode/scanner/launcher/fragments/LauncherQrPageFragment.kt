@@ -13,7 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.setViewTreeLifecycleOwner
-import com.qrcode.scanner.R
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.ui.navigation.ScanPulseNavHost
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 

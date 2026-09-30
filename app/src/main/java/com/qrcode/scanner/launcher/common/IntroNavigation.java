@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.activities.Intro1Activity;
 import com.qrcode.scanner.launcher.activities.Intro2Activity;
 import com.qrcode.scanner.launcher.activities.Intro3Activity;

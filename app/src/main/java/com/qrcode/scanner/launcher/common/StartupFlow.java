@@ -27,7 +27,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.helpers.VPNHelper;
 import com.qrcode.scanner.launcher.remote.RemoteConfigHelper;
 

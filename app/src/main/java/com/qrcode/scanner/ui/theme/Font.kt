@@ -3,7 +3,7 @@ package com.qrcode.scanner.ui.theme
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import com.qrcode.scanner.R
+import com.qrcode.scanner.app.R
 
 /**
  * Stitch Home Dashboard (White Theme) CSS:

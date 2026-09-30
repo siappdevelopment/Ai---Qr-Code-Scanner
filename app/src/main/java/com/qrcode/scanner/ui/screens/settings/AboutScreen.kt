@@ -34,7 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.qrcode.scanner.R
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.ui.components.AppBackButton
 import com.qrcode.scanner.ui.components.headerBottomStroke
 import com.qrcode.scanner.ui.theme.BorderSubtle

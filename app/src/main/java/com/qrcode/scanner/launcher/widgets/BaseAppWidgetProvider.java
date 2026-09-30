@@ -10,7 +10,7 @@ import android.widget.RemoteViews;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.common.WidgetNavigation;
 
 public abstract class BaseAppWidgetProvider extends AppWidgetProvider {

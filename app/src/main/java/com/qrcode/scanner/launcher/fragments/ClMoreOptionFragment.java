@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 
 import androidx.fragment.app.Fragment;
 
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.activities.ClEndActivity;
 
 public class ClMoreOptionFragment extends Fragment {

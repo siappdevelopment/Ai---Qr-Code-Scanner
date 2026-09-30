@@ -64,7 +64,7 @@
         android:required="false" />
 
     <application
-        android:name=".QrScannerApplication"
+        android:name="com.qrcode.scanner.QrScannerApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -84,7 +84,7 @@
                 android:value="true" />
         </service>
         <activity
-            android:name=".MainActivity"
+            android:name="com.qrcode.scanner.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.QRCodeScanner">
@@ -95,7 +95,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".launcher.activities.LauncherHomeActivity"
+            android:name="com.qrcode.scanner.launcher.activities.LauncherHomeActivity"
             android:clearTaskOnLaunch="true"
             android:excludeFromRecents="true"
             android:exported="true"
@@ -111,106 +111,106 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".launcher.activities.LanguageActivity"
+            android:name="com.qrcode.scanner.launcher.activities.LanguageActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
-            android:name=".launcher.activities.CollectionActivity"
+            android:name="com.qrcode.scanner.launcher.activities.CollectionActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
-            android:name=".launcher.activities.PermissionActivity"
+            android:name="com.qrcode.scanner.launcher.activities.PermissionActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
-            android:name=".launcher.activities.DefaultActivity"
+            android:name="com.qrcode.scanner.launcher.activities.DefaultActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
-            android:name=".launcher.activities.Intro1Activity"
+            android:name="com.qrcode.scanner.launcher.activities.Intro1Activity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
-            android:name=".launcher.activities.Intro2Activity"
+            android:name="com.qrcode.scanner.launcher.activities.Intro2Activity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
-            android:name=".launcher.activities.Intro3Activity"
+            android:name="com.qrcode.scanner.launcher.activities.Intro3Activity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
-            android:name=".launcher.activities.LauncherSettingsActivity"
+            android:name="com.qrcode.scanner.launcher.activities.LauncherSettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
-            android:name=".launcher.activities.AppWidgetsActivity"
+            android:name="com.qrcode.scanner.launcher.activities.AppWidgetsActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
-            android:name=".ui.screens.create.CreateActivity"
+            android:name="com.qrcode.scanner.ui.screens.create.CreateActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.create.CommonQrFormActivity"
+            android:name="com.qrcode.scanner.ui.screens.create.CommonQrFormActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.create.WifiQrActivity"
+            android:name="com.qrcode.scanner.ui.screens.create.WifiQrActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.create.QrPreviewActivity"
+            android:name="com.qrcode.scanner.ui.screens.create.QrPreviewActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.create.QrCustomizationActivity"
+            android:name="com.qrcode.scanner.ui.screens.create.QrCustomizationActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.scan.ScannerActivity"
+            android:name="com.qrcode.scanner.ui.screens.scan.ScannerActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.scan.ContinuousBatchResultActivity"
+            android:name="com.qrcode.scanner.ui.screens.scan.ContinuousBatchResultActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.scan.ScanResultActivity"
+            android:name="com.qrcode.scanner.ui.screens.scan.ScanResultActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.scan.GalleryCropActivity"
+            android:name="com.qrcode.scanner.ui.screens.scan.GalleryCropActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.scan.DetectionErrorActivity"
+            android:name="com.qrcode.scanner.ui.screens.scan.DetectionErrorActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.history.FavoritesActivity"
+            android:name="com.qrcode.scanner.ui.screens.history.FavoritesActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.history.HistoryActivity"
+            android:name="com.qrcode.scanner.ui.screens.history.HistoryActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
-            android:name=".ui.screens.history.HistoryDetailActivity"
+            android:name="com.qrcode.scanner.ui.screens.history.HistoryDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.QRCodeScanner" />
 
         <activity
-            android:name=".launcher.activities.ClEndActivity"
+            android:name="com.qrcode.scanner.launcher.activities.ClEndActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:launchMode="singleTask"
@@ -221,7 +221,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <receiver
-            android:name=".launcher.services.PhoneCallStateService"
+            android:name="com.qrcode.scanner.launcher.services.PhoneCallStateService"
             android:enabled="true"
             android:exported="true">
             <intent-filter android:priority="998">
@@ -239,7 +239,7 @@
         </receiver>
 
         <service
-            android:name=".launcher.receivers.CallEndReceiver"
+            android:name="com.qrcode.scanner.launcher.receivers.CallEndReceiver"
             android:exported="true"
             android:permission="android.permission.BIND_SCREENING_SERVICE">
             <intent-filter>
@@ -248,12 +248,12 @@
         </service>
 
         <receiver
-            android:name=".launcher.receivers.ReminderReceiver"
+            android:name="com.qrcode.scanner.launcher.receivers.ReminderReceiver"
             android:enabled="true"
             android:exported="false" />
 
         <service
-            android:name=".launcher.services.MyFirebaseMessagingService"
+            android:name="com.qrcode.scanner.launcher.services.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -261,7 +261,7 @@
         </service>
 
         <receiver
-            android:name=".launcher.widgets.AppIconWidgetProvider"
+            android:name="com.qrcode.scanner.launcher.widgets.AppIconWidgetProvider"
             android:exported="true"
             android:label="@string/app_icon_1x1">
             <intent-filter>
@@ -272,7 +272,7 @@
                 android:resource="@xml/app_widget_app_icon_info" />
         </receiver>
         <receiver
-            android:name=".launcher.widgets.CreateQrAWidgetProvider"
+            android:name="com.qrcode.scanner.launcher.widgets.CreateQrAWidgetProvider"
             android:exported="true"
             android:label="@string/style_a">
             <intent-filter>
@@ -283,7 +283,7 @@
                 android:resource="@xml/app_widget_create_qr_a_info" />
         </receiver>
         <receiver
-            android:name=".launcher.widgets.CreateQrBWidgetProvider"
+            android:name="com.qrcode.scanner.launcher.widgets.CreateQrBWidgetProvider"
             android:exported="true"
             android:label="@string/style_b">
             <intent-filter>
@@ -294,7 +294,7 @@
                 android:resource="@xml/app_widget_create_qr_b_info" />
         </receiver>
         <receiver
-            android:name=".launcher.widgets.CreateQrCWidgetProvider"
+            android:name="com.qrcode.scanner.launcher.widgets.CreateQrCWidgetProvider"
             android:exported="true"
             android:label="@string/style_c">
             <intent-filter>
@@ -305,7 +305,7 @@
                 android:resource="@xml/app_widget_create_qr_c_info" />
         </receiver>
         <receiver
-            android:name=".launcher.widgets.ScanQrAWidgetProvider"
+            android:name="com.qrcode.scanner.launcher.widgets.ScanQrAWidgetProvider"
             android:exported="true"
             android:label="@string/style_a">
             <intent-filter>
@@ -316,7 +316,7 @@
                 android:resource="@xml/app_widget_scan_qr_a_info" />
         </receiver>
         <receiver
-            android:name=".launcher.widgets.ScanQrBWidgetProvider"
+            android:name="com.qrcode.scanner.launcher.widgets.ScanQrBWidgetProvider"
             android:exported="true"
             android:label="@string/style_b">
             <intent-filter>
@@ -328,7 +328,7 @@
         </receiver>
 
         <receiver
-            android:name=".launcher.receivers.BootReceiver"
+            android:name="com.qrcode.scanner.launcher.receivers.BootReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

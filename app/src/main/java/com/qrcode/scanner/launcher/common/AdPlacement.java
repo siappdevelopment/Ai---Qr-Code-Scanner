@@ -52,7 +52,7 @@ import com.google.android.gms.ads.nativead.MediaView;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
@@ -758,20 +758,28 @@ public final class AdPlacement {
     }
 
     public static void loadAdaptiveBannerAd(Activity activity, String bannerId, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd) {
-        if (shouldUseQuizPriority()) {
+        loadAdaptiveBannerAd(activity, bannerId, rlBannerAdView, slBannerShimmer, llBannerAd, false);
+    }
+
+    public static void loadAdaptiveBannerAd(Activity activity, String bannerId, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd, boolean googleOnly) {
+        if (activity != null) {
+            initializeIfConfigured(activity);
+        }
+        String unitId = bannerId == null ? "" : bannerId.trim();
+        if (!googleOnly && shouldUseQuizPriority()) {
             if (!QuizAds.showBanner(activity, rlBannerAdView, slBannerShimmer, llBannerAd)) {
                 hideBannerContainer(rlBannerAdView, slBannerShimmer, llBannerAd);
             }
             return;
         }
-        if (!canLoad(activity, bannerId)) {
+        if (!canLoad(activity, unitId)) {
             hideBannerContainer(rlBannerAdView, slBannerShimmer, llBannerAd);
             return;
         }
         prepareBannerLoading(slBannerShimmer, llBannerAd);
         AdView adView = new AdView(activity);
         adView.setAdSize(getAdaptiveAdSize(activity));
-        adView.setAdUnitId(bannerId);
+        adView.setAdUnitId(unitId);
         llBannerAd.addView(adView);
         adView.setAdListener(new AdListener() {
             @Override
@@ -787,7 +795,7 @@ public final class AdPlacement {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
                 adView.destroy();
-                if (getGoogleAdFailedShowQuiz() && QuizAds.showBanner(activity, rlBannerAdView, slBannerShimmer, llBannerAd)) {
+                if (!googleOnly && getGoogleAdFailedShowQuiz() && QuizAds.showBanner(activity, rlBannerAdView, slBannerShimmer, llBannerAd)) {
                     return;
                 }
                 hideBannerContainer(rlBannerAdView, slBannerShimmer, llBannerAd);
@@ -797,11 +805,23 @@ public final class AdPlacement {
     }
 
     public static void loadNativeAd(Activity activity, String nativeId, RelativeLayout rlNativeAdView, ShimmerFrameLayout slNativeShimmer, FrameLayout flNativeAd, String type) {
-        loadNativeAd(activity, nativeId, rlNativeAdView, slNativeShimmer, flNativeAd, type, null, null);
+        loadNativeAd(activity, nativeId, rlNativeAdView, slNativeShimmer, flNativeAd, type, null, null, false);
+    }
+
+    public static void loadNativeAd(Activity activity, String nativeId, RelativeLayout rlNativeAdView, ShimmerFrameLayout slNativeShimmer, FrameLayout flNativeAd, String type, boolean googleOnly) {
+        loadNativeAd(activity, nativeId, rlNativeAdView, slNativeShimmer, flNativeAd, type, null, null, googleOnly);
     }
 
     public static void loadNativeAd(Activity activity, String nativeId, RelativeLayout rlNativeAdView, ShimmerFrameLayout slNativeShimmer, FrameLayout flNativeAd, String type, @Nullable java.util.function.Consumer<NativeAd> onAdLoaded, @Nullable Runnable onAdFailed) {
-        if (shouldUseQuizPriority()) {
+        loadNativeAd(activity, nativeId, rlNativeAdView, slNativeShimmer, flNativeAd, type, onAdLoaded, onAdFailed, false);
+    }
+
+    public static void loadNativeAd(Activity activity, String nativeId, RelativeLayout rlNativeAdView, ShimmerFrameLayout slNativeShimmer, FrameLayout flNativeAd, String type, @Nullable java.util.function.Consumer<NativeAd> onAdLoaded, @Nullable Runnable onAdFailed, boolean googleOnly) {
+        if (activity != null) {
+            initializeIfConfigured(activity);
+        }
+        String unitId = nativeId == null ? "" : nativeId.trim();
+        if (!googleOnly && shouldUseQuizPriority()) {
             if (!QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type)) {
                 hideNativeContainer(rlNativeAdView, slNativeShimmer, flNativeAd);
                 if (onAdFailed != null) {
@@ -812,7 +832,7 @@ public final class AdPlacement {
             }
             return;
         }
-        if (!canLoad(activity, nativeId)) {
+        if (!canLoad(activity, unitId)) {
             hideNativeContainer(rlNativeAdView, slNativeShimmer, flNativeAd);
             if (onAdFailed != null) {
                 onAdFailed.run();
@@ -823,7 +843,7 @@ public final class AdPlacement {
             slNativeShimmer.setVisibility(View.VISIBLE);
             slNativeShimmer.startShimmer();
         }
-        AdLoader adLoader = new AdLoader.Builder(activity, nativeId).forNativeAd(nativeAd -> {
+        AdLoader adLoader = new AdLoader.Builder(activity, unitId).forNativeAd(nativeAd -> {
             if (activity.isFinishing() || activity.isDestroyed() || flNativeAd == null) {
                 nativeAd.destroy();
                 return;
@@ -847,7 +867,7 @@ public final class AdPlacement {
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
-                if (getGoogleAdFailedShowQuiz() && QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type)) {
+                if (!googleOnly && getGoogleAdFailedShowQuiz() && QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type)) {
                     if (onAdLoaded != null) {
                         onAdLoaded.accept(null);
                     }
@@ -1579,6 +1599,16 @@ public final class AdPlacement {
     @NonNull
     public static String getClEndBackAdInterstitialId() {
         return RemoteConfigValues.getClEndBackAdInterstitialId();
+    }
+
+    @NonNull
+    public static String getClEndBackAdNativeId() {
+        return RemoteConfigValues.getClEndBackAdNativeId();
+    }
+
+    @NonNull
+    public static List<String[]> getClEndBackAdSequence() {
+        return RemoteConfigValues.getClEndBackAdSequence();
     }
 
     public static boolean getClEndBackAdCountryIP() {

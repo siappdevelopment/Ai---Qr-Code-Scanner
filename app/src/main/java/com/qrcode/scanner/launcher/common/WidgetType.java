@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.widgets.AppIconWidgetProvider;
 import com.qrcode.scanner.launcher.widgets.CreateQrAWidgetProvider;
 import com.qrcode.scanner.launcher.widgets.CreateQrBWidgetProvider;

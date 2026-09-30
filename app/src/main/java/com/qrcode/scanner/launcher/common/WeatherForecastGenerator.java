@@ -4,7 +4,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.qrcode.scanner.R;
+import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.models.WeatherHourlyModel;
 import com.qrcode.scanner.launcher.models.WeatherModel;
 

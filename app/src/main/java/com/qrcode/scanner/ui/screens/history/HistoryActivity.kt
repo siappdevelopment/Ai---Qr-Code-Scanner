@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.qrcode.scanner.ui.screens.scan.ScanIntents
@@ -22,9 +21,8 @@ class HistoryActivity : ComponentActivity() {
             QRCodeScannerTheme {
                 val context = LocalContext.current
                 HistoryScreen(
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .navigationBarsPadding(),
+                    modifier = Modifier.navigationBarsPadding(),
+                    onBack = { finish() },
                     onOpenScanner = {
                         context.startActivity(ScanIntents.openScanner(context))
                     },

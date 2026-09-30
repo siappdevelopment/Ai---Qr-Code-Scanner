@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
@@ -21,9 +20,7 @@ class CreateActivity : ComponentActivity() {
             QRCodeScannerTheme {
                 val context = LocalContext.current
                 CreateHubScreen(
-                    modifier = Modifier
-                        .statusBarsPadding()
-                        .navigationBarsPadding(),
+                    modifier = Modifier.navigationBarsPadding(),
                     onCategoryClick = { type ->
                         context.startActivity(CreateQrIntents.openCategory(context, type))
                     }

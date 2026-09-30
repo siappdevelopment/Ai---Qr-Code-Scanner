@@ -26,6 +26,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
@@ -72,6 +73,7 @@ import com.qrcode.scanner.data.history.HistoryEntity
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
 import com.qrcode.scanner.ui.theme.BorderSubtle
+import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.CobaltSoft
@@ -101,6 +103,7 @@ private enum class HistoryFilter { All, Scanned, Created }
 
 @Composable
 fun HistoryScreen(
+    onBack: () -> Unit = {},
     onOpenScanner: () -> Unit = {},
     onOpenDetail: (Long) -> Unit = {},
     modifier: Modifier = Modifier
@@ -154,53 +157,49 @@ fun HistoryScreen(
         // Header
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(CardSurface)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
+                .appHeaderBackground()
+                .height(56.dp)
+                .padding(start = 4.dp, end = 16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-//            Column {
-//                Text(
-//                    text = "Scan History",
-//                    color = TextPrimary,
-//                    fontFamily = PlusJakartaSans,
-//                    fontWeight = FontWeight.SemiBold,
-//                    fontSize = 18.sp,
-//                    letterSpacing = (-0.2).sp
-//                )
-//                Text(
-//                    text = if (isEmpty) {
-//                        "Offline Vault Active · 0 Scans Recorded"
-//                    } else {
-//                        "${allItems.size} items stored locally"
-//                    },
-//                    color = TextSecondary,
-//                    fontFamily = PlusJakartaSans,
-//                    fontWeight = FontWeight.Medium,
-//                    fontSize = 12.sp
-//                )
-//            }
             Box(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(10.dp))
-                    .background(if (isEmpty) NestedSurface else CobaltSoft)
-                    .border(1.dp, BorderSubtle, RoundedCornerShape(10.dp))
+                    .size(40.dp)
                     .clickable(
-                        enabled = !isEmpty,
                         indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { showClearDialog = true }
-                    .padding(horizontal = 12.dp, vertical = 8.dp)
+                        interactionSource = remember { MutableInteractionSource() },
+                        onClick = onBack
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Text(
-                    text = "Clear",
-                    color = if (isEmpty) TextTertiary else CobaltPrimary,
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 12.sp
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                    contentDescription = "Back",
+                    tint = TextPrimary,
+                    modifier = Modifier.size(22.dp)
                 )
             }
+            Text(
+                text = "History",
+                color = TextPrimary,
+                fontFamily = PlusJakartaSans,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                lineHeight = 24.sp,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = "Clear",
+                color = if (isEmpty) TextTertiary else CobaltPrimary,
+                fontFamily = PlusJakartaSans,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp,
+                modifier = Modifier.clickable(
+                    enabled = !isEmpty,
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { showClearDialog = true }
+            )
         }
 
         // Chrome stays visible when empty (Stitch empty-state intent); Search/Clear disabled.

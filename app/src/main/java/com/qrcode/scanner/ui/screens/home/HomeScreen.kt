@@ -30,7 +30,7 @@ import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.QrCode2
-import androidx.compose.material.icons.outlined.Star
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.ViewWeek
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Icon
@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.R
+import com.qrcode.scanner.ui.components.headerBottomStroke
 import com.qrcode.scanner.data.history.HistoryEntity
 import com.qrcode.scanner.data.history.HistoryRepository
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
@@ -60,6 +61,7 @@ import com.qrcode.scanner.data.history.ScanPayloadMapper
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltAccent
 import com.qrcode.scanner.ui.theme.CobaltPrimary
+import com.qrcode.scanner.ui.theme.CobaltSoft
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.ScanPulsePalette
 import com.qrcode.scanner.ui.theme.ScanPulseThemeState
@@ -124,6 +126,7 @@ private fun HomeTopBar(onOpenFavorites: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .background(CardSurface)
+            .headerBottomStroke()
     ) {
         Row(
             modifier = Modifier
@@ -146,7 +149,8 @@ private fun HomeTopBar(onOpenFavorites: () -> Unit) {
             )
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(36.dp)
+                    .background(CobaltSoft, RoundedCornerShape(12.dp))
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
@@ -155,19 +159,13 @@ private fun HomeTopBar(onOpenFavorites: () -> Unit) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.Star,
+                    imageVector = Icons.Filled.Star,
                     contentDescription = "Favorites",
                     tint = CobaltPrimary,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(20.dp)
                 )
             }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(HomeColors.Outline)
-        )
     }
 }
 

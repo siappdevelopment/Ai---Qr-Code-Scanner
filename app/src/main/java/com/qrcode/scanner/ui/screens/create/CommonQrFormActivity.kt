@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -58,6 +57,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.ui.theme.BorderSubtle
+import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.CobaltSoft
@@ -155,7 +155,6 @@ fun CommonQrFormScreen(
         modifier = modifier
             .fillMaxSize()
             .background(PageBackground)
-            .statusBarsPadding()
             .navigationBarsPadding()
     ) {
         FormTopBar(title = category.displayTitle, onBack = onBack)
@@ -485,7 +484,7 @@ private data class FormLabels(
 internal fun FormTopBar(title: String, onBack: () -> Unit) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .appHeaderBackground()
             .height(56.dp)
             .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically

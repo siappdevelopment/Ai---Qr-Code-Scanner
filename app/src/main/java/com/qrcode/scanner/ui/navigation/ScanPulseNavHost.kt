@@ -74,8 +74,9 @@ fun ScanPulseNavHost(
     val currentRoute = backStackEntry?.destination?.route
     val showBottomBar = currentRoute.showsBottomNavigation()
     val isScan = currentRoute == AppDestination.Scan.route
-    val matchHeaderStatus = currentRoute == AppDestination.Home.route ||
-        currentRoute == AppDestination.Settings.route
+    val matchHeaderStatus = currentRoute != null &&
+        currentRoute != AppDestination.Scan.route &&
+        currentRoute != AppDestination.Splash.route
     val hostActivity = LocalContext.current.findHostActivity()
     val useDark = ScanPulseThemeState.palette == ScanPulsePalette.Dark
     SideEffect {

@@ -69,6 +69,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qrcode.scanner.R
+import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -210,9 +211,7 @@ fun CreateHubScreen(
 @Composable
 private fun CreateTopBar(onTuneClick: () -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(CardSurface)
+        modifier = Modifier.appHeaderBackground()
     ) {
         Row(
             modifier = Modifier
@@ -268,12 +267,6 @@ private fun CreateTopBar(onTuneClick: () -> Unit) {
 //                )
 //            }
         }
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .background(CreateColors.Border)
-        )
     }
 }
 

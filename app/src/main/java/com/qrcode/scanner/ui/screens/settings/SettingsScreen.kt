@@ -54,6 +54,7 @@ import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.launcher.common.AppUtils
 import com.qrcode.scanner.ui.screens.history.ClearHistoryDialog
 import com.qrcode.scanner.ui.theme.BorderSubtle
+import com.qrcode.scanner.ui.components.headerBottomStroke
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.CobaltSoft
@@ -275,6 +276,7 @@ private fun SettingsTopBar() {
         modifier = Modifier
             .fillMaxWidth()
             .background(CardSurface)
+            .headerBottomStroke()
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)

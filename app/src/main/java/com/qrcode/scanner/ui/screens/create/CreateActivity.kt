@@ -21,6 +21,7 @@ class CreateActivity : ComponentActivity() {
                 val context = LocalContext.current
                 CreateHubScreen(
                     modifier = Modifier.navigationBarsPadding(),
+                    onBack = { finish() },
                     onCategoryClick = { type ->
                         context.startActivity(CreateQrIntents.openCategory(context, type))
                     }

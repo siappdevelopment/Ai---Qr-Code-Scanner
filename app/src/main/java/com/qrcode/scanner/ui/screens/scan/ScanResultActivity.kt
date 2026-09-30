@@ -30,7 +30,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Launch
 import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Bookmark
@@ -76,6 +75,7 @@ import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.ui.theme.BorderSubtle
+import com.qrcode.scanner.ui.components.AppBackButton
 import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -319,11 +319,7 @@ fun ScanResultScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                HeaderIconButton(
-                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = "Go back",
-                    onClick = onBack
-                )
+                AppBackButton(onClick = onBack)
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = title,

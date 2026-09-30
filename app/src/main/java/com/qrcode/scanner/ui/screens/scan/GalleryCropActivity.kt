@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Flip
@@ -72,6 +71,7 @@ import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.CobaltSoft
 import com.qrcode.scanner.ui.theme.NestedSurface
+import com.qrcode.scanner.ui.components.AppBackButton
 import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
@@ -262,11 +262,7 @@ private fun GalleryCropScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                CropIconButton(
-                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = "Back",
-                    onClick = onBack
-                )
+                AppBackButton(onClick = onBack)
                 Text(
                     text = "Crop Photo",
                     color = TextPrimary,
@@ -628,34 +624,6 @@ private fun ToolChip(
             fontFamily = PlusJakartaSans,
             fontSize = 12.sp,
             fontWeight = FontWeight.Medium
-        )
-    }
-}
-
-@Composable
-private fun CropIconButton(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    contentDescription: String,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .size(44.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(CardSurface)
-            .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = onClick
-            ),
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            icon,
-            contentDescription = contentDescription,
-            tint = TextPrimary,
-            modifier = Modifier.size(20.dp)
         )
     }
 }

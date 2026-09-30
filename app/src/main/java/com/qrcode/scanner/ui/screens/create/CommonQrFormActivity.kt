@@ -30,7 +30,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.ContentPaste
@@ -57,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.ui.theme.BorderSubtle
+import com.qrcode.scanner.ui.components.AppBackButton
 import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -198,7 +198,7 @@ fun CommonQrFormScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
+                .padding(top = 16.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Box(
@@ -236,11 +236,7 @@ fun CommonQrFormScreen(
                         if (error != null) error = null
                     },
                     placeholder = labels.primaryPlaceholder,
-                    keyboardType = if (BarcodeSymbology.isNumericInput(category)) {
-                        KeyboardType.Number
-                    } else {
-                        KeyboardType.Unspecified
-                    },
+                    keyboardType = labels.primaryKeyboard,
                     trailingPaste = {
                         val text = clipboard.getText()?.text
                         if (!text.isNullOrBlank()) {
@@ -279,9 +275,10 @@ fun CommonQrFormScreen(
                         label = labels.tertiaryLabel,
                         value = tertiary,
                         onValueChange = { tertiary = it },
-                        placeholder = labels.tertiaryPlaceholder.orEmpty(),
-                        optional = true
-                    )
+                    placeholder = labels.tertiaryPlaceholder.orEmpty(),
+                    optional = true,
+                    keyboardType = labels.tertiaryKeyboard
+                )
                 }
             }
 
@@ -369,7 +366,9 @@ private data class FormLabels(
     val tertiaryPlaceholder: String? = null,
     val quaternaryLabel: String? = null,
     val quaternaryPlaceholder: String? = null,
-    val quaternaryOptional: Boolean = true
+    val quaternaryOptional: Boolean = true,
+    val primaryKeyboard: KeyboardType = KeyboardType.Text,
+    val tertiaryKeyboard: KeyboardType = KeyboardType.Text
 ) {
     companion object {
         fun forCategory(type: QrCategoryType): FormLabels = when (type) {
@@ -393,13 +392,15 @@ private data class FormLabels(
                 quaternaryLabel = "Job Title (optional)",
                 quaternaryPlaceholder = "e.g., Product Manager",
                 tertiaryLabel = "Phone (optional)",
-                tertiaryPlaceholder = "+1 555 0100"
+                tertiaryPlaceholder = "+1 555 0100",
+                tertiaryKeyboard = KeyboardType.Phone
             )
             QrCategoryType.PHONE -> FormLabels(
                 primaryLabel = "Phone Number",
                 primaryPlaceholder = "+1 555 0100",
                 secondaryLabel = "Display Title / Note",
-                secondaryPlaceholder = "Optional label"
+                secondaryPlaceholder = "Optional label",
+                primaryKeyboard = KeyboardType.Phone
             )
             QrCategoryType.EMAIL -> FormLabels(
                 primaryLabel = "Email Address",
@@ -413,13 +414,15 @@ private data class FormLabels(
                 primaryLabel = "Phone Number",
                 primaryPlaceholder = "+1 555 0100",
                 secondaryLabel = "Message (optional)",
-                secondaryPlaceholder = "SMS text"
+                secondaryPlaceholder = "SMS text",
+                primaryKeyboard = KeyboardType.Phone
             )
             QrCategoryType.WHATSAPP -> FormLabels(
                 primaryLabel = "WhatsApp Number",
                 primaryPlaceholder = "15550100 (with country code)",
                 secondaryLabel = "Message (optional)",
-                secondaryPlaceholder = "Pre-filled chat text"
+                secondaryPlaceholder = "Pre-filled chat text",
+                primaryKeyboard = KeyboardType.Phone
             )
             QrCategoryType.LOCATION -> FormLabels(
                 primaryLabel = "Coordinates (lat,lng)",
@@ -452,14 +455,14 @@ private data class FormLabels(
             QrCategoryType.DATA_MATRIX -> barcodeForm("Data Matrix value", "Text or numbers")
             QrCategoryType.PDF_417 -> barcodeForm("PDF 417 value", "Text or numbers")
             QrCategoryType.AZTEC -> barcodeForm("Aztec value", "Text or numbers")
-            QrCategoryType.EAN_13 -> barcodeForm("EAN 13 digits", "12 digits, or 13 with check digit")
-            QrCategoryType.EAN_8 -> barcodeForm("EAN 8 digits", "7 digits, or 8 with check digit")
-            QrCategoryType.UPC_E -> barcodeForm("UPC E digits", "7 or 8 digits")
-            QrCategoryType.UPC_A -> barcodeForm("UPC A digits", "11 digits, or 12 with check digit")
+            QrCategoryType.EAN_13 -> barcodeForm("EAN 13 digits", "12 digits, or 13 with check digit", numeric = true)
+            QrCategoryType.EAN_8 -> barcodeForm("EAN 8 digits", "7 digits, or 8 with check digit", numeric = true)
+            QrCategoryType.UPC_E -> barcodeForm("UPC E digits", "7 or 8 digits", numeric = true)
+            QrCategoryType.UPC_A -> barcodeForm("UPC A digits", "11 digits, or 12 with check digit", numeric = true)
             QrCategoryType.CODE_93 -> barcodeForm("Code 93 value", "ASCII text")
             QrCategoryType.CODE_39 -> barcodeForm("Code 39 value", "Text or numbers")
             QrCategoryType.CODABAR -> barcodeForm("Codabar value", "Digits, optional start/stop")
-            QrCategoryType.ITF -> barcodeForm("ITF digits", "Even number of digits")
+            QrCategoryType.ITF -> barcodeForm("ITF digits", "Even number of digits", numeric = true)
             else -> FormLabels(
                 primaryLabel = "Payload",
                 primaryPlaceholder = "Enter value"
@@ -473,9 +476,10 @@ private data class FormLabels(
             secondaryPlaceholder = "Optional label"
         )
 
-        private fun barcodeForm(label: String, example: String) = FormLabels(
+        private fun barcodeForm(label: String, example: String, numeric: Boolean = false) = FormLabels(
             primaryLabel = label,
-            primaryPlaceholder = example
+            primaryPlaceholder = example,
+            primaryKeyboard = if (numeric) KeyboardType.Number else KeyboardType.Text
         )
     }
 }
@@ -489,23 +493,7 @@ internal fun FormTopBar(title: String, onBack: () -> Unit) {
             .padding(horizontal = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier
-                .size(44.dp)
-                .clickable(
-                    indication = null,
-                    interactionSource = remember { MutableInteractionSource() },
-                    onClick = onBack
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                contentDescription = "Back",
-                tint = TextPrimary,
-                modifier = Modifier.size(22.dp)
-            )
-        }
+        AppBackButton(onClick = onBack)
         Text(
             text = title,
             color = TextPrimary,
@@ -523,7 +511,7 @@ internal fun FormTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     optional: Boolean = false,
-    keyboardType: KeyboardType = KeyboardType.Unspecified,
+    keyboardType: KeyboardType = KeyboardType.Text,
     trailingPaste: (() -> Unit)? = null,
     onClear: (() -> Unit)? = null
 ) {

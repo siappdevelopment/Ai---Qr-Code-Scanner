@@ -25,7 +25,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.QrCode2
 import androidx.compose.material.icons.outlined.ViewWeek
@@ -45,6 +44,7 @@ import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.CobaltSoft
+import com.qrcode.scanner.ui.components.AppBackButton
 import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
@@ -128,26 +128,7 @@ private fun ContinuousBatchResultScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(CardSurface)
-                    .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
-                    .clickable(
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = onBack
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = "Go back",
-                    tint = TextPrimary,
-                    modifier = Modifier.size(22.dp)
-                )
-            }
+            AppBackButton(onClick = onBack)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "Batch Results",

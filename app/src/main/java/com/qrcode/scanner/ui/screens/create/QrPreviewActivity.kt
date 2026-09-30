@@ -33,19 +33,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.CheckCircle
-import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.Print
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.StarBorder
-import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -60,11 +56,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -73,12 +69,11 @@ import com.google.mlkit.vision.barcode.common.Barcode
 import com.qrcode.scanner.data.history.HistoryEntity
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
-import com.qrcode.scanner.data.settings.QrDefaultOutputFormat
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
-import com.qrcode.scanner.ui.theme.CobaltSoft
 import com.qrcode.scanner.ui.theme.NestedSurface
+import com.qrcode.scanner.ui.components.AppBackButton
 import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
@@ -179,7 +174,6 @@ private fun QrPreviewScreen(
 ) {
     val context = LocalContext.current
     val repository = remember { HistoryRepositoryProvider.get(context) }
-    val preferredOutput = QrDefaultOutputFormat.PNG
     val scope = rememberCoroutineScope()
 
     var style by remember { mutableStateOf(initialStyle) }
@@ -302,25 +296,39 @@ private fun QrPreviewScreen(
         Row(
             modifier = Modifier
                 .appHeaderBackground()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .height(56.dp)
+                .padding(start = 4.dp, end = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                PreviewIconButton(
-                    icon = Icons.AutoMirrored.Outlined.ArrowBack,
-                    contentDescription = "Back",
-                    onClick = onBack
-                )
-                Text(
-                    text = "QR Preview",
-                    color = TextPrimary,
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(start = 4.dp)
-                )
-            }
+            AppBackButton(onClick = onBack)
+            Text(
+                text = "QR Preview",
+                color = TextPrimary,
+                fontFamily = PlusJakartaSans,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                modifier = Modifier.weight(1f)
+            )
+            PreviewIconButton(
+                icon = if (favorite) Icons.Outlined.Star else Icons.Outlined.StarBorder,
+                contentDescription = "Favorite",
+                tint = if (favorite) CobaltPrimary else TextPrimary,
+                onClick = {
+                    if (historyId <= 0L) {
+                        Toast.makeText(
+                            context,
+                            "Create first to favorite",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@PreviewIconButton
+                    }
+                    val next = !favorite
+                    favorite = next
+                    scope.launch {
+                        repository.updateFavorite(historyId, next)
+                    }
+                }
+            )
             PreviewIconButton(
                 icon = Icons.Outlined.Share,
                 contentDescription = "Share",
@@ -340,74 +348,9 @@ private fun QrPreviewScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+                .padding(top = 16.dp, bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(999.dp))
-                            .background(CobaltSoft)
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        Text(
-                            text = "Ready to Export",
-                            color = CobaltPrimary,
-                            fontFamily = PlusJakartaSans,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 12.sp
-                        )
-                    }
-                    Text(
-                        text = "Level ${ecc.label}",
-                        color = TextSecondary,
-                        fontFamily = PlusJakartaSans,
-                        fontSize = 12.sp
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(NestedSurface)
-                        .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            if (historyId <= 0L) {
-                                Toast.makeText(
-                                    context,
-                                    "Save to History first to favorite",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                return@clickable
-                            }
-                            val next = !favorite
-                            favorite = next
-                            scope.launch {
-                                repository.updateFavorite(historyId, next)
-                            }
-                        },
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = if (favorite) Icons.Outlined.Star else Icons.Outlined.StarBorder,
-                        contentDescription = "Favorite",
-                        tint = if (favorite) CobaltPrimary else TextSecondary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-            }
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -476,46 +419,6 @@ private fun QrPreviewScreen(
                     fontSize = 18.sp,
                     modifier = Modifier.padding(top = 4.dp)
                 )
-                Text(
-                    text = payload,
-                    color = TextSecondary,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 13.sp,
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(top = 4.dp)
-                )
-
-                Row(
-                    modifier = Modifier
-                        .padding(top = 12.dp)
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(NestedSurface)
-                        .padding(horizontal = 12.dp, vertical = 10.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.VerifiedUser,
-                        contentDescription = null,
-                        tint = CobaltPrimary,
-                        modifier = Modifier.size(16.dp)
-                    )
-                    Spacer(modifier = Modifier.size(6.dp))
-                    Text(
-                        text = if (BarcodeSymbology.isBarcode(category)) {
-                            "Valid ${category.displayTitle} barcode"
-                        } else {
-                            "Valid QR payload • UTF-8 • ${style.paletteName}"
-                        },
-                        color = TextSecondary,
-                        fontFamily = PlusJakartaSans,
-                        fontSize = 12.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
             }
 
             if (!BarcodeSymbology.isBarcode(category)) {
@@ -563,178 +466,48 @@ private fun QrPreviewScreen(
                 }
             }
             }
-            // Settings default format is listed first and marked preferred; both actions remain.
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(if (exporting || bitmap == null) NestedSurface else CobaltPrimary)
+                    .clickable(
+                        enabled = bitmap != null && !exporting,
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {
+                        withExportBmp { bmp ->
+                            exporting = true
+                            scope.launch {
+                                val result = withContext(Dispatchers.IO) {
+                                    QrExportHelper.savePngToGallery(context, bmp)
+                                }
+                                Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
+                                exporting = false
+                            }
+                        }
+                    },
+                contentAlignment = Alignment.Center
             ) {
-                if (preferredOutput == QrDefaultOutputFormat.PNG) {
-                    ExportTile(
-                        title = "Save PNG",
-                        subtitle = "1024×1024",
-                        icon = Icons.Outlined.Image,
-                        modifier = Modifier.weight(1f),
-                        enabled = bitmap != null && !exporting,
-                        preferred = true,
-                        onClick = {
-                            withExportBmp { bmp ->
-                                exporting = true
-                                scope.launch {
-                                    val result = withContext(Dispatchers.IO) {
-                                        QrExportHelper.savePngToGallery(context, bmp)
-                                    }
-                                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT)
-                                        .show()
-                                    exporting = false
-                                }
-                            }
-                        }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Image,
+                        contentDescription = null,
+                        tint = if (bitmap != null && !exporting) White else TextTertiary,
+                        modifier = Modifier.size(20.dp)
                     )
-                    ExportTile(
-                        title = "Export Vector",
-                        subtitle = "Scalable SVG",
-                        icon = Icons.Outlined.Description,
-                        modifier = Modifier.weight(1f),
-                        enabled = bitmap != null && !exporting,
-                        preferred = false,
-                        onClick = {
-                            exporting = true
-                            scope.launch {
-                                try {
-                                    val svg = withContext(Dispatchers.Default) {
-                                        if (BarcodeSymbology.isBarcode(category)) {
-                                            BarcodeBitmapEncoder.toSvg(payload, category)
-                                        } else {
-                                            QrStyledRenderer.toSvg(payload, style, ecc, 1024)
-                                        }
-                                    }
-                                    val result = withContext(Dispatchers.IO) {
-                                        QrExportHelper.saveSvgToCache(context, svg)
-                                    }
-                                    if (result.success && result.uri != null) {
-                                        QrExportHelper.shareSvg(context, result.uri, displayTitle)
-                                        Toast.makeText(context, "SVG ready", Toast.LENGTH_SHORT)
-                                            .show()
-                                    } else {
-                                        Toast.makeText(context, result.message, Toast.LENGTH_SHORT)
-                                            .show()
-                                    }
-                                } catch (e: Exception) {
-                                    Toast.makeText(
-                                        context,
-                                        e.message ?: "SVG export failed",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } finally {
-                                    exporting = false
-                                }
-                            }
-                        }
-                    )
-                } else {
-                    ExportTile(
-                        title = "Export Vector",
-                        subtitle = "Scalable SVG",
-                        icon = Icons.Outlined.Description,
-                        modifier = Modifier.weight(1f),
-                        enabled = bitmap != null && !exporting,
-                        preferred = true,
-                        onClick = {
-                            exporting = true
-                            scope.launch {
-                                try {
-                                    val svg = withContext(Dispatchers.Default) {
-                                        if (BarcodeSymbology.isBarcode(category)) {
-                                            BarcodeBitmapEncoder.toSvg(payload, category)
-                                        } else {
-                                            QrStyledRenderer.toSvg(payload, style, ecc, 1024)
-                                        }
-                                    }
-                                    val result = withContext(Dispatchers.IO) {
-                                        QrExportHelper.saveSvgToCache(context, svg)
-                                    }
-                                    if (result.success && result.uri != null) {
-                                        QrExportHelper.shareSvg(context, result.uri, displayTitle)
-                                        Toast.makeText(context, "SVG ready", Toast.LENGTH_SHORT)
-                                            .show()
-                                    } else {
-                                        Toast.makeText(context, result.message, Toast.LENGTH_SHORT)
-                                            .show()
-                                    }
-                                } catch (e: Exception) {
-                                    Toast.makeText(
-                                        context,
-                                        e.message ?: "SVG export failed",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                } finally {
-                                    exporting = false
-                                }
-                            }
-                        }
-                    )
-                    ExportTile(
-                        title = "Save PNG",
-                        subtitle = "1024×1024",
-                        icon = Icons.Outlined.Image,
-                        modifier = Modifier.weight(1f),
-                        enabled = bitmap != null && !exporting,
-                        preferred = false,
-                        onClick = {
-                            withExportBmp { bmp ->
-                                exporting = true
-                                scope.launch {
-                                    val result = withContext(Dispatchers.IO) {
-                                        QrExportHelper.savePngToGallery(context, bmp)
-                                    }
-                                    Toast.makeText(context, result.message, Toast.LENGTH_SHORT)
-                                        .show()
-                                    exporting = false
-                                }
-                            }
-                        }
+                    Text(
+                        text = if (exporting) "Saving..." else "Save Image",
+                        color = if (bitmap != null && !exporting) White else TextTertiary,
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp
                     )
                 }
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ) {
-                ExportTile(
-                    title = "Print Card",
-                    subtitle = "System print",
-                    icon = Icons.Outlined.Print,
-                    modifier = Modifier.weight(1f),
-                    enabled = bitmap != null && !exporting,
-                    onClick = {
-                        withExportBmp { bmp ->
-                            runCatching {
-                                QrExportHelper.printBitmap(context, bmp, displayTitle)
-                            }.onFailure {
-                                Toast.makeText(
-                                    context,
-                                    it.message ?: "Print failed",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    }
-                )
-                ExportTile(
-                    title = "Send Code",
-                    subtitle = "Sharesheet",
-                    icon = Icons.Outlined.Share,
-                    modifier = Modifier.weight(1f),
-                    enabled = bitmap != null && !exporting,
-                    onClick = {
-                        withExportBmp { bmp ->
-                            val result = QrExportHelper.shareBitmap(context, bmp, displayTitle)
-                            if (!result.success) {
-                                Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
-                            }
-                        }
-                    }
-                )
             }
 
             // Primary Save — Phase 7 persistence (payload unchanged by style)
@@ -766,7 +539,7 @@ private fun QrPreviewScreen(
                                         onHistoryIdAssigned(it)
                                     }
                                 }
-                                Toast.makeText(context, "Saved to History", Toast.LENGTH_SHORT)
+                                Toast.makeText(context, "Qr code generated", Toast.LENGTH_SHORT)
                                     .show()
                                 onSavedAndDone(id)
                             } catch (e: Exception) {
@@ -786,14 +559,14 @@ private fun QrPreviewScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Icon(
-                        imageVector = if (historyId > 0L) Icons.Outlined.Bookmark else Icons.Outlined.BookmarkBorder,
-                        contentDescription = null,
-                        tint = if (saving || bitmap == null) TextTertiary else White,
-                        modifier = Modifier.size(20.dp)
-                    )
+//                    Icon(
+//                        imageVector = if (historyId > 0L) Icons.Outlined.Bookmark else Icons.Outlined.BookmarkBorder,
+//                        contentDescription = null,
+//                        tint = if (saving || bitmap == null) TextTertiary else White,
+//                        modifier = Modifier.size(20.dp)
+//                    )
                     Text(
-                        text = if (saving) "Saving…" else "Save to History",
+                        text = if (saving) "Creating..." else "Create",
                         color = if (saving || bitmap == null) TextTertiary else White,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -814,70 +587,15 @@ private fun QrPreviewScreen(
                     color = TextPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 14.sp
+                    fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    SpecCell("Symbology", "QR Model 2", Modifier.weight(1f))
                     SpecCell("Export", "1024 × 1024", Modifier.weight(1f))
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    SpecCell("Redundancy", "Level ${ecc.label}", Modifier.weight(1f))
                     SpecCell("Style", style.bodyPattern.label, Modifier.weight(1f))
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun ExportTile(
-    title: String,
-    subtitle: String,
-    icon: ImageVector,
-    enabled: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    preferred: Boolean = false
-) {
-    Column(
-        modifier = modifier
-            .clip(RoundedCornerShape(14.dp))
-            .background(if (preferred) CobaltSoft else CardSurface)
-            .border(
-                1.dp,
-                if (preferred) CobaltPrimary else BorderSubtle,
-                RoundedCornerShape(14.dp)
-            )
-            .clickable(
-                enabled = enabled,
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = onClick
-            )
-            .padding(14.dp),
-        verticalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = if (enabled) CobaltPrimary else TextTertiary,
-            modifier = Modifier.size(22.dp)
-        )
-        Text(
-            text = title,
-            color = if (enabled) TextPrimary else TextTertiary,
-            fontFamily = PlusJakartaSans,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 13.sp
-        )
-        Text(
-            text = if (preferred) "Preferred · $subtitle" else subtitle,
-            color = TextSecondary,
-            fontFamily = PlusJakartaSans,
-            fontSize = 11.sp
-        )
     }
 }
 
@@ -906,7 +624,8 @@ private fun SpecCell(label: String, value: String, modifier: Modifier = Modifier
 private fun PreviewIconButton(
     icon: ImageVector,
     contentDescription: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    tint: Color = TextPrimary
 ) {
     Box(
         modifier = Modifier
@@ -924,7 +643,7 @@ private fun PreviewIconButton(
         Icon(
             imageVector = icon,
             contentDescription = contentDescription,
-            tint = TextPrimary,
+            tint = tint,
             modifier = Modifier.size(20.dp)
         )
     }

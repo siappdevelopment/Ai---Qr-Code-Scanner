@@ -69,6 +69,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qrcode.scanner.R
+import com.qrcode.scanner.ui.components.AppBackButton
 import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
@@ -90,8 +91,8 @@ import com.qrcode.scanner.ui.theme.forDarkUi
  */
 @Composable
 fun CreateHubScreen(
+    onBack: () -> Unit = {},
     onCategoryClick: (QrCategoryType) -> Unit = {},
-    onTuneClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -116,7 +117,7 @@ fun CreateHubScreen(
             .fillMaxSize()
             .background(CreateColors.SurfaceBg)
     ) {
-        CreateTopBar(onTuneClick = onTuneClick)
+        CreateTopBar(onBack = onBack)
 
         Column(
             modifier = Modifier
@@ -209,7 +210,7 @@ fun CreateHubScreen(
 }
 
 @Composable
-private fun CreateTopBar(onTuneClick: () -> Unit) {
+private fun CreateTopBar(onBack: () -> Unit) {
     Column(
         modifier = Modifier.appHeaderBackground()
     ) {
@@ -217,55 +218,18 @@ private fun CreateTopBar(onTuneClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp)
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .padding(start = 4.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-//                Box(
-//                    modifier = Modifier
-//                        .size(36.dp)
-//                        .background(CobaltPrimary, RoundedCornerShape(12.dp)),
-//                    contentAlignment = Alignment.Center
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Outlined.AddBox,
-//                        contentDescription = null,
-//                        tint = White,
-//                        modifier = Modifier.size(20.dp)
-//                    )
-//                }
-                Text(
-                    text = "Create QR Code",
-                    color = CreateColors.TextMain,
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    lineHeight = 24.sp
-                )
-            }
-//            Box(
-//                modifier = Modifier
-//                    .size(40.dp)
-//                    .background(CardSurface, RoundedCornerShape(12.dp))
-//                    .border(1.dp, CreateColors.Border, RoundedCornerShape(12.dp))
-//                    .clickable(
-//                        interactionSource = remember { MutableInteractionSource() },
-//                        indication = null,
-//                        onClick = onTuneClick
-//                    ),
-//                contentAlignment = Alignment.Center
-//            ) {
-//                Icon(
-//                    imageVector = Icons.Outlined.Tune,
-//                    contentDescription = "Tune",
-//                    tint = CreateColors.TextSecondary,
-//                    modifier = Modifier.size(20.dp)
-//                )
-//            }
+            AppBackButton(onClick = onBack)
+            Text(
+                text = "Create QR Code",
+                color = CreateColors.TextMain,
+                fontFamily = PlusJakartaSans,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.SemiBold,
+                lineHeight = 24.sp
+            )
         }
     }
 }

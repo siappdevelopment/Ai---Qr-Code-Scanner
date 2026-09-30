@@ -3,8 +3,6 @@ package com.qrcode.scanner.ui.screens.create
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -208,13 +206,7 @@ private fun QrPreviewScreen(
         }
         val uriStr = style.customLogoUri ?: return@LaunchedEffect
         logoBmp = withContext(Dispatchers.IO) {
-            runCatching {
-                context.contentResolver.openInputStream(Uri.parse(uriStr))?.use { stream ->
-                    BitmapFactory.decodeStream(stream)?.let {
-                        QrStyledRenderer.prepareLogo(it, 256)
-                    }
-                }
-            }.getOrNull()
+            QrLogoStore.load(context, uriStr)
         }
     }
 
@@ -329,6 +321,7 @@ private fun QrPreviewScreen(
                     }
                 }
             )
+            Spacer(modifier = Modifier.size(8.dp))
             PreviewIconButton(
                 icon = Icons.Outlined.Share,
                 contentDescription = "Share",

@@ -39,7 +39,6 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Language
-import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material.icons.outlined.QrCode2
 import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Share
@@ -48,8 +47,6 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.material.icons.outlined.ViewWeek
 import androidx.compose.material.icons.outlined.Wifi
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -290,7 +287,6 @@ fun ScanResultScreen(
     val kind = remember(detectedType) { resolveKind(detectedType) }
     val isUrl = kind == ResultKind.Website
     var favorite by remember(historyId) { mutableStateOf(initialFavorite) }
-    var moreMenuOpen by remember { mutableStateOf(false) }
     LaunchedEffect(initialFavorite) { favorite = initialFavorite }
     val scannedAt = remember(scannedAtMillis) {
         SimpleDateFormat("MMM d, HH:mm", Locale.getDefault()).format(Date(scannedAtMillis))
@@ -342,41 +338,6 @@ fun ScanResultScreen(
                     contentDescription = "Share result",
                     onClick = { shareResult(context, displayValue, isUrl) }
                 )
-                if (onDeleteRequest != null) {
-                    Box {
-                        HeaderIconButton(
-                            icon = Icons.Outlined.MoreVert,
-                            contentDescription = "More options",
-                            onClick = { moreMenuOpen = true }
-                        )
-                        DropdownMenu(
-                            expanded = moreMenuOpen,
-                            onDismissRequest = { moreMenuOpen = false },
-                            containerColor = White
-                        ) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text(
-                                        text = "Delete",
-                                        color = Destructive,
-                                        fontFamily = PlusJakartaSans
-                                    )
-                                },
-                                onClick = {
-                                    moreMenuOpen = false
-                                    onDeleteRequest()
-                                },
-                                leadingIcon = {
-                                    Icon(
-                                        Icons.Outlined.Delete,
-                                        contentDescription = null,
-                                        tint = Destructive
-                                    )
-                                }
-                            )
-                        }
-                    }
-                }
             }
         }
 
@@ -385,7 +346,10 @@ fun ScanResultScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
+                .padding(
+                    top = if (onDeleteRequest != null) 16.dp else 0.dp,
+                    bottom = 24.dp
+                ),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Column(
@@ -574,12 +538,21 @@ fun ScanResultScreen(
                     modifier = Modifier.weight(1f),
                     onClick = { shareResult(context, displayValue, isUrl) }
                 )
-                SecondaryAction(
-                    label = if (favorite) "Saved" else "Save Fav",
-                    icon = if (favorite) Icons.Outlined.Bookmark else Icons.Outlined.BookmarkBorder,
-                    modifier = Modifier.weight(1f),
-                    onClick = { toggleFavorite() }
-                )
+//                SecondaryAction(
+//                    label = if (favorite) "Saved" else "Save Fav",
+//                    icon = if (favorite) Icons.Outlined.Bookmark else Icons.Outlined.BookmarkBorder,
+//                    modifier = Modifier.weight(1f),
+//                    onClick = { toggleFavorite() }
+//                )
+                if (onDeleteRequest != null) {
+                    SecondaryAction(
+                        label = "Delete",
+                        icon = Icons.Outlined.Delete,
+                        iconTint = Destructive,
+                        modifier = Modifier.weight(1f),
+                        onClick = onDeleteRequest
+                    )
+                }
             }
         }
     }
@@ -619,7 +592,8 @@ private fun SecondaryAction(
     label: String,
     icon: ImageVector,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    iconTint: Color = CobaltPrimary
 ) {
     Column(
         modifier = modifier
@@ -646,7 +620,7 @@ private fun SecondaryAction(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = CobaltPrimary,
+                tint = iconTint,
                 modifier = Modifier.size(18.dp)
             )
         }

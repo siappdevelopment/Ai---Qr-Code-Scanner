@@ -30,18 +30,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.LightMode
-import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Public
-import androidx.compose.material.icons.outlined.RestartAlt
 import androidx.compose.material.icons.outlined.Upload
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Icon
@@ -60,7 +55,6 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qrcode.scanner.ui.theme.BorderSubtle
@@ -138,11 +132,13 @@ private fun QrCustomizationScreen(
         if (uri == null) return@rememberLauncherForActivityResult
         runCatching {
             context.contentResolver.openInputStream(uri)?.use { stream ->
-                val decoded = BitmapFactory.decodeStream(stream)
-                logoBmp = decoded?.let { QrStyledRenderer.prepareLogo(it, 256) }
+                val decoded = BitmapFactory.decodeStream(stream) ?: return@use
+                val prepared = QrStyledRenderer.prepareLogo(decoded, 256)
+                val path = QrLogoStore.persist(context, prepared)
+                logoBmp = prepared
                 style = style.copy(
                     centerIcon = QrStyleConfig.CenterIcon.CUSTOM,
-                    customLogoUri = uri.toString()
+                    customLogoUri = path
                 )
             }
         }.onFailure {
@@ -173,20 +169,18 @@ private fun QrCustomizationScreen(
         previewBmp = result.bitmap
     }
 
-    // Load existing custom logo URI once
-    LaunchedEffect(initialStyle.customLogoUri) {
-        val uriStr = initialStyle.customLogoUri ?: return@LaunchedEffect
+    LaunchedEffect(initialStyle.customLogoUri, initialStyle.centerIcon) {
         if (initialStyle.centerIcon != QrStyleConfig.CenterIcon.CUSTOM) return@LaunchedEffect
-        runCatching {
-            context.contentResolver.openInputStream(Uri.parse(uriStr))?.use { stream ->
-                logoBmp = BitmapFactory.decodeStream(stream)?.let {
-                    QrStyledRenderer.prepareLogo(it, 256)
-                }
-            }
+        val loaded = withContext(Dispatchers.IO) {
+            QrLogoStore.load(context, initialStyle.customLogoUri)
+        } ?: return@LaunchedEffect
+        logoBmp = loaded
+        val stored = initialStyle.customLogoUri
+        if (!stored.isNullOrBlank() && !stored.startsWith("/")) {
+            val path = withContext(Dispatchers.IO) { QrLogoStore.persist(context, loaded) }
+            style = style.copy(customLogoUri = path)
         }
     }
-
-    val canvasBg = if (style.previewDarkCanvas) Color(0xFF0F172A) else NestedSurface
 
     Column(
         modifier = Modifier
@@ -194,99 +188,53 @@ private fun QrCustomizationScreen(
             .background(PageBackground)
             .navigationBarsPadding()
     ) {
-        // Top bar
         Row(
             modifier = Modifier
                 .appHeaderBackground()
-                .padding(horizontal = 12.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .height(56.dp)
+                .padding(start = 4.dp, end = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AppBackButton(onClick = onBack)
-                Text(
-                    text = "Customize QR",
-                    color = TextPrimary,
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(start = 8.dp)
-                )
-            }
+            AppBackButton(onClick = onBack)
+            Text(
+                text = "Customize QR",
+                color = TextPrimary,
+                fontFamily = PlusJakartaSans,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                modifier = Modifier.weight(1f)
+            )
+            Text(
+                text = "Reset",
+                color = CobaltPrimary,
+                fontFamily = PlusJakartaSans,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp,
+                modifier = Modifier.clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) {
+                    style = QrStyleConfig.Default
+                    logoBmp = null
+                    Toast.makeText(context, "Reset to Electric Cobalt", Toast.LENGTH_SHORT).show()
+                }
+            )
         }
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .weight(1f)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
+                .padding(top = 16.dp, bottom = 16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            // Light / Dark canvas + Reset
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(999.dp))
-                        .background(NestedSurface)
-                        .border(1.dp, BorderSubtle, RoundedCornerShape(999.dp))
-                        .padding(4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    ThemeChip(
-                        selected = !style.previewDarkCanvas,
-                        icon = Icons.Outlined.LightMode,
-                        label = "Light",
-                        onClick = { style = style.copy(previewDarkCanvas = false) }
-                    )
-                    ThemeChip(
-                        selected = style.previewDarkCanvas,
-                        icon = Icons.Outlined.DarkMode,
-                        label = "Dark",
-                        onClick = { style = style.copy(previewDarkCanvas = true) }
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(NestedSurface)
-                        .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            style = QrStyleConfig.Default
-                            logoBmp = null
-                            Toast.makeText(context, "Reset to Electric Cobalt", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp)
-                ) {
-                    Icon(Icons.Outlined.RestartAlt, null, tint = TextSecondary, modifier = Modifier.size(16.dp))
-                    Text("Reset", color = TextSecondary, fontFamily = PlusJakartaSans, fontSize = 12.sp)
-                }
-            }
-
-            Text(
-                text = "Live preview",
-                color = TextTertiary,
-                fontFamily = PlusJakartaSans,
-                fontSize = 12.sp
-            )
-
-            // Live preview
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(1f)
                     .clip(RoundedCornerShape(18.dp))
-                    .background(canvasBg)
+                    .background(NestedSurface)
                     .border(1.dp, BorderSubtle, RoundedCornerShape(18.dp))
                     .padding(20.dp),
                 contentAlignment = Alignment.Center
@@ -314,7 +262,7 @@ private fun QrCustomizationScreen(
             }
 
             // Body Pattern
-            SectionCard(title = "Body Pattern", trailing = style.bodyPattern.label) {
+            SectionCard(title = "Body Pattern") {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     QrStyleConfig.BodyPattern.entries.chunked(2).forEach { row ->
                         Row(
@@ -336,7 +284,7 @@ private fun QrCustomizationScreen(
             }
 
             // Corner Eye
-            SectionCard(title = "Corner Eye Style", trailing = style.eyeStyle.label) {
+            SectionCard(title = "Corner Eye Style") {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -353,7 +301,7 @@ private fun QrCustomizationScreen(
             }
 
             // Color Palette — solid only
-            SectionCard(title = "Color Palette", trailing = style.paletteName) {
+            SectionCard(title = "Color Palette") {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -409,26 +357,25 @@ private fun QrCustomizationScreen(
                             )
                         }
                     )
-                    // Custom = reuse cobalt as base; simple alternate pick via long-press not available —
-                    // offer a few solid extras as "Custom" deep blue / black
-                    PaletteSwatch(
-                        color = Color(0xFF002080),
-                        selected = style.paletteKey == QrStyleConfig.PALETTE_CUSTOM,
-                        onClick = {
-                            style = style.copy(
-                                paletteKey = QrStyleConfig.PALETTE_CUSTOM,
-                                paletteName = "Custom (#002080)",
-                                foregroundColor = 0xFF002080.toInt(),
-                                backgroundColor = QrStyleConfig.COLOR_WHITE
-                            )
-                        },
-                        showPlus = true
-                    )
+                    ExtraPalettes.forEach { extra ->
+                        PaletteSwatch(
+                            color = Color(extra.color),
+                            selected = style.paletteKey == extra.key,
+                            onClick = {
+                                style = style.copy(
+                                    paletteKey = extra.key,
+                                    paletteName = extra.name,
+                                    foregroundColor = extra.color,
+                                    backgroundColor = QrStyleConfig.COLOR_WHITE
+                                )
+                            }
+                        )
+                    }
                 }
             }
 
             // Center icon
-            SectionCard(title = "Center Icon", trailing = style.centerIcon.label) {
+            SectionCard(title = "Center Icon") {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -476,8 +423,8 @@ private fun QrCustomizationScreen(
             }
 
             // Frame
-            SectionCard(title = "Frame Template", trailing = style.frame.label) {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            SectionCard(title = "Frame Template") {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     QrStyleConfig.FrameTemplate.entries.forEach { frame ->
                         val selected = style.frame == frame
                         Column(
@@ -494,20 +441,21 @@ private fun QrCustomizationScreen(
                                     indication = null,
                                     interactionSource = remember { MutableInteractionSource() }
                                 ) { style = style.copy(frame = frame) }
-                                .padding(12.dp)
+                                .padding(horizontal = 14.dp, vertical = 16.dp)
                         ) {
                             Text(
                                 text = frame.label,
                                 color = if (selected) CobaltPrimary else TextPrimary,
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.SemiBold,
-                                fontSize = 14.sp
+                                fontSize = 16.sp
                             )
                             Text(
                                 text = frame.subtitle,
                                 color = TextSecondary,
                                 fontFamily = PlusJakartaSans,
-                                fontSize = 12.sp
+                                fontSize = 13.sp,
+                                modifier = Modifier.padding(top = 2.dp)
                             )
                         }
                     }
@@ -522,90 +470,58 @@ private fun QrCustomizationScreen(
                     fontSize = 13.sp
                 )
             }
+        }
 
-            // Apply → return to Preview
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp)
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(if (previewBmp == null || error != null) NestedSurface else CobaltPrimary)
-                    .clickable(
-                        enabled = previewBmp != null && error == null,
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) { onApply(style) },
-                contentAlignment = Alignment.Center
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(PageBackground)
+                .padding(horizontal = 16.dp)
+                .padding(top = 8.dp, bottom = 16.dp)
+                .height(52.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .background(if (previewBmp == null || error != null) NestedSurface else CobaltPrimary)
+                .clickable(
+                    enabled = previewBmp != null && error == null,
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() }
+                ) { onApply(style) },
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Icon(
-                        Icons.Outlined.Check,
-                        contentDescription = null,
-                        tint = if (previewBmp == null || error != null) TextTertiary else White,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        text = "Save & Export Custom QR",
-                        color = if (previewBmp == null || error != null) TextTertiary else White,
-                        fontFamily = PlusJakartaSans,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 15.sp
-                    )
-                }
+                Icon(
+                    Icons.Outlined.Check,
+                    contentDescription = null,
+                    tint = if (previewBmp == null || error != null) TextTertiary else White,
+                    modifier = Modifier.size(20.dp)
+                )
+                Text(
+                    text = "Save & Export Custom QR",
+                    color = if (previewBmp == null || error != null) TextTertiary else White,
+                    fontFamily = PlusJakartaSans,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp
+                )
             }
-            Text(
-                text = "Returns to Preview where you can save, share, or export.",
-                color = TextTertiary,
-                fontFamily = PlusJakartaSans,
-                fontSize = 12.sp
-            )
         }
     }
 }
 
-@Composable
-private fun ThemeChip(
-    selected: Boolean,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    label: String,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .clip(RoundedCornerShape(999.dp))
-            .background(if (selected) White else Color.Transparent)
-            .border(1.dp, if (selected) BorderSubtle else Color.Transparent, RoundedCornerShape(999.dp))
-            .clickable(
-                indication = null,
-                interactionSource = remember { MutableInteractionSource() },
-                onClick = onClick
-            )
-            .padding(horizontal = 10.dp, vertical = 6.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Icon(
-            icon,
-            null,
-            tint = if (selected) CobaltPrimary else TextSecondary,
-            modifier = Modifier.size(16.dp)
-        )
-        Text(
-            label,
-            color = if (selected) TextPrimary else TextSecondary,
-            fontFamily = PlusJakartaSans,
-            fontSize = 12.sp
-        )
-    }
-}
+private data class ExtraPalette(val key: String, val name: String, val color: Int)
+
+private val ExtraPalettes = listOf(
+    ExtraPalette("crimson", "Crimson", 0xFFDC2626.toInt()),
+    ExtraPalette("emerald", "Emerald", 0xFF059669.toInt()),
+    ExtraPalette("violet", "Violet", 0xFF7C3AED.toInt()),
+    ExtraPalette("amber", "Amber", 0xFFD97706.toInt())
+)
 
 @Composable
 private fun SectionCard(
     title: String,
-    trailing: String,
     content: @Composable () -> Unit
 ) {
     Column(
@@ -616,29 +532,13 @@ private fun SectionCard(
             .padding(14.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = title,
-                color = TextPrimary,
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp
-            )
-            Text(
-                text = trailing,
-                color = CobaltPrimary,
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 12.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.width(140.dp)
-            )
-        }
+        Text(
+            text = title,
+            color = TextPrimary,
+            fontFamily = PlusJakartaSans,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 15.sp
+        )
         content()
     }
 }
@@ -660,7 +560,7 @@ private fun SelectChip(
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = onClick
             )
-            .padding(horizontal = 10.dp, vertical = 12.dp),
+            .padding(horizontal = 12.dp, vertical = 16.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -668,7 +568,7 @@ private fun SelectChip(
             color = if (selected) CobaltPrimary else TextPrimary,
             fontFamily = PlusJakartaSans,
             fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             maxLines = 2
         )
     }
@@ -678,8 +578,7 @@ private fun SelectChip(
 private fun PaletteSwatch(
     color: Color,
     selected: Boolean,
-    onClick: () -> Unit,
-    showPlus: Boolean = false
+    onClick: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -698,8 +597,6 @@ private fun PaletteSwatch(
     ) {
         if (selected) {
             Icon(Icons.Outlined.Check, null, tint = White, modifier = Modifier.size(18.dp))
-        } else if (showPlus) {
-            Icon(Icons.Outlined.Palette, null, tint = White, modifier = Modifier.size(18.dp))
         }
     }
 }

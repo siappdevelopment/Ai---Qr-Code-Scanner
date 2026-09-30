@@ -1,7 +1,6 @@
 package com.qrcode.scanner.ui.screens.settings
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -91,14 +90,6 @@ fun SettingsScreen(
         .collectAsStateWithLifecycle(initialValue = 0)
     var showClearDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
-    val appVersion = remember {
-        try {
-            @Suppress("DEPRECATION")
-            context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "1.0"
-        } catch (_: PackageManager.NameNotFoundException) {
-            "1.0"
-        }
-    }
 
     Column(
         modifier = modifier
@@ -166,18 +157,6 @@ fun SettingsScreen(
                         scope.launch { repository.setAutoOpenUrls(enabled) }
                     }
                 )
-            }
-
-            SettingsSectionCard(title = "Storage & History") {
-//                SettingsNavRow(
-//                    title = "Cloud Auto-Backup",
-//                    subtitle = "Google Drive encrypted store",
-//                    icon = Icons.Outlined.CloudSync,
-//                    trailingLabel = "Unavailable",
-//                    showChevron = false,
-//                    enabled = false,
-//                    onClick = null
-//                )
                 SettingsRowDivider()
                 SettingsNavRow(
                     title = "Clear Scan & Create History",
@@ -195,7 +174,7 @@ fun SettingsScreen(
             SettingsSectionCard(title = "About & Legal") {
                 SettingsNavRow(
                     title = "About",
-                    subtitle = "Version $appVersion",
+                    subtitle = "",
                     icon = Icons.Outlined.Info,
                     enabled = true,
                     onClick = onOpenAbout
@@ -213,7 +192,7 @@ fun SettingsScreen(
                 SettingsRowDivider()
                 SettingsNavRow(
                     title = "Share",
-                    subtitle = "Share this app with friends",
+                    subtitle = "",
                     icon = Icons.Outlined.Share,
                     enabled = true,
                     onClick = { shareApp(context) }
@@ -221,7 +200,7 @@ fun SettingsScreen(
                 SettingsRowDivider()
                 SettingsNavRow(
                     title = "Rate",
-                    subtitle = "Rate us on the Play Store",
+                    subtitle = "",
                     icon = Icons.Outlined.Star,
                     showChevron = false,
                     showExternalLink = true,

@@ -18,8 +18,11 @@ import android.util.Log
 internal object DetectionFeedback {
     private const val TAG = "DetectionFeedback"
     private const val VIBRATE_MS = 60L
-    private const val BEEP_MS = 150
-    private const val TONE_RELEASE_DELAY_MS = 220L
+    private const val BEEP_MS = 200
+
+    private val mainHandler = Handler(Looper.getMainLooper())
+    private var toneGenerator: ToneGenerator? = null
+    private var toneStream: Int = AudioManager.STREAM_MUSIC
 
     fun onAcceptedDetection(
         context: Context,
@@ -31,7 +34,7 @@ internal object DetectionFeedback {
             vibrateOnce(context.applicationContext)
         }
         if (beepEnabled) {
-            beepOnce()
+            beepOnce(context.applicationContext)
         }
     }
 
@@ -58,19 +61,37 @@ internal object DetectionFeedback {
         }
     }
 
-    private fun beepOnce() {
-        try {
-            val toneGenerator = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 80)
-            toneGenerator.startTone(ToneGenerator.TONE_PROP_BEEP, BEEP_MS)
-            Handler(Looper.getMainLooper()).postDelayed({
-                try {
-                    toneGenerator.release()
-                } catch (_: Throwable) {
-                    // already released
+    private fun beepOnce(context: Context) {
+        mainHandler.post {
+            try {
+                val stream = audibleStream(context)
+                if (toneGenerator == null || toneStream != stream) {
+                    toneGenerator?.release()
+                    toneGenerator = ToneGenerator(stream, 100)
+                    toneStream = stream
                 }
-            }, TONE_RELEASE_DELAY_MS)
-        } catch (t: Throwable) {
-            Log.w(TAG, "beep failed", t)
+                val started = toneGenerator?.startTone(ToneGenerator.TONE_PROP_BEEP, BEEP_MS) == true
+                if (!started) {
+                    toneGenerator?.release()
+                    toneGenerator = ToneGenerator(stream, 100)
+                    toneStream = stream
+                    toneGenerator?.startTone(ToneGenerator.TONE_PROP_BEEP, BEEP_MS)
+                }
+            } catch (t: Throwable) {
+                toneGenerator = null
+                Log.w(TAG, "beep failed", t)
+            }
+        }
+    }
+
+    private fun audibleStream(context: Context): Int {
+        val audio = context.getSystemService(Context.AUDIO_SERVICE) as? AudioManager
+            ?: return AudioManager.STREAM_MUSIC
+        return when {
+            audio.getStreamVolume(AudioManager.STREAM_MUSIC) > 0 -> AudioManager.STREAM_MUSIC
+            audio.getStreamVolume(AudioManager.STREAM_RING) > 0 -> AudioManager.STREAM_RING
+            audio.getStreamVolume(AudioManager.STREAM_NOTIFICATION) > 0 -> AudioManager.STREAM_NOTIFICATION
+            else -> AudioManager.STREAM_MUSIC
         }
     }
 }

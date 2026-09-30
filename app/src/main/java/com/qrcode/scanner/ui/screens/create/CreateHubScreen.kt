@@ -1,5 +1,6 @@
 package com.qrcode.scanner.ui.screens.create
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -57,14 +58,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.qrcode.scanner.R
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -121,24 +125,24 @@ fun CreateHubScreen(
                 .padding(top = 12.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                Text(
-                    text = "Create QR Code",
-                    color = CreateColors.TextMain,
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    lineHeight = 32.sp
-                )
-                Text(
-                    text = "Choose a content format to generate a custom scannable code",
-                    color = CreateColors.TextMuted,
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Normal,
-                    lineHeight = 20.sp
-                )
-            }
+//            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+//                Text(
+//                    text = "Create QR Code",
+//                    color = CreateColors.TextMain,
+//                    fontFamily = PlusJakartaSans,
+//                    fontSize = 24.sp,
+//                    fontWeight = FontWeight.ExtraBold,
+//                    lineHeight = 32.sp
+//                )
+//                Text(
+//                    text = "Choose a content format to generate a custom scannable code",
+//                    color = CreateColors.TextMuted,
+//                    fontFamily = PlusJakartaSans,
+//                    fontSize = 14.sp,
+//                    fontWeight = FontWeight.Normal,
+//                    lineHeight = 20.sp
+//                )
+//            }
 
             SearchField(
                 query = searchQuery,
@@ -222,19 +226,19 @@ private fun CreateTopBar(onTuneClick: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(36.dp)
-                        .background(CobaltPrimary, RoundedCornerShape(12.dp)),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.AddBox,
-                        contentDescription = null,
-                        tint = White,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
+//                Box(
+//                    modifier = Modifier
+//                        .size(36.dp)
+//                        .background(CobaltPrimary, RoundedCornerShape(12.dp)),
+//                    contentAlignment = Alignment.Center
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Outlined.AddBox,
+//                        contentDescription = null,
+//                        tint = White,
+//                        modifier = Modifier.size(20.dp)
+//                    )
+//                }
                 Text(
                     text = "Create QR Code",
                     color = CreateColors.TextMain,
@@ -244,25 +248,25 @@ private fun CreateTopBar(onTuneClick: () -> Unit) {
                     lineHeight = 24.sp
                 )
             }
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(CardSurface, RoundedCornerShape(12.dp))
-                    .border(1.dp, CreateColors.Border, RoundedCornerShape(12.dp))
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null,
-                        onClick = onTuneClick
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Tune,
-                    contentDescription = "Tune",
-                    tint = CreateColors.TextSecondary,
-                    modifier = Modifier.size(20.dp)
-                )
-            }
+//            Box(
+//                modifier = Modifier
+//                    .size(40.dp)
+//                    .background(CardSurface, RoundedCornerShape(12.dp))
+//                    .border(1.dp, CreateColors.Border, RoundedCornerShape(12.dp))
+//                    .clickable(
+//                        interactionSource = remember { MutableInteractionSource() },
+//                        indication = null,
+//                        onClick = onTuneClick
+//                    ),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Outlined.Tune,
+//                    contentDescription = "Tune",
+//                    tint = CreateColors.TextSecondary,
+//                    modifier = Modifier.size(20.dp)
+//                )
+//            }
         }
         Box(
             modifier = Modifier
@@ -391,87 +395,7 @@ private fun SocialGrid(
     categories: List<CreateCategory>,
     onCategoryClick: (QrCategoryType) -> Unit
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        categories.chunked(2).forEach { rowItems ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                rowItems.forEach { category ->
-                    SocialCard(
-                        category = category,
-                        onClick = { onCategoryClick(category.categoryType) },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                if (rowItems.size == 1) {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SocialCard(
-    category: CreateCategory,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Row(
-        modifier = modifier
-            .height(64.dp)
-            .background(CardSurface, RoundedCornerShape(18.dp))
-            .border(1.dp, CreateColors.Border, RoundedCornerShape(18.dp))
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick
-            )
-            .padding(horizontal = 14.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .size(32.dp)
-                .then(
-                    if (category.mark == null && category.categoryType == QrCategoryType.SNAPCHAT) {
-                        Modifier.background(category.iconBg.forDarkUi(), CircleShape)
-                    } else {
-                        Modifier
-                    }
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            val mark = category.mark
-            if (mark != null) {
-                Text(
-                    text = mark,
-                    color = category.iconTint.forDarkUi(),
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = if (mark.length > 1) 13.sp else 18.sp
-                )
-            } else {
-                Icon(
-                    imageVector = category.icon,
-                    contentDescription = null,
-                    tint = category.iconTint.forDarkUi(),
-                    modifier = Modifier.size(26.dp)
-                )
-            }
-        }
-        Text(
-            text = category.title,
-            color = CreateColors.TextMain,
-            fontFamily = PlusJakartaSans,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.SemiBold,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
+    CategoryGrid(categories = categories, onCategoryClick = onCategoryClick)
 }
 
 @Composable
@@ -479,65 +403,7 @@ private fun BarcodeGrid(
     categories: List<CreateCategory>,
     onCategoryClick: (QrCategoryType) -> Unit
 ) {
-    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-        categories.chunked(3).forEach { rowItems ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                rowItems.forEach { category ->
-                    BarcodeCard(
-                        category = category,
-                        onClick = { onCategoryClick(category.categoryType) },
-                        modifier = Modifier.weight(1f)
-                    )
-                }
-                repeat(3 - rowItems.size) {
-                    Spacer(modifier = Modifier.weight(1f))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun BarcodeCard(
-    category: CreateCategory,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .heightIn(min = 108.dp)
-            .background(CardSurface, RoundedCornerShape(16.dp))
-            .border(1.dp, CreateColors.Border, RoundedCornerShape(16.dp))
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null,
-                onClick = onClick
-            )
-            .padding(horizontal = 8.dp, vertical = 14.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Icon(
-            imageVector = category.icon,
-            contentDescription = null,
-            tint = CobaltPrimary,
-            modifier = Modifier.size(28.dp)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = category.title,
-            color = CreateColors.TextMain,
-            fontFamily = PlusJakartaSans,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.SemiBold,
-            textAlign = TextAlign.Center,
-            maxLines = 2,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
+    CategoryGrid(categories = categories, onCategoryClick = onCategoryClick)
 }
 
 @Composable
@@ -597,12 +463,22 @@ private fun CategoryCard(
                     .border(1.dp, category.iconBorder.forDarkUi(), RoundedCornerShape(12.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                Icon(
-                    imageVector = category.icon,
-                    contentDescription = null,
-                    tint = category.iconTint.forDarkUi(),
-                    modifier = Modifier.size(22.dp)
-                )
+                val iconRes = category.iconRes
+                if (iconRes != null) {
+                    Image(
+                        painter = painterResource(iconRes),
+                        contentDescription = null,
+                        colorFilter = if (category.barcode) ColorFilter.tint(TextPrimary) else null,
+                        modifier = Modifier.size(26.dp)
+                    )
+                } else {
+                    Icon(
+                        imageVector = category.icon,
+                        contentDescription = null,
+                        tint = category.iconTint.forDarkUi(),
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
             }
                 Icon(
                     imageVector = Icons.Outlined.NorthEast,
@@ -721,7 +597,8 @@ private enum class CreateCategory(
     val mark: String? = null,
     val socialOrder: Int = 0,
     val barcode: Boolean = false,
-    val barcodeOrder: Int = 0
+    val barcodeOrder: Int = 0,
+    val iconRes: Int? = null
 ) {
     Website(
         title = "Website URL",
@@ -803,7 +680,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF25D366),
         categoryType = QrCategoryType.WHATSAPP,
         social = true,
-        socialOrder = 1
+        socialOrder = 1,
+        iconRes = R.drawable.ic_whatsapp
     ),
     Location(
         title = "Location",
@@ -845,8 +723,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF1877F2),
         categoryType = QrCategoryType.FACEBOOK,
         social = true,
-        mark = "f",
-        socialOrder = 0
+        socialOrder = 0,
+        iconRes = R.drawable.ic_facebook
     ),
     YouTube(
         title = "YouTube",
@@ -858,7 +736,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFFFF0000),
         categoryType = QrCategoryType.YOUTUBE,
         social = true,
-        socialOrder = 2
+        socialOrder = 2,
+        iconRes = R.drawable.ic_youtube
     ),
     Twitter(
         title = "Twitter",
@@ -870,8 +749,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.TWITTER,
         social = true,
-        mark = "X",
-        socialOrder = 3
+        socialOrder = 3,
+        iconRes = R.drawable.ic_twitter
     ),
     TikTok(
         title = "TikTok",
@@ -883,7 +762,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.TIKTOK,
         social = true,
-        socialOrder = 4
+        socialOrder = 4,
+        iconRes = R.drawable.ic_tiktok
     ),
     Instagram(
         title = "Instagram",
@@ -895,7 +775,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFFE1306C),
         categoryType = QrCategoryType.INSTAGRAM,
         social = true,
-        socialOrder = 5
+        socialOrder = 5,
+        iconRes = R.drawable.ic_instagram
     ),
     Paypal(
         title = "PayPal",
@@ -907,8 +788,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF003087),
         categoryType = QrCategoryType.PAYPAL,
         social = true,
-        mark = "P",
-        socialOrder = 6
+        socialOrder = 6,
+        iconRes = R.drawable.ic_paypal
     ),
     Snapchat(
         title = "Snapchat",
@@ -920,7 +801,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.SNAPCHAT,
         social = true,
-        socialOrder = 7
+        socialOrder = 7,
+        iconRes = R.drawable.ic_snapchat
     ),
     LinkedIn(
         title = "LinkedIn",
@@ -932,8 +814,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF0A66C2),
         categoryType = QrCategoryType.LINKEDIN,
         social = true,
-        mark = "in",
-        socialOrder = 8
+        socialOrder = 8,
+        iconRes = R.drawable.ic_linkedin
     ),
     Spotify(
         title = "Spotify",
@@ -945,7 +827,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF1DB954),
         categoryType = QrCategoryType.SPOTIFY,
         social = true,
-        socialOrder = 9
+        socialOrder = 9,
+        iconRes = R.drawable.ic_spotify
     ),
     Code128(
         title = "Code 128",
@@ -957,7 +840,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.CODE_128,
         barcode = true,
-        barcodeOrder = 0
+        barcodeOrder = 0,
+        iconRes = R.drawable.ic_barcode_code128
     ),
     DataMatrix(
         title = "Data Matrix",
@@ -969,7 +853,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.DATA_MATRIX,
         barcode = true,
-        barcodeOrder = 1
+        barcodeOrder = 1,
+        iconRes = R.drawable.ic_barcode_datamatrix
     ),
     Pdf417(
         title = "PDF 417",
@@ -981,7 +866,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.PDF_417,
         barcode = true,
-        barcodeOrder = 2
+        barcodeOrder = 2,
+        iconRes = R.drawable.ic_barcode_pdf417
     ),
     Aztec(
         title = "Aztec",
@@ -993,7 +879,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.AZTEC,
         barcode = true,
-        barcodeOrder = 3
+        barcodeOrder = 3,
+        iconRes = R.drawable.ic_barcode_aztec
     ),
     Ean13(
         title = "EAN 13",
@@ -1005,7 +892,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.EAN_13,
         barcode = true,
-        barcodeOrder = 4
+        barcodeOrder = 4,
+        iconRes = R.drawable.ic_barcode_ean13
     ),
     Ean8(
         title = "EAN 8",
@@ -1017,7 +905,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.EAN_8,
         barcode = true,
-        barcodeOrder = 5
+        barcodeOrder = 5,
+        iconRes = R.drawable.ic_barcode_ean8
     ),
     UpcE(
         title = "UPC E",
@@ -1029,7 +918,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.UPC_E,
         barcode = true,
-        barcodeOrder = 6
+        barcodeOrder = 6,
+        iconRes = R.drawable.ic_barcode_upce
     ),
     UpcA(
         title = "UPC A",
@@ -1041,7 +931,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.UPC_A,
         barcode = true,
-        barcodeOrder = 7
+        barcodeOrder = 7,
+        iconRes = R.drawable.ic_barcode_upca
     ),
     Code93(
         title = "Code 93",
@@ -1053,7 +944,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.CODE_93,
         barcode = true,
-        barcodeOrder = 8
+        barcodeOrder = 8,
+        iconRes = R.drawable.ic_barcode_code93
     ),
     Code39(
         title = "Code 39",
@@ -1065,7 +957,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.CODE_39,
         barcode = true,
-        barcodeOrder = 9
+        barcodeOrder = 9,
+        iconRes = R.drawable.ic_barcode_code39
     ),
     Codabar(
         title = "Codabar",
@@ -1077,7 +970,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.CODABAR,
         barcode = true,
-        barcodeOrder = 10
+        barcodeOrder = 10,
+        iconRes = R.drawable.ic_barcode_codabar
     ),
     Itf(
         title = "ITF",
@@ -1089,7 +983,8 @@ private enum class CreateCategory(
         iconTint = Color(0xFF111111),
         categoryType = QrCategoryType.ITF,
         barcode = true,
-        barcodeOrder = 11
+        barcodeOrder = 11,
+        iconRes = R.drawable.ic_barcode_itf
     )
 }
 

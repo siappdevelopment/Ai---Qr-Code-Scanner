@@ -21,14 +21,14 @@ class SettingsPreferencesTest {
         assertFalse(prefs.autoOpenUrls)
         assertFalse(prefs.continuousBatchScan)
         assertEquals(QrDefaultEcc.H, prefs.defaultQrEcc)
-        assertEquals(QrDefaultOutputFormat.SVG, prefs.defaultQrOutputFormat)
+        assertEquals(QrDefaultOutputFormat.PNG, prefs.defaultQrOutputFormat)
         assertEquals(AppThemeMode.LIGHT, prefs.appTheme)
         assertEquals(true, SettingsPreferences.DEFAULT_VIBRATE_ON_DETECTION)
         assertEquals(false, SettingsPreferences.DEFAULT_BEEP_ON_DETECTION)
         assertEquals(false, SettingsPreferences.DEFAULT_AUTO_OPEN_URLS)
         assertEquals(false, SettingsPreferences.DEFAULT_CONTINUOUS_BATCH_SCAN)
         assertEquals(QrDefaultEcc.H, SettingsPreferences.DEFAULT_QR_ECC)
-        assertEquals(QrDefaultOutputFormat.SVG, SettingsPreferences.DEFAULT_QR_OUTPUT_FORMAT)
+        assertEquals(QrDefaultOutputFormat.PNG, SettingsPreferences.DEFAULT_QR_OUTPUT_FORMAT)
         assertEquals(AppThemeMode.LIGHT, SettingsPreferences.DEFAULT_APP_THEME)
     }
 }
@@ -67,11 +67,11 @@ class QrCreationDefaultsTest {
     }
 
     @Test
-    fun outputFormat_fromStored_fallsBackToSvg_whenMissingOrInvalid() {
-        assertEquals(QrDefaultOutputFormat.SVG, QrDefaultOutputFormat.fromStored(null))
-        assertEquals(QrDefaultOutputFormat.SVG, QrDefaultOutputFormat.fromStored(""))
-        assertEquals(QrDefaultOutputFormat.SVG, QrDefaultOutputFormat.fromStored("JPEG"))
-        assertEquals(QrDefaultOutputFormat.SVG, QrDefaultOutputFormat.fromStored("Vector"))
+    fun outputFormat_fromStored_fallsBackToPng_whenMissingOrInvalid() {
+        assertEquals(QrDefaultOutputFormat.PNG, QrDefaultOutputFormat.fromStored(null))
+        assertEquals(QrDefaultOutputFormat.PNG, QrDefaultOutputFormat.fromStored(""))
+        assertEquals(QrDefaultOutputFormat.PNG, QrDefaultOutputFormat.fromStored("JPEG"))
+        assertEquals(QrDefaultOutputFormat.PNG, QrDefaultOutputFormat.fromStored("Vector"))
     }
 
     @Test

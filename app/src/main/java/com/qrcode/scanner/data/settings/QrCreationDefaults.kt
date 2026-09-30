@@ -53,6 +53,6 @@ enum class QrDefaultOutputFormat(val storageValue: String) {
     companion object {
         fun fromStored(value: String?): QrDefaultOutputFormat =
             entries.firstOrNull { it.storageValue.equals(value, ignoreCase = true) }
-                ?: SVG
+                ?: PNG
     }
 }

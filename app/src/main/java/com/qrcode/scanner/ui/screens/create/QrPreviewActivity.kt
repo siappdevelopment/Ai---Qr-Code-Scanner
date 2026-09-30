@@ -75,10 +75,7 @@ import com.qrcode.scanner.data.history.HistoryEntity
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
 import com.qrcode.scanner.data.settings.QrDefaultOutputFormat
-import com.qrcode.scanner.data.settings.SettingsPreferences
-import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.ui.theme.BorderSubtle
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.CobaltSoft
@@ -182,11 +179,7 @@ private fun QrPreviewScreen(
 ) {
     val context = LocalContext.current
     val repository = remember { HistoryRepositoryProvider.get(context) }
-    val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
-    val settingsPrefs by settingsRepository.preferences.collectAsStateWithLifecycle(
-        initialValue = SettingsPreferences()
-    )
-    val preferredOutput = settingsPrefs.defaultQrOutputFormat
+    val preferredOutput = QrDefaultOutputFormat.PNG
     val scope = rememberCoroutineScope()
 
     var style by remember { mutableStateOf(initialStyle) }

@@ -17,6 +17,7 @@ import com.qrcode.scanner.R;
 import com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter;
 import com.qrcode.scanner.launcher.dialogs.LauncherAppsBottomSheet;
 import com.qrcode.scanner.launcher.fragments.LauncherHomeFragment;
+import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars;
 import com.qrcode.scanner.launcher.fragments.SubContainerFragment;
 import com.qrcode.scanner.launcher.helpers.LauncherAppsHelper;
 import com.qrcode.scanner.launcher.common.AdPlacement;
@@ -366,6 +367,9 @@ public class LauncherHomeActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                if (lastSelectedPage == LauncherPagerAdapter.PAGE_RIGHT && position != LauncherPagerAdapter.PAGE_RIGHT) {
+                    LauncherQrSystemBars.INSTANCE.restore(LauncherHomeActivity.this);
+                }
                 if (lastSelectedPage == LauncherPagerAdapter.PAGE_HOME && position == LauncherPagerAdapter.PAGE_RIGHT) {
                     pendingRightSwipeOpen = true;
                     notifyRightSwipeTutorialCompleted();

@@ -1,6 +1,8 @@
 package com.qrcode.scanner.ui.screens.settings
 
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,17 +22,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.VolumeUp
-import androidx.compose.material.icons.outlined.CloudSync
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.DeleteSweep
-import androidx.compose.material.icons.outlined.Gavel
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.OpenInBrowser
 import androidx.compose.material.icons.outlined.PrivacyTip
-import androidx.compose.material.icons.outlined.QrCode2
 import androidx.compose.material.icons.outlined.Search
-import androidx.compose.material.icons.outlined.Security
+import androidx.compose.material.icons.outlined.Share
+import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.Vibration
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -89,8 +89,6 @@ fun SettingsScreen(
     val historyCount by historyRepository.observeCount()
         .collectAsStateWithLifecycle(initialValue = 0)
     var showClearDialog by remember { mutableStateOf(false) }
-    var showEccDialog by remember { mutableStateOf(false) }
-    var showFormatDialog by remember { mutableStateOf(false) }
     var showThemeDialog by remember { mutableStateOf(false) }
     val appVersion = remember {
         try {
@@ -169,26 +167,6 @@ fun SettingsScreen(
                 )
             }
 
-            SettingsSectionCard(title = "QR Creation") {
-                SettingsNavRow(
-                    title = "Default Correction Level",
-                    subtitle = preferences.defaultQrEcc.settingsSubtitle(),
-                    icon = Icons.Outlined.Security,
-                    showChevron = true,
-                    enabled = true,
-                    onClick = { showEccDialog = true }
-                )
-                SettingsRowDivider()
-                SettingsNavRow(
-                    title = "Default QR Format",
-                    subtitle = preferences.defaultQrOutputFormat.settingsSubtitle(),
-                    icon = Icons.Outlined.QrCode2,
-                    showChevron = true,
-                    enabled = true,
-                    onClick = { showFormatDialog = true }
-                )
-            }
-
             SettingsSectionCard(title = "Storage & History") {
 //                SettingsNavRow(
 //                    title = "Cloud Auto-Backup",
@@ -215,7 +193,7 @@ fun SettingsScreen(
 
             SettingsSectionCard(title = "About & Legal") {
                 SettingsNavRow(
-                    title = "About ScanPulse",
+                    title = "About",
                     subtitle = "Version $appVersion",
                     icon = Icons.Outlined.Info,
                     enabled = true,
@@ -224,14 +202,32 @@ fun SettingsScreen(
                 SettingsRowDivider()
                 SettingsNavRow(
                     title = "Privacy Policy",
-                    subtitle = "URL not configured",
+                    subtitle = "",
                     icon = Icons.Outlined.PrivacyTip,
                     showChevron = false,
                     showExternalLink = true,
-                    enabled = false,
-                    onClick = null
+                    enabled = true,
+                    onClick = { AppUtils.openPrivacyPolicy(context) }
                 )
                 SettingsRowDivider()
+                SettingsNavRow(
+                    title = "Share",
+                    subtitle = "Share this app with friends",
+                    icon = Icons.Outlined.Share,
+                    enabled = true,
+                    onClick = { shareApp(context) }
+                )
+                SettingsRowDivider()
+                SettingsNavRow(
+                    title = "Rate",
+                    subtitle = "Rate us on the Play Store",
+                    icon = Icons.Outlined.Star,
+                    showChevron = false,
+                    showExternalLink = true,
+                    enabled = true,
+                    onClick = { rateApp(context) }
+                )
+//                SettingsRowDivider()
 //                SettingsNavRow(
 //                    title = "Terms of Service",
 //                    subtitle = "URL not configured",
@@ -258,28 +254,6 @@ fun SettingsScreen(
                 }
             },
             onDismiss = { showClearDialog = false }
-        )
-    }
-
-    if (showEccDialog) {
-        QrDefaultEccPickerDialog(
-            selected = preferences.defaultQrEcc,
-            onSelect = { ecc ->
-                showEccDialog = false
-                scope.launch { repository.setDefaultQrEcc(ecc) }
-            },
-            onDismiss = { showEccDialog = false }
-        )
-    }
-
-    if (showFormatDialog) {
-        QrDefaultFormatPickerDialog(
-            selected = preferences.defaultQrOutputFormat,
-            onSelect = { format ->
-                showFormatDialog = false
-                scope.launch { repository.setDefaultQrOutputFormat(format) }
-            },
-            onDismiss = { showFormatDialog = false }
         )
     }
 
@@ -417,6 +391,34 @@ private fun SettingsFooter() {
             fontFamily = PlusJakartaSans,
             fontSize = 11.sp
         )
+    }
+}
+
+private fun shareApp(context: android.content.Context) {
+    val url = "https://play.google.com/store/apps/details?id=${context.packageName}"
+    val intent = Intent(Intent.ACTION_SEND).apply {
+        type = "text/plain"
+        putExtra(Intent.EXTRA_SUBJECT, context.applicationInfo.loadLabel(context.packageManager))
+        putExtra(Intent.EXTRA_TEXT, url)
+    }
+    context.startActivity(Intent.createChooser(intent, "Share"))
+}
+
+private fun rateApp(context: android.content.Context) {
+    val packageName = context.packageName
+    val market = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")).apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    val web = Intent(
+        Intent.ACTION_VIEW,
+        Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+    ).apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+    try {
+        context.startActivity(market)
+    } catch (_: Exception) {
+        context.startActivity(web)
     }
 }
 

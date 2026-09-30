@@ -1,6 +1,8 @@
 package com.qrcode.scanner.ui.theme
 
 import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Color as AndroidColor
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -16,6 +18,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
+import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
 
 /**
  * Electric Cobalt theme driven by Settings → Theme (Phase 12.20).
@@ -90,7 +93,11 @@ fun QRCodeScannerTheme(
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {
-            val window = (view.context as? Activity)?.window ?: return@SideEffect
+            val activity = view.context.findHostActivity() ?: return@SideEffect
+            if (activity is LauncherHomeActivity) {
+                return@SideEffect
+            }
+            val window = activity.window
             val insets = WindowCompat.getInsetsController(window, view)
             insets.isAppearanceLightStatusBars = !useDark
             insets.isAppearanceLightNavigationBars = !useDark
@@ -106,4 +113,15 @@ fun QRCodeScannerTheme(
         typography = Typography,
         content = content
     )
+}
+
+private fun Context.findHostActivity(): Activity? {
+    var current: Context = this
+    while (current is ContextWrapper) {
+        if (current is Activity) {
+            return current
+        }
+        current = current.baseContext
+    }
+    return null
 }

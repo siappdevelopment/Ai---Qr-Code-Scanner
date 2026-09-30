@@ -219,9 +219,13 @@ fun ScannerViewfinderScreen(
         finishContinuousBatchSession()
     }
 
-    // After returning from ScanResult / Settings, reset detection gate and re-check permission.
+    val cameraState = rememberUpdatedState(camera)
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_PAUSE) {
+                cameraState.value?.cameraControl?.enableTorch(false)
+                torchEnabled = false
+            }
             if (event == Lifecycle.Event.ON_RESUME) {
                 // Single-shot gate only; Continuous session is retained across resume.
                 if (!latestContinuousBatchScan) {
@@ -236,7 +240,10 @@ fun ScannerViewfinderScreen(
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+        onDispose {
+            cameraState.value?.cameraControl?.enableTorch(false)
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
     }
 
     LaunchedEffect(torchEnabled, camera) {
@@ -380,6 +387,7 @@ private fun CameraPreviewHost(
     val lifecycleOwner = (context as? ComponentActivity) ?: LocalLifecycleOwner.current
     val analysisExecutor = remember { Executors.newSingleThreadExecutor() }
     val cameraProviderHolder = remember { mutableStateOf<ProcessCameraProvider?>(null) }
+    val boundCamera = remember { mutableStateOf<Camera?>(null) }
     val latestOnBarcodeDetected by rememberUpdatedState(onBarcodeDetected)
     val latestOnContinuousAccepted by rememberUpdatedState(onContinuousAccepted)
     val latestContinuousBatchScan by rememberUpdatedState(continuousBatchScan)
@@ -394,7 +402,21 @@ private fun CameraPreviewHost(
 
     DisposableEffect(Unit) {
         onDispose {
-            cameraProviderHolder.value?.unbindAll()
+            val cam = boundCamera.value
+            val provider = cameraProviderHolder.value
+            boundCamera.value = null
+            val executor = ContextCompat.getMainExecutor(context)
+            try {
+                if (cam != null) {
+                    cam.cameraControl.enableTorch(false).addListener({
+                        provider?.unbindAll()
+                    }, executor)
+                } else {
+                    provider?.unbindAll()
+                }
+            } catch (_: Throwable) {
+                provider?.unbindAll()
+            }
             analysisExecutor.shutdown()
             onCameraReady(null)
         }
@@ -446,9 +468,11 @@ private fun CameraPreviewHost(
                 analysis
             )
             if (!isActive) {
+                boundCamera.value = null
                 cameraProvider.unbindAll()
                 return@LaunchedEffect
             }
+            boundCamera.value = bound
             onCameraReady(bound)
         } catch (t: Throwable) {
             Log.e(TAG, "Failed to bind camera", t)

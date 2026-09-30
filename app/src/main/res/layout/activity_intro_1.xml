@@ -34,7 +34,6 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="match_parent"
                     android:layout_height="340dp"
-                    android:contentDescription="@string/quick_qr_scanning"
                     android:scaleType="centerCrop"
                     android:src="@drawable/intro_image1" />
 
@@ -54,9 +53,9 @@
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/sans_trial_semi_bold"
                 android:gravity="center"
-                android:text="@string/quick_qr_scanning"
+                android:text="@string/intro_title_1"
                 android:textColor="@color/text_primary"
-                android:textSize="@dimen/_18sdp" />
+                android:textSize="@dimen/_17sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
@@ -66,7 +65,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/_2sdp"
-                android:text="@string/fast_simple_and_accurate_qr_scanning_whenever_you_need_it"
+                android:text="@string/intro_desc_1"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_12sdp" />
 

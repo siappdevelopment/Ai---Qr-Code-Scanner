@@ -18,7 +18,7 @@ class AppThemeModeTest {
     fun fromStored_mapsKnownValues() {
         assertEquals(AppThemeMode.LIGHT, AppThemeMode.fromStored("light"))
         assertEquals(AppThemeMode.DARK, AppThemeMode.fromStored("DARK"))
-        assertEquals(AppThemeMode.SYSTEM, AppThemeMode.fromStored("system"))
+        assertEquals(AppThemeMode.LIGHT, AppThemeMode.fromStored("system"))
     }
 
     @Test
@@ -35,14 +35,11 @@ class AppThemeModeTest {
         assertFalse(AppThemeMode.LIGHT.resolveDark(systemDark = false))
         assertTrue(AppThemeMode.DARK.resolveDark(systemDark = false))
         assertTrue(AppThemeMode.DARK.resolveDark(systemDark = true))
-        assertTrue(AppThemeMode.SYSTEM.resolveDark(systemDark = true))
-        assertFalse(AppThemeMode.SYSTEM.resolveDark(systemDark = false))
     }
 
     @Test
     fun selectionTitles_matchProductCopy() {
         assertEquals("Light", AppThemeMode.LIGHT.selectionTitle())
         assertEquals("Dark", AppThemeMode.DARK.selectionTitle())
-        assertEquals("System Default", AppThemeMode.SYSTEM.selectionTitle())
     }
 }

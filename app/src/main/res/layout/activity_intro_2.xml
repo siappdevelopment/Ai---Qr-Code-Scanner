@@ -34,7 +34,6 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="match_parent"
                     android:layout_height="340dp"
-                    android:contentDescription="@string/fast_amp_accurate_scanning"
                     android:scaleType="centerCrop"
                     android:src="@drawable/intro_image2" />
 
@@ -54,9 +53,9 @@
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/sans_trial_semi_bold"
                 android:gravity="center"
-                android:text="@string/fast_amp_accurate_scanning"
+                android:text="@string/intro_title_2"
                 android:textColor="@color/text_primary"
-                android:textSize="@dimen/_18sdp" />
+                android:textSize="@dimen/_17sdp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
@@ -66,7 +65,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/_2sdp"
-                android:text="@string/scan_any_barcode_with_ease_and_get_instant_results_every_time"
+                android:text="@string/intro_desc_2"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_12sdp" />
 

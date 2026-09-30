@@ -347,17 +347,13 @@ fun ScanResultScreen(
                     contentDescription = "Share result",
                     onClick = { shareResult(context, displayValue, isUrl) }
                 )
-                Box {
-                    HeaderIconButton(
-                        icon = Icons.Outlined.MoreVert,
-                        contentDescription = "More options",
-                        onClick = {
-                            if (onDeleteRequest != null) {
-                                moreMenuOpen = true
-                            }
-                        }
-                    )
-                    if (onDeleteRequest != null) {
+                if (onDeleteRequest != null) {
+                    Box {
+                        HeaderIconButton(
+                            icon = Icons.Outlined.MoreVert,
+                            contentDescription = "More options",
+                            onClick = { moreMenuOpen = true }
+                        )
                         DropdownMenu(
                             expanded = moreMenuOpen,
                             onDismissRequest = { moreMenuOpen = false },

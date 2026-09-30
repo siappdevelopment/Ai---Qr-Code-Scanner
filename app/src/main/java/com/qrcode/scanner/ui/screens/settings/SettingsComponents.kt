@@ -123,16 +123,18 @@ internal fun SettingsNavRow(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Spacer(modifier = Modifier.height(2.dp))
-            Text(
-                text = subtitle,
-                color = TextSecondary,
-                fontFamily = PlusJakartaSans,
-                fontWeight = FontWeight.Normal,
-                fontSize = 12.sp,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+            if (subtitle.isNotBlank()) {
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = subtitle,
+                    color = TextSecondary,
+                    fontFamily = PlusJakartaSans,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 12.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
         when {
             trailingLabel != null -> {

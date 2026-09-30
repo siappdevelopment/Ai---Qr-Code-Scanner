@@ -36,8 +36,8 @@ data class SettingsPreferences(
         /** Matches existing hardcoded create-form / encoder default (High / 30%). */
         val DEFAULT_QR_ECC: QrDefaultEcc = QrDefaultEcc.H
 
-        /** Matches Settings Hub copy: Vector SVG / Sharp 1024px. */
-        val DEFAULT_QR_OUTPUT_FORMAT: QrDefaultOutputFormat = QrDefaultOutputFormat.SVG
+        /** Download is always a PNG image. */
+        val DEFAULT_QR_OUTPUT_FORMAT: QrDefaultOutputFormat = QrDefaultOutputFormat.PNG
 
         /** Product default remains Light (White + Electric Cobalt). */
         val DEFAULT_APP_THEME: AppThemeMode = AppThemeMode.LIGHT

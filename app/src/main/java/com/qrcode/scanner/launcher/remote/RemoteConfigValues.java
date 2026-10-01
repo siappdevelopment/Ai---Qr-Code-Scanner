@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,42 +33,20 @@ public final class RemoteConfigValues {
     private static boolean clEndScreenShow;
     private static boolean defaultAppPopupShow;
     private static int defaultAppPopupCount;
-    private static boolean otherInterstitialAdShow;
 
     private static boolean mainAdShow;
     private static boolean mainBigTopAdShow;
     private static String mainAdType = "banner";
     private static String mainBannerId = "";
     private static String mainNativeId = "";
-    private static boolean mainAdAutoRefresh;
+//    private static boolean mainAdAutoRefresh;
     private static int mainAdAutoSecond;
     private static boolean mainBottomAdAutoRefresh;
     private static int mainBottomAdAutoSecond;
 
-    private static boolean createFragmentNativeAdShow;
-    private static String createFragmentNativeId = "";
-    private static int createFragmentNativeSecond;
-
-    private static boolean generalAdShow;
-    private static String generalAdType = "banner";
-    private static String generalBannerId = "";
-    private static String generalNativeId = "";
-    private static boolean generalInterstitialAdShow;
-    private static String generalInterstitialId = "";
-
-    private static boolean socialAdShow;
-    private static String socialAdType = "banner";
-    private static String socialBannerId = "";
-    private static String socialNativeId = "";
-    private static boolean socialInterstitialAdShow;
-    private static String socialInterstitialId = "";
-
-    private static boolean barcodeAdShow;
-    private static String barcodeAdType = "banner";
-    private static String barcodeBannerId = "";
-    private static String barcodeNativeId = "";
-    private static boolean barcodeInterstitialAdShow;
-    private static String barcodeInterstitialId = "";
+//    private static boolean createFragmentNativeAdShow;
+//    private static String createFragmentNativeId = "";
+//    private static int createFragmentNativeSecond;
 
     private static boolean settingsFragmentNativeAdShow;
     private static String settingsFragmentNativeId = "";
@@ -147,47 +126,22 @@ public final class RemoteConfigValues {
         mainAdType = mainScreen.optString("Main_Ad_Type", "banner");
         mainBannerId = mainScreen.optString("Main_Banner_Id", "");
         mainNativeId = mainScreen.optString("Main_Native_Id", "");
-        mainAdAutoRefresh = mainScreen.optBoolean("Main_Ad_Auto_Refresh", false);
+//        mainAdAutoRefresh = mainScreen.optBoolean("Main_Ad_Auto_Refresh", false);
         mainAdAutoSecond = mainScreen.optInt("Main_Ad_Auto_Second", 0);
         mainBottomAdAutoRefresh = mainScreen.optBoolean("Main_Bottom_Ad_Auto_Refresh", false);
         mainBottomAdAutoSecond = mainScreen.optInt("Main_Bottom_Ad_Auto_Second", 0);
 
-        JSONObject createFragmentScreen = child(screenObject, "CreateFragmentScreen");
-        createFragmentNativeAdShow = createFragmentScreen.optBoolean("CreateFragment_Native_Ad_Show", false);
-        createFragmentNativeId = createFragmentScreen.optString("CreateFragment_Native_Id", "");
-        createFragmentNativeSecond = createFragmentScreen.optInt("CreateFragment_Native_Second", 0);
+//        JSONObject createFragmentScreen = child(screenObject, "CreateFragmentScreen");
+//        createFragmentNativeAdShow = createFragmentScreen.optBoolean("CreateFragment_Native_Ad_Show", false);
+//        createFragmentNativeId = createFragmentScreen.optString("CreateFragment_Native_Id", "");
+//        createFragmentNativeSecond = createFragmentScreen.optInt("CreateFragment_Native_Second", 0);
 
-        JSONObject generalScreen = child(screenObject, "GeneralScreen");
-        generalAdShow = generalScreen.optBoolean("General_Ad_Show", false);
-        generalAdType = generalScreen.optString("General_Ad_Type", "banner");
-        generalBannerId = generalScreen.optString("General_Banner_Id", "");
-        generalNativeId = generalScreen.optString("General_Native_Id", "");
-        generalInterstitialAdShow = generalScreen.optBoolean("General_Interstitial_Ad_Show", false);
-        generalInterstitialId = generalScreen.optString("General_Interstitial_Id", "");
-
-        JSONObject socialScreen = child(screenObject, "SocialScreen");
-        socialAdShow = socialScreen.optBoolean("Social_Ad_Show", false);
-        socialAdType = socialScreen.optString("Social_Ad_Type", "banner");
-        socialBannerId = socialScreen.optString("Social_Banner_Id", "");
-        socialNativeId = socialScreen.optString("Social_Native_Id", "");
-        socialInterstitialAdShow = socialScreen.optBoolean("Social_Interstitial_Ad_Show", false);
-        socialInterstitialId = socialScreen.optString("Social_Interstitial_Id", "");
-
-        JSONObject barcodeScreen = child(screenObject, "BarcodeScreen");
-        barcodeAdShow = barcodeScreen.optBoolean("Barcode_Ad_Show", false);
-        barcodeAdType = barcodeScreen.optString("Barcode_Ad_Type", "banner");
-        barcodeBannerId = barcodeScreen.optString("Barcode_Banner_Id", "");
-        barcodeNativeId = barcodeScreen.optString("Barcode_Native_Id", "");
-        barcodeInterstitialAdShow = barcodeScreen.optBoolean("Barcode_Interstitial_Ad_Show", false);
-        barcodeInterstitialId = barcodeScreen.optString("Barcode_Interstitial_Id", "");
+        applyScreenAds(screenObject);
 
         JSONObject settingsFragmentScreen = child(screenObject, "SettingsFragmentScreen");
         settingsFragmentNativeAdShow = settingsFragmentScreen.optBoolean("SettingsFragment_Native_Ad_Show", false);
         settingsFragmentNativeId = settingsFragmentScreen.optString("SettingsFragment_Native_Id", "");
         settingsFragmentNativeSecond = settingsFragmentScreen.optInt("SettingsFragment_Native_Second", 0);
-
-        JSONObject otherScreen = child(screenObject, "OtherScreen");
-        otherInterstitialAdShow = otherScreen.optBoolean("Other_Interstitial_Ad_Show", false);
 
         JSONObject launcherAppScreen = child(screenObject, "LauncherAppScreen");
         launcherAppNativeAdShow = launcherAppScreen.optBoolean("LauncherApp_Native_Ad_Show", false);
@@ -488,10 +442,6 @@ public final class RemoteConfigValues {
         return defaultAppPopupCount;
     }
 
-    public static boolean getOtherInterstitialAdShow() {
-        return otherInterstitialAdShow;
-    }
-
     public static boolean getLauncherAppNativeAdShow() {
         return launcherAppNativeAdShow;
     }
@@ -675,6 +625,57 @@ public final class RemoteConfigValues {
         editor.putString("notificationCallCountryList", formatCountryList(notificationCallCountryList));
         editor.putString("notificationCallOverlayCountryList", formatCountryList(notificationCallOverlayCountryList));
         editor.apply();
+    }
+
+    public static final class ScreenAdConfig {
+        public final boolean show;
+        public final String type;
+        public final String bannerId;
+        public final String nativeId;
+
+        ScreenAdConfig(boolean show, String type, String bannerId, String nativeId) {
+            this.show = show;
+            this.type = type == null ? "banner" : type;
+            this.bannerId = bannerId == null ? "" : bannerId;
+            this.nativeId = nativeId == null ? "" : nativeId;
+        }
+    }
+
+    private static final String[] SCREEN_AD_KEYS = {
+            "ScanResultScreen", "ScanResult",
+            "CreateHubScreen", "CreateHub",
+            "QrFormScreen", "QrForm",
+            "QrCustomizationScreen", "QrCustomization",
+            "QrPreviewScreen", "QrPreview",
+            "HistoryScreen", "History",
+            "HistoryDetailScreen", "HistoryDetail",
+            "LauncherSettingsScreen", "LauncherSettings",
+            "OtherScreen", "Other"
+    };
+
+    private static final HashMap<String, ScreenAdConfig> screenAds = new HashMap<>();
+
+    @Nullable
+    public static ScreenAdConfig getScreenAd(@Nullable String screenKey) {
+        if (screenKey == null) {
+            return null;
+        }
+        return screenAds.get(screenKey);
+    }
+
+    private static void applyScreenAds(JSONObject screenObject) {
+        screenAds.clear();
+        for (int i = 0; i < SCREEN_AD_KEYS.length; i += 2) {
+            String objectName = SCREEN_AD_KEYS[i];
+            String prefix = SCREEN_AD_KEYS[i + 1];
+            JSONObject screen = child(screenObject, objectName);
+            screenAds.put(objectName, new ScreenAdConfig(
+                    screen.optBoolean(prefix + "_Ad_Show", false),
+                    screen.optString(prefix + "_Ad_Type", "banner"),
+                    screen.optString(prefix + "_Banner_Id", ""),
+                    screen.optString(prefix + "_Native_Id", "")
+            ));
+        }
     }
 
     private static JSONObject child(JSONObject screen, String key) {

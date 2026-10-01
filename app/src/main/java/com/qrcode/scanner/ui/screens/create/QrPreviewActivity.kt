@@ -76,6 +76,7 @@ import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import com.qrcode.scanner.ui.components.ScreenWithAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
@@ -119,6 +120,7 @@ class QrPreviewActivity : ComponentActivity() {
 
         setContent {
             QRCodeScannerTheme {
+                ScreenWithAd(screenKey = "QrPreviewScreen") {
                 QrPreviewScreen(
                     category = category,
                     payload = payload,
@@ -139,6 +141,7 @@ class QrPreviewActivity : ComponentActivity() {
                     },
                     onPersistStyle = { styleForSave = it }
                 )
+                }
             }
         }
     }

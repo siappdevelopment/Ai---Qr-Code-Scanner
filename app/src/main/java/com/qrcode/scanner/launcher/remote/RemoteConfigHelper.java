@@ -268,15 +268,6 @@ public final class RemoteConfigHelper {
         AdPlacement.setIntroBannerId(intro.optString("Intro_Banner_Id", ""));
         AdPlacement.setIntroNativeId(intro.optString("Intro_Native_Id", ""));
         AdPlacement.setIntroInterstitialAdShow(intro.optBoolean("Intro_Interstitial_Ad_Show", false));
-        JSONObject otherScreen = screen.optJSONObject("OtherScreen");
-        if (otherScreen == null) {
-            otherScreen = new JSONObject();
-        }
-        AdPlacement.setOtherAdShow(otherScreen.optBoolean("Other_Ad_Show", false));
-        AdPlacement.setOtherAdType(otherScreen.optString("Other_Ad_Type", "native"));
-        AdPlacement.setOtherBannerId(otherScreen.optString("Other_Banner_Id", ""));
-        AdPlacement.setOtherNativeId(otherScreen.optString("Other_Native_Id", ""));
-        AdPlacement.setOtherInterstitialId(otherScreen.optString("Other_Interstitial_Id", ""));
         JSONObject launcherAppScreen = screen.optJSONObject("LauncherAppScreen");
         if (launcherAppScreen == null) {
             launcherAppScreen = new JSONObject();

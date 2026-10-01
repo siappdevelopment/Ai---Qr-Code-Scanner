@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.qrcode.scanner.ui.screens.scan.ScanIntents
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import com.qrcode.scanner.ui.components.ScreenWithAd
 
 /**
  * Hosts the existing History screen. System back finishes and returns to Home.
@@ -19,6 +20,7 @@ class HistoryActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             QRCodeScannerTheme {
+                ScreenWithAd(screenKey = "HistoryScreen") {
                 val context = LocalContext.current
                 HistoryScreen(
                     modifier = Modifier.navigationBarsPadding(),
@@ -30,6 +32,7 @@ class HistoryActivity : ComponentActivity() {
                         context.startActivity(HistoryIntents.openDetail(context, historyId))
                     }
                 )
+                }
             }
         }
     }

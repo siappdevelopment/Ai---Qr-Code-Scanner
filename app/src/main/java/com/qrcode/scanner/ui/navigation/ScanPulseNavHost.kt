@@ -40,6 +40,7 @@ import com.qrcode.scanner.launcher.common.WidgetNavigation
 import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars
 import com.qrcode.scanner.ui.components.HomeBottomAdSlot
 import com.qrcode.scanner.ui.components.ScanPulseBottomBar
+import com.qrcode.scanner.ui.components.ScreenWithAd
 import com.qrcode.scanner.ui.screens.common.PlaceholderScreen
 import com.qrcode.scanner.ui.screens.create.CreateQrIntents
 import com.qrcode.scanner.ui.screens.history.HistoryIntents
@@ -251,7 +252,9 @@ fun ScanPulseNavHost(
                 PlaceholderScreen(title = "QR Preview & Export")
             }
             composable(AppDestination.About.route) {
-                AboutScreen(onBack = { navController.popBackStack() })
+                ScreenWithAd(screenKey = "OtherScreen") {
+                    AboutScreen(onBack = { navController.popBackStack() })
+                }
             }
         }
         }

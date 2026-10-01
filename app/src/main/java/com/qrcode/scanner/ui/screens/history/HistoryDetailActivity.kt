@@ -34,6 +34,7 @@ import com.qrcode.scanner.ui.theme.CobaltPrimary
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import com.qrcode.scanner.ui.components.ScreenWithAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import kotlinx.coroutines.launch
@@ -49,10 +50,12 @@ class HistoryDetailActivity : ComponentActivity() {
         val historyId = intent.getLongExtra(HistoryIntents.EXTRA_HISTORY_ID, -1L)
         setContent {
             QRCodeScannerTheme {
+                ScreenWithAd(screenKey = "HistoryDetailScreen") {
                 HistoryDetailRoute(
                     historyId = historyId,
                     onBack = { finish() }
                 )
+                }
             }
         }
     }

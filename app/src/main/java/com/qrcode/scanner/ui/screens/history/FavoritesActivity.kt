@@ -48,6 +48,7 @@ import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import com.qrcode.scanner.ui.components.ScreenWithAd
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -62,6 +63,7 @@ class FavoritesActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             QRCodeScannerTheme {
+                ScreenWithAd(screenKey = "OtherScreen") {
                 val context = LocalContext.current
                 FavoritesScreen(
                     onBack = { finish() },
@@ -69,6 +71,7 @@ class FavoritesActivity : ComponentActivity() {
                         context.startActivity(HistoryIntents.openDetail(context, historyId))
                     }
                 )
+                }
             }
         }
     }

@@ -66,6 +66,7 @@ import com.qrcode.scanner.ui.theme.NestedSurface
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import com.qrcode.scanner.ui.components.ScreenWithAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
@@ -85,11 +86,13 @@ class CommonQrFormActivity : ComponentActivity() {
         )
         setContent {
             QRCodeScannerTheme {
+                ScreenWithAd(screenKey = "QrFormScreen") {
                 CommonQrFormScreen(
                     category = type,
                     onBack = { finish() },
                     onSavedClose = { finish() }
                 )
+                }
             }
         }
     }

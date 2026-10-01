@@ -36,6 +36,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.common.AdPlacement;
+import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 import com.qrcode.scanner.launcher.common.AppUtils;
 import com.qrcode.scanner.launcher.helpers.LauncherSettingsHelper;
 
@@ -131,7 +132,12 @@ public class LauncherSettingsActivity extends AppCompatActivity {
     }
 
     private void showAd() {
-        AdPlacement.showSlot(this, AdPlacement.getOtherAdShow(), AdPlacement.getOtherAdType(), AdPlacement.getOtherBannerId(), AdPlacement.getOtherNativeId(), "medium", rlAdView, rlBannerAdView, slBannerShimmer, llBannerAd, rlNativeAdView, slNativeShimmer, flNativeAd, false);
+        RemoteConfigValues.ScreenAdConfig config = RemoteConfigValues.getScreenAd("LauncherSettingsScreen");
+        boolean show = config != null && config.show;
+        String type = config == null ? "banner" : config.type;
+        String bannerId = config == null ? "" : config.bannerId;
+        String nativeId = config == null ? "" : config.nativeId;
+        AdPlacement.showSlot(this, show, type, bannerId, nativeId, "medium", rlAdView, rlBannerAdView, slBannerShimmer, llBannerAd, rlNativeAdView, slNativeShimmer, flNativeAd, false);
     }
 
     private void setApp() {

@@ -82,6 +82,7 @@ import com.qrcode.scanner.ui.theme.NestedSurface
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import com.qrcode.scanner.ui.components.ScreenWithAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
@@ -119,6 +120,7 @@ class ScanResultActivity : ComponentActivity() {
         val format = intent.getIntExtra(ScanIntents.EXTRA_BARCODE_FORMAT, -1)
         setContent {
             QRCodeScannerTheme {
+                ScreenWithAd(screenKey = "ScanResultScreen") {
                 ScanResultRoute(
                     rawValue = rawValue,
                     formatName = formatName,
@@ -130,6 +132,7 @@ class ScanResultActivity : ComponentActivity() {
                     onAutoOpenConsumed = { autoOpenConsumed = true },
                     onBack = { finish() }
                 )
+                }
             }
         }
     }

@@ -49,6 +49,7 @@ import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import com.qrcode.scanner.ui.components.ScreenWithAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.White
@@ -71,6 +72,7 @@ class ContinuousBatchResultActivity : ComponentActivity() {
         }
         setContent {
             QRCodeScannerTheme {
+                ScreenWithAd(screenKey = "OtherScreen") {
                 ContinuousBatchResultScreen(
                     items = items,
                     onBack = { finish() },
@@ -91,6 +93,7 @@ class ContinuousBatchResultActivity : ComponentActivity() {
                         // Do not finish — Back from detail returns here.
                     }
                 )
+                }
             }
         }
     }

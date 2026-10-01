@@ -18,6 +18,7 @@ import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.common.AdPlacement;
 import com.qrcode.scanner.launcher.common.WidgetType;
 import com.qrcode.scanner.launcher.helpers.WidgetPinHelper;
+import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 public class AppWidgetsActivity extends AppCompatActivity {
     private AppCompatImageView ivBack;
@@ -89,21 +90,20 @@ public class AppWidgetsActivity extends AppCompatActivity {
     }
 
     private void showAd() {
-        if (!AdPlacement.isNetworkAvailable(this) || !AdPlacement.getOtherAdShow()) {
+        RemoteConfigValues.ScreenAdConfig config = RemoteConfigValues.getScreenAd("OtherScreen");
+        if (config == null || !config.show) {
             rlAdView.setVisibility(View.GONE);
             return;
         }
-
         rlAdView.setVisibility(View.VISIBLE);
-
-        if ("banner".equalsIgnoreCase(AdPlacement.getOtherAdType())) {
+        if ("banner".equalsIgnoreCase(config.type)) {
             rlBannerAdView.setVisibility(View.VISIBLE);
             rlNativeAdView.setVisibility(View.GONE);
-            AdPlacement.loadBannerAd(this, AdPlacement.getOtherBannerId(), rlBannerAdView, slBannerShimmer, llBannerAd);
+            AdPlacement.loadBannerAd(this, config.bannerId, rlBannerAdView, slBannerShimmer, llBannerAd);
         } else {
             rlBannerAdView.setVisibility(View.GONE);
             rlNativeAdView.setVisibility(View.VISIBLE);
-            AdPlacement.loadNativeAd(this, AdPlacement.getOtherNativeId(), rlNativeAdView, slNativeShimmer, flNativeAd, "medium");
+            AdPlacement.loadNativeAd(this, config.nativeId, rlNativeAdView, slNativeShimmer, flNativeAd, "medium");
         }
     }
 

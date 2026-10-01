@@ -51,6 +51,7 @@ import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import com.qrcode.scanner.ui.components.ScreenWithAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.White
@@ -69,6 +70,7 @@ class DetectionErrorActivity : ComponentActivity() {
 
         setContent {
             QRCodeScannerTheme {
+                ScreenWithAd(screenKey = "OtherScreen") {
                 DetectionErrorScreen(
                     reason = reason,
                     onBack = { finish() },
@@ -103,6 +105,7 @@ class DetectionErrorActivity : ComponentActivity() {
                         finish()
                     }
                 )
+                }
             }
         }
     }
@@ -149,7 +152,7 @@ private fun DetectionErrorScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
+                .padding(top = 20.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             Row(

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import com.qrcode.scanner.ui.components.ScreenWithAd
 
 /**
  * Hosts the existing Create hub. System back finishes and returns to Home.
@@ -18,6 +19,7 @@ class CreateActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             QRCodeScannerTheme {
+                ScreenWithAd(screenKey = "CreateHubScreen") {
                 val context = LocalContext.current
                 CreateHubScreen(
                     modifier = Modifier.navigationBarsPadding(),
@@ -26,6 +28,7 @@ class CreateActivity : ComponentActivity() {
                         context.startActivity(CreateQrIntents.openCategory(context, type))
                     }
                 )
+                }
             }
         }
     }

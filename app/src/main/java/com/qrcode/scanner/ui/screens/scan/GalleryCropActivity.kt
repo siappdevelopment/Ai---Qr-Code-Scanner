@@ -76,6 +76,7 @@ import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
+import com.qrcode.scanner.ui.components.ScreenWithAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
@@ -100,6 +101,7 @@ class GalleryCropActivity : ComponentActivity() {
 
         setContent {
             QRCodeScannerTheme {
+                ScreenWithAd(screenKey = "OtherScreen") {
                 GalleryCropScreen(
                     initialUri = initialUri,
                     autoPick = autoPick,
@@ -128,6 +130,7 @@ class GalleryCropActivity : ComponentActivity() {
                         finish()
                     }
                 )
+                }
             }
         }
     }

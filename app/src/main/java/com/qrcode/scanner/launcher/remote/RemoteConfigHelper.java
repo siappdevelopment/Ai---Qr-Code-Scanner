@@ -1,7 +1,12 @@
 package com.qrcode.scanner.launcher.remote;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
+import android.net.NetworkRequest;
 
 import androidx.annotation.Nullable;
 
@@ -25,7 +30,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * paid_user is selected only when the stored install referrer matches the source markers.
  */
 public final class RemoteConfigHelper {
+    private static final long REFRESH_AFTER_MS = 12L * 60L * 60L * 1000L;
+    private static final String PREFS_LAUNCHER_REMOTE = "launcher_remote_config";
+    private static final String KEY_LAST_REMOTE_FETCH_TIME = "last_remote_fetch_time";
     private static final AtomicBoolean IS_FETCHING = new AtomicBoolean(false);
+    private static final AtomicBoolean NETWORK_WATCH_STARTED = new AtomicBoolean(false);
     private static final CopyOnWriteArrayList<FetchCallback> PENDING_CALLBACKS = new CopyOnWriteArrayList<>();
 
     public interface FetchCallback {
@@ -90,6 +99,7 @@ public final class RemoteConfigHelper {
                     }
                     jsonObject = resolveUserConfig(jsonObject, referrerProfile(appContext));
                     applyScreenConfig(appContext, jsonObject, firebaseRemoteConfig.getString("Show_Screen_Flow"));
+                    saveFetchTime(appContext);
                     fetchSucceeded = true;
                 } catch (Exception e) {
                     ScreenFlowConfig.restoreShowScreenFlow(appContext);
@@ -101,6 +111,52 @@ public final class RemoteConfigHelper {
             }
             dispatchPending(fetchSucceeded);
         });
+    }
+
+    public static void watchNetwork(@Nullable Context context) {
+        if (context == null || !NETWORK_WATCH_STARTED.compareAndSet(false, true)) {
+            return;
+        }
+        Context appContext = context.getApplicationContext();
+        ConnectivityManager connectivityManager = (ConnectivityManager) appContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager == null) {
+            NETWORK_WATCH_STARTED.set(false);
+            return;
+        }
+        AtomicBoolean waitingForNetwork = new AtomicBoolean(!AdPlacement.isNetworkAvailable(appContext));
+        NetworkRequest request = new NetworkRequest.Builder()
+                .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                .build();
+        connectivityManager.registerNetworkCallback(request, new ConnectivityManager.NetworkCallback() {
+            @Override
+            public void onAvailable(@androidx.annotation.NonNull Network network) {
+                if (waitingForNetwork.compareAndSet(true, false)) {
+                    fetchRemoteConfig(appContext, null);
+                }
+            }
+
+            @Override
+            public void onLost(@androidx.annotation.NonNull Network network) {
+                waitingForNetwork.set(!AdPlacement.isNetworkAvailable(appContext));
+            }
+        });
+    }
+
+    public static void refreshIfDue(@Nullable Context context, @Nullable FetchCallback onComplete) {
+        if (context == null) {
+            return;
+        }
+        long lastFetch = context.getApplicationContext()
+                .getSharedPreferences(PREFS_LAUNCHER_REMOTE, Context.MODE_PRIVATE)
+                .getLong(KEY_LAST_REMOTE_FETCH_TIME, 0L);
+        if (lastFetch == 0L || System.currentTimeMillis() - lastFetch >= REFRESH_AFTER_MS) {
+            fetchRemoteConfig(context, onComplete);
+        }
+    }
+
+    private static void saveFetchTime(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences(PREFS_LAUNCHER_REMOTE, Context.MODE_PRIVATE);
+        preferences.edit().putLong(KEY_LAST_REMOTE_FETCH_TIME, System.currentTimeMillis()).apply();
     }
 
     private static String referrerProfile(Context context) {

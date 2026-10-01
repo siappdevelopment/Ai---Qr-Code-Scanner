@@ -28,6 +28,7 @@ public class QrScannerApplication extends Application {
         AdPlacement.initializeIfConfigured(this);
         new com.qrcode.scanner.launcher.common.ProcessAppOpen(this).register();
         RemoteConfigHelper.fetchRemoteConfig(this, null);
+        RemoteConfigHelper.watchNetwork(this);
     }
 
     private void applySavedTheme() {

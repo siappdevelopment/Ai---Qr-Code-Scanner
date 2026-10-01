@@ -98,6 +98,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
             return;
         }
         AdPlacement.handleLauncherAppReturnAd(this);
+        RemoteConfigHelper.refreshIfDue(this, this::saveRemoteFetchTimestampIfSuccessful);
         LauncherAppsBottomSheet.clearSuppressBackgroundDismiss();
         returnHomeForThemeChangeIfNeeded();
     }

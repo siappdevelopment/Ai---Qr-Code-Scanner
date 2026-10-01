@@ -484,9 +484,7 @@
                         app:shimmer_base_alpha="0.9"
                         app:shimmer_highlight_alpha="1.0">
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                        <include layout="@layout/shimmer_medium_ad" />
 
                     </com.facebook.shimmer.ShimmerFrameLayout>
 

@@ -128,12 +128,15 @@ public final class AdPlacement {
     private static String launcherAppNativeListId = "";
     private static boolean launcherAppClickAdShow;
     private static int launcherAppCount;
-    private static String launcherAppAdType = "";
+    private static final ArrayList<String> launcherAppAdSequence = new ArrayList<>();
+    private static int launcherAppAdSequenceIndex;
     private static String launcherAppInterstitialId = "";
     private static boolean launcherAppBackClickAdShow;
     private static int launcherAppBackCount;
-    private static String launcherAppBackAdType = "";
+    private static final ArrayList<String> launcherAppBackAdSequence = new ArrayList<>();
+    private static int launcherAppBackAdSequenceIndex;
     private static String launcherAppBackInterstitialId = "";
+    private static boolean launcherGoogleAdFailedShowQuiz;
     private static int launcherAppClickCount = 1;
 
     private static final AtomicInteger interstitialLoadToken = new AtomicInteger();
@@ -629,11 +632,28 @@ public final class AdPlacement {
     }
 
     public static String getLauncherAppAdType() {
-        return launcherAppAdType;
+        return launcherAppAdSequence.isEmpty() ? "" : launcherAppAdSequence.get(launcherAppAdSequenceIndex % launcherAppAdSequence.size());
     }
 
     public static void setLauncherAppAdType(String value) {
-        launcherAppAdType = value == null ? "" : value;
+        ArrayList<String> types = new ArrayList<>();
+        if (value != null && !value.trim().isEmpty()) {
+            types.add(value.trim());
+        }
+        setLauncherAppAdSequence(types);
+    }
+
+    public static void setLauncherAppAdSequence(@Nullable List<String> types) {
+        launcherAppAdSequence.clear();
+        launcherAppAdSequenceIndex = 0;
+        if (types == null) {
+            return;
+        }
+        for (String type : types) {
+            if (type != null && !type.trim().isEmpty() && !normalizeLauncherAppAdType(type).isEmpty()) {
+                launcherAppAdSequence.add(type.trim());
+            }
+        }
     }
 
     public static String getLauncherAppInterstitialId() {
@@ -661,11 +681,32 @@ public final class AdPlacement {
     }
 
     public static String getLauncherAppBackAdType() {
-        return launcherAppBackAdType;
+        return launcherAppBackAdSequence.isEmpty() ? "" : launcherAppBackAdSequence.get(launcherAppBackAdSequenceIndex % launcherAppBackAdSequence.size());
     }
 
     public static void setLauncherAppBackAdType(String value) {
-        launcherAppBackAdType = value == null ? "" : value;
+        ArrayList<String> types = new ArrayList<>();
+        if (value != null && !value.trim().isEmpty()) {
+            types.add(value.trim());
+        }
+        setLauncherAppBackAdSequence(types);
+    }
+
+    public static void setLauncherAppBackAdSequence(@Nullable List<String> types) {
+        launcherAppBackAdSequence.clear();
+        launcherAppBackAdSequenceIndex = 0;
+        if (types == null) {
+            return;
+        }
+        for (String type : types) {
+            if (type != null && !type.trim().isEmpty() && !normalizeLauncherAppAdType(type).isEmpty()) {
+                launcherAppBackAdSequence.add(type.trim());
+            }
+        }
+    }
+
+    public static void setLauncherGoogleAdFailedShowQuiz(boolean value) {
+        launcherGoogleAdFailedShowQuiz = value;
     }
 
     public static String getLauncherAppBackInterstitialId() {
@@ -1052,7 +1093,7 @@ public final class AdPlacement {
         }
         if (getLauncherAppCount() == launcherAppClickCount) {
             launcherAppClickCount = 1;
-            executeLauncherAppAd(activity, openSelectedApp, getLauncherAppAdType(), getLauncherAppInterstitialId());
+            executeLauncherAppAd(activity, openSelectedApp, nextLauncherAppAdType(false), getLauncherAppInterstitialId());
             return;
         }
         launcherAppClickCount++;
@@ -1092,9 +1133,9 @@ public final class AdPlacement {
         if (!showReturnAd) {
             return;
         }
-        String adType = getLauncherAppBackAdType();
-        if (adType == null || adType.trim().isEmpty()) {
-            adType = getLauncherAppAdType();
+        String adType = nextLauncherAppAdType(true);
+        if (adType.isEmpty()) {
+            return;
         }
         executeLauncherAppAd(activity, () -> {
         }, adType, getLauncherAppBackInterstitialId());
@@ -1150,47 +1191,62 @@ public final class AdPlacement {
         return activity != null && !activity.isFinishing() && canRequestAds(activity) && isNetworkAvailable(activity) && unitId != null && !unitId.isEmpty();
     }
 
+    private static String nextLauncherAppAdType(boolean back) {
+        ArrayList<String> sequence = back ? launcherAppBackAdSequence : launcherAppAdSequence;
+        if (sequence.isEmpty()) {
+            return "";
+        }
+        int index = back ? launcherAppBackAdSequenceIndex : launcherAppAdSequenceIndex;
+        String type = normalizeLauncherAppAdType(sequence.get(index % sequence.size()));
+        int next = (index + 1) % sequence.size();
+        if (back) {
+            launcherAppBackAdSequenceIndex = next;
+        } else {
+            launcherAppAdSequenceIndex = next;
+        }
+        return type;
+    }
+
     private static void executeLauncherAppAd(Activity activity, Runnable continueAction, String adType, @Nullable String interstitialId) {
-        String normalized = normalizeLauncherAppAdType(adType);
-        if (LAUNCHER_APP_AD_TYPE_GOOGLE_INTER.equals(normalized)) {
-            loadInterstitialAdInternal(activity, interstitialId, () -> continueAction.run(), true);
+        if (LAUNCHER_APP_AD_TYPE_GOOGLE_INTER.equals(adType)) {
+            loadInterstitialAdInternal(activity, interstitialId, () -> continueAction.run(), true, false, launcherGoogleAdFailedShowQuiz);
             return;
         }
-        if (LAUNCHER_APP_AD_TYPE_GOOGLE_APP_OPEN.equals(normalized)) {
-            loadAppOpenAdInternal(activity, getAppOpenId(), () -> continueAction.run());
+        if (LAUNCHER_APP_AD_TYPE_GOOGLE_APP_OPEN.equals(adType)) {
+            loadAppOpenAdInternal(activity, getAppOpenId(), () -> continueAction.run(), false, launcherGoogleAdFailedShowQuiz);
             return;
         }
-        if (LAUNCHER_APP_AD_TYPE_GOOGLE_NATIVE.equals(normalized)) {
-            showLauncherNativeFull(activity, continueAction);
+        if (LAUNCHER_APP_AD_TYPE_GOOGLE_NATIVE.equals(adType)) {
+            showLauncherNativeFull(activity, continueAction, launcherGoogleAdFailedShowQuiz);
             return;
         }
-        if (LAUNCHER_APP_AD_TYPE_QUIZ_INTER.equals(normalized)) {
+        if (LAUNCHER_APP_AD_TYPE_QUIZ_INTER.equals(adType)) {
             if (!QuizAds.showInterstitial(activity, continueAction)) {
                 continueAction.run();
             }
             return;
         }
-        if (LAUNCHER_APP_AD_TYPE_QUIZ_APP_OPEN.equals(normalized)) {
+        if (LAUNCHER_APP_AD_TYPE_QUIZ_APP_OPEN.equals(adType)) {
             if (!QuizAds.showAppOpen(activity, continueAction)) {
                 continueAction.run();
             }
             return;
         }
-        if (LAUNCHER_APP_AD_TYPE_QUIZ_NATIVE.equals(normalized)) {
+        if (LAUNCHER_APP_AD_TYPE_QUIZ_NATIVE.equals(adType)) {
             if (!QuizAds.showNativeFull(activity, continueAction)) {
                 continueAction.run();
             }
             return;
         }
-        if (LAUNCHER_APP_AD_TYPE_QUIZ_BROWSER.equals(normalized)) {
+        if (LAUNCHER_APP_AD_TYPE_QUIZ_BROWSER.equals(adType)) {
             QuizAds.openBrowserThenContinue(activity, continueAction);
             return;
         }
         continueAction.run();
     }
 
-    private static void showLauncherNativeFull(Activity activity, Runnable continueAction) {
-        String nativeId = getOtherNativeId();
+    private static void showLauncherNativeFull(Activity activity, Runnable continueAction, boolean quizOnFail) {
+        String nativeId = getLauncherAppNativeId();
         if (!canLoad(activity, nativeId)) {
             continueAction.run();
             return;
@@ -1236,6 +1292,9 @@ public final class AdPlacement {
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
                 handler.removeCallbacks(timeout);
                 dismissInterstitialLoadingDialog(dialog);
+                if (quizOnFail && QuizAds.showNativeFull(activity, () -> notifyComplete(listener, completed))) {
+                    return;
+                }
                 notifyComplete(listener, completed);
             }
         }).build();
@@ -1272,9 +1331,13 @@ public final class AdPlacement {
     }
 
     private static void loadInterstitialAdInternal(Activity activity, String interstitialId, @Nullable OnInterstitialAdListener listener, boolean showLoadingDialog) {
+        loadInterstitialAdInternal(activity, interstitialId, listener, showLoadingDialog, true, getGoogleAdFailedShowQuiz());
+    }
+
+    private static void loadInterstitialAdInternal(Activity activity, String interstitialId, @Nullable OnInterstitialAdListener listener, boolean showLoadingDialog, boolean honorQuizPriority, boolean quizOnFail) {
         int token = interstitialLoadToken.incrementAndGet();
         AtomicBoolean completed = new AtomicBoolean(false);
-        if (shouldUseQuizPriority()) {
+        if (honorQuizPriority && shouldUseQuizPriority()) {
             if (!QuizAds.showInterstitial(activity, () -> notifyComplete(listener, completed))) {
                 notifyComplete(listener, completed);
             }
@@ -1327,7 +1390,7 @@ public final class AdPlacement {
                 }
                 handler.removeCallbacks(timeout);
                 dismissInterstitialLoadingDialog(loadingDialog);
-                if (getGoogleAdFailedShowQuiz() && QuizAds.showInterstitial(activity, () -> notifyComplete(listener, completed))) {
+                if (quizOnFail && QuizAds.showInterstitial(activity, () -> notifyComplete(listener, completed))) {
                     return;
                 }
                 notifyComplete(listener, completed);
@@ -1336,9 +1399,13 @@ public final class AdPlacement {
     }
 
     private static void loadAppOpenAdInternal(Activity activity, String appOpenUnitId, @Nullable OnInterstitialAdListener listener) {
+        loadAppOpenAdInternal(activity, appOpenUnitId, listener, true, getGoogleAdFailedShowQuiz());
+    }
+
+    private static void loadAppOpenAdInternal(Activity activity, String appOpenUnitId, @Nullable OnInterstitialAdListener listener, boolean honorQuizPriority, boolean quizOnFail) {
         int token = appOpenLoadToken.incrementAndGet();
         AtomicBoolean completed = new AtomicBoolean(false);
-        if (shouldUseQuizPriority()) {
+        if (honorQuizPriority && shouldUseQuizPriority()) {
             if (!QuizAds.showAppOpen(activity, () -> notifyComplete(listener, completed))) {
                 notifyComplete(listener, completed);
             }
@@ -1375,7 +1442,7 @@ public final class AdPlacement {
                 if (token != appOpenLoadToken.get()) {
                     return;
                 }
-                if (getGoogleAdFailedShowQuiz() && QuizAds.showAppOpen(activity, () -> notifyComplete(listener, completed))) {
+                if (quizOnFail && QuizAds.showAppOpen(activity, () -> notifyComplete(listener, completed))) {
                     return;
                 }
                 notifyComplete(listener, completed);

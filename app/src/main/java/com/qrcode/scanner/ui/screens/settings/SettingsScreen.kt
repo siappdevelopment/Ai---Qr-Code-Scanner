@@ -51,6 +51,8 @@ import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.launcher.common.AppUtils
+import com.qrcode.scanner.launcher.common.ScreenNativeAds
+import com.qrcode.scanner.ui.components.BigNativeAd
 import com.qrcode.scanner.ui.screens.history.ClearHistoryDialog
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.components.headerBottomStroke
@@ -106,7 +108,7 @@ fun SettingsScreen(
                 .padding(top = 8.dp, bottom = 28.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-//            SettingsPreferencesHero()
+            BigNativeAd(slot = ScreenNativeAds.Slot.SETTINGS)
 
             SettingsSectionCard(title = "Appearance") {
                 SettingsNavRow(

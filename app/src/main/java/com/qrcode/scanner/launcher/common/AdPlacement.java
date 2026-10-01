@@ -882,6 +882,45 @@ public final class AdPlacement {
         adLoader.loadAd(new AdRequest.Builder().build());
     }
 
+    public static void requestLargeNativeAd(Activity activity, String unitId, @Nullable java.util.function.Consumer<NativeAd> onLoaded, @Nullable Runnable onFailed) {
+        if (activity != null) {
+            initializeIfConfigured(activity);
+        }
+        String id = unitId == null ? "" : unitId.trim();
+        Context context = activity == null ? null : activity.getApplicationContext();
+        if (context == null || !canLoad(activity, id)) {
+            if (onFailed != null) {
+                onFailed.run();
+            }
+            return;
+        }
+        AdLoader adLoader = new AdLoader.Builder(context, id).forNativeAd(nativeAd -> {
+            nativeAd.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
+            if (onLoaded != null) {
+                onLoaded.accept(nativeAd);
+            }
+        }).withAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                if (onFailed != null) {
+                    onFailed.run();
+                }
+            }
+        }).build();
+        adLoader.loadAd(new AdRequest.Builder().build());
+    }
+
+    public static void showLargeNative(Activity activity, FrameLayout container, NativeAd nativeAd) {
+        if (activity == null || activity.isFinishing() || container == null || nativeAd == null) {
+            return;
+        }
+        NativeAdView adView = (NativeAdView) LayoutInflater.from(activity).inflate(R.layout.native_large_ad_layout, container, false);
+        populateNativeAdView(nativeAd, adView, "large");
+        container.removeAllViews();
+        container.addView(adView);
+        container.setVisibility(View.VISIBLE);
+    }
+
     public static void loadLanguageInterstitialAd(Activity activity, OnInterstitialAdListener listener) {
         if (!getLanguageInterstitialAdShow()) {
             notifyComplete(listener);

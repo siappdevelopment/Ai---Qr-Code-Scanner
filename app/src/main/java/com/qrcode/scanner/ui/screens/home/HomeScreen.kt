@@ -53,6 +53,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.app.R
+import com.qrcode.scanner.launcher.common.ScreenNativeAds
+import com.qrcode.scanner.ui.components.BigNativeAd
 import com.qrcode.scanner.ui.components.headerBottomStroke
 import com.qrcode.scanner.data.history.HistoryEntity
 import com.qrcode.scanner.data.history.HistoryRepository
@@ -106,6 +108,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             InstantScannerHero(onOpenScanner = onOpenScanner)
+            BigNativeAd(slot = ScreenNativeAds.Slot.HOME)
             QuickToolsSection(
                 onScanBarcode = onScanBarcode,
                 onScanGallery = onScanGallery,

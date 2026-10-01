@@ -140,25 +140,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_4sdp"
                     android:layout_weight="1"
-                    android:background="@drawable/custom_scan_home_bg"
+                    android:background="@drawable/bg_home_action"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingHorizontal="@dimen/_10sdp"
-                    android:paddingVertical="@dimen/_6sdp">
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:paddingVertical="@dimen/_8sdp">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:src="@drawable/ic_scan_home" />
+                        android:layout_width="@dimen/_26sdp"
+                        android:layout_height="@dimen/_26sdp"
+                        android:background="@drawable/bg_home_action_icon"
+                        android:padding="@dimen/_5sdp"
+                        android:src="@drawable/ic_home_action_scan" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_2sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="Scan"
-                        android:textColor="@color/dock_scan"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="HardcodedText" />
 
@@ -170,25 +172,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_4sdp"
                     android:layout_weight="1"
-                    android:background="@drawable/custom_create_home_bg"
+                    android:background="@drawable/bg_home_action"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingHorizontal="@dimen/_10sdp"
-                    android:paddingVertical="@dimen/_6sdp">
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:paddingVertical="@dimen/_8sdp">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:src="@drawable/ic_create_home" />
+                        android:layout_width="@dimen/_26sdp"
+                        android:layout_height="@dimen/_26sdp"
+                        android:background="@drawable/bg_home_action_icon"
+                        android:padding="@dimen/_5sdp"
+                        android:src="@drawable/ic_home_action_create" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_2sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="Create"
-                        android:textColor="@color/dock_create"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="HardcodedText" />
 
@@ -208,25 +212,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_4sdp"
                     android:layout_weight="1"
-                    android:background="@drawable/custom_history_home_bg"
+                    android:background="@drawable/bg_home_action"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingHorizontal="@dimen/_10sdp"
-                    android:paddingVertical="@dimen/_6sdp">
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:paddingVertical="@dimen/_8sdp">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:src="@drawable/ic_history_home" />
+                        android:layout_width="@dimen/_26sdp"
+                        android:layout_height="@dimen/_26sdp"
+                        android:background="@drawable/bg_home_action_icon"
+                        android:padding="@dimen/_5sdp"
+                        android:src="@drawable/ic_home_action_history" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_2sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="History"
-                        android:textColor="@color/dock_history"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="HardcodedText" />
 
@@ -238,25 +244,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_4sdp"
                     android:layout_weight="1"
-                    android:background="@drawable/custom_setting_home_bg"
+                    android:background="@drawable/bg_home_action"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingHorizontal="@dimen/_10sdp"
-                    android:paddingVertical="@dimen/_6sdp">
+                    android:paddingHorizontal="@dimen/_8sdp"
+                    android:paddingVertical="@dimen/_8sdp">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:src="@drawable/ic_setting_home" />
+                        android:layout_width="@dimen/_26sdp"
+                        android:layout_height="@dimen/_26sdp"
+                        android:background="@drawable/bg_home_action_icon"
+                        android:padding="@dimen/_5sdp"
+                        android:src="@drawable/ic_home_action_setting" />
 
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_2sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
                         android:fontFamily="@font/sans_trial_medium"
                         android:singleLine="true"
                         android:text="Setting"
-                        android:textColor="@color/dock_settings"
+                        android:textColor="@color/text_primary"
                         android:textSize="@dimen/_10sdp"
                         tools:ignore="HardcodedText" />
 
@@ -322,7 +330,7 @@
                 <androidx.appcompat.widget.AppCompatImageView
                     android:layout_width="@dimen/_40sdp"
                     android:layout_height="@dimen/_40sdp"
-                    android:src="@drawable/ic_app_logo" />
+                    android:src="@drawable/ic_widget_app_logo" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -405,7 +413,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/_80sdp"
             android:adjustViewBounds="true"
-            android:src="@drawable/img_default_home" />
+            android:src="@drawable/ic_defult_vector" />
 
     </LinearLayout>
 

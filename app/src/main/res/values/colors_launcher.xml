@@ -25,6 +25,11 @@
     <color name="white_light">#1AFFFFFF</color>
     <color name="green">#23BC49</color>
     <color name="launcher_bg_dark">#E6313131</color>
+    <color name="home_action_surface">#FFFFFF</color>
+    <color name="home_action_stroke">#E5E8EB</color>
+    <color name="home_action_icon_well">#F0F5FF</color>
+    <color name="home_action_icon_well_stroke">#D0E2FF</color>
+    <color name="home_action_icon">#0033CC</color>
     <color name="dock_scan">#0882D3</color>
     <color name="dock_scan_fill">#330882D3</color>
     <color name="dock_create">#6E1BC0</color>

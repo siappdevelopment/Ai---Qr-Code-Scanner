@@ -52,6 +52,41 @@ public final class ScreenNativeAds {
             return;
         }
         bindChrome(activity, host, state);
+        if (!HomeBottomAd.isQrPageOpen(activity)) {
+            hideSlot(state);
+            return;
+        }
+        showOrLoad(activity, slot);
+    }
+
+    public static void onPageVisible() {
+        Activity activity = null;
+        for (Slot slot : Slot.values()) {
+            SlotState state = state(slot);
+            if (currentHost(state) == null) {
+                continue;
+            }
+            if (activity == null) {
+                activity = state.activity == null ? null : state.activity.get();
+            }
+            if (activity == null || activity.isFinishing()) {
+                return;
+            }
+            showOrLoad(activity, slot);
+        }
+    }
+
+    public static void onPageHidden() {
+        for (Slot slot : Slot.values()) {
+            SlotState state = state(slot);
+            if (currentHost(state) != null) {
+                hideSlot(state);
+            }
+        }
+    }
+
+    private static void showOrLoad(Activity activity, Slot slot) {
+        SlotState state = state(slot);
         if (remainingWait(slot) > 0L && state.ad != null) {
             showCachedAd(activity, state);
             return;

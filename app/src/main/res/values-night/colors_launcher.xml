@@ -9,6 +9,11 @@
     <color name="launcher_bg">@color/launcher_bg_dark</color>
     <color name="cl_end_tab_track">#252830</color>
     <color name="cl_end_tab_stroke">#3A3F4A</color>
+    <color name="home_action_surface">#1A1D24</color>
+    <color name="home_action_stroke">#343944</color>
+    <color name="home_action_icon_well">#1A2433</color>
+    <color name="home_action_icon_well_stroke">#314056</color>
+    <color name="home_action_icon">#4A78C8</color>
     <color name="dock_scan">#9EBFEE</color>
     <color name="dock_scan_fill">#339EBFEE</color>
     <color name="dock_create">#C4A6EE</color>

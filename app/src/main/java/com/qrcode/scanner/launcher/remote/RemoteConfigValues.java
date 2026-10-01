@@ -41,6 +41,8 @@ public final class RemoteConfigValues {
     private static String mainNativeId = "";
     private static boolean mainAdAutoRefresh;
     private static int mainAdAutoSecond;
+    private static boolean mainBottomAdAutoRefresh;
+    private static int mainBottomAdAutoSecond;
 
     private static boolean createFragmentNativeAdShow;
     private static String createFragmentNativeId = "";
@@ -147,6 +149,8 @@ public final class RemoteConfigValues {
         mainNativeId = mainScreen.optString("Main_Native_Id", "");
         mainAdAutoRefresh = mainScreen.optBoolean("Main_Ad_Auto_Refresh", false);
         mainAdAutoSecond = mainScreen.optInt("Main_Ad_Auto_Second", 0);
+        mainBottomAdAutoRefresh = mainScreen.optBoolean("Main_Bottom_Ad_Auto_Refresh", false);
+        mainBottomAdAutoSecond = mainScreen.optInt("Main_Bottom_Ad_Auto_Second", 0);
 
         JSONObject createFragmentScreen = child(screenObject, "CreateFragmentScreen");
         createFragmentNativeAdShow = createFragmentScreen.optBoolean("CreateFragment_Native_Ad_Show", false);
@@ -293,6 +297,26 @@ public final class RemoteConfigValues {
         notificationCallCountryList = parseStoredCountryList(preferences.getString("notificationCallCountryList", ""));
         notificationCallOverlayCountryList = parseStoredCountryList(preferences.getString("notificationCallOverlayCountryList", ""));
         clEndConfigLoaded = true;
+    }
+
+    public static boolean getMainAdShow() {
+        return mainAdShow;
+    }
+
+    public static String getMainAdType() {
+        return mainAdType == null ? "" : mainAdType;
+    }
+
+    public static String getMainBannerId() {
+        return mainBannerId == null ? "" : mainBannerId;
+    }
+
+    public static boolean getMainBottomAdAutoRefresh() {
+        return mainBottomAdAutoRefresh;
+    }
+
+    public static int getMainBottomAdAutoSecond() {
+        return mainBottomAdAutoSecond;
     }
 
     public static boolean getMainBigTopAdShow() {

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,6 +38,7 @@ import com.qrcode.scanner.launcher.common.StartupFlow
 import com.qrcode.scanner.launcher.common.StartupNavigation
 import com.qrcode.scanner.launcher.common.WidgetNavigation
 import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars
+import com.qrcode.scanner.ui.components.HomeBottomAdSlot
 import com.qrcode.scanner.ui.components.ScanPulseBottomBar
 import com.qrcode.scanner.ui.screens.common.PlaceholderScreen
 import com.qrcode.scanner.ui.screens.create.CreateQrIntents
@@ -125,11 +127,14 @@ fun ScanPulseNavHost(
             contentColor = Color.Unspecified,
             bottomBar = {
                 if (showBottomBar) {
-                    ScanPulseBottomBar(
-                        currentRoute = currentRoute,
-                        onNavigate = { destination -> openRootTab(destination.route) },
-                        onScanClick = { openRootTab(AppDestination.Scan.route) }
-                    )
+                    Column(modifier = Modifier.fillMaxWidth()) {
+                        ScanPulseBottomBar(
+                            currentRoute = currentRoute,
+                            onNavigate = { destination -> openRootTab(destination.route) },
+                            onScanClick = { openRootTab(AppDestination.Scan.route) }
+                        )
+                        HomeBottomAdSlot()
+                    }
                 }
             }
         ) { innerPadding ->

@@ -910,6 +910,40 @@ public final class AdPlacement {
         adLoader.loadAd(new AdRequest.Builder().build());
     }
 
+    public static void requestSmallBannerAd(Activity activity, String unitId, @Nullable java.util.function.Consumer<AdView> onLoaded, @Nullable Runnable onFailed) {
+        if (activity != null) {
+            initializeIfConfigured(activity);
+        }
+        String id = unitId == null ? "" : unitId.trim();
+        if (activity == null || !canLoad(activity, id)) {
+            if (onFailed != null) {
+                onFailed.run();
+            }
+            return;
+        }
+        AdView adView = new AdView(activity);
+        adView.setAdSize(AdSize.BANNER);
+        adView.setAdUnitId(id);
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                adView.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
+                if (onLoaded != null) {
+                    onLoaded.accept(adView);
+                }
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                adView.destroy();
+                if (onFailed != null) {
+                    onFailed.run();
+                }
+            }
+        });
+        adView.loadAd(new AdRequest.Builder().build());
+    }
+
     public static void showLargeNative(Activity activity, FrameLayout container, NativeAd nativeAd) {
         if (activity == null || activity.isFinishing() || container == null || nativeAd == null) {
             return;

@@ -369,6 +369,10 @@ public class LauncherHomeActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 if (lastSelectedPage == LauncherPagerAdapter.PAGE_RIGHT && position != LauncherPagerAdapter.PAGE_RIGHT) {
                     LauncherQrSystemBars.INSTANCE.restore(LauncherHomeActivity.this);
+                    com.qrcode.scanner.launcher.common.HomeBottomAd.onPageHidden();
+                }
+                if (position == LauncherPagerAdapter.PAGE_RIGHT && lastSelectedPage != LauncherPagerAdapter.PAGE_RIGHT) {
+                    com.qrcode.scanner.launcher.common.HomeBottomAd.onPageVisible();
                 }
                 if (lastSelectedPage == LauncherPagerAdapter.PAGE_HOME && position == LauncherPagerAdapter.PAGE_RIGHT) {
                     pendingRightSwipeOpen = true;

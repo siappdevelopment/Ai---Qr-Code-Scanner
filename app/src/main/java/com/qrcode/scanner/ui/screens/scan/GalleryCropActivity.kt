@@ -106,7 +106,7 @@ class GalleryCropActivity : ComponentActivity() {
                     initialUri = initialUri,
                     autoPick = autoPick,
                     scanMode = scanMode,
-                    onBack = { finish() },
+                    onBack = { onBackPressedDispatcher.onBackPressed() },
                     onDetectedSingle = { code ->
                         startActivity(
                             ScanIntents.openScanResult(

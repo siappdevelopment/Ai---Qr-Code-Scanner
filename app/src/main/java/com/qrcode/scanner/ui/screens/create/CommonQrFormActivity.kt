@@ -67,6 +67,8 @@ import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 import com.qrcode.scanner.ui.components.ScreenWithAd
+import com.qrcode.scanner.ui.components.runWithClickAd
+import com.qrcode.scanner.ui.components.bindScreenBackAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
@@ -81,6 +83,7 @@ class CommonQrFormActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        bindScreenBackAd("QrFormScreen")
         val type = QrCategoryType.fromIntentExtra(
             intent.getStringExtra(QrCategoryType.EXTRA_QR_CATEGORY)
         )
@@ -89,7 +92,7 @@ class CommonQrFormActivity : ComponentActivity() {
                 ScreenWithAd(screenKey = "QrFormScreen") {
                 CommonQrFormScreen(
                     category = type,
-                    onBack = { finish() },
+                    onBack = { onBackPressedDispatcher.onBackPressed() },
                     onSavedClose = { finish() }
                 )
                 }
@@ -304,7 +307,7 @@ fun CommonQrFormScreen(
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
-                        onClick = { attemptGenerate() }
+                        onClick = { context.runWithClickAd("QrFormScreen") { attemptGenerate() } }
                     ),
                 contentAlignment = Alignment.Center
             ) {

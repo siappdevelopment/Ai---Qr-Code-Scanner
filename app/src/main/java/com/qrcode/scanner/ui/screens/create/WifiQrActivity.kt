@@ -64,6 +64,8 @@ import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 import com.qrcode.scanner.ui.components.ScreenWithAd
+import com.qrcode.scanner.ui.components.runWithClickAd
+import com.qrcode.scanner.ui.components.bindScreenBackAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
@@ -78,11 +80,12 @@ class WifiQrActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        bindScreenBackAd("QrFormScreen")
         setContent {
             QRCodeScannerTheme {
                 ScreenWithAd(screenKey = "QrFormScreen") {
                 WifiQrFormScreen(
-                    onBack = { finish() },
+                    onBack = { onBackPressedDispatcher.onBackPressed() },
                     onSavedClose = { finish() }
                 )
                 }
@@ -463,7 +466,7 @@ fun WifiQrFormScreen(
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
-                        onClick = { attemptGenerate() }
+                        onClick = { context.runWithClickAd("QrFormScreen") { attemptGenerate() } }
                     ),
                 contentAlignment = Alignment.Center
             ) {

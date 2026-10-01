@@ -75,7 +75,7 @@ class ContinuousBatchResultActivity : ComponentActivity() {
                 ScreenWithAd(screenKey = "OtherScreen") {
                 ContinuousBatchResultScreen(
                     items = items,
-                    onBack = { finish() },
+                    onBack = { onBackPressedDispatcher.onBackPressed() },
                     onOpenItem = { item ->
                         // Only open already-persisted History rows (Phase 12.10 policy).
                         if (item.historyId <= 0L) return@ContinuousBatchResultScreen

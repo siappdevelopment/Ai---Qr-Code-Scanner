@@ -69,6 +69,8 @@ import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 import com.qrcode.scanner.ui.components.ScreenWithAd
+import com.qrcode.scanner.ui.components.runWithClickAd
+import com.qrcode.scanner.ui.components.bindScreenBackAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
@@ -84,6 +86,7 @@ class QrCustomizationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        bindScreenBackAd("QrCustomizationScreen")
         val payload = intent.getStringExtra(CreateQrIntents.EXTRA_PAYLOAD).orEmpty()
         val eccName = intent.getStringExtra(CreateQrIntents.EXTRA_ECC_LEVEL)
             ?: QrBitmapEncoder.EccLevel.H.name
@@ -100,13 +103,15 @@ class QrCustomizationActivity : ComponentActivity() {
                     payload = payload,
                     ecc = ecc,
                     initialStyle = initialStyle,
-                    onBack = { finish() },
+                    onBack = { onBackPressedDispatcher.onBackPressed() },
                     onApply = { style ->
-                        setResult(
-                            Activity.RESULT_OK,
-                            Intent().putExtra(CreateQrIntents.EXTRA_STYLE, style)
-                        )
-                        finish()
+                        runWithClickAd("QrCustomizationScreen") {
+                            setResult(
+                                Activity.RESULT_OK,
+                                Intent().putExtra(CreateQrIntents.EXTRA_STYLE, style)
+                            )
+                            finish()
+                        }
                     }
                 )
                 }

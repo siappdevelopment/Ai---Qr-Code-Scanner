@@ -66,7 +66,7 @@ class FavoritesActivity : ComponentActivity() {
                 ScreenWithAd(screenKey = "OtherScreen") {
                 val context = LocalContext.current
                 FavoritesScreen(
-                    onBack = { finish() },
+                    onBack = { onBackPressedDispatcher.onBackPressed() },
                     onOpenItem = { historyId ->
                         context.startActivity(HistoryIntents.openDetail(context, historyId))
                     }

@@ -298,7 +298,7 @@ public final class AdPlacement {
                 return;
             }
         }
-        loadInterstitialAdInternal(activity, getOtherInterstitialId(), onFinished, true);
+        loadInterstitialAdInternal(activity, RemoteConfigValues.getInterAdsId(), onFinished, true);
     }
 
     public static void setNativeAdLabelColor(String value) {

@@ -103,10 +103,7 @@ public class LauncherSettingsActivity extends AppCompatActivity {
         setApp();
         refreshSettingsUI();
 
-        ivBack.setOnClickListener(v -> {
-            LauncherSettingsActivity.this.finish();
-            overridePendingTransition(0, 0);
-        });
+        ivBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override

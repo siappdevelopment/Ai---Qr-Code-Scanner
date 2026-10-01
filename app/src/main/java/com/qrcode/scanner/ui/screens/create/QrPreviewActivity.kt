@@ -77,6 +77,8 @@ import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 import com.qrcode.scanner.ui.components.ScreenWithAd
+import com.qrcode.scanner.ui.components.runWithClickAd
+import com.qrcode.scanner.ui.components.bindScreenBackAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import com.qrcode.scanner.ui.theme.TextTertiary
@@ -99,6 +101,7 @@ class QrPreviewActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        bindScreenBackAd("QrPreviewScreen")
         savedHistoryId = savedInstanceState?.getLong(KEY_HISTORY_ID, -1L) ?: -1L
 
         val category = QrCategoryType.fromIntentExtra(
@@ -131,7 +134,7 @@ class QrPreviewActivity : ComponentActivity() {
                     initialHistoryId = savedHistoryId,
                     onHistoryIdAssigned = { savedHistoryId = it },
                     onStyleChanged = { /* persisted via Activity saveInstance below through callback state */ },
-                    onBack = { finish() },
+                    onBack = { onBackPressedDispatcher.onBackPressed() },
                     onSavedAndDone = { historyId ->
                         setResult(
                             Activity.RESULT_OK,
@@ -431,14 +434,16 @@ private fun QrPreviewScreen(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     ) {
-                        customizeLauncher.launch(
-                            CreateQrIntents.openCustomization(
-                                context = context,
-                                payload = payload,
-                                eccLevel = ecc.name,
-                                style = style
+                        context.runWithClickAd("QrPreviewScreen") {
+                            customizeLauncher.launch(
+                                CreateQrIntents.openCustomization(
+                                    context = context,
+                                    payload = payload,
+                                    eccLevel = ecc.name,
+                                    style = style
+                                )
                             )
-                        )
+                        }
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -518,6 +523,7 @@ private fun QrPreviewScreen(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
                     ) {
+                        context.runWithClickAd("QrPreviewScreen") {
                         saving = true
                         scope.launch {
                             try {
@@ -547,6 +553,7 @@ private fun QrPreviewScreen(
                             } finally {
                                 saving = false
                             }
+                        }
                         }
                     },
                 contentAlignment = Alignment.Center

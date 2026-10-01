@@ -73,7 +73,7 @@ class DetectionErrorActivity : ComponentActivity() {
                 ScreenWithAd(screenKey = "OtherScreen") {
                 DetectionErrorScreen(
                     reason = reason,
-                    onBack = { finish() },
+                    onBack = { onBackPressedDispatcher.onBackPressed() },
                     onRetry = {
                         if (imageUri != null) {
                             startActivity(

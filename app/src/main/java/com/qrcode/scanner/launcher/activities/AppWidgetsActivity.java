@@ -68,10 +68,7 @@ public class AppWidgetsActivity extends AppCompatActivity {
     private void initialClicks() {
         showAd();
 
-        ivBack.setOnClickListener(v -> {
-            AppWidgetsActivity.this.finish();
-            overridePendingTransition(0, 0);
-        });
+        ivBack.setOnClickListener(v -> getOnBackPressedDispatcher().onBackPressed());
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override

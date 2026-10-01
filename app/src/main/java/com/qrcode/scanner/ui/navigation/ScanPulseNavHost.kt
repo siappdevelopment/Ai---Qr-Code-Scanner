@@ -34,6 +34,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.qrcode.scanner.launcher.activities.LanguageActivity
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
+import com.qrcode.scanner.launcher.common.ScreenInterAds
 import com.qrcode.scanner.launcher.common.StartupFlow
 import com.qrcode.scanner.launcher.common.StartupNavigation
 import com.qrcode.scanner.launcher.common.WidgetNavigation
@@ -41,6 +42,7 @@ import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars
 import com.qrcode.scanner.ui.components.HomeBottomAdSlot
 import com.qrcode.scanner.ui.components.ScanPulseBottomBar
 import com.qrcode.scanner.ui.components.ScreenWithAd
+import com.qrcode.scanner.ui.components.runWithClickAd
 import com.qrcode.scanner.ui.screens.common.PlaceholderScreen
 import com.qrcode.scanner.ui.screens.create.CreateQrIntents
 import com.qrcode.scanner.ui.screens.history.HistoryIntents
@@ -122,6 +124,15 @@ fun ScanPulseNavHost(
         }
     }
 
+    fun openRootTabWithAd(route: String) {
+        val activity = hostActivity
+        if (activity == null) {
+            openRootTab(route)
+            return
+        }
+        ScreenInterAds.onBottomNav(activity, Runnable { openRootTab(route) })
+    }
+
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
             containerColor = if (isScan) Color.Transparent else PageBackground,
@@ -131,8 +142,8 @@ fun ScanPulseNavHost(
                     Column(modifier = Modifier.fillMaxWidth()) {
                         ScanPulseBottomBar(
                             currentRoute = currentRoute,
-                            onNavigate = { destination -> openRootTab(destination.route) },
-                            onScanClick = { openRootTab(AppDestination.Scan.route) }
+                            onNavigate = { destination -> openRootTabWithAd(destination.route) },
+                            onScanClick = { openRootTabWithAd(AppDestination.Scan.route) }
                         )
                         HomeBottomAdSlot()
                     }
@@ -202,16 +213,24 @@ fun ScanPulseNavHost(
                             )
                         },
                         onCreateQr = {
-                            context.startActivity(CreateQrIntents.openHub(context))
+                            context.runWithClickAd("MainScreen") {
+                                context.startActivity(CreateQrIntents.openHub(context))
+                            }
                         },
                         onOpenHistory = {
-                            context.startActivity(HistoryIntents.openHistory(context))
+                            context.runWithClickAd("MainScreen") {
+                                context.startActivity(HistoryIntents.openHistory(context))
+                            }
                         },
                         onOpenFavorites = {
-                            context.startActivity(HistoryIntents.openFavorites(context))
+                            context.runWithClickAd("MainScreen") {
+                                context.startActivity(HistoryIntents.openFavorites(context))
+                            }
                         },
                         onViewAllHistory = {
-                            context.startActivity(HistoryIntents.openHistory(context))
+                            context.runWithClickAd("MainScreen") {
+                                context.startActivity(HistoryIntents.openHistory(context))
+                            }
                         },
                         onRecentItemClick = { historyId ->
                             context.startActivity(HistoryIntents.openDetail(context, historyId))
@@ -231,10 +250,12 @@ fun ScanPulseNavHost(
                             navController.navigate(AppDestination.About.route)
                         },
                         onOpenLanguage = {
-                            context.startActivity(
-                                Intent(context, LanguageActivity::class.java)
-                                    .putExtra(LanguageActivity.EXTRA_FROM_APP_SETTINGS, true)
-                            )
+                            context.runWithClickAd("SettingsFragmentScreen") {
+                                context.startActivity(
+                                    Intent(context, LanguageActivity::class.java)
+                                        .putExtra(LanguageActivity.EXTRA_FROM_APP_SETTINGS, true)
+                                )
+                            }
                         }
                     )
                 }

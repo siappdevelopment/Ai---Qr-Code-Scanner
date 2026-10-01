@@ -35,6 +35,7 @@ import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 import com.qrcode.scanner.ui.components.ScreenWithAd
+import com.qrcode.scanner.ui.components.bindScreenBackAd
 import com.qrcode.scanner.ui.theme.TextPrimary
 import com.qrcode.scanner.ui.theme.TextSecondary
 import kotlinx.coroutines.launch
@@ -47,13 +48,14 @@ class HistoryDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        bindScreenBackAd("HistoryDetailScreen")
         val historyId = intent.getLongExtra(HistoryIntents.EXTRA_HISTORY_ID, -1L)
         setContent {
             QRCodeScannerTheme {
                 ScreenWithAd(screenKey = "HistoryDetailScreen") {
                 HistoryDetailRoute(
                     historyId = historyId,
-                    onBack = { finish() }
+                    onBack = { onBackPressedDispatcher.onBackPressed() }
                 )
                 }
             }

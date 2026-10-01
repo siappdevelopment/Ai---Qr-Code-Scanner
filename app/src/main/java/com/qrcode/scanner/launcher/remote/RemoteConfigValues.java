@@ -26,7 +26,18 @@ public final class RemoteConfigValues {
     private static boolean appOpenAdShow;
     private static boolean appOpenDialogShow;
     private static int appOpenShowPerDay;
-    private static int interstitialClick;
+    private static boolean interAdsShow;
+    private static int interAdsClick;
+    private static String interAdsClickType = "load";
+    private static boolean interAdsOnBack;
+    private static int interAdsBackClick;
+    private static String interAdsBackClickType = "load";
+    private static String interAdsId = "";
+    private static String interBackAdsId = "";
+    private static boolean bottomNavInterAdsShow;
+    private static String bottomNavInterAdsType = "load";
+    private static String bottomNavInterAdsId = "";
+    private static int bottomNavInterClick;
     private static boolean rightSwipeInterstitialAdShow;
     private static int rightSwipeInterstitial;
     private static boolean clEndConfigLoaded;
@@ -113,9 +124,7 @@ public final class RemoteConfigValues {
         appOpenAdShow = root.optBoolean("App_Open_Ad_Show", false);
         appOpenDialogShow = root.optBoolean("App_Open_Dialog_Show", false);
         appOpenShowPerDay = root.optInt("App_Open_Show_Per_Day", 0);
-        interstitialClick = root.optInt("Interstitial_Click", 0);
-        rightSwipeInterstitialAdShow = root.optBoolean("Right_Swipe_Interstitial_Ad_Show", false);
-        rightSwipeInterstitial = root.optInt("Right_Swipe_Interstitial", 0);
+        applyInterAds(root.optJSONObject("inter_ads"));
         clEndScreenShow = root.optBoolean("Cl_End_Screen_Show", false);
         defaultAppPopupShow = root.optBoolean("Default_App_Popup_Show", false);
         defaultAppPopupCount = root.optInt("Default_App_Popup_Count", 0);
@@ -130,18 +139,21 @@ public final class RemoteConfigValues {
         mainAdAutoSecond = mainScreen.optInt("Main_Ad_Auto_Second", 0);
         mainBottomAdAutoRefresh = mainScreen.optBoolean("Main_Bottom_Ad_Auto_Refresh", false);
         mainBottomAdAutoSecond = mainScreen.optInt("Main_Bottom_Ad_Auto_Second", 0);
-
-//        JSONObject createFragmentScreen = child(screenObject, "CreateFragmentScreen");
-//        createFragmentNativeAdShow = createFragmentScreen.optBoolean("CreateFragment_Native_Ad_Show", false);
-//        createFragmentNativeId = createFragmentScreen.optString("CreateFragment_Native_Id", "");
-//        createFragmentNativeSecond = createFragmentScreen.optInt("CreateFragment_Native_Second", 0);
+        bottomNavInterAdsShow = mainScreen.optBoolean("bottom_nav_inter_ads_show", false);
+        bottomNavInterAdsType = mainScreen.optString("bottom_nav_inter_ads_type", "load");
+        bottomNavInterAdsId = mainScreen.optString("bottom_nav_inter_ads_id", "");
+        bottomNavInterClick = mainScreen.optInt("bottom_nav_inter_click", 0);
+        rightSwipeInterstitialAdShow = mainScreen.optBoolean("Right_Swipe_Interstitial_Ad_Show", false);
+        rightSwipeInterstitial = mainScreen.optInt("Right_Swipe_Interstitial", 0);
 
         applyScreenAds(screenObject);
+        rememberInterFlags("MainScreen", mainScreen);
 
         JSONObject settingsFragmentScreen = child(screenObject, "SettingsFragmentScreen");
         settingsFragmentNativeAdShow = settingsFragmentScreen.optBoolean("SettingsFragment_Native_Ad_Show", false);
         settingsFragmentNativeId = settingsFragmentScreen.optString("SettingsFragment_Native_Id", "");
         settingsFragmentNativeSecond = settingsFragmentScreen.optInt("SettingsFragment_Native_Second", 0);
+        rememberInterFlags("SettingsFragmentScreen", settingsFragmentScreen);
 
         JSONObject launcherAppScreen = child(screenObject, "LauncherAppScreen");
         launcherAppNativeAdShow = launcherAppScreen.optBoolean("LauncherApp_Native_Ad_Show", false);
@@ -215,6 +227,7 @@ public final class RemoteConfigValues {
 
         saveClEndConfig(context);
         clEndConfigLoaded = true;
+        com.qrcode.scanner.launcher.common.ScreenInterAds.onConfigApplied(context);
         com.qrcode.scanner.launcher.helpers.AppProxyLookup.refreshActiveQuizLinks();
         AdPlacement.requestCallEndIpCountryIfNeeded(context);
     }
@@ -309,8 +322,67 @@ public final class RemoteConfigValues {
         return appOpenShowPerDay;
     }
 
-    public static int getInterstitialClick() {
-        return interstitialClick;
+    public static boolean getInterAdsShow() {
+        return interAdsShow;
+    }
+
+    public static int getInterAdsClick() {
+        return interAdsClick;
+    }
+
+    @NonNull
+    public static String getInterAdsClickType() {
+        return interAdsClickType == null ? "load" : interAdsClickType;
+    }
+
+    public static boolean getInterAdsOnBack() {
+        return interAdsOnBack;
+    }
+
+    public static int getInterAdsBackClick() {
+        return interAdsBackClick;
+    }
+
+    @NonNull
+    public static String getInterAdsBackClickType() {
+        return interAdsBackClickType == null ? "load" : interAdsBackClickType;
+    }
+
+    @NonNull
+    public static String getInterAdsId() {
+        return interAdsId == null ? "" : interAdsId;
+    }
+
+    @NonNull
+    public static String getInterBackAdsId() {
+        return interBackAdsId == null ? "" : interBackAdsId;
+    }
+
+    public static boolean getBottomNavInterAdsShow() {
+        return bottomNavInterAdsShow;
+    }
+
+    @NonNull
+    public static String getBottomNavInterAdsType() {
+        return bottomNavInterAdsType == null ? "load" : bottomNavInterAdsType;
+    }
+
+    @NonNull
+    public static String getBottomNavInterAdsId() {
+        return bottomNavInterAdsId == null ? "" : bottomNavInterAdsId;
+    }
+
+    public static int getBottomNavInterClick() {
+        return bottomNavInterClick;
+    }
+
+    public static boolean anyScreenInterFlag(boolean back) {
+        for (ScreenAdConfig config : screenAds.values()) {
+            if (config != null && (back ? config.onBackInterShow : config.onClickInterShow)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean getRightSwipeInterstitialAdShow() {
@@ -632,12 +704,16 @@ public final class RemoteConfigValues {
         public final String type;
         public final String bannerId;
         public final String nativeId;
+        public final boolean onBackInterShow;
+        public final boolean onClickInterShow;
 
-        ScreenAdConfig(boolean show, String type, String bannerId, String nativeId) {
+        ScreenAdConfig(boolean show, String type, String bannerId, String nativeId, boolean onBackInterShow, boolean onClickInterShow) {
             this.show = show;
             this.type = type == null ? "banner" : type;
             this.bannerId = bannerId == null ? "" : bannerId;
             this.nativeId = nativeId == null ? "" : nativeId;
+            this.onBackInterShow = onBackInterShow;
+            this.onClickInterShow = onClickInterShow;
         }
     }
 
@@ -673,9 +749,34 @@ public final class RemoteConfigValues {
                     screen.optBoolean(prefix + "_Ad_Show", false),
                     screen.optString(prefix + "_Ad_Type", "banner"),
                     screen.optString(prefix + "_Banner_Id", ""),
-                    screen.optString(prefix + "_Native_Id", "")
+                    screen.optString(prefix + "_Native_Id", ""),
+                    screen.optBoolean("on_back_inter_ads_show", false),
+                    screen.optBoolean("on_click_inter_ads_show", false)
             ));
         }
+    }
+
+    private static void rememberInterFlags(String key, JSONObject screen) {
+        screenAds.put(key, new ScreenAdConfig(
+                false,
+                "banner",
+                "",
+                "",
+                screen.optBoolean("on_back_inter_ads_show", false),
+                screen.optBoolean("on_click_inter_ads_show", false)
+        ));
+    }
+
+    private static void applyInterAds(@Nullable JSONObject interAds) {
+        JSONObject value = interAds == null ? new JSONObject() : interAds;
+        interAdsShow = value.optBoolean("inter_ads_show", false);
+        interAdsClick = value.optInt("inter_ads_click", 0);
+        interAdsClickType = value.optString("inter_ads_click_type", "load");
+        interAdsOnBack = value.optBoolean("inter_ads_on_back", false);
+        interAdsBackClick = value.optInt("inter_ads_back_click", 0);
+        interAdsBackClickType = value.optString("inter_ads_back_click_type", "load");
+        interAdsId = value.optString("inter_ads_id", "");
+        interBackAdsId = value.optString("inter_back_ads_id", "");
     }
 
     private static JSONObject child(JSONObject screen, String key) {

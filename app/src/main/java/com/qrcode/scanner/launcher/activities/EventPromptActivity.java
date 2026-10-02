@@ -317,8 +317,13 @@ public class EventPromptActivity extends AppCompatActivity {
         if (nativeSlot != null) {
             for (int i = 0; i < nativeSlot.getChildCount(); i++) {
                 View child = nativeSlot.getChildAt(i);
-                if (child instanceof NativeAdView) {
-                    ((NativeAdView) child).destroy();
+                NativeAdView nativeAdView = child instanceof NativeAdView
+                        ? (NativeAdView) child
+                        : (child instanceof ViewGroup && ((ViewGroup) child).getChildCount() > 0 && ((ViewGroup) child).getChildAt(0) instanceof NativeAdView)
+                        ? (NativeAdView) ((ViewGroup) child).getChildAt(0)
+                        : null;
+                if (nativeAdView != null) {
+                    nativeAdView.destroy();
                     destroyedView = true;
                 }
             }

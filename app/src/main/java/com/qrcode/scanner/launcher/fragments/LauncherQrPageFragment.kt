@@ -51,6 +51,7 @@ class LauncherQrPageFragment : Fragment() {
         pageLifecycleOwner.registry.currentState = Lifecycle.State.CREATED
         val themedContext = ContextThemeWrapper(requireContext(), R.style.Theme_QRCodeScanner)
         return ComposeView(themedContext).apply {
+            id = R.id.launcher_qr_compose
             layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
             setViewTreeLifecycleOwner(pageLifecycleOwner)
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)

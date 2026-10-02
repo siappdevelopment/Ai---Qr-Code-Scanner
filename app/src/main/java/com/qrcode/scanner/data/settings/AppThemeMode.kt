@@ -9,8 +9,8 @@ enum class AppThemeMode(val storageValue: String) {
     DARK("dark");
 
     fun settingsSubtitle(): String = when (this) {
-        LIGHT -> "Light (Electric Cobalt)"
-        DARK -> "Dark (Electric Cobalt)"
+        LIGHT -> "Light"
+        DARK -> "Dark"
     }
 
     fun selectionTitle(): String = when (this) {

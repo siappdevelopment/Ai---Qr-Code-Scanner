@@ -43,11 +43,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
+import com.qrcode.scanner.ui.navigation.ThemeNavigation
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.launcher.common.AppUtils
@@ -244,6 +247,9 @@ fun SettingsScreen(
             selected = preferences.appTheme,
             onSelect = { theme ->
                 showThemeDialog = false
+                if (theme != preferences.appTheme) {
+                    ThemeNavigation.markReopenSettings()
+                }
                 scope.launch { repository.setAppTheme(theme) }
             },
             onDismiss = { showThemeDialog = false }
@@ -369,7 +375,7 @@ private fun SettingsFooter() {
             )
         }
         Text(
-            text = "ScanPulse Pro · Device Acceleration Verified",
+            text = stringResource(R.string.app_name) + " Pro · Device Acceleration Verified",
             color = TextTertiary,
             fontFamily = PlusJakartaSans,
             fontSize = 11.sp

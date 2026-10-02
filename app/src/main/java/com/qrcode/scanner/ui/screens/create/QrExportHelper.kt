@@ -24,7 +24,7 @@ object QrExportHelper {
     fun savePngToGallery(
         context: Context,
         bitmap: Bitmap,
-        displayName: String = "ScanPulse_QR_${System.currentTimeMillis()}.png"
+        displayName: String = "QR_Code_Scanner_${System.currentTimeMillis()}.png"
     ): ExportResult {
         return try {
             val resolver = context.contentResolver
@@ -32,7 +32,7 @@ object QrExportHelper {
                 put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
                 put(MediaStore.Images.Media.MIME_TYPE, "image/png")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/ScanPulse")
+                    put(MediaStore.Images.Media.RELATIVE_PATH, Environment.DIRECTORY_PICTURES + "/QR Code Scanner")
                     put(MediaStore.Images.Media.IS_PENDING, 1)
                 }
             }
@@ -62,7 +62,7 @@ object QrExportHelper {
     fun saveSvgToCache(
         context: Context,
         svg: String,
-        fileName: String = "ScanPulse_QR_${System.currentTimeMillis()}.svg"
+        fileName: String = "QR_Code_Scanner_${System.currentTimeMillis()}.svg"
     ): ExportResult {
         return try {
             val dir = File(context.cacheDir, "exports").apply { mkdirs() }
@@ -82,7 +82,7 @@ object QrExportHelper {
     fun shareBitmap(
         context: Context,
         bitmap: Bitmap,
-        title: String = "ScanPulse QR"
+        title: String = "QR Code & Scanner"
     ): ExportResult {
         return try {
             val dir = File(context.cacheDir, "exports").apply { mkdirs() }
@@ -108,7 +108,7 @@ object QrExportHelper {
         }
     }
 
-    fun shareSvg(context: Context, svgUri: Uri, title: String = "ScanPulse QR SVG") {
+    fun shareSvg(context: Context, svgUri: Uri, title: String = "QR Code & Scanner SVG") {
         val send = Intent(Intent.ACTION_SEND).apply {
             type = "image/svg+xml"
             putExtra(Intent.EXTRA_STREAM, svgUri)
@@ -118,7 +118,7 @@ object QrExportHelper {
         context.startActivity(Intent.createChooser(send, "Export Vector"))
     }
 
-    fun printBitmap(context: Context, bitmap: Bitmap, jobName: String = "ScanPulse QR") {
+    fun printBitmap(context: Context, bitmap: Bitmap, jobName: String = "QR Code & Scanner") {
         val printManager = context.getSystemService(Context.PRINT_SERVICE) as PrintManager
         val adapter = object : PrintDocumentAdapter() {
             override fun onLayout(

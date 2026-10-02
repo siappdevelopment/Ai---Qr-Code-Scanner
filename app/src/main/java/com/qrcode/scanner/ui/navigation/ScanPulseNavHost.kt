@@ -94,11 +94,14 @@ fun ScanPulseNavHost(
         if (launcher.launcherCurrentItem != com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter.PAGE_RIGHT) {
             return@SideEffect
         }
-        if (matchHeaderStatus) {
+        if (isScan) {
+            LauncherQrSystemBars.applyScanStatusBar(launcher)
+        } else if (matchHeaderStatus) {
             LauncherQrSystemBars.applyHeaderStatusBar(launcher, useDark)
         }
     }
     val inLauncher = hostActivity is LauncherHomeActivity
+    val reopenSettings = remember { ThemeNavigation.consumeReopenSettings() }
     var tabBeforeScan by remember { mutableStateOf(AppDestination.Home.route) }
     LaunchedEffect(currentRoute) {
         if (
@@ -117,6 +120,12 @@ fun ScanPulseNavHost(
             }
             launchSingleTop = true
             restoreState = true
+        }
+    }
+
+    LaunchedEffect(reopenSettings) {
+        if (reopenSettings) {
+            openRootTab(AppDestination.Settings.route)
         }
     }
 
@@ -193,7 +202,11 @@ fun ScanPulseNavHost(
 
             navigation(
                 route = MAIN_GRAPH_ROUTE,
-                startDestination = AppDestination.Scan.route
+                startDestination = if (reopenSettings) {
+                    AppDestination.Settings.route
+                } else {
+                    AppDestination.Scan.route
+                }
             ) {
                 composable(AppDestination.Home.route) {
                     val context = LocalContext.current

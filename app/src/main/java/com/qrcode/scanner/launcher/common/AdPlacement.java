@@ -17,8 +17,10 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -28,7 +30,6 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
@@ -941,7 +942,7 @@ public final class AdPlacement {
             NativeAdView adView = (NativeAdView) LayoutInflater.from(flNativeAd.getContext()).inflate(resolveGoogleNativeLayout(type), flNativeAd, false);
             populateNativeAdView(nativeAd, adView, type);
             flNativeAd.removeAllViews();
-            flNativeAd.addView(adView);
+            flNativeAd.addView(GestureSafeNativeAdView.wrap(adView));
             if (slNativeShimmer != null) {
                 slNativeShimmer.stopShimmer();
                 slNativeShimmer.setVisibility(View.GONE);
@@ -1040,7 +1041,7 @@ public final class AdPlacement {
         NativeAdView adView = (NativeAdView) LayoutInflater.from(container.getContext()).inflate(R.layout.native_large_ad_layout, container, false);
         populateNativeAdView(nativeAd, adView, "large");
         container.removeAllViews();
-        container.addView(adView);
+        container.addView(GestureSafeNativeAdView.wrap(adView));
         container.setVisibility(View.VISIBLE);
     }
 
@@ -1599,14 +1600,32 @@ public final class AdPlacement {
         if (adView.getBodyView() instanceof AppCompatTextView) {
             ((AppCompatTextView) adView.getBodyView()).setText(nativeAd.getBody());
         }
-        if (adView.getCallToActionView() instanceof AppCompatButton) {
-            AppCompatButton button = (AppCompatButton) adView.getCallToActionView();
-            button.setText(nativeAd.getCallToAction());
+        if (adView.getCallToActionView() instanceof AppCompatTextView) {
+            AppCompatTextView button = (AppCompatTextView) adView.getCallToActionView();
+            applyCallToAction(button, nativeAd.getCallToAction());
             applyBackgroundColor(button, nativeAdButtonColor, R.color.primary);
         }
         View attribution = adView.findViewById(R.id.ad_attribution);
         applyBackgroundColor(attribution, nativeAdLabelColor, 0);
         adView.setNativeAd(nativeAd);
+        if (adView.getCallToActionView() instanceof AppCompatTextView) {
+            applyCallToAction((AppCompatTextView) adView.getCallToActionView(), ((AppCompatTextView) adView.getCallToActionView()).getText());
+        }
+    }
+
+    private static void applyCallToAction(AppCompatTextView button, CharSequence label) {
+        String text = label == null ? "" : label.toString().trim();
+        if (text.isEmpty()) {
+            text = "Install";
+        }
+        button.setSingleLine(false);
+        button.setHorizontallyScrolling(false);
+        button.setMaxLines(1);
+        button.setEllipsize(TextUtils.TruncateAt.END);
+        button.setGravity(Gravity.CENTER);
+        button.setText(text);
+        button.setTextColor(Color.WHITE);
+        button.setAllCaps(false);
     }
 
     private static int resolveGoogleNativeLayout(@Nullable String type) {

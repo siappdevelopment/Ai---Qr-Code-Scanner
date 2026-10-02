@@ -88,7 +88,7 @@
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/ad_call_to_action"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
@@ -99,9 +99,10 @@
             android:gravity="center"
             android:minWidth="0dp"
             android:minHeight="0dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:maxLines="1"
             android:paddingHorizontal="@dimen/_6sdp"
-            android:paddingBottom="@dimen/_1sdp"
-            android:singleLine="true"
             android:stateListAnimator="@null"
             android:text="Install"
             android:textAllCaps="false"

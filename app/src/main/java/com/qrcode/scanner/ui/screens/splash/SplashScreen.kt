@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -94,20 +95,20 @@ fun SplashScreen(
             AndroidView(
                 factory = { context ->
                     ImageView(context).apply {
-                        setImageResource(R.mipmap.ic_launcher)
-                        scaleType = ImageView.ScaleType.CENTER_CROP
+                        setImageResource(R.drawable.ic_widget_app_logo)
+//                        scaleType = ImageView.ScaleType.CENTER_CROP
                         contentDescription = context.getString(R.string.app_name)
                     }
                 },
                 modifier = Modifier
-                    .size(88.dp)
-                    .clip(RoundedCornerShape(22.dp))
+                    .size(120.dp)
+//                    .clip(RoundedCornerShape(22.dp))
             )
 
             Spacer(modifier = Modifier.height(28.dp))
 
             Text(
-                text = "ScanPulse",
+                text = stringResource(R.string.app_name),
                 color = palette.textPrimary,
                 fontFamily = PlusJakartaSans,
                 fontSize = 28.sp,

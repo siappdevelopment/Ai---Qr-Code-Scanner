@@ -31,6 +31,18 @@ object LauncherQrSystemBars {
             .isAppearanceLightStatusBars = !useDark
     }
 
+    /** Scan camera sits under the status bar, so the bar must not keep the previous screen color. */
+    fun applyScanStatusBar(activity: Activity) {
+        val window = activity.window
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isStatusBarContrastEnforced = false
+        }
+        @Suppress("DEPRECATION")
+        window.statusBarColor = Color.TRANSPARENT
+        WindowCompat.getInsetsController(window, window.decorView)
+            .isAppearanceLightStatusBars = false
+    }
+
     /** Hides the navigation bar until the user swipes it in. Status bar stays visible. */
     fun hideNavigationBar(activity: Activity) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {

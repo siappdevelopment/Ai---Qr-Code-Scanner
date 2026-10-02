@@ -20,7 +20,7 @@
     <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
     <string name="utm_source_marketing">utm_source=marketing</string>
     <string name="permission_title">Camera Access Required</string>
-    <string name="permission_description">ScanPulse needs camera access to instantly scan QR codes, Wi-Fi credentials, and barcodes directly in real time.</string>
+    <string name="permission_description">QR Code &amp; Scanner needs camera access to instantly scan QR codes, Wi-Fi credentials, and barcodes directly in real time.</string>
     <string name="permission_local_title">Instant Local Scanning</string>
     <string name="permission_local_desc">Scans are processed completely on-device with zero server latency.</string>
     <string name="permission_privacy_title">100% Privacy Preserved</string>
@@ -28,7 +28,7 @@
     <string name="permission_gallery_title">Gallery Alternative</string>
     <string name="permission_gallery_desc">Import photos directly from your library anytime without camera privileges.</string>
     <string name="allow_permission">Allow Permission</string>
-    <string name="default_title">Make ScanPulse Your Default Home Launcher</string>
+    <string name="default_title">Make QR Code &amp; Scanner Your Default Home Launcher</string>
     <string name="default_description">Instant QR scanner access with a single swipe right from your home screen, custom widget controls, and organized app drawers.</string>
     <string name="default_swipe_title">Swipe Right to Scan</string>
     <string name="default_swipe_desc">Launch viewfinder instantly from anywhere on your home screen with zero latency.</string>

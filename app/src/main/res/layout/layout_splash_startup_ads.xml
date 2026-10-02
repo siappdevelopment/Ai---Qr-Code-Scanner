@@ -9,27 +9,26 @@
         android:id="@+id/rlAdView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/ad_background"
+        android:paddingBottom="12dp"
         android:visibility="invisible">
 
         <RelativeLayout
             android:id="@+id/rlBannerAdView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_60sdp">
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_splash_ad_card">
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/slBannerShimmer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_60sdp"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@color/ad_background"
                 app:shimmer_auto_start="true"
-                app:shimmer_base_alpha="1.0"
+                app:shimmer_base_alpha="0.9"
+                app:shimmer_duration="1100"
                 app:shimmer_highlight_alpha="1.0">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                <include layout="@layout/layout_splash_shimmer_small" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -46,22 +45,21 @@
         <RelativeLayout
             android:id="@+id/rlNativeAdView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_60sdp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_splash_ad_card"
             android:visibility="gone">
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/slNativeShimmer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_60sdp"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@color/ad_background"
                 app:shimmer_auto_start="true"
-                app:shimmer_base_alpha="1.0"
+                app:shimmer_base_alpha="0.9"
+                app:shimmer_duration="1100"
                 app:shimmer_highlight_alpha="1.0">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                <include layout="@layout/layout_splash_shimmer_small" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 

@@ -330,7 +330,7 @@ public final class HomeBottomAd {
         NativeAdView adView = (NativeAdView) LayoutInflater.from(STATE.nativeContent.getContext()).inflate(R.layout.native_small_ad_layout, STATE.nativeContent, false);
         AdPlacement.populateNativeAdView(STATE.nativeAd, adView, "small");
         STATE.nativeContent.removeAllViews();
-        STATE.nativeContent.addView(adView);
+        STATE.nativeContent.addView(GestureSafeNativeAdView.wrap(adView));
         STATE.nativeContent.setVisibility(View.VISIBLE);
     }
 

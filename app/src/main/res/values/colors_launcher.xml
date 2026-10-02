@@ -16,6 +16,9 @@
     <color name="surface_secondary">@color/surface_secondary_light</color>
     <color name="ad_background">@color/surface_primary</color>
     <color name="ad_shimmer">#E8EAED</color>
+    <color name="splash_ad_card">#FFFFFF</color>
+    <color name="splash_ad_stroke">#D5DEEA</color>
+    <color name="splash_ad_block">#D5DCE6</color>
     <color name="launcher_bg">@color/launcher_bg_light</color>
     <color name="cl_end_tab_track">#EEF1F6</color>
     <color name="cl_end_tab_stroke">#D9DEE8</color>

@@ -60,7 +60,6 @@ fun AboutScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val appLabel = stringResource(R.string.app_name)
     val versionName = remember {
         try {
             @Suppress("DEPRECATION")
@@ -143,18 +142,11 @@ fun AboutScreen(
                 }
                 // Product brand used across Splash / Home.
                 Text(
-                    text = "ScanPulse",
+                    text = stringResource(R.string.app_name),
                     color = TextPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp
-                )
-                // Launcher label from res/values/strings.xml
-                Text(
-                    text = appLabel,
-                    color = TextSecondary,
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 14.sp
                 )
                 // Existing Splash tagline.
                 Text(
@@ -199,7 +191,7 @@ fun AboutScreen(
                     .padding(horizontal = 14.dp, vertical = 12.dp)
             ) {
                 Text(
-                    text = "ScanPulse Pro · Device Acceleration Verified",
+                    text = stringResource(R.string.app_name) + " Pro · Device Acceleration Verified",
                     color = TextTertiary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 12.sp

@@ -8,6 +8,9 @@
     <color name="surface_secondary">@color/surface_secondary_dark</color>
     <color name="ad_background">@color/surface_secondary_dark</color>
     <color name="ad_shimmer">#2A2F38</color>
+    <color name="splash_ad_card">#242833</color>
+    <color name="splash_ad_stroke">#3A4150</color>
+    <color name="splash_ad_block">#3A4250</color>
     <color name="launcher_bg">@color/launcher_bg_dark</color>
     <color name="cl_end_tab_track">#252830</color>
     <color name="cl_end_tab_stroke">#3A3F4A</color>

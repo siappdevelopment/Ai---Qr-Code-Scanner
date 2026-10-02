@@ -48,14 +48,12 @@ class LauncherQrPageFragment : Fragment() {
         if (pageLifecycleOwner.registry.currentState != Lifecycle.State.DESTROYED) {
             pageLifecycleOwner.registry.currentState = Lifecycle.State.RESUMED
         }
-        LauncherQrSystemBars.hideNavigationBarUntilSwipe(requireActivity())
     }
 
     override fun onPause() {
         if (pageLifecycleOwner.registry.currentState.isAtLeast(Lifecycle.State.CREATED)) {
             pageLifecycleOwner.registry.currentState = Lifecycle.State.CREATED
         }
-        LauncherQrSystemBars.restore(requireActivity())
         super.onPause()
     }
 

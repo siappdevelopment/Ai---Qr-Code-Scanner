@@ -312,13 +312,11 @@
         android:layout_marginBottom="@dimen/_16sdp"
         android:background="@drawable/custom_radius_12"
         android:backgroundTint="@color/launcher_bg"
-        android:paddingHorizontal="@dimen/_16sdp"
-        android:paddingTop="@dimen/_16sdp">
+        android:padding="@dimen/_10sdp">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_10sdp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -335,6 +333,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:orientation="vertical">
 
@@ -360,60 +359,61 @@
 
                 </LinearLayout>
 
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="@dimen/_28sdp"
+                    android:layout_height="@dimen/_28sdp"
+                    android:src="@drawable/ic_arrow"
+                    app:tint="@android:color/black" />
+
             </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/rlSetAsDefault"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:layout_marginBottom="@dimen/_minus8sdp"
-                android:backgroundTint="@color/primary">
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/rlSetAsDefault"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="@dimen/_12sdp"-->
+<!--                android:layout_marginBottom="@dimen/_minus8sdp"-->
+<!--                android:backgroundTint="@color/primary">-->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_38sdp"
-                    android:background="@drawable/custom_radius_12"
-                    android:backgroundTint="@color/primary"
-                    android:gravity="center">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="@dimen/_38sdp"-->
+<!--                    android:background="@drawable/custom_radius_12"-->
+<!--                    android:backgroundTint="@color/primary"-->
+<!--                    android:gravity="center">-->
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/sans_trial_medium"
-                        android:paddingHorizontal="@dimen/_4sdp"
-                        android:paddingBottom="@dimen/_2sdp"
-                        android:text="Set as Default"
-                        android:textColor="@android:color/white"
-                        android:textSize="@dimen/_13sdp"
-                        tools:ignore="HardcodedText" />
+<!--                    <androidx.appcompat.widget.AppCompatTextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:fontFamily="@font/sans_trial_medium"-->
+<!--                        android:paddingHorizontal="@dimen/_4sdp"-->
+<!--                        android:paddingBottom="@dimen/_2sdp"-->
+<!--                        android:text="Set as Default"-->
+<!--                        android:textColor="@android:color/white"-->
+<!--                        android:textSize="@dimen/_13sdp"-->
+<!--                        tools:ignore="HardcodedText" />-->
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="@dimen/_18sdp"
-                        android:layout_height="@dimen/_18sdp"
-                        android:src="@drawable/ic_arrow"
-                        app:tint="@android:color/white" />
 
-                </LinearLayout>
+<!--                </LinearLayout>-->
 
-                <com.airbnb.lottie.LottieAnimationView
-                    android:layout_width="@dimen/_70sdp"
-                    android:layout_height="@dimen/_70sdp"
-                    android:layout_marginStart="@dimen/_minus12sdp"
-                    android:layout_marginTop="@dimen/_minus8sdp"
-                    app:lottie_autoPlay="true"
-                    app:lottie_fileName="launcher_tap_animation.json"
-                    app:lottie_loop="true" />
+<!--                <com.airbnb.lottie.LottieAnimationView-->
+<!--                    android:layout_width="@dimen/_70sdp"-->
+<!--                    android:layout_height="@dimen/_70sdp"-->
+<!--                    android:layout_marginStart="@dimen/_minus12sdp"-->
+<!--                    android:layout_marginTop="@dimen/_minus8sdp"-->
+<!--                    app:lottie_autoPlay="true"-->
+<!--                    app:lottie_fileName="launcher_tap_animation.json"-->
+<!--                    app:lottie_loop="true" />-->
 
-            </RelativeLayout>
+<!--            </RelativeLayout>-->
 
         </LinearLayout>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_80sdp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/ic_defult_vector" />
+<!--        <androidx.appcompat.widget.AppCompatImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="@dimen/_80sdp"-->
+<!--            android:adjustViewBounds="true"-->
+<!--            android:src="@drawable/ic_defult_vector" />-->
 
     </LinearLayout>
 

@@ -11,10 +11,17 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
+import com.qrcode.scanner.MainActivity
+import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
 import com.qrcode.scanner.launcher.common.ScreenLoadAd
+import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars
 
 @Composable
 fun ScreenWithAd(
@@ -22,6 +29,7 @@ fun ScreenWithAd(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
+    HideNavigationBarOnAdScreen()
     Column(modifier = modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
@@ -59,6 +67,27 @@ fun FirebaseScreenAd(
         },
         onRelease = { host -> ScreenLoadAd.detach(host) }
     )
+}
+
+@Composable
+private fun HideNavigationBarOnAdScreen() {
+    val activity = LocalContext.current.findActivity() ?: return
+    if (activity is LauncherHomeActivity || activity is MainActivity) {
+        return
+    }
+    DisposableEffect(activity) {
+        val owner = activity as? LifecycleOwner
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                LauncherQrSystemBars.hideNavigationBar(activity)
+            }
+        }
+        owner?.lifecycle?.addObserver(observer)
+        LauncherQrSystemBars.hideNavigationBar(activity)
+        onDispose {
+            owner?.lifecycle?.removeObserver(observer)
+        }
+    }
 }
 
 private fun Context.findActivity(): Activity? {

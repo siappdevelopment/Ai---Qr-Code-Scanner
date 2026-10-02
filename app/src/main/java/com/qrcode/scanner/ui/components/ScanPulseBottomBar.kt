@@ -72,14 +72,21 @@ fun ScanPulseBottomBar(
     currentRoute: String?,
     onNavigate: (AppDestination) -> Unit,
     onScanClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    includeNavigationBarPadding: Boolean = true
 ) {
     val fabOverhang = 28.dp
 
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .windowInsetsPadding(WindowInsets.navigationBars)
+            .then(
+                if (includeNavigationBarPadding) {
+                    Modifier.windowInsetsPadding(WindowInsets.navigationBars)
+                } else {
+                    Modifier
+                }
+            )
     ) {
         Spacer(modifier = Modifier.fillMaxWidth().height(fabOverhang))
 

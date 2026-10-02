@@ -2,6 +2,8 @@ package com.qrcode.scanner.launcher.fragments
 
 import android.app.Activity
 import android.os.Build
+import android.view.WindowInsets
+import android.view.WindowInsetsController
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.toArgb
@@ -25,6 +27,17 @@ object LauncherQrSystemBars {
         window.statusBarColor = palette.cardSurface.toArgb()
         WindowCompat.getInsetsController(window, window.decorView)
             .isAppearanceLightStatusBars = !useDark
+    }
+
+    /** Hides the navigation bar until the user swipes it in. Status bar stays visible. */
+    fun hideNavigationBar(activity: Activity) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            return
+        }
+        val controller = activity.window.insetsController ?: return
+        controller.hide(WindowInsets.Type.navigationBars())
+        controller.systemBarsBehavior =
+            WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
     }
 
     fun hideNavigationBarUntilSwipe(activity: Activity) {

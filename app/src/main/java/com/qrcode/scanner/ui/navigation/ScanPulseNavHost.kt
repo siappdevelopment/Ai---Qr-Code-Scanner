@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -93,6 +94,7 @@ fun ScanPulseNavHost(
             LauncherQrSystemBars.applyHeaderStatusBar(launcher, useDark)
         }
     }
+    val inLauncher = hostActivity is LauncherHomeActivity
     var tabBeforeScan by remember { mutableStateOf(AppDestination.Home.route) }
     LaunchedEffect(currentRoute) {
         if (
@@ -101,16 +103,6 @@ fun ScanPulseNavHost(
             currentRoute in rootDestinations
         ) {
             tabBeforeScan = currentRoute
-        }
-        val launcher = hostActivity as? LauncherHomeActivity ?: return@LaunchedEffect
-        if (launcher.launcherCurrentItem != com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter.PAGE_RIGHT) {
-            return@LaunchedEffect
-        }
-        if (isScan) {
-            LauncherQrSystemBars.restore(launcher)
-        }
-        if (isScan || matchHeaderStatus) {
-            LauncherQrSystemBars.hideNavigationBarUntilSwipe(launcher)
         }
     }
 
@@ -137,13 +129,15 @@ fun ScanPulseNavHost(
         Scaffold(
             containerColor = if (isScan) Color.Transparent else PageBackground,
             contentColor = Color.Unspecified,
+            contentWindowInsets = if (inLauncher) WindowInsets.statusBars else WindowInsets.systemBars,
             bottomBar = {
                 if (showBottomBar) {
                     Column(modifier = Modifier.fillMaxWidth()) {
                         ScanPulseBottomBar(
                             currentRoute = currentRoute,
                             onNavigate = { destination -> openRootTabWithAd(destination.route) },
-                            onScanClick = { openRootTabWithAd(AppDestination.Scan.route) }
+                            onScanClick = { openRootTabWithAd(AppDestination.Scan.route) },
+                            includeNavigationBarPadding = !inLauncher
                         )
                         HomeBottomAdSlot()
                     }

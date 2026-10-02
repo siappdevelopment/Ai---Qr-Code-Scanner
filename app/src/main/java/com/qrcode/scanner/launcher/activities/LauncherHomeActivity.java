@@ -47,6 +47,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
 
     private ViewPager2 vpLauncher;
     private boolean navigatingToHome;
+    private boolean qrPageNavigationHidden;
     private boolean launcherPagerSwipeAllowed = true;
     @Nullable
     private Bundle pendingSavedInstanceState;
@@ -98,6 +99,10 @@ public class LauncherHomeActivity extends AppCompatActivity {
             return;
         }
         AdPlacement.handleLauncherAppReturnAd(this);
+        if (vpLauncher != null && vpLauncher.getCurrentItem() == LauncherPagerAdapter.PAGE_RIGHT) {
+            qrPageNavigationHidden = true;
+            LauncherQrSystemBars.INSTANCE.hideNavigationBarUntilSwipe(this);
+        }
         RemoteConfigHelper.refreshIfDue(this, this::saveRemoteFetchTimestampIfSuccessful);
         LauncherAppsBottomSheet.clearSuppressBackgroundDismiss();
         returnHomeForThemeChangeIfNeeded();
@@ -145,6 +150,18 @@ public class LauncherHomeActivity extends AppCompatActivity {
     public void setLauncherSwipeEnabled(boolean enabled) {
         launcherPagerSwipeAllowed = enabled;
         applyLauncherPagerInputPolicy();
+    }
+
+    private void showQrPageNavigation(boolean hidden) {
+        if (qrPageNavigationHidden == hidden) {
+            return;
+        }
+        qrPageNavigationHidden = hidden;
+        if (hidden) {
+            LauncherQrSystemBars.INSTANCE.hideNavigationBarUntilSwipe(this);
+        } else {
+            LauncherQrSystemBars.INSTANCE.restore(this);
+        }
     }
 
     private void applyLauncherPagerInputPolicy() {
@@ -362,17 +379,29 @@ public class LauncherHomeActivity extends AppCompatActivity {
         pendingSavedInstanceState = null;
         final int initialPage = restoreLauncherPage;
         vpLauncher.setCurrentItem(initialPage, false);
+        if (initialPage == LauncherPagerAdapter.PAGE_RIGHT) {
+            showQrPageNavigation(true);
+        }
         vpLauncher.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             private int lastSelectedPage = initialPage;
             private boolean pendingRightSwipeOpen;
 
             @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position == LauncherPagerAdapter.PAGE_RIGHT) {
+                    showQrPageNavigation(true);
+                } else if (positionOffset == 0f) {
+                    showQrPageNavigation(false);
+                }
+            }
+
+            @Override
             public void onPageSelected(int position) {
                 if (lastSelectedPage == LauncherPagerAdapter.PAGE_RIGHT && position != LauncherPagerAdapter.PAGE_RIGHT) {
-                    LauncherQrSystemBars.INSTANCE.restore(LauncherHomeActivity.this);
                     com.qrcode.scanner.launcher.common.HomeBottomAd.onPageHidden();
                 }
                 if (position == LauncherPagerAdapter.PAGE_RIGHT && lastSelectedPage != LauncherPagerAdapter.PAGE_RIGHT) {
+                    showQrPageNavigation(true);
                     com.qrcode.scanner.launcher.common.HomeBottomAd.onPageVisible();
                 }
                 if (lastSelectedPage == LauncherPagerAdapter.PAGE_HOME && position == LauncherPagerAdapter.PAGE_RIGHT) {

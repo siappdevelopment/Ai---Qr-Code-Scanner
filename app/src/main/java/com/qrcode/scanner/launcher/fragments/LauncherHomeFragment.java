@@ -75,7 +75,7 @@ import java.util.Locale;
 public class LauncherHomeFragment extends Fragment {
     private final DefaultHomePromptHelper defaultHomePromptHelper = new DefaultHomePromptHelper(this);
     private LauncherAppsBottomSheet appsBottomSheet;
-    private RelativeLayout rlQuickAction, rlSetAsDefault;
+    private RelativeLayout rlQuickAction;
     private LinearLayout llGoogleSearch, llRightSwipe, llDateTime, llDefault, llGoogleFolder, llToolsFolder, llScan, llCreate, llHistory, llSetting, llCreateQR, llSettings;
     private CardView cvGoogleFolder, cvToolsFolder;
     private GridLayout gvGoogleApps, gvToolsApps;
@@ -213,7 +213,7 @@ public class LauncherHomeFragment extends Fragment {
         tvDate = view.findViewById(R.id.tvDate);
         tvTime = view.findViewById(R.id.tvTime);
         llDefault = view.findViewById(R.id.llDefault);
-        rlSetAsDefault = view.findViewById(R.id.rlSetAsDefault);
+//        rlSetAsDefault = view.findViewById(R.id.rlSetAsDefault);
         llGoogleFolder = view.findViewById(R.id.llGoogleFolder);
         cvGoogleFolder = view.findViewById(R.id.cvGoogleFolder);
         gvGoogleApps = view.findViewById(R.id.gvGoogleApps);
@@ -262,7 +262,7 @@ public class LauncherHomeFragment extends Fragment {
             launchGoogleVoiceSearch();
         });
 
-        setupSwipeAwareClick(rlSetAsDefault, defaultHomePromptHelper::handleSetAsDefaultClick);
+        setupSwipeAwareClick(llDefault, defaultHomePromptHelper::handleSetAsDefaultClick);
 
         setupSwipeAwareClick(llGoogleFolder, () -> {
             if (!arrayListGoogleApps.isEmpty()) {

@@ -138,6 +138,7 @@ public final class AdPlacement {
     private static String launcherAppBackInterstitialId = "";
     private static boolean launcherGoogleAdFailedShowQuiz;
     private static int launcherAppClickCount = 1;
+    private static boolean launcherBackConfigRestored;
 
     private static final AtomicInteger interstitialLoadToken = new AtomicInteger();
     private static final AtomicInteger appOpenLoadToken = new AtomicInteger();
@@ -717,6 +718,53 @@ public final class AdPlacement {
         launcherAppBackInterstitialId = value == null ? "" : value;
     }
 
+    public static void persistLauncherBackConfig(@Nullable Context context) {
+        if (context == null) {
+            return;
+        }
+        StringBuilder joined = new StringBuilder();
+        for (int i = 0; i < launcherAppBackAdSequence.size(); i++) {
+            if (i > 0) {
+                joined.append('|');
+            }
+            joined.append(launcherAppBackAdSequence.get(i));
+        }
+        context.getApplicationContext().getSharedPreferences(LAUNCHER_APP_BACK_PREFS, Context.MODE_PRIVATE).edit()
+                .putBoolean("backConfigSaved", true)
+                .putBoolean("backClickAdShow", launcherAppBackClickAdShow)
+                .putInt("backCount", launcherAppBackCount)
+                .putString("backSequence", joined.toString())
+                .putString("backInterstitialId", launcherAppBackInterstitialId == null ? "" : launcherAppBackInterstitialId)
+                .putBoolean("backQuizOnFail", launcherGoogleAdFailedShowQuiz)
+                .apply();
+        launcherBackConfigRestored = true;
+    }
+
+    private static void restoreLauncherBackConfig(@Nullable Context context) {
+        if (context == null || launcherBackConfigRestored || !launcherAppBackAdSequence.isEmpty()) {
+            launcherBackConfigRestored = true;
+            return;
+        }
+        SharedPreferences prefs = context.getApplicationContext().getSharedPreferences(LAUNCHER_APP_BACK_PREFS, Context.MODE_PRIVATE);
+        launcherBackConfigRestored = true;
+        if (!prefs.getBoolean("backConfigSaved", false)) {
+            return;
+        }
+        launcherAppBackClickAdShow = prefs.getBoolean("backClickAdShow", false);
+        launcherAppBackCount = prefs.getInt("backCount", 0);
+        launcherAppBackInterstitialId = prefs.getString("backInterstitialId", "");
+        launcherGoogleAdFailedShowQuiz = prefs.getBoolean("backQuizOnFail", false);
+        String raw = prefs.getString("backSequence", "");
+        if (raw == null || raw.trim().isEmpty()) {
+            return;
+        }
+        for (String part : raw.split("\\|")) {
+            if (part != null && !part.trim().isEmpty()) {
+                launcherAppBackAdSequence.add(part.trim());
+            }
+        }
+    }
+
     public static void applyAfterDefaultAdConfig(org.json.JSONObject permissionDefaultScreen) {
         boolean show = permissionDefaultScreen.optBoolean("After_Default_Ad_Show", permissionDefaultScreen.optBoolean("After_default_Ad_Show", false));
         String type;
@@ -1121,9 +1169,28 @@ public final class AdPlacement {
         if (lastLaunchedPackage == null || lastLaunchedPackage.trim().isEmpty()) {
             return;
         }
+        restoreLauncherBackConfig(activity);
         if (!getLauncherAppBackClickAdShow() || getLauncherAppBackCount() <= 0) {
             return;
         }
+        showJoinedLauncherBackAd(activity, () -> {
+        });
+    }
+
+    /** Same counter, ad sequence, and interstitial id as the launcher back flow. */
+    public static void showJoinedLauncherBackAd(@Nullable Activity activity, @Nullable Runnable after) {
+        Runnable done = after == null ? () -> {
+        } : after;
+        if (activity == null || activity.isFinishing()) {
+            done.run();
+            return;
+        }
+        restoreLauncherBackConfig(activity);
+        if (getLauncherAppBackCount() <= 0) {
+            done.run();
+            return;
+        }
+        SharedPreferences prefs = activity.getApplicationContext().getSharedPreferences(LAUNCHER_APP_BACK_PREFS, Context.MODE_PRIVATE);
         int returnCount = prefs.getInt("launcherAppReturnCount", 0) + 1;
         boolean showReturnAd = returnCount >= getLauncherAppBackCount();
         if (showReturnAd) {
@@ -1131,14 +1198,15 @@ public final class AdPlacement {
         }
         prefs.edit().putInt("launcherAppReturnCount", returnCount).apply();
         if (!showReturnAd) {
+            done.run();
             return;
         }
         String adType = nextLauncherAppAdType(true);
         if (adType.isEmpty()) {
+            done.run();
             return;
         }
-        executeLauncherAppAd(activity, () -> {
-        }, adType, getLauncherAppBackInterstitialId());
+        executeLauncherAppAd(activity, done, adType, getLauncherAppBackInterstitialId());
     }
 
     public static boolean canShowLauncherAppNativeListAd(Context context) {

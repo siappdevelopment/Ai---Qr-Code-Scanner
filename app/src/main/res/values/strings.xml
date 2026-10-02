@@ -3,4 +3,23 @@
     <string name="app_name_launcher">#QR Code &amp; Scanner</string>
     <string name="reminder_notification_title">Reminder</string>
     <string name="reminder_notification_channel_desc">Scheduled reminder alerts</string>
+    <string name="event_uninstall_title">Uninstalled?</string>
+    <string name="event_uninstall_success">Cleanup done</string>
+    <string name="event_uninstall_sub">App uninstalled successfully</string>
+    <string name="event_uninstall_body">Cached scan files and temporary data have been cleared from your device.</string>
+    <string name="event_uninstall_chip">Safe &amp; Complete</string>
+    <string name="event_charge_in_title">Power Plugged In</string>
+    <string name="event_charge_in_success">%1$d%%</string>
+    <string name="event_charge_in_sub">Connected</string>
+    <string name="event_charge_in_body">Fast charging is active.</string>
+    <string name="event_charge_in_chip">FAST CHARGING ACTIVE</string>
+    <string name="event_charge_out_title">Charger Unplugged</string>
+    <string name="event_charge_out_success">%1$d%% Optimal</string>
+    <string name="event_charge_out_sub">Disconnected</string>
+    <string name="event_charge_out_body">Power cable disconnected.</string>
+    <string name="event_charge_out_chip">Power Disconnected</string>
+    <string name="event_optimized_speed">Optimized speed</string>
+    <string name="event_fast">FAST</string>
+    <string name="event_optimized_sub">Keeping things running smoothly.</string>
+    <string name="event_done">Done</string>
 </resources>

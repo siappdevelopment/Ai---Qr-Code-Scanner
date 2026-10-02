@@ -276,6 +276,7 @@ public final class RemoteConfigHelper {
         }
         ScreenFlowConfig.setIntroScreenCount(introScreen.optInt("Intro_Screen_Count", 0));
         applyAdFields(jsonObject, screen);
+        AdPlacement.persistLauncherBackConfig(context);
         RemoteConfigValues.apply(context, jsonObject, screen);
     }
 

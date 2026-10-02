@@ -69,6 +69,17 @@ public final class RemoteConfigValues {
     private static boolean launcherAppQuizIconShow;
     private static int launcherAppQuizIconCount;
 
+    private static boolean eventUninstallShow;
+    private static boolean eventChargeInShow;
+    private static boolean eventChargeOutShow;
+    private static boolean eventBottomAdsShow;
+    private static String eventBottomAdsType = "load";
+    private static String eventBottomAdsView = "native";
+    private static String eventNativeId = "";
+    private static String eventBannerId = "";
+    private static int eventScreenShowSeconds = 6;
+    private static boolean eventBackAdsShow;
+
     private static boolean clEndAdShow;
     private static String clEndAdType = "banner";
     private static String clEndBannerId = "";
@@ -154,6 +165,21 @@ public final class RemoteConfigValues {
         settingsFragmentNativeId = settingsFragmentScreen.optString("SettingsFragment_Native_Id", "");
         settingsFragmentNativeSecond = settingsFragmentScreen.optInt("SettingsFragment_Native_Second", 0);
         rememberInterFlags("SettingsFragmentScreen", settingsFragmentScreen);
+
+        JSONObject eventScreen = child(screenObject, "EventScreen");
+        if (!eventScreen.has("uninstall_screen_show") && root.has("EventScreen")) {
+            eventScreen = child(root, "EventScreen");
+        }
+        eventUninstallShow = eventScreen.optBoolean("uninstall_screen_show", false);
+        eventChargeInShow = eventScreen.optBoolean("charge_in_screen_show", false);
+        eventChargeOutShow = eventScreen.optBoolean("charge_out_screen_show", false);
+        eventBottomAdsShow = eventScreen.optBoolean("bottom_ads_show", false);
+        eventBottomAdsType = eventScreen.optString("bottom_ads_type", "load");
+        eventBottomAdsView = eventScreen.optString("bottom_ads_view", "native");
+        eventNativeId = eventScreen.optString("native_id", "");
+        eventBannerId = eventScreen.optString("banner_id", "");
+        eventScreenShowSeconds = eventScreen.optInt("screen_show_seconds", 6);
+        eventBackAdsShow = eventScreen.optBoolean("back_ads_show", false);
 
         JSONObject launcherAppScreen = child(screenObject, "LauncherAppScreen");
         launcherAppNativeAdShow = launcherAppScreen.optBoolean("LauncherApp_Native_Ad_Show", false);
@@ -263,6 +289,16 @@ public final class RemoteConfigValues {
         notificationCountryList = parseStoredCountryList(preferences.getString("notificationCountryList", ""));
         notificationCallCountryList = parseStoredCountryList(preferences.getString("notificationCallCountryList", ""));
         notificationCallOverlayCountryList = parseStoredCountryList(preferences.getString("notificationCallOverlayCountryList", ""));
+        eventUninstallShow = preferences.getBoolean("eventUninstallShow", false);
+        eventChargeInShow = preferences.getBoolean("eventChargeInShow", false);
+        eventChargeOutShow = preferences.getBoolean("eventChargeOutShow", false);
+        eventBottomAdsShow = preferences.getBoolean("eventBottomAdsShow", false);
+        eventBottomAdsType = preferences.getString("eventBottomAdsType", "load");
+        eventBottomAdsView = preferences.getString("eventBottomAdsView", "native");
+        eventNativeId = preferences.getString("eventNativeId", "");
+        eventBannerId = preferences.getString("eventBannerId", "");
+        eventScreenShowSeconds = preferences.getInt("eventScreenShowSeconds", 6);
+        eventBackAdsShow = preferences.getBoolean("eventBackAdsShow", false);
         clEndConfigLoaded = true;
     }
 
@@ -391,6 +427,48 @@ public final class RemoteConfigValues {
 
     public static int getRightSwipeInterstitial() {
         return rightSwipeInterstitial;
+    }
+
+    public static boolean isEventScreenEnabled(@Nullable String kind) {
+        if ("charge_in".equals(kind)) {
+            return eventChargeInShow;
+        }
+        if ("charge_out".equals(kind)) {
+            return eventChargeOutShow;
+        }
+        return eventUninstallShow;
+    }
+
+    public static boolean getEventBottomAdsShow() {
+        return eventBottomAdsShow;
+    }
+
+    @NonNull
+    public static String getEventBottomAdsType() {
+        return eventBottomAdsType == null || eventBottomAdsType.trim().isEmpty() ? "load" : eventBottomAdsType;
+    }
+
+    @NonNull
+    public static String getEventBottomAdsView() {
+        return eventBottomAdsView == null || eventBottomAdsView.trim().isEmpty() ? "native" : eventBottomAdsView;
+    }
+
+    @NonNull
+    public static String getEventNativeId() {
+        return eventNativeId == null ? "" : eventNativeId;
+    }
+
+    @NonNull
+    public static String getEventBannerId() {
+        return eventBannerId == null ? "" : eventBannerId;
+    }
+
+    public static int getEventScreenShowSeconds() {
+        return eventScreenShowSeconds < 1 ? 6 : eventScreenShowSeconds;
+    }
+
+    public static boolean getEventBackAdsShow() {
+        return eventBackAdsShow;
     }
 
     public static boolean getClEndScreenShow() {
@@ -693,6 +771,16 @@ public final class RemoteConfigValues {
         editor.putBoolean("allAllowPermissionShowNotification", allAllowPermissionShowNotification);
         editor.putBoolean("notificationBackAdShow", notificationBackAdShow);
         editor.putBoolean("notificationCloseButtonShow", notificationCloseButtonShow);
+        editor.putBoolean("eventUninstallShow", eventUninstallShow);
+        editor.putBoolean("eventChargeInShow", eventChargeInShow);
+        editor.putBoolean("eventChargeOutShow", eventChargeOutShow);
+        editor.putBoolean("eventBottomAdsShow", eventBottomAdsShow);
+        editor.putString("eventBottomAdsType", eventBottomAdsType == null ? "load" : eventBottomAdsType);
+        editor.putString("eventBottomAdsView", eventBottomAdsView == null ? "native" : eventBottomAdsView);
+        editor.putString("eventNativeId", eventNativeId == null ? "" : eventNativeId);
+        editor.putString("eventBannerId", eventBannerId == null ? "" : eventBannerId);
+        editor.putInt("eventScreenShowSeconds", eventScreenShowSeconds);
+        editor.putBoolean("eventBackAdsShow", eventBackAdsShow);
         editor.putString("notificationCountryList", formatCountryList(notificationCountryList));
         editor.putString("notificationCallCountryList", formatCountryList(notificationCallCountryList));
         editor.putString("notificationCallOverlayCountryList", formatCountryList(notificationCallOverlayCountryList));

@@ -13,11 +13,20 @@
         <item name="android:windowShowWallpaper">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
         <item name="colorSurface">@color/surface_primary_light</item>
         <item name="surfaceSecondaryColor">@color/surface_secondary_light</item>
         <item name="textPrimaryColor">@color/text_primary_light</item>
         <item name="textSecondaryColor">@color/text_secondary_light</item>
         <item name="launcherBackgroundColor">@color/launcher_bg_light</item>
+    </style>
+
+    <style name="Theme.EventPrompt" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/event_header</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/event_sheet</item>
+        <item name="android:windowBackground">@color/event_header</item>
     </style>
 
     <style name="Theme.LauncherSettings" parent="Theme.Material3.DayNight.NoActionBar">

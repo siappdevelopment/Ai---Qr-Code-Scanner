@@ -24,6 +24,25 @@ import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 class LauncherQrPageFragment : Fragment() {
     private val pageLifecycleOwner = PageLifecycleOwner()
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        // Fragment replaces the view lifecycle after onCreateView. CameraX must
+        // follow this page owner, which drops below STARTED when the page is left.
+        view.setViewTreeLifecycleOwner(pageLifecycleOwner)
+    }
+
+    fun setCameraActive(active: Boolean) {
+        val registry = pageLifecycleOwner.registry
+        if (registry.currentState == Lifecycle.State.DESTROYED) {
+            return
+        }
+        val target = if (active) Lifecycle.State.RESUMED else Lifecycle.State.CREATED
+        if (registry.currentState != target) {
+            registry.currentState = target
+        }
+        view?.setViewTreeLifecycleOwner(pageLifecycleOwner)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -45,15 +64,14 @@ class LauncherQrPageFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (pageLifecycleOwner.registry.currentState != Lifecycle.State.DESTROYED) {
-            pageLifecycleOwner.registry.currentState = Lifecycle.State.RESUMED
-        }
+        val launcher = activity as? com.qrcode.scanner.launcher.activities.LauncherHomeActivity
+        val onQrPage = launcher?.launcherCurrentItem ==
+            com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter.PAGE_RIGHT
+        setCameraActive(onQrPage)
     }
 
     override fun onPause() {
-        if (pageLifecycleOwner.registry.currentState.isAtLeast(Lifecycle.State.CREATED)) {
-            pageLifecycleOwner.registry.currentState = Lifecycle.State.CREATED
-        }
+        setCameraActive(false)
         super.onPause()
     }
 

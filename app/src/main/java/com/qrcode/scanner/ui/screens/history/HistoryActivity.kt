@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.qrcode.scanner.ui.screens.scan.ScanIntents
+import com.qrcode.scanner.ui.navigation.ComposeScanRequest
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 import com.qrcode.scanner.ui.components.ScreenWithAd
 import com.qrcode.scanner.ui.components.bindScreenBackAd
@@ -28,7 +28,8 @@ class HistoryActivity : ComponentActivity() {
                     modifier = Modifier.navigationBarsPadding(),
                     onBack = { onBackPressedDispatcher.onBackPressed() },
                     onOpenScanner = {
-                        context.startActivity(ScanIntents.openScanner(context))
+                        ComposeScanRequest.request()
+                        finish()
                     },
                     onOpenDetail = { historyId ->
                         context.startActivity(HistoryIntents.openDetail(context, historyId))

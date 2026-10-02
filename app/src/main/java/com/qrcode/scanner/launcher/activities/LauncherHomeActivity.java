@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +16,7 @@ import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter;
 import com.qrcode.scanner.launcher.dialogs.LauncherAppsBottomSheet;
 import com.qrcode.scanner.launcher.fragments.LauncherHomeFragment;
+import com.qrcode.scanner.launcher.fragments.LauncherQrPageFragment;
 import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars;
 import com.qrcode.scanner.launcher.fragments.SubContainerFragment;
 import com.qrcode.scanner.launcher.helpers.LauncherAppsHelper;
@@ -27,6 +27,7 @@ import com.qrcode.scanner.launcher.common.WidgetNavigation;
 import com.qrcode.scanner.launcher.helpers.ThemeHelper;
 import com.qrcode.scanner.launcher.remote.RemoteConfigHelper;
 import com.qrcode.scanner.launcher.models.LauncherAppsModel;
+import com.qrcode.scanner.ui.navigation.ComposeScanRequest;
 import com.qrcode.scanner.ui.screens.create.CreateActivity;
 import com.qrcode.scanner.ui.screens.history.HistoryActivity;
 import com.qrcode.scanner.ui.screens.scan.ScannerActivity;
@@ -64,7 +65,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
             completeAfterDefaultSetup();
             return;
         }
-        EdgeToEdge.enable(this);
+        LauncherQrSystemBars.INSTANCE.showTransparentNavigationBar(this);
         setContentView(R.layout.activity_launcher_home);
         setupLauncherHome();
         WidgetNavigation.openComposeDestinationFromIntent(this);
@@ -99,13 +100,19 @@ public class LauncherHomeActivity extends AppCompatActivity {
             return;
         }
         AdPlacement.handleLauncherAppReturnAd(this);
-        if (vpLauncher != null && vpLauncher.getCurrentItem() == LauncherPagerAdapter.PAGE_RIGHT) {
+        if (vpLauncher != null && isSidePage(vpLauncher.getCurrentItem())) {
             qrPageNavigationHidden = true;
             LauncherQrSystemBars.INSTANCE.hideNavigationBarUntilSwipe(this);
+        } else if (vpLauncher != null) {
+            qrPageNavigationHidden = false;
+            LauncherQrSystemBars.INSTANCE.showTransparentNavigationBar(this);
         }
         RemoteConfigHelper.refreshIfDue(this, this::saveRemoteFetchTimestampIfSuccessful);
         LauncherAppsBottomSheet.clearSuppressBackgroundDismiss();
         returnHomeForThemeChangeIfNeeded();
+        if (ComposeScanRequest.INSTANCE.isPending()) {
+            openQrShell();
+        }
     }
 
     @Override
@@ -150,6 +157,19 @@ public class LauncherHomeActivity extends AppCompatActivity {
     public void setLauncherSwipeEnabled(boolean enabled) {
         launcherPagerSwipeAllowed = enabled;
         applyLauncherPagerInputPolicy();
+    }
+
+    private void syncQrCamera(boolean active) {
+        Fragment qrPage = getSupportFragmentManager().findFragmentByTag(
+                VIEWPAGER_FRAGMENT_TAG_PREFIX + LauncherPagerAdapter.PAGE_RIGHT
+        );
+        if (qrPage instanceof LauncherQrPageFragment) {
+            ((LauncherQrPageFragment) qrPage).setCameraActive(active);
+        }
+    }
+
+    private boolean isSidePage(int position) {
+        return position == LauncherPagerAdapter.PAGE_RIGHT || position == LauncherPagerAdapter.PAGE_SUB;
     }
 
     private void showQrPageNavigation(boolean hidden) {
@@ -355,6 +375,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
         }
         navigatingToHome = true;
         vpLauncher.setCurrentItem(LauncherPagerAdapter.PAGE_HOME, smoothScroll);
+        syncQrCamera(false);
         applyLauncherPagerInputPolicy();
     }
 
@@ -379,7 +400,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
         pendingSavedInstanceState = null;
         final int initialPage = restoreLauncherPage;
         vpLauncher.setCurrentItem(initialPage, false);
-        if (initialPage == LauncherPagerAdapter.PAGE_RIGHT) {
+        if (isSidePage(initialPage)) {
             showQrPageNavigation(true);
         }
         vpLauncher.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -388,15 +409,13 @@ public class LauncherHomeActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if (position == LauncherPagerAdapter.PAGE_RIGHT) {
-                    showQrPageNavigation(true);
-                } else if (positionOffset == 0f) {
-                    showQrPageNavigation(false);
-                }
+                boolean openingSubPage = position == LauncherPagerAdapter.PAGE_HOME && positionOffset > 0f;
+                showQrPageNavigation(isSidePage(position) || openingSubPage);
             }
 
             @Override
             public void onPageSelected(int position) {
+                syncQrCamera(position == LauncherPagerAdapter.PAGE_RIGHT);
                 if (lastSelectedPage == LauncherPagerAdapter.PAGE_RIGHT && position != LauncherPagerAdapter.PAGE_RIGHT) {
                     com.qrcode.scanner.launcher.common.HomeBottomAd.onPageHidden();
                 }

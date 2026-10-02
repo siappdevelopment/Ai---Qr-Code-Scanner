@@ -146,6 +146,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
+            android:name="com.qrcode.scanner.launcher.activities.EventPromptActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:theme="@style/Theme.EventPrompt" />
+        <activity
             android:name="com.qrcode.scanner.launcher.activities.LauncherSettingsActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -246,6 +255,15 @@
                 <action android:name="android.telecom.CallScreeningService" />
             </intent-filter>
         </service>
+
+        <receiver
+            android:name="com.qrcode.scanner.launcher.receivers.EventPromptReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+                <data android:scheme="package" />
+            </intent-filter>
+        </receiver>
 
         <receiver
             android:name="com.qrcode.scanner.launcher.receivers.ReminderReceiver"

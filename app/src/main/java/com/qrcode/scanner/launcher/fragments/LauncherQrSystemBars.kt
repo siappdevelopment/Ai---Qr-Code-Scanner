@@ -1,10 +1,12 @@
 package com.qrcode.scanner.launcher.fragments
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Build
 import android.view.WindowInsets
 import android.view.WindowInsetsController
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
@@ -49,10 +51,32 @@ object LauncherQrSystemBars {
         controller.hide(WindowInsetsCompat.Type.navigationBars())
     }
 
-    fun restore(activity: Activity) {
+    /**
+     * Wallpaper home page. The bar stays visible, but it must not paint white
+     * over the wallpaper on Android 15+.
+     */
+    fun showTransparentNavigationBar(activity: Activity) {
         val componentActivity = activity as? ComponentActivity ?: return
-        componentActivity.enableEdgeToEdge()
-        WindowCompat.getInsetsController(componentActivity.window, componentActivity.window.decorView)
-            .show(WindowInsetsCompat.Type.navigationBars())
+        val window = componentActivity.window
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+            window.isStatusBarContrastEnforced = false
+        }
+        componentActivity.enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT)
+        )
+        @Suppress("DEPRECATION")
+        window.navigationBarColor = Color.TRANSPARENT
+        @Suppress("DEPRECATION")
+        window.statusBarColor = Color.TRANSPARENT
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+        controller.isAppearanceLightNavigationBars = false
+        controller.isAppearanceLightStatusBars = false
+        controller.show(WindowInsetsCompat.Type.navigationBars())
+    }
+
+    fun restore(activity: Activity) {
+        showTransparentNavigationBar(activity)
     }
 }

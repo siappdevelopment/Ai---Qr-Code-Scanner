@@ -437,12 +437,10 @@
                 android:layout_centerInParent="true"
                 android:background="@color/ad_background"
                 app:shimmer_auto_start="true"
-                app:shimmer_base_alpha="1.0"
+                app:shimmer_base_alpha="0.9"
                 app:shimmer_highlight_alpha="1.0">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                <include layout="@layout/shimmer_small_ad" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -467,6 +465,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/ad_background"
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="0dp">
 
@@ -481,7 +480,7 @@
                         android:layout_centerInParent="true"
                         android:background="@color/ad_background"
                         app:shimmer_auto_start="true"
-                        app:shimmer_base_alpha="1.0"
+                        app:shimmer_base_alpha="0.9"
                         app:shimmer_highlight_alpha="1.0">
 
                         <include layout="@layout/shimmer_medium_ad" />

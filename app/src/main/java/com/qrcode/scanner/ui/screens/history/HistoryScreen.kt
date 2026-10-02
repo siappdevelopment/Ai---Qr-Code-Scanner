@@ -296,7 +296,7 @@ fun HistoryScreen(
             onConfirm = {
                 showClearDialog = false
                 scope.launch {
-                    repository.clearHistoryKeepingFavorites()
+                    repository.deleteAll()
                     Toast.makeText(context, "History cleared", Toast.LENGTH_SHORT).show()
                 }
             },
@@ -971,7 +971,7 @@ internal fun ClearHistoryDialog(
                     }
                 }
                 Text(
-                    text = "This will permanently remove non-favorite history items from your local device. Pinned favorites remain saved.",
+                    text = "This will permanently remove every history item from your local device, including liked and favorited items.",
                     color = TextSecondary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp,

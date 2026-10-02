@@ -6,7 +6,7 @@
     <color name="text_secondary">@color/text_secondary_dark</color>
     <color name="surface_primary">@color/surface_primary_dark</color>
     <color name="surface_secondary">@color/surface_secondary_dark</color>
-    <color name="ad_background">@color/surface_primary_dark</color>
+    <color name="ad_background">@color/surface_secondary_dark</color>
     <color name="ad_shimmer">#2A2F38</color>
     <color name="launcher_bg">@color/launcher_bg_dark</color>
     <color name="cl_end_tab_track">#252830</color>

@@ -4,9 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
+import com.qrcode.scanner.launcher.activities.EventPromptActivity;
 import com.qrcode.scanner.launcher.common.AdPlacement;
 import com.qrcode.scanner.launcher.common.CallEndLaunchHelper;
+import com.qrcode.scanner.launcher.common.EventPromptLauncher;
 
 import java.util.Date;
 
@@ -28,6 +31,17 @@ public class PhoneCallStateService extends BroadcastReceiver {
         }
 
         String action = intent.getAction();
+        Log.d("EventPrompt", "PhoneCallStateService action=" + action);
+        if (Intent.ACTION_POWER_CONNECTED.equals(action)) {
+            Log.d("EventPrompt", "charge in broadcast received");
+            EventPromptLauncher.open(context, EventPromptActivity.KIND_CHARGE_IN);
+            return;
+        }
+        if (Intent.ACTION_POWER_DISCONNECTED.equals(action)) {
+            Log.d("EventPrompt", "charge out broadcast received");
+            EventPromptLauncher.open(context, EventPromptActivity.KIND_CHARGE_OUT);
+            return;
+        }
         if (Intent.ACTION_NEW_OUTGOING_CALL.equals(action)) {
             outgoingNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER);
             return;

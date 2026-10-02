@@ -5,4 +5,16 @@
     <color name="page_background">#FFF8FAFC</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
+    <color name="event_header">#C2E6F6</color>
+    <color name="event_sheet">#FFFFFF</color>
+    <color name="event_title">#111827</color>
+    <color name="event_accent">#0063E5</color>
+    <color name="event_muted">#475569</color>
+    <color name="event_card">#F5F5F5</color>
+    <color name="event_fast">#FEF3C7</color>
+    <color name="event_fast_text">#92400E</color>
+    <color name="event_shimmer">#E6E8EE</color>
+    <color name="event_shimmer_block">#F3F4F8</color>
+    <color name="event_progress_track">#E5E7EB</color>
+    <color name="event_check">#22C55E</color>
 </resources>

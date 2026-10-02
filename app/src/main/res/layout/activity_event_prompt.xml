@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/eventRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/event_header"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/eventHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/event_header"
+        android:minHeight="188dp">
+
+        <ImageView
+            android:id="@+id/ivEventHero"
+            android:layout_width="170dp"
+            android:layout_height="170dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_event_hero_uninstall" />
+
+        <ImageView
+            android:id="@+id/ivEventSettings"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end|top"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/bg_event_icon_well"
+            android:elevation="2dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_event_settings" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="150dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvEventTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/sans_trial_semi_bold"
+                android:includeFontPadding="false"
+                android:textColor="@color/event_title"
+                android:textSize="28sp"
+                tools:text="App Uninstall" />
+
+            <TextView
+                android:id="@+id/tvEventSuccess"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:fontFamily="@font/sans_trial_semi_bold"
+                android:includeFontPadding="false"
+                android:textColor="@color/event_accent"
+                android:textSize="28sp"
+                tools:text="Successfully" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/ivEventStatusIcon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_event_check" />
+
+                <TextView
+                    android:id="@+id/tvEventSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="@font/sans_trial_medium"
+                    android:includeFontPadding="false"
+                    android:textColor="@color/event_muted"
+                    android:textSize="14sp"
+                    tools:text="Connected" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvEventBody"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/sans_trial_medium"
+                android:includeFontPadding="false"
+                android:textColor="@color/event_muted"
+                android:textSize="13sp"
+                tools:text="Fast charging is active." />
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_event_sheet"
+        android:elevation="4dp"
+        android:orientation="vertical"
+        android:paddingTop="20dp">
+
+        <LinearLayout
+            android:id="@+id/llOptimizedSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:background="@drawable/bg_event_card"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="12dp">
+
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_event_icon_well">
+
+                <ImageView
+                    android:id="@+id/ivOptimizeIcon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_event_bolt" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvOptimizeTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/sans_trial_semi_bold"
+                        android:includeFontPadding="false"
+                        android:text="@string/event_optimized_speed"
+                        android:textColor="@color/event_title"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tvOptimizeBadge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/bg_event_fast_badge"
+                        android:fontFamily="@font/sans_trial_medium"
+                        android:includeFontPadding="false"
+                        android:paddingHorizontal="6dp"
+                        android:paddingVertical="2dp"
+                        android:text="@string/event_fast"
+                        android:textColor="@color/event_fast_text"
+                        android:textSize="11sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvOptimizeSub"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:fontFamily="@font/sans_trial_medium"
+                    android:includeFontPadding="false"
+                    android:text="@string/event_optimized_sub"
+                    android:textColor="@color/event_muted"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:contentDescription="@null"
+                android:padding="2dp"
+                android:src="@drawable/ic_event_arrow" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlEventAd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="12dp"
+            android:visibility="gone">
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/eventAdCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/slEventShimmerNative"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:shimmer_auto_start="true"
+                        app:shimmer_base_alpha="0.9"
+                        app:shimmer_duration="1100"
+                        app:shimmer_highlight_alpha="1.0">
+
+                        <include layout="@layout/layout_event_shimmer_large" />
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/slEventShimmerBanner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone"
+                        app:shimmer_auto_start="true"
+                        app:shimmer_base_alpha="0.9"
+                        app:shimmer_duration="1100"
+                        app:shimmer_highlight_alpha="1.0">
+
+                        <include layout="@layout/layout_event_shimmer_small" />
+                    </com.facebook.shimmer.ShimmerFrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/flEventNative"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:id="@+id/llEventBanner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:visibility="gone" />
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="24dp">
+
+            <ProgressBar
+                android:id="@+id/pbEventHold"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="14dp"
+                android:layout_gravity="center"
+                android:indeterminate="false"
+                android:max="1000"
+                android:progress="0"
+                android:progressDrawable="@drawable/bg_event_progress" />
+
+            <TextView
+                android:id="@+id/btnEventDone"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_event_done"
+                android:fontFamily="@font/sans_trial_semi_bold"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="@string/event_done"
+                android:textColor="@android:color/white"
+                android:textSize="17sp"
+                android:visibility="gone" />
+        </FrameLayout>
+    </LinearLayout>
+</LinearLayout>

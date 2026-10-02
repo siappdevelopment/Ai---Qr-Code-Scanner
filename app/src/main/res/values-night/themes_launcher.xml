@@ -9,6 +9,8 @@
         <item name="android:windowShowWallpaper">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:enforceNavigationBarContrast">false</item>
         <item name="colorSurface">@color/surface_primary_dark</item>
         <item name="surfaceSecondaryColor">@color/surface_secondary_dark</item>
         <item name="textPrimaryColor">@color/text_primary_dark</item>

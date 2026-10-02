@@ -246,7 +246,7 @@ public final class HomeBottomAd {
     private static void bindChrome(Activity activity, FrameLayout host) {
         host.setVisibility(View.VISIBLE);
         host.removeAllViews();
-        View root = LayoutInflater.from(activity).inflate(R.layout.view_home_bottom_ad, host, false);
+        View root = LayoutInflater.from(AdTheme.forApp(activity)).inflate(R.layout.view_home_bottom_ad, host, false);
         host.addView(root, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
         STATE.bannerContainer = root.findViewById(R.id.rlBannerAdView);
         STATE.bannerShimmer = root.findViewById(R.id.slBannerShimmer);
@@ -327,7 +327,7 @@ public final class HomeBottomAd {
         setGone(STATE.bannerContainer);
         setVisible(STATE.nativeContainer);
         stopShimmer(STATE.nativeShimmer);
-        NativeAdView adView = (NativeAdView) LayoutInflater.from(activity).inflate(R.layout.native_small_ad_layout, STATE.nativeContent, false);
+        NativeAdView adView = (NativeAdView) LayoutInflater.from(STATE.nativeContent.getContext()).inflate(R.layout.native_small_ad_layout, STATE.nativeContent, false);
         AdPlacement.populateNativeAdView(STATE.nativeAd, adView, "small");
         STATE.nativeContent.removeAllViews();
         STATE.nativeContent.addView(adView);

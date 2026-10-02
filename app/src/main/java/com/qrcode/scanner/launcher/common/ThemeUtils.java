@@ -23,8 +23,13 @@ public class ThemeUtils {
 
     public static int getTheme(Context context) {
         if (context == null) {
-            return THEME_SYSTEM;
+            return THEME_LIGHT;
         }
-        return context.getSharedPreferences("APP_PREF", Context.MODE_PRIVATE).getInt(PREF_THEME, THEME_SYSTEM);
+        int stored = context.getSharedPreferences("APP_PREF", Context.MODE_PRIVATE)
+                .getInt(PREF_THEME, THEME_LIGHT);
+        if (stored == THEME_SYSTEM) {
+            return THEME_LIGHT;
+        }
+        return stored;
     }
 }

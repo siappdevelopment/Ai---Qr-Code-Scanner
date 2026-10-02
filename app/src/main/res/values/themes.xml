@@ -2,7 +2,7 @@
 <resources>
 
     <!-- AppCompat parent required for AppCompatDelegate per-app locales (Phase 12.19). -->
-    <style name="Theme.QRCodeScanner" parent="Theme.AppCompat.Light.NoActionBar" />
+    <style name="Theme.QRCodeScanner" parent="Theme.AppCompat.DayNight.NoActionBar" />
 
     <!-- Device HOME only. Do not apply this theme to Compose activities. -->
     <style name="Theme.Home" parent="Theme.Material3.DayNight.NoActionBar">

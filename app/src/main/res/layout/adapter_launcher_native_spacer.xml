@@ -16,10 +16,10 @@
             android:id="@+id/slNativeListItemShimmer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/surface_secondary"
+            android:background="@color/ad_background"
             android:visibility="gone"
             app:shimmer_auto_start="false"
-            app:shimmer_base_alpha="0.9"
+            app:shimmer_base_alpha="1.0"
             app:shimmer_highlight_alpha="1.0">
 
             <View

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Color as AndroidColor
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -16,15 +16,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.qrcode.scanner.data.settings.AppThemeMode
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
+import com.qrcode.scanner.data.settings.readAppNightMode
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
 
 /**
  * Electric Cobalt theme driven by Settings → Theme (Phase 12.20).
  * - No dynamic Material color
  * - Solid colors only (no gradients)
- * - Default preference is Light; System follows [isSystemInDarkTheme]
+ * - Default preference is Light. Dark stays dark. The phone theme is ignored.
  */
 private fun lightSchemeFrom(palette: ScanPulsePalette) = lightColorScheme(
     primary = palette.cobaltPrimary,
@@ -78,11 +80,19 @@ fun QRCodeScannerTheme(
 ) {
     val context = LocalContext.current
     val repository = remember { SettingsRepositoryProvider.get(context) }
+    val initialPreferences = remember(context) {
+        SettingsPreferences(
+            appTheme = if (readAppNightMode(context) == AppCompatDelegate.MODE_NIGHT_YES) {
+                AppThemeMode.DARK
+            } else {
+                AppThemeMode.LIGHT
+            }
+        )
+    }
     val preferences by repository.preferences.collectAsStateWithLifecycle(
-        initialValue = SettingsPreferences()
+        initialValue = initialPreferences
     )
-    val systemDark = isSystemInDarkTheme()
-    val useDark = preferences.appTheme.resolveDark(systemDark)
+    val useDark = preferences.appTheme == AppThemeMode.DARK
     val palette = if (useDark) ScanPulsePalette.Dark else ScanPulsePalette.Light
     val colorScheme = if (useDark) darkSchemeFrom(palette) else lightSchemeFrom(palette)
 

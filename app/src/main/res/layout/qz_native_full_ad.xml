@@ -20,7 +20,7 @@
             android:layout_height="@dimen/_24sdp"
             android:layout_alignParentEnd="true"
             android:background="@drawable/custom_circle"
-            android:backgroundTint="@color/surface_secondary"
+            android:backgroundTint="@color/ad_background"
             android:padding="@dimen/_4sdp"
             android:src="@drawable/ic_close" />
 
@@ -28,10 +28,10 @@
             android:id="@+id/qzShimmer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/surface_secondary"
+            android:background="@color/ad_background"
             android:visibility="gone"
             app:shimmer_auto_start="false"
-            app:shimmer_base_alpha="0.9"
+            app:shimmer_base_alpha="1.0"
             app:shimmer_highlight_alpha="1.0">
 
             <include layout="@layout/qz_shimmer" />
@@ -61,10 +61,10 @@
                 android:id="@+id/qzShimmerIcon"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/surface_secondary"
+                android:background="@color/ad_background"
                 android:visibility="gone"
                 app:shimmer_auto_start="false"
-                app:shimmer_base_alpha="0.9"
+                app:shimmer_base_alpha="1.0"
                 app:shimmer_highlight_alpha="1.0">
 
                 <include layout="@layout/qz_shimmer" />

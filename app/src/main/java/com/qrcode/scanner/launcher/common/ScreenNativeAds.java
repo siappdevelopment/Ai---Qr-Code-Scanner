@@ -170,7 +170,7 @@ public final class ScreenNativeAds {
     private static void bindChrome(Activity activity, FrameLayout host, SlotState state) {
         host.setVisibility(View.VISIBLE);
         host.removeAllViews();
-        View root = LayoutInflater.from(activity).inflate(R.layout.view_big_native_ad, host, false);
+        View root = LayoutInflater.from(AdTheme.forApp(activity)).inflate(R.layout.view_big_native_ad, host, false);
         host.addView(root, new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT));
         state.container = root.findViewById(R.id.rlNativeAdView);
         state.shimmer = root.findViewById(R.id.slNativeShimmer);

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_195sdp"
         app:shimmer_auto_start="true"
-        app:shimmer_base_alpha="0.9"
+        app:shimmer_base_alpha="1.0"
         app:shimmer_highlight_alpha="1.0">
 
         <include layout="@layout/shimmer_medium_ad" />

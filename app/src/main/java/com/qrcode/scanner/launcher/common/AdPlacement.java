@@ -890,7 +890,7 @@ public final class AdPlacement {
                 return;
             }
             nativeAd.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
-            NativeAdView adView = (NativeAdView) LayoutInflater.from(activity).inflate(resolveGoogleNativeLayout(type), flNativeAd, false);
+            NativeAdView adView = (NativeAdView) LayoutInflater.from(flNativeAd.getContext()).inflate(resolveGoogleNativeLayout(type), flNativeAd, false);
             populateNativeAdView(nativeAd, adView, type);
             flNativeAd.removeAllViews();
             flNativeAd.addView(adView);
@@ -989,7 +989,7 @@ public final class AdPlacement {
         if (activity == null || activity.isFinishing() || container == null || nativeAd == null) {
             return;
         }
-        NativeAdView adView = (NativeAdView) LayoutInflater.from(activity).inflate(R.layout.native_large_ad_layout, container, false);
+        NativeAdView adView = (NativeAdView) LayoutInflater.from(container.getContext()).inflate(R.layout.native_large_ad_layout, container, false);
         populateNativeAdView(nativeAd, adView, "large");
         container.removeAllViews();
         container.addView(adView);
@@ -1270,7 +1270,7 @@ public final class AdPlacement {
             }
             Dialog full = new Dialog(activity);
             full.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            NativeAdView adView = (NativeAdView) LayoutInflater.from(activity).inflate(R.layout.native_full_ad_layout, null);
+            NativeAdView adView = (NativeAdView) LayoutInflater.from(AdTheme.forLauncher(activity)).inflate(R.layout.native_full_ad_layout, null);
             populateNativeAdView(nativeAd, adView, "full");
             View close = adView.findViewById(R.id.ivClose);
             if (close != null) {

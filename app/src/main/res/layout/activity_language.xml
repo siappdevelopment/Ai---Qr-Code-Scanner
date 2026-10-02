@@ -45,7 +45,7 @@
         android:id="@+id/rlAdView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/surface_secondary">
+        android:background="@color/ad_background">
 
         <RelativeLayout
             android:id="@+id/rlBannerAdView"
@@ -58,9 +58,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="@color/surface_secondary"
+                android:background="@color/ad_background"
                 app:shimmer_auto_start="true"
-                app:shimmer_base_alpha="0.9"
+                app:shimmer_base_alpha="1.0"
                 app:shimmer_highlight_alpha="1.0">
 
                 <View android:layout_width="match_parent" android:layout_height="match_parent" />
@@ -87,9 +87,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_250sdp"
                 android:layout_centerInParent="true"
-                android:background="@color/surface_secondary"
+                android:background="@color/ad_background"
                 app:shimmer_auto_start="true"
-                app:shimmer_base_alpha="0.9"
+                app:shimmer_base_alpha="1.0"
                 app:shimmer_highlight_alpha="1.0">
 
                 <View android:layout_width="match_parent" android:layout_height="match_parent" />

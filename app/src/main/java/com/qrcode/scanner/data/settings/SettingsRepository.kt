@@ -6,6 +6,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
+import com.qrcode.scanner.launcher.common.ThemeUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -18,6 +19,7 @@ private val Context.settingsDataStore: DataStore<Preferences> by preferencesData
 )
 
 class SettingsRepository(
+    private val appContext: Context,
     private val dataStore: DataStore<Preferences>
 ) {
     val preferences: Flow<SettingsPreferences> = dataStore.data.map { prefs ->
@@ -78,19 +80,39 @@ class SettingsRepository(
         dataStore.edit { prefs ->
             prefs[SettingsKeys.APP_THEME] = theme.storageValue
         }
+        applyAppNightMode(appContext, theme)
     }
 }
 
-/** Night mode for AppCompat screens so they follow the Settings app theme, not the phone theme. */
+/** Night mode for every screen: Light or Dark from Settings. Never the phone theme. */
 fun readAppNightMode(context: Context): Int {
     val stored = runBlocking {
         context.applicationContext.settingsDataStore.data.first()[SettingsKeys.APP_THEME]
     }
-    return if (AppThemeMode.fromStored(stored) == AppThemeMode.DARK) {
+    return nightModeFor(AppThemeMode.fromStored(stored))
+}
+
+/** Applies the saved Light/Dark choice to Compose, launcher, and onboarding. */
+fun applyStoredAppNightMode(context: Context) {
+    applyAppNightMode(context, AppThemeMode.fromStored(runBlocking {
+        context.applicationContext.settingsDataStore.data.first()[SettingsKeys.APP_THEME]
+    }))
+}
+
+private fun nightModeFor(theme: AppThemeMode): Int {
+    return if (theme == AppThemeMode.DARK) {
         AppCompatDelegate.MODE_NIGHT_YES
     } else {
         AppCompatDelegate.MODE_NIGHT_NO
     }
+}
+
+private fun applyAppNightMode(context: Context, theme: AppThemeMode) {
+    AppCompatDelegate.setDefaultNightMode(nightModeFor(theme))
+    ThemeUtils.setTheme(
+        context.applicationContext,
+        if (theme == AppThemeMode.DARK) ThemeUtils.THEME_DARK else ThemeUtils.THEME_LIGHT
+    )
 }
 
 object SettingsRepositoryProvider {
@@ -100,6 +122,7 @@ object SettingsRepositoryProvider {
     fun get(context: Context): SettingsRepository {
         return instance ?: synchronized(this) {
             instance ?: SettingsRepository(
+                context.applicationContext,
                 context.applicationContext.settingsDataStore
             ).also { instance = it }
         }

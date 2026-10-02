@@ -50,7 +50,7 @@
                 android:layout_width="@dimen/_24sdp"
                 android:layout_height="@dimen/_24sdp"
                 android:background="@drawable/custom_circle"
-                android:backgroundTint="@color/surface_secondary"
+                android:backgroundTint="@color/ad_background"
                 android:padding="8dp"
                 android:src="@drawable/ic_close"
                 android:visibility="gone" />
@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/_10sdp"
-        app:cardBackgroundColor="@color/surface_secondary"
+        app:cardBackgroundColor="@color/ad_background"
         app:cardCornerRadius="@dimen/_16sdp"
         app:cardElevation="0dp">
 
@@ -81,10 +81,10 @@
                     android:id="@+id/qzShimmer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/surface_secondary"
+                    android:background="@color/ad_background"
                     android:visibility="gone"
                     app:shimmer_auto_start="false"
-                    app:shimmer_base_alpha="0.9"
+                    app:shimmer_base_alpha="1.0"
                     app:shimmer_highlight_alpha="1.0">
 
                     <include layout="@layout/qz_shimmer" />
@@ -115,10 +115,10 @@
                         android:id="@+id/qzShimmerIcon"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/surface_secondary"
+                        android:background="@color/ad_background"
                         android:visibility="gone"
                         app:shimmer_auto_start="false"
-                        app:shimmer_base_alpha="0.9"
+                        app:shimmer_base_alpha="1.0"
                         app:shimmer_highlight_alpha="1.0">
 
                         <include layout="@layout/qz_shimmer" />

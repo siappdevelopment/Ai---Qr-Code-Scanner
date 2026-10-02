@@ -1,11 +1,10 @@
 package com.qrcode.scanner.ui.screens.splash
 
 import android.app.Activity
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -36,9 +35,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.app.R
+import com.qrcode.scanner.data.settings.AppThemeMode
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
-import com.qrcode.scanner.launcher.common.ThemeUtils
+import com.qrcode.scanner.data.settings.readAppNightMode
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.ScanPulsePalette
 
@@ -53,19 +53,19 @@ fun SplashScreen(
     val context = LocalContext.current
     val view = LocalView.current
     val repository = remember { SettingsRepositoryProvider.get(context) }
+    val initialPreferences = remember(context) {
+        SettingsPreferences(
+            appTheme = if (readAppNightMode(context) == AppCompatDelegate.MODE_NIGHT_YES) {
+                AppThemeMode.DARK
+            } else {
+                AppThemeMode.LIGHT
+            }
+        )
+    }
     val preferences by repository.preferences.collectAsStateWithLifecycle(
-        initialValue = SettingsPreferences()
+        initialValue = initialPreferences
     )
-    val deviceDark = remember {
-        val night = Resources.getSystem().configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-        night == Configuration.UI_MODE_NIGHT_YES
-    }
-    val launcherDark = when (ThemeUtils.getTheme(context)) {
-        ThemeUtils.THEME_DARK -> true
-        ThemeUtils.THEME_LIGHT -> false
-        else -> deviceDark
-    }
-    val dark = preferences.appTheme.resolveDark(deviceDark) || launcherDark
+    val dark = preferences.appTheme == AppThemeMode.DARK
     val palette = if (dark) ScanPulsePalette.Dark else ScanPulsePalette.Light
 
     SideEffect {

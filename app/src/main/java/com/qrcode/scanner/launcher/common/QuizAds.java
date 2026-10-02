@@ -72,7 +72,7 @@ public final class QuizAds {
                 shimmer.setVisibility(View.GONE);
             }
             content.removeAllViews();
-            View view = LayoutInflater.from(activity).inflate(R.layout.qz_banner_ad, content, false);
+            View view = LayoutInflater.from(content.getContext()).inflate(R.layout.qz_banner_ad, content, false);
             int index = new Random().nextInt(itemCount);
             bindText(view, index, RemoteConfigValues.getQuizBannerTitleList(), RemoteConfigValues.getQuizBannerDescriptionList());
             loadImage(view, view.findViewById(R.id.ivQZAppIcon), RemoteConfigValues.getQuizAppIconList(), index, R.id.qzShimmerIcon);
@@ -97,7 +97,7 @@ public final class QuizAds {
                 shimmer.setVisibility(View.GONE);
             }
             content.removeAllViews();
-            View view = LayoutInflater.from(activity).inflate(nativeLayout(type), content, false);
+            View view = LayoutInflater.from(content.getContext()).inflate(nativeLayout(type), content, false);
             int index = new Random().nextInt(itemCount);
             bindText(view, index, RemoteConfigValues.getQuizNativeTitleList(), RemoteConfigValues.getQuizNativeDescriptionList());
             loadImage(view, view.findViewById(R.id.ivQZAppIcon), RemoteConfigValues.getQuizAppIconList(), index, R.id.qzShimmerIcon);

@@ -21,7 +21,7 @@ public final class ThemeHelper {
 
     public static int getSavedTheme(Context context) {
         SharedPreferences sharedPreferences = context.getApplicationContext().getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
-        return sharedPreferences.getInt(KEY_THEME, THEME_DARK);
+        return sharedPreferences.getInt(KEY_THEME, THEME_LIGHT);
     }
 
     public static void saveTheme(Context context, int theme) {

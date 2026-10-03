@@ -1288,7 +1288,7 @@ public final class AdPlacement {
             return;
         }
         if (LAUNCHER_APP_AD_TYPE_GOOGLE_APP_OPEN.equals(adType)) {
-            loadAppOpenAdInternal(activity, getAppOpenId(), () -> continueAction.run(), false, launcherGoogleAdFailedShowQuiz);
+            loadAppOpenAdInternal(activity, getAppOpenId(), () -> continueAction.run(), false, launcherGoogleAdFailedShowQuiz, true);
             return;
         }
         if (LAUNCHER_APP_AD_TYPE_GOOGLE_NATIVE.equals(adType)) {
@@ -1595,10 +1595,14 @@ public final class AdPlacement {
     }
 
     private static void loadAppOpenAdInternal(Activity activity, String appOpenUnitId, @Nullable OnInterstitialAdListener listener) {
-        loadAppOpenAdInternal(activity, appOpenUnitId, listener, true, getGoogleAdFailedShowQuiz());
+        loadAppOpenAdInternal(activity, appOpenUnitId, listener, true, getGoogleAdFailedShowQuiz(), false);
     }
 
     private static void loadAppOpenAdInternal(Activity activity, String appOpenUnitId, @Nullable OnInterstitialAdListener listener, boolean honorQuizPriority, boolean quizOnFail) {
+        loadAppOpenAdInternal(activity, appOpenUnitId, listener, honorQuizPriority, quizOnFail, false);
+    }
+
+    private static void loadAppOpenAdInternal(Activity activity, String appOpenUnitId, @Nullable OnInterstitialAdListener listener, boolean honorQuizPriority, boolean quizOnFail, boolean showLoadingDialog) {
         int token = appOpenLoadToken.incrementAndGet();
         AtomicBoolean completed = new AtomicBoolean(false);
         if (honorQuizPriority && shouldUseQuizPriority()) {
@@ -1611,13 +1615,29 @@ public final class AdPlacement {
             notifyComplete(listener, completed);
             return;
         }
+        Dialog loadingDialog = showLoadingDialog ? showInterstitialLoadingDialog(activity) : null;
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable timeout = () -> {
+            if (token != appOpenLoadToken.get()) {
+                return;
+            }
+            appOpenLoadToken.incrementAndGet();
+            dismissInterstitialLoadingDialog(loadingDialog);
+            notifyComplete(listener, completed);
+        };
+        if (loadingDialog != null) {
+            handler.postDelayed(timeout, INTERSTITIAL_LOADING_DIALOG_TIMEOUT_MS);
+        }
         AppOpenAd.load(activity, appOpenUnitId, new AdRequest.Builder().build(), new AppOpenAd.AppOpenAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull AppOpenAd ad) {
                 if (token != appOpenLoadToken.get() || activity.isFinishing()) {
+                    dismissInterstitialLoadingDialog(loadingDialog);
                     notifyComplete(listener, completed);
                     return;
                 }
+                handler.removeCallbacks(timeout);
+                dismissInterstitialLoadingDialog(loadingDialog);
                 ad.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
                 ad.setFullScreenContentCallback(new FullScreenContentCallback() {
                     @Override
@@ -1638,6 +1658,8 @@ public final class AdPlacement {
                 if (token != appOpenLoadToken.get()) {
                     return;
                 }
+                handler.removeCallbacks(timeout);
+                dismissInterstitialLoadingDialog(loadingDialog);
                 if (quizOnFail && QuizAds.showAppOpen(activity, () -> notifyComplete(listener, completed))) {
                     return;
                 }

@@ -24,6 +24,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,7 +34,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
 import androidx.core.graphics.drawable.DrawableCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.ads.AdError;
@@ -1337,21 +1343,50 @@ public final class AdPlacement {
                 notifyComplete(listener, completed);
                 return;
             }
-            Dialog full = new Dialog(activity);
-            full.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            Dialog full = new Dialog(activity, R.style.Theme_NativeFullAd);
+            full.setCancelable(true);
             NativeAdView adView = (NativeAdView) LayoutInflater.from(AdTheme.forLauncher(activity)).inflate(R.layout.native_full_ad_layout, null);
             populateNativeAdView(nativeAd, adView, "full");
             View close = adView.findViewById(R.id.ivClose);
             if (close != null) {
-                close.setOnClickListener(v -> full.dismiss());
+                close.bringToFront();
+                close.setClickable(true);
+                close.setOnClickListener(v -> {
+                    try {
+                        full.dismiss();
+                    } catch (Exception ignored) {
+                    }
+                });
             }
             full.setContentView(adView);
+            Window fullWindow = full.getWindow();
+            Window host = activity.getWindow();
+            final int savedStatusColor = host.getStatusBarColor();
+            final int savedNavColor = host.getNavigationBarColor();
+            WindowInsetsControllerCompat hostController = WindowCompat.getInsetsController(host, host.getDecorView());
+            final boolean savedLightStatus = hostController.isAppearanceLightStatusBars();
+            final boolean savedLightNav = hostController.isAppearanceLightNavigationBars();
+            final boolean savedStatusContrast = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && host.isStatusBarContrastEnforced();
+            final boolean savedNavContrast = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && host.isNavigationBarContrastEnforced();
+            applyNativeFullSystemBars(activity, fullWindow, adView);
             full.setOnDismissListener(d -> {
+                host.setStatusBarColor(savedStatusColor);
+                host.setNavigationBarColor(savedNavColor);
+                hostController.setAppearanceLightStatusBars(savedLightStatus);
+                hostController.setAppearanceLightNavigationBars(savedLightNav);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    host.setStatusBarContrastEnforced(savedStatusContrast);
+                    host.setNavigationBarContrastEnforced(savedNavContrast);
+                }
                 nativeAd.destroy();
                 notifyComplete(listener, completed);
             });
             try {
                 full.show();
+                applyNativeFullSystemBars(activity, fullWindow, adView);
+                if (close != null) {
+                    close.bringToFront();
+                }
             } catch (Exception e) {
                 nativeAd.destroy();
                 notifyComplete(listener, completed);
@@ -1368,6 +1403,98 @@ public final class AdPlacement {
             }
         }).build();
         loader.loadAd(new AdRequest.Builder().build());
+    }
+
+    /** Status and navigation bars use the same surface as the ad, with no nav-bar scrim. */
+    private static void applyNativeFullSystemBars(Activity activity, @Nullable Window window, @NonNull View content) {
+        if (window == null) {
+            return;
+        }
+        int color = ContextCompat.getColor(activity, R.color.surface_primary);
+        boolean night = (activity.getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK) == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+        WindowCompat.setDecorFitsSystemWindows(window, false);
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND | WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.setBackgroundDrawable(new ColorDrawable(color));
+        window.setStatusBarColor(android.graphics.Color.TRANSPARENT);
+        window.setNavigationBarColor(color);
+        window.getDecorView().setPadding(0, 0, 0, 0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams attrs = window.getAttributes();
+            attrs.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            window.setAttributes(attrs);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.setStatusBarContrastEnforced(false);
+            window.setNavigationBarContrastEnforced(false);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            window.setNavigationBarDividerColor(android.graphics.Color.TRANSPARENT);
+        }
+        content.setBackgroundColor(color);
+        View insetTarget = content instanceof android.view.ViewGroup && ((android.view.ViewGroup) content).getChildCount() > 0
+                ? ((android.view.ViewGroup) content).getChildAt(0)
+                : content;
+        if (!(insetTarget.getTag() instanceof int[])) {
+            insetTarget.setTag(new int[]{insetTarget.getPaddingLeft(), insetTarget.getPaddingTop(), insetTarget.getPaddingRight(), insetTarget.getPaddingBottom()});
+        }
+        final int[] basePadding = (int[]) insetTarget.getTag();
+        View close = content.findViewById(R.id.ivClose);
+        if (close != null && !(close.getTag() instanceof Integer) && close.getLayoutParams() instanceof android.view.ViewGroup.MarginLayoutParams) {
+            close.setTag(((android.view.ViewGroup.MarginLayoutParams) close.getLayoutParams()).topMargin);
+        }
+        final int closeBaseTop = close != null && close.getTag() instanceof Integer ? (Integer) close.getTag() : 0;
+        View statusScrim = content.findViewById(R.id.statusBarScrim);
+        ViewCompat.setOnApplyWindowInsetsListener(insetTarget, (view, insets) -> {
+            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            view.setPadding(basePadding[0], basePadding[1], basePadding[2], basePadding[3] + bars.bottom);
+            if (close != null && close.getLayoutParams() instanceof android.view.ViewGroup.MarginLayoutParams) {
+                android.view.ViewGroup.MarginLayoutParams lp = (android.view.ViewGroup.MarginLayoutParams) close.getLayoutParams();
+                lp.topMargin = closeBaseTop + bars.top;
+                close.setLayoutParams(lp);
+            }
+            if (statusScrim != null) {
+                android.view.ViewGroup.LayoutParams scrimParams = statusScrim.getLayoutParams();
+                scrimParams.height = night ? bars.top : 0;
+                statusScrim.setLayoutParams(scrimParams);
+            }
+            return WindowInsetsCompat.CONSUMED;
+        });
+        ViewCompat.requestApplyInsets(window.getDecorView());
+        ViewCompat.requestApplyInsets(insetTarget);
+        applySystemBarIconColor(window, night, color);
+        applySystemBarIconColor(activity.getWindow(), night, color);
+        window.getDecorView().post(() -> {
+            applySystemBarIconColor(window, night, color);
+            applySystemBarIconColor(activity.getWindow(), night, color);
+        });
+    }
+
+    /** Dark status and navigation icons on the light page, white icons on the dark page. */
+    private static void applySystemBarIconColor(@Nullable Window window, boolean night, int navigationColor) {
+        if (window == null) {
+            return;
+        }
+        window.setStatusBarColor(android.graphics.Color.TRANSPARENT);
+        window.setNavigationBarColor(navigationColor);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.setStatusBarContrastEnforced(false);
+            window.setNavigationBarContrastEnforced(false);
+        }
+        boolean lightIcons = !night;
+        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(window, window.getDecorView());
+        controller.setAppearanceLightStatusBars(lightIcons);
+        controller.setAppearanceLightNavigationBars(lightIcons);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            android.view.WindowInsetsController insetsController = window.getInsetsController();
+            if (insetsController != null) {
+                int mask = android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
+                        | android.view.WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS;
+                int appearance = lightIcons ? mask : 0;
+                insetsController.setSystemBarsAppearance(appearance, mask);
+            }
+        }
     }
 
     private static String normalizeLauncherAppAdType(@Nullable String adType) {

@@ -850,7 +850,11 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
         launcherAppsAdapter.notifyAppsDataChanged();
         updateEmptyState(LauncherHomeActivity.arrayListApps.size());
         if (rvApps != null) {
-            rvApps.post(this::updateStickyNativeListAdPosition);
+            rvApps.scrollToPosition(0);
+            rvApps.post(() -> {
+                updateStickyNativeListAdPosition();
+                rvApps.post(this::updateStickyNativeListAdPosition);
+            });
         }
     }
 
@@ -1215,7 +1219,7 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
         int stickyNaturalTop = parent.getHeight() - rlNativeListAdView.getHeight() - marginBottom;
         int placeholderPos = launcherAppsAdapter.findNativePlaceholderPosition();
         if (placeholderPos == RecyclerView.NO_POSITION) {
-            rlNativeListAdView.setTranslationY(0f);
+            placeNativeAdBelowVisibleApps(parent, marginBottom, stickyNaturalTop);
             return;
         }
 
@@ -1244,6 +1248,25 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
             return;
         }
         rlNativeListAdView.setTranslationY(Math.min(0f, placeholderTop - stickyNaturalTop));
+    }
+
+    /** A short search list has no in-list ad slot, so the ad must sit under the apps. */
+    private void placeNativeAdBelowVisibleApps(View parent, int marginBottom, int stickyNaturalTop) {
+        if (rvApps.getChildCount() == 0) {
+            rlNativeListAdView.setTranslationY(0f);
+            return;
+        }
+        int[] parentLoc = new int[2];
+        parent.getLocationInWindow(parentLoc);
+        int contentBottom = 0;
+        for (int i = 0; i < rvApps.getChildCount(); i++) {
+            View child = rvApps.getChildAt(i);
+            int[] childLoc = new int[2];
+            child.getLocationInWindow(childLoc);
+            contentBottom = Math.max(contentBottom, childLoc[1] - parentLoc[1] + child.getHeight());
+        }
+        int targetTop = contentBottom + marginBottom;
+        rlNativeListAdView.setTranslationY(Math.min(0f, targetTop - stickyNaturalTop));
     }
 
     private void warmAppIconCacheAsync() {

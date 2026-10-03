@@ -74,6 +74,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.QRCodeScanner">
+        <property
+            android:name="android.window.PROPERTY_COMPAT_ALLOW_RESTRICTED_RESIZABILITY"
+            android:value="true" />
         <!-- AppCompat persists application locales on API &lt; 33. -->
         <service
             android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
@@ -87,6 +90,7 @@
             android:name="com.qrcode.scanner.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -167,22 +171,27 @@
         <activity
             android:name="com.qrcode.scanner.ui.screens.create.CreateActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.create.CommonQrFormActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.create.WifiQrActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.create.QrPreviewActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.create.QrCustomizationActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.scan.ScannerActivity"
@@ -192,30 +201,37 @@
         <activity
             android:name="com.qrcode.scanner.ui.screens.scan.ContinuousBatchResultActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.scan.ScanResultActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.scan.GalleryCropActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.scan.DetectionErrorActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.history.FavoritesActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.history.HistoryActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.history.HistoryDetailActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.QRCodeScanner" />
 
         <activity
@@ -223,6 +239,7 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:showOnLockScreen="false"
             android:taskAffinity=""
             android:theme="@style/Theme.ClEnd"

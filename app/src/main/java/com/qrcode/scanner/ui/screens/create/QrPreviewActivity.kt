@@ -123,7 +123,7 @@ class QrPreviewActivity : ComponentActivity() {
 
         setContent {
             QRCodeScannerTheme {
-                ScreenWithAd(screenKey = "QrPreviewScreen") {
+                ScreenWithAd(screenKey = "QrPreviewScreen", nativeSize = "small") {
                 QrPreviewScreen(
                     category = category,
                     payload = payload,

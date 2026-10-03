@@ -27,6 +27,7 @@ import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars
 fun ScreenWithAd(
     screenKey: String,
     modifier: Modifier = Modifier,
+    nativeSize: String = "medium",
     content: @Composable () -> Unit
 ) {
     HideNavigationBarOnAdScreen()
@@ -40,6 +41,7 @@ fun ScreenWithAd(
         }
         FirebaseScreenAd(
             screenKey = screenKey,
+            nativeSize = nativeSize,
             modifier = Modifier.navigationBarsPadding()
         )
     }
@@ -48,7 +50,8 @@ fun ScreenWithAd(
 @Composable
 fun FirebaseScreenAd(
     screenKey: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    nativeSize: String = "medium"
 ) {
     if (!ScreenLoadAd.isEnabled(screenKey)) {
         return
@@ -62,7 +65,7 @@ fun FirebaseScreenAd(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
-                ScreenLoadAd.attach(activity, this, screenKey)
+                ScreenLoadAd.attach(activity, this, screenKey, nativeSize)
             }
         },
         onRelease = { host -> ScreenLoadAd.detach(host) }

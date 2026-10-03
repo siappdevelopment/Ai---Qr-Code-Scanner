@@ -7,6 +7,9 @@ import android.graphics.Matrix
 import android.net.Uri
 import android.util.Log
 import android.media.ExifInterface
+import androidx.core.content.FileProvider
+import java.io.File
+import java.io.FileOutputStream
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -125,6 +128,30 @@ object GalleryScanHelper {
             applyExifOrientation(context, uri, decoded)
         } catch (e: Exception) {
             Log.w(TAG, "decodeBitmap failed for $uri", e)
+            null
+        }
+    }
+
+    /**
+     * Photo-picker URIs cannot be read again after the crop screen closes.
+     * A cache copy stays readable when Detection Fail opens Scan Again.
+     */
+    fun cacheCopy(context: Context, bitmap: Bitmap): Uri? {
+        return try {
+            val dir = File(context.cacheDir, "gallery_crop").apply { mkdirs() }
+            val file = File(dir, "scan_again.jpg")
+            FileOutputStream(file).use { out ->
+                if (!bitmap.compress(Bitmap.CompressFormat.JPEG, 92, out)) {
+                    return null
+                }
+            }
+            FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                file
+            )
+        } catch (e: Exception) {
+            Log.w(TAG, "cacheCopy failed", e)
             null
         }
     }

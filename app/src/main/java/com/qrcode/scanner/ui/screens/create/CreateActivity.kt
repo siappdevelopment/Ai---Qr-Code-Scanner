@@ -21,7 +21,7 @@ class CreateActivity : ComponentActivity() {
         bindScreenBackAd("CreateHubScreen")
         setContent {
             QRCodeScannerTheme {
-                ScreenWithAd(screenKey = "CreateHubScreen") {
+                ScreenWithAd(screenKey = "CreateHubScreen", nativeSize = "small") {
                 CreateHubScreen(
                     modifier = Modifier.navigationBarsPadding(),
                     onBack = { onBackPressedDispatcher.onBackPressed() },

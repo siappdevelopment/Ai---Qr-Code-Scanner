@@ -98,7 +98,7 @@ class QrCustomizationActivity : ComponentActivity() {
 
         setContent {
             QRCodeScannerTheme {
-                ScreenWithAd(screenKey = "QrCustomizationScreen") {
+                ScreenWithAd(screenKey = "QrCustomizationScreen", nativeSize = "small") {
                 QrCustomizationScreen(
                     payload = payload,
                     ecc = ecc,

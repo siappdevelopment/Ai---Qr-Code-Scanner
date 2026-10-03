@@ -3,6 +3,7 @@ package com.qrcode.scanner.launcher.common;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -13,8 +14,9 @@ import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 /**
- * Banner or medium native for one app screen. A new request starts every time
- * that screen opens. Quiz follows Ad_Priority and Google_Ad_Failed_Show_Quiz.
+ * Banner or native for one app screen. Native size is medium unless the screen
+ * asks for small. A new request starts every time that screen opens.
+ * Quiz follows Ad_Priority and Google_Ad_Failed_Show_Quiz.
  */
 public final class ScreenLoadAd {
     private ScreenLoadAd() {
@@ -34,6 +36,10 @@ public final class ScreenLoadAd {
     }
 
     public static void attach(Activity activity, FrameLayout host, String screenKey) {
+        attach(activity, host, screenKey, "medium");
+    }
+
+    public static void attach(Activity activity, FrameLayout host, String screenKey, String nativeSize) {
         if (host == null) {
             return;
         }
@@ -68,7 +74,27 @@ public final class ScreenLoadAd {
         }
         bannerContainer.setVisibility(View.GONE);
         nativeContainer.setVisibility(View.VISIBLE);
-        AdPlacement.loadNativeAd(activity, config.nativeId, nativeContainer, nativeShimmer, nativeContent, "medium");
+        String size = "small".equalsIgnoreCase(nativeSize == null ? "" : nativeSize.trim()) ? "small" : "medium";
+        if ("small".equals(size)) {
+            applySmallNativeSlot(activity, nativeContainer, nativeShimmer);
+        }
+        AdPlacement.loadNativeAd(activity, config.nativeId, nativeContainer, nativeShimmer, nativeContent, size);
+    }
+
+    private static void applySmallNativeSlot(Activity activity, RelativeLayout container, ShimmerFrameLayout shimmer) {
+        setWrapHeight(container);
+        setWrapHeight(shimmer);
+        shimmer.removeAllViews();
+        LayoutInflater.from(AdTheme.forApp(activity)).inflate(R.layout.shimmer_small_ad, shimmer, true);
+    }
+
+    private static void setWrapHeight(View view) {
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params == null) {
+            return;
+        }
+        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        view.setLayoutParams(params);
     }
 
     public static void detach(FrameLayout host) {

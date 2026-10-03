@@ -1,6 +1,7 @@
 package com.qrcode.scanner.ui.screens.scan
 
 import android.app.Activity
+import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
@@ -32,7 +33,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Flip
 import androidx.compose.material.icons.outlined.Rotate90DegreesCw
@@ -49,6 +49,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,6 +67,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import kotlin.math.abs
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -101,7 +103,7 @@ class GalleryCropActivity : ComponentActivity() {
 
         setContent {
             QRCodeScannerTheme {
-                ScreenWithAd(screenKey = "OtherScreen") {
+                ScreenWithAd(screenKey = "OtherScreen", nativeSize = "small") {
                 GalleryCropScreen(
                     initialUri = initialUri,
                     autoPick = autoPick,
@@ -238,13 +240,19 @@ private fun GalleryCropScreen(
                 }
 
                 when {
-                    hits.isEmpty() -> onDetectionFailed(uri, "No scannable code detected")
+                    hits.isEmpty() -> onDetectionFailed(
+                        cachedImageUri(context, src, uri),
+                        "No scannable code detected"
+                    )
                     hits.size == 1 -> onDetectedSingle(hits.first())
                     else -> multiResults = hits
                 }
             } catch (e: Exception) {
                 Toast.makeText(context, e.message ?: "Detection failed", Toast.LENGTH_SHORT).show()
-                onDetectionFailed(uri, e.message ?: "Detection failed")
+                onDetectionFailed(
+                    cachedImageUri(context, src, uri),
+                    e.message ?: "Detection failed"
+                )
             } finally {
                 detecting = false
             }
@@ -261,52 +269,20 @@ private fun GalleryCropScreen(
             modifier = Modifier
                 .appHeaderBackground()
                 .padding(horizontal = 12.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                AppBackButton(onClick = onBack)
-                Text(
-                    text = "Crop Photo",
-                    color = TextPrimary,
-                    fontFamily = PlusJakartaSans,
-                    fontWeight = FontWeight.SemiBold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(start = 8.dp)
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(CobaltPrimary)
-                    .clickable(
-                        enabled = sourceBitmap != null && !detecting && !loading,
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() },
-                        onClick = { runDetect() }
-                    )
-                    .padding(horizontal = 14.dp, vertical = 10.dp)
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(6.dp)
-                ) {
-                    Text(
-                        text = if (detecting) "Scanning…" else "Done",
-                        color = White,
-                        fontFamily = PlusJakartaSans,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 14.sp
-                    )
-                    Icon(
-                        Icons.Outlined.Check,
-                        contentDescription = null,
-                        tint = White,
-                        modifier = Modifier.size(18.dp)
-                    )
-                }
-            }
+            AppBackButton(onClick = onBack)
+            Text(
+                text = "Crop Photo",
+                color = TextPrimary,
+                fontFamily = PlusJakartaSans,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 18.sp,
+                modifier = Modifier.padding(start = 8.dp)
+            )
         }
+
+        Spacer(Modifier.height(16.dp))
 
         Box(
             modifier = Modifier
@@ -516,6 +492,8 @@ private fun CropCanvas(
         val density = LocalDensity.current
         val drawWdp = with(density) { drawW.toDp() }
         val drawHdp = with(density) { drawH.toDp() }
+        val crop = rememberUpdatedState(floatArrayOf(cropLeft, cropTop, cropRight, cropBottom))
+        val onCrop = rememberUpdatedState(onCropChange)
 
         Box(
             modifier = Modifier
@@ -530,19 +508,46 @@ private fun CropCanvas(
             Canvas(
                 modifier = Modifier
                     .fillMaxSize()
-                    .pointerInput(drawW, drawH, cropLeft, cropTop, cropRight, cropBottom) {
-                        detectDragGestures { change, dragAmount ->
-                            change.consume()
-                            val dx = dragAmount.x / drawW
-                            val dy = dragAmount.y / drawH
-                            val width = cropRight - cropLeft
-                            val height = cropBottom - cropTop
-                            var nl = cropLeft + dx
-                            var nt = cropTop + dy
-                            nl = nl.coerceIn(0f, 1f - width)
-                            nt = nt.coerceIn(0f, 1f - height)
-                            onCropChange(nl, nt, nl + width, nt + height)
-                        }
+                    .pointerInput(drawW, drawH) {
+                        val slop = 28.dp.toPx()
+                        var left = 0f
+                        var top = 0f
+                        var right = 0f
+                        var bottom = 0f
+                        var drag = CropDrag.None
+                        detectDragGestures(
+                            onDragStart = { offset ->
+                                val current = crop.value
+                                left = current[0]
+                                top = current[1]
+                                right = current[2]
+                                bottom = current[3]
+                                drag = cropDragTarget(
+                                    offset,
+                                    left,
+                                    top,
+                                    right,
+                                    bottom,
+                                    size.width.toFloat(),
+                                    size.height.toFloat(),
+                                    slop
+                                )
+                            },
+                            onDrag = { change, dragAmount ->
+                                if (drag == CropDrag.None) {
+                                    return@detectDragGestures
+                                }
+                                change.consume()
+                                val dx = dragAmount.x / size.width.toFloat().coerceAtLeast(1f)
+                                val dy = dragAmount.y / size.height.toFloat().coerceAtLeast(1f)
+                                val next = resizeCrop(left, top, right, bottom, dx, dy, drag)
+                                left = next[0]
+                                top = next[1]
+                                right = next[2]
+                                bottom = next[3]
+                                onCrop.value(left, top, right, bottom)
+                            }
+                        )
                     }
             ) {
                 val left = cropLeft * size.width
@@ -590,6 +595,107 @@ private fun CropCanvas(
             }
         }
     }
+}
+
+private suspend fun cachedImageUri(context: Context, bitmap: Bitmap, fallback: Uri): Uri {
+    return withContext(Dispatchers.IO) {
+        GalleryScanHelper.cacheCopy(context, bitmap) ?: fallback
+    }
+}
+
+private enum class CropDrag {
+    None,
+    Move,
+    Left,
+    Right,
+    Top,
+    Bottom,
+    TopLeft,
+    TopRight,
+    BottomLeft,
+    BottomRight
+}
+
+private fun cropDragTarget(
+    offset: Offset,
+    left: Float,
+    top: Float,
+    right: Float,
+    bottom: Float,
+    width: Float,
+    height: Float,
+    slop: Float
+): CropDrag {
+    val pxLeft = left * width
+    val pxTop = top * height
+    val pxRight = right * width
+    val pxBottom = bottom * height
+    val nearLeft = abs(offset.x - pxLeft) <= slop
+    val nearRight = abs(offset.x - pxRight) <= slop
+    val nearTop = abs(offset.y - pxTop) <= slop
+    val nearBottom = abs(offset.y - pxBottom) <= slop
+    val alongX = offset.x in (pxLeft - slop)..(pxRight + slop)
+    val alongY = offset.y in (pxTop - slop)..(pxBottom + slop)
+    return when {
+        nearLeft && nearTop -> CropDrag.TopLeft
+        nearRight && nearTop -> CropDrag.TopRight
+        nearLeft && nearBottom -> CropDrag.BottomLeft
+        nearRight && nearBottom -> CropDrag.BottomRight
+        nearLeft && alongY -> CropDrag.Left
+        nearRight && alongY -> CropDrag.Right
+        nearTop && alongX -> CropDrag.Top
+        nearBottom && alongX -> CropDrag.Bottom
+        offset.x in pxLeft..pxRight && offset.y in pxTop..pxBottom -> CropDrag.Move
+        else -> CropDrag.None
+    }
+}
+
+private fun resizeCrop(
+    left: Float,
+    top: Float,
+    right: Float,
+    bottom: Float,
+    dx: Float,
+    dy: Float,
+    drag: CropDrag
+): FloatArray {
+    val minSize = 0.12f
+    var nextLeft = left
+    var nextTop = top
+    var nextRight = right
+    var nextBottom = bottom
+    when (drag) {
+        CropDrag.Move -> {
+            val width = right - left
+            val height = bottom - top
+            nextLeft = (left + dx).coerceIn(0f, 1f - width)
+            nextTop = (top + dy).coerceIn(0f, 1f - height)
+            nextRight = nextLeft + width
+            nextBottom = nextTop + height
+        }
+        CropDrag.Left -> nextLeft = (left + dx).coerceIn(0f, right - minSize)
+        CropDrag.Right -> nextRight = (right + dx).coerceIn(left + minSize, 1f)
+        CropDrag.Top -> nextTop = (top + dy).coerceIn(0f, bottom - minSize)
+        CropDrag.Bottom -> nextBottom = (bottom + dy).coerceIn(top + minSize, 1f)
+        CropDrag.TopLeft -> {
+            nextLeft = (left + dx).coerceIn(0f, right - minSize)
+            nextTop = (top + dy).coerceIn(0f, bottom - minSize)
+        }
+        CropDrag.TopRight -> {
+            nextRight = (right + dx).coerceIn(left + minSize, 1f)
+            nextTop = (top + dy).coerceIn(0f, bottom - minSize)
+        }
+        CropDrag.BottomLeft -> {
+            nextLeft = (left + dx).coerceIn(0f, right - minSize)
+            nextBottom = (bottom + dy).coerceIn(top + minSize, 1f)
+        }
+        CropDrag.BottomRight -> {
+            nextRight = (right + dx).coerceIn(left + minSize, 1f)
+            nextBottom = (bottom + dy).coerceIn(top + minSize, 1f)
+        }
+        CropDrag.None -> Unit
+    }
+    return floatArrayOf(nextLeft, nextTop, nextRight, nextBottom)
 }
 
 @Composable

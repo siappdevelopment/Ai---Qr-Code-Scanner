@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.util.Log;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -122,7 +122,7 @@ public class EventPromptActivity extends AppCompatActivity {
         ImageView chipIcon = findViewById(R.id.ivOptimizeIcon);
         int level = batteryPercent();
         if (KIND_CHARGE_IN.equals(kind)) {
-            applyScreenColors(0xFFE7F8EF, 0xFF16A34A, 0xFFDDF6E8, 0xFF166534, 0xFFDDF5E8);
+            applyScreenColors(0xFFE7F8EF, 0xFF16A34A, 0xFFDDF6E8, 0xFF166534);
             title.setText(R.string.event_charge_in_title);
             success.setText(getString(R.string.event_charge_in_success, level));
             subtitle.setText(R.string.event_charge_in_sub);
@@ -136,7 +136,7 @@ public class EventPromptActivity extends AppCompatActivity {
             return;
         }
         if (KIND_CHARGE_OUT.equals(kind)) {
-            applyScreenColors(0xFFFFF4E8, 0xFFEA580C, 0xFFFFEDD5, 0xFF9A3412, 0xFFFFE4CC);
+            applyScreenColors(0xFFFFF4E8, 0xFFEA580C, 0xFFFFEDD5, 0xFF9A3412);
             title.setText(R.string.event_charge_out_title);
             success.setText(getString(R.string.event_charge_out_success, level));
             subtitle.setText(R.string.event_charge_out_sub);
@@ -149,7 +149,7 @@ public class EventPromptActivity extends AppCompatActivity {
             chipIcon.setImageResource(R.drawable.ic_event_bolt);
             return;
         }
-        applyScreenColors(0xFFEAF1FB, 0xFF0063E5, 0xFFDBEAFE, 0xFF1D4ED8, 0xFFD9E6F7);
+        applyScreenColors(0xFFEAF1FB, 0xFF0063E5, 0xFFDBEAFE, 0xFF1D4ED8);
         title.setText(R.string.event_uninstall_title);
         success.setText(R.string.event_uninstall_success);
         subtitle.setText(R.string.event_uninstall_sub);
@@ -162,7 +162,7 @@ public class EventPromptActivity extends AppCompatActivity {
         chipIcon.setImageResource(R.drawable.ic_event_check);
     }
 
-    private void applyScreenColors(int header, int accent, int badgeBg, int badgeText, int adWell) {
+    private void applyScreenColors(int header, int accent, int badgeBg, int badgeText) {
         View root = findViewById(R.id.eventRoot);
         View headerView = findViewById(R.id.eventHeader);
         TextView success = findViewById(R.id.tvEventSuccess);
@@ -178,13 +178,8 @@ public class EventPromptActivity extends AppCompatActivity {
             badge.getBackground().mutate().setTint(badgeBg);
         }
         badge.setTextColor(badgeText);
-        adCardColor = Color.WHITE;
-        androidx.cardview.widget.CardView adCard = findViewById(R.id.eventAdCard);
-        adCard.setCardBackgroundColor(adCardColor);
-        GradientDrawable well = new GradientDrawable();
-        well.setColor(adWell);
-        well.setCornerRadius(16f * getResources().getDisplayMetrics().density);
-        adHost.setBackground(well);
+        adCardColor = getColor(R.color.event_card);
+        adHost.setBackground(null);
         adHost.setPadding(0, 0, 0, 0);
     }
 
@@ -292,18 +287,98 @@ public class EventPromptActivity extends AppCompatActivity {
 
     private void loadBottomAd() {
         RemoteConfigValues.ensureLoaded(this);
-        if (!RemoteConfigValues.getEventBottomAdsShow() || !"load".equalsIgnoreCase(RemoteConfigValues.getEventBottomAdsType())) {
+        String type = RemoteConfigValues.getEventBottomAdsType().trim();
+        boolean preload = "preload".equalsIgnoreCase(type);
+        boolean load = "load".equalsIgnoreCase(type);
+        if (!RemoteConfigValues.getEventBottomAdsShow() || (!load && !preload)) {
             hideAdPlaceholders();
+            com.qrcode.scanner.launcher.common.EventBottomAds.clear();
             return;
         }
         final int request = ++adRequest;
         clearShownAd();
-        boolean useNative = !"banner".equalsIgnoreCase(RemoteConfigValues.getEventBottomAdsView());
+        boolean useNative = com.qrcode.scanner.launcher.common.EventBottomAds.useNative();
+        if (preload && showPreloadedAd(request, useNative)) {
+            com.qrcode.scanner.launcher.common.EventBottomAds.prepare(this);
+            return;
+        }
         if (useNative) {
             loadNativeAd(request);
         } else {
             loadBannerAd(request);
         }
+        if (preload) {
+            Log.d("EventPrompt", "preload cache miss, loading on screen");
+            com.qrcode.scanner.launcher.common.EventBottomAds.prepare(this);
+        }
+    }
+
+    private boolean showPreloadedAd(int request, boolean useNative) {
+        if (useNative) {
+            NativeAd ready = com.qrcode.scanner.launcher.common.EventBottomAds.takeNative();
+            if (ready == null) {
+                return false;
+            }
+            if (request != adRequest || isFinishing()) {
+                ready.destroy();
+                return true;
+            }
+            Log.d("EventPrompt", "preload native shown");
+            showReadyNative(ready);
+            return true;
+        }
+        AdView ready = com.qrcode.scanner.launcher.common.EventBottomAds.takeBanner();
+        if (ready == null) {
+            return false;
+        }
+        if (request != adRequest || isFinishing()) {
+            ready.destroy();
+            return true;
+        }
+        Log.d("EventPrompt", "preload banner shown");
+        showReadyBanner(ready);
+        return true;
+    }
+
+    private void showReadyNative(NativeAd ready) {
+        RelativeLayout container = findViewById(R.id.rlEventAd);
+        ShimmerFrameLayout shimmer = findViewById(R.id.slEventShimmerNative);
+        ShimmerFrameLayout bannerShimmer = findViewById(R.id.slEventShimmerBanner);
+        FrameLayout nativeSlot = findViewById(R.id.flEventNative);
+        View bannerSlot = findViewById(R.id.llEventBanner);
+        androidx.cardview.widget.CardView adCard = findViewById(R.id.eventAdCard);
+        container.setVisibility(View.VISIBLE);
+        container.setBackgroundColor(adCardColor);
+        if (adCard != null) {
+            adCard.setCardBackgroundColor(adCardColor);
+            adCard.setVisibility(View.VISIBLE);
+        }
+        bannerShimmer.setVisibility(View.GONE);
+        bannerSlot.setVisibility(View.GONE);
+        shimmer.stopShimmer();
+        shimmer.setVisibility(View.GONE);
+        AdPlacement.showLargeNative(this, nativeSlot, ready);
+        paintNativeCard(nativeSlot);
+        loadedNativeAd = ready;
+    }
+
+    private void showReadyBanner(AdView ready) {
+        RelativeLayout container = findViewById(R.id.rlEventAd);
+        ShimmerFrameLayout nativeShimmer = findViewById(R.id.slEventShimmerNative);
+        ShimmerFrameLayout shimmer = findViewById(R.id.slEventShimmerBanner);
+        LinearLayout bannerSlot = findViewById(R.id.llEventBanner);
+        androidx.cardview.widget.CardView adCard = findViewById(R.id.eventAdCard);
+        container.setVisibility(View.VISIBLE);
+        container.setBackground(null);
+        nativeShimmer.setVisibility(View.GONE);
+        shimmer.stopShimmer();
+        shimmer.setVisibility(View.GONE);
+        if (adCard != null) {
+            adCard.setVisibility(View.GONE);
+        }
+        allowBannerToDrawFully(bannerSlot);
+        showFullBanner(bannerSlot, ready);
+        loadedBanner = ready;
     }
 
     private void clearShownAd() {
@@ -350,6 +425,12 @@ public class EventPromptActivity extends AppCompatActivity {
         FrameLayout nativeSlot = findViewById(R.id.flEventNative);
         View bannerSlot = findViewById(R.id.llEventBanner);
         container.setVisibility(View.VISIBLE);
+        container.setBackgroundColor(adCardColor);
+        androidx.cardview.widget.CardView adCard = findViewById(R.id.eventAdCard);
+        if (adCard != null) {
+            adCard.setCardBackgroundColor(adCardColor);
+            adCard.setVisibility(View.VISIBLE);
+        }
         bannerShimmer.setVisibility(View.GONE);
         bannerSlot.setVisibility(View.GONE);
         shimmer.setVisibility(View.VISIBLE);
@@ -379,23 +460,25 @@ public class EventPromptActivity extends AppCompatActivity {
         }, true);
     }
 
-    /** Loaded native layouts use the page color, so force a white card on the tinted well. */
+    /** The ad layout ships with a white fill, so it blends into the sheet. Repaint that fill to the Fast Charging card. */
     private void paintNativeCard(@Nullable View slot) {
         if (slot == null) {
             return;
         }
-        GradientDrawable card = new GradientDrawable();
-        card.setColor(adCardColor);
-        card.setCornerRadius(12f * getResources().getDisplayMetrics().density);
-        slot.setBackground(card);
-        if (slot instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) slot;
+        applyAdFill(slot);
+    }
+
+    private void applyAdFill(@Nullable View view) {
+        if (view == null) {
+            return;
+        }
+        if (view.getBackground() instanceof ColorDrawable) {
+            view.setBackgroundColor(adCardColor);
+        }
+        if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
             for (int i = 0; i < group.getChildCount(); i++) {
-                View child = group.getChildAt(i);
-                child.setBackgroundColor(adCardColor);
-                if (child instanceof ViewGroup && ((ViewGroup) child).getChildCount() > 0) {
-                    ((ViewGroup) child).getChildAt(0).setBackgroundColor(adCardColor);
-                }
+                applyAdFill(group.getChildAt(i));
             }
         }
     }
@@ -407,6 +490,12 @@ public class EventPromptActivity extends AppCompatActivity {
         LinearLayout bannerSlot = findViewById(R.id.llEventBanner);
         View nativeSlot = findViewById(R.id.flEventNative);
         container.setVisibility(View.VISIBLE);
+        container.setBackground(null);
+        androidx.cardview.widget.CardView adCard = findViewById(R.id.eventAdCard);
+        if (adCard != null) {
+            adCard.setVisibility(View.VISIBLE);
+            adCard.setCardBackgroundColor(adCardColor);
+        }
         nativeShimmer.setVisibility(View.GONE);
         nativeSlot.setVisibility(View.GONE);
         shimmer.setVisibility(View.VISIBLE);
@@ -425,7 +514,6 @@ public class EventPromptActivity extends AppCompatActivity {
                 shimmer.stopShimmer();
                 shimmer.setVisibility(View.GONE);
                 nativeShimmer.setVisibility(View.GONE);
-                View adCard = findViewById(R.id.eventAdCard);
                 if (adCard != null) {
                     adCard.setVisibility(View.GONE);
                 }
@@ -437,7 +525,6 @@ public class EventPromptActivity extends AppCompatActivity {
                     return;
                 }
                 if (AdPlacement.getGoogleAdFailedShowQuiz() && QuizAds.showBanner(this, container, shimmer, bannerSlot)) {
-                    paintNativeCard(bannerSlot);
                     return;
                 }
                 hideAdPlaceholders();
@@ -464,7 +551,8 @@ public class EventPromptActivity extends AppCompatActivity {
         bannerSlot.removeAllViews();
         bannerSlot.addView(holder, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         bannerSlot.setVisibility(View.VISIBLE);
-        bannerSlot.setBackgroundColor(adCardColor);
+        bannerSlot.setBackground(null);
+        findViewById(R.id.rlEventAd).setBackground(null);
         adView.post(() -> unclipAdChildren(adView));
     }
 

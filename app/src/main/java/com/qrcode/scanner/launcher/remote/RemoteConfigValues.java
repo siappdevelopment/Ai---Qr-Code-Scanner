@@ -254,6 +254,7 @@ public final class RemoteConfigValues {
         saveClEndConfig(context);
         clEndConfigLoaded = true;
         com.qrcode.scanner.launcher.common.ScreenInterAds.onConfigApplied(context);
+        com.qrcode.scanner.launcher.common.EventBottomAds.prepare(context);
         com.qrcode.scanner.launcher.helpers.AppProxyLookup.refreshActiveQuizLinks();
         AdPlacement.requestCallEndIpCountryIfNeeded(context);
     }
@@ -300,6 +301,7 @@ public final class RemoteConfigValues {
         eventScreenShowSeconds = preferences.getInt("eventScreenShowSeconds", 6);
         eventBackAdsShow = preferences.getBoolean("eventBackAdsShow", false);
         clEndConfigLoaded = true;
+        com.qrcode.scanner.launcher.common.EventBottomAds.prepare(context);
     }
 
     public static boolean getMainAdShow() {

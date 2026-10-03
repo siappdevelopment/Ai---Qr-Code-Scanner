@@ -1,6 +1,8 @@
 package com.qrcode.scanner.launcher.activities;
 
+import android.app.ActivityManager;
 import android.app.Dialog;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -54,12 +56,44 @@ public class LauncherHomeActivity extends AppCompatActivity {
     private Bundle pendingSavedInstanceState;
     private final ExecutorService appsExecutor = Executors.newSingleThreadExecutor();
 
+    /** Marks the home task hidden in Recent Apps without closing or reopening the screen. */
+    private void hideLauncherFromRecents() {
+        try {
+            ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+            if (activityManager == null) {
+                return;
+            }
+            String mainName = "com.qrcode.scanner.MainActivity";
+            for (ActivityManager.AppTask appTask : activityManager.getAppTasks()) {
+                ActivityManager.RecentTaskInfo info = appTask.getTaskInfo();
+                if (info != null && isHomeComponent(info.baseActivity, mainName) && !isLauncherHomeTask(info, LauncherHomeActivity.class.getName())) {
+                    continue;
+                }
+                appTask.setExcludeFromRecents(true);
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
+    private static boolean isLauncherHomeTask(ActivityManager.RecentTaskInfo info, String homeName) {
+        if (isHomeComponent(info.baseActivity, homeName) || isHomeComponent(info.topActivity, homeName) || isHomeComponent(info.origActivity, homeName)) {
+            return true;
+        }
+        Intent baseIntent = info.baseIntent;
+        return baseIntent != null && isHomeComponent(baseIntent.getComponent(), homeName);
+    }
+
+    private static boolean isHomeComponent(@androidx.annotation.Nullable ComponentName component, String homeName) {
+        return component != null && homeName.equals(component.getClassName());
+    }
+
     public static List<LauncherAppsModel> arrayListApps = Collections.synchronizedList(new ArrayList<>());
     public static List<LauncherAppsModel> arrayListAppsSearch = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        hideLauncherFromRecents();
         pendingSavedInstanceState = savedInstanceState;
         if (shouldHandleAfterDefaultSetup()) {
             completeAfterDefaultSetup();
@@ -95,6 +129,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        hideLauncherFromRecents();
         if (shouldHandleAfterDefaultSetup()) {
             completeAfterDefaultSetup();
             return;
@@ -124,14 +159,22 @@ public class LauncherHomeActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        hideLauncherFromRecents();
+        super.onPause();
+    }
+
+    @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
+        hideLauncherFromRecents();
         dismissAppsBottomSheetIfAllowed();
         dismissAppsFolderDialogOnly();
     }
 
     @Override
     protected void onStop() {
+        hideLauncherFromRecents();
         dismissAppsBottomSheetIfAllowed();
         super.onStop();
     }

@@ -210,6 +210,18 @@ public final class ScreenFlowNavigation {
         });
     }
 
+    /** Drops the splash task so Recent Apps does not keep both the splash and the app. */
+    private static void removeLaunchingActivity(Activity activity) {
+        if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
+            return;
+        }
+        if (activity instanceof MainActivity) {
+            activity.finishAndRemoveTask();
+            return;
+        }
+        activity.finish();
+    }
+
     private static Intent buildScreenIntent(Context context, String screen) {
         if (ScreenFlowConfig.SCREEN_LANGUAGE.equalsIgnoreCase(screen)) {
             Intent intent = new Intent(context, LanguageActivity.class);
@@ -238,9 +250,7 @@ public final class ScreenFlowNavigation {
         if (!openFinalDestination(activity)) {
             return;
         }
-        if (!activity.isFinishing() && !activity.isDestroyed()) {
-            activity.finish();
-        }
+        removeLaunchingActivity(activity);
     }
 
     public static void openMain(Context context) {
@@ -300,7 +310,7 @@ public final class ScreenFlowNavigation {
             return AppUtils.buildLauncherHomeIntent(context);
         }
         if (ScreenFlowConfig.getRedirectHomeLauncher()) {
-            Intent intent = new Intent(context, LauncherHomeActivity.class);
+            Intent intent = AppUtils.buildLauncherHomeIntent(context);
             WidgetNavigation.attachPendingTargetScreen(context, intent);
             return intent;
         }

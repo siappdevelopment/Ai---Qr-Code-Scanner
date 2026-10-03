@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import com.qrcode.scanner.ui.theme.enableThemedEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Canvas
@@ -96,7 +96,7 @@ import kotlin.math.min
 class GalleryCropActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableThemedEdgeToEdge()
         val initialUri = intent.getStringExtra(ScanIntents.EXTRA_IMAGE_URI)?.let(Uri::parse)
         val autoPick = intent.getBooleanExtra(ScanIntents.EXTRA_AUTO_PICK, initialUri == null)
         val scanMode = intent.getStringExtra(ScanIntents.EXTRA_SCAN_MODE) ?: ScanIntents.MODE_BATCH

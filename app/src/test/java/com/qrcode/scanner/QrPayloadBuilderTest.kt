@@ -116,6 +116,37 @@ class QrPayloadBuilderTest {
     }
 
     @Test
+    fun email_bodyRequired() {
+        assertEquals(
+            "Enter an email body",
+            QrPayloadBuilder.validate(
+                QrCategoryType.EMAIL,
+                QrPayloadBuilder.FormInput(primary = "a@b.com", secondary = "Hi")
+            )
+        )
+    }
+
+    @Test
+    fun plainText_rejectsPayloadThatCannotFitInQr() {
+        val huge = "a".repeat(QrPayloadBuilder.MAX_QR_PAYLOAD_BYTES + 1)
+        assertEquals(
+            "This field is limited to 500 characters.",
+            QrPayloadBuilder.validate(
+                QrCategoryType.PLAIN_TEXT,
+                QrPayloadBuilder.FormInput(primary = huge)
+            )
+        )
+        val encodedHeavy = "你".repeat(450)
+        assertEquals(
+            "This is too long to fit in a QR code. Shorten the text.",
+            QrPayloadBuilder.validate(
+                QrCategoryType.PLAIN_TEXT,
+                QrPayloadBuilder.FormInput(primary = encodedHeavy)
+            )
+        )
+    }
+
+    @Test
     fun email_specialSubjectBody() {
         val built = QrPayloadBuilder.build(
             QrCategoryType.EMAIL,
@@ -133,11 +164,21 @@ class QrPayloadBuilderTest {
 
     @Test
     fun sms_bodyEncodingAndEmpty() {
-        val empty = QrPayloadBuilder.build(
-            QrCategoryType.SMS,
-            QrPayloadBuilder.FormInput(primary = "+15551234567")
+        assertEquals(
+            "Enter a message",
+            QrPayloadBuilder.validate(
+                QrCategoryType.SMS,
+                QrPayloadBuilder.FormInput(primary = "+15551234567")
+            )
         )
-        assertEquals("sms:+15551234567", empty.payload)
+        try {
+            QrPayloadBuilder.build(
+                QrCategoryType.SMS,
+                QrPayloadBuilder.FormInput(primary = "+15551234567")
+            )
+            fail("expected IllegalArgumentException")
+        } catch (_: IllegalArgumentException) {
+        }
 
         val colon = QrPayloadBuilder.build(
             QrCategoryType.SMS,

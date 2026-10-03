@@ -121,31 +121,11 @@ fun CreateHubScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp)
-                .padding(top = 12.dp, bottom = 24.dp),
+                .padding(top = 12.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-//            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
-//                Text(
-//                    text = "Create QR Code",
-//                    color = CreateColors.TextMain,
-//                    fontFamily = PlusJakartaSans,
-//                    fontSize = 24.sp,
-//                    fontWeight = FontWeight.ExtraBold,
-//                    lineHeight = 32.sp
-//                )
-//                Text(
-//                    text = "Choose a content format to generate a custom scannable code",
-//                    color = CreateColors.TextMuted,
-//                    fontFamily = PlusJakartaSans,
-//                    fontSize = 14.sp,
-//                    fontWeight = FontWeight.Normal,
-//                    lineHeight = 20.sp
-//                )
-//            }
-
             SearchField(
                 query = searchQuery,
                 onQueryChange = { searchQuery = it },
@@ -156,7 +136,17 @@ fun CreateHubScreen(
                 selected = selectedFilter,
                 onSelect = { selectedFilter = it }
             )
+        }
 
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp, bottom = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             if (visibleCategories.isEmpty()) {
                 NoFormatsFound(
                     onReset = {

@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import com.qrcode.scanner.ui.theme.enableThemedEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -82,14 +82,15 @@ import com.qrcode.scanner.ui.theme.White
 class CommonQrFormActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableThemedEdgeToEdge()
         bindScreenBackAd("QrFormScreen")
         val type = QrCategoryType.fromIntentExtra(
             intent.getStringExtra(QrCategoryType.EXTRA_QR_CATEGORY)
         )
+        val nativeSize = if (FormLabels.forCategory(type).editRowCount() <= 2) "medium" else "small"
         setContent {
             QRCodeScannerTheme {
-                ScreenWithAd(screenKey = "QrFormScreen") {
+                ScreenWithAd(screenKey = "QrFormScreen", nativeSize = nativeSize) {
                 CommonQrFormScreen(
                     category = type,
                     onBack = { onBackPressedDispatcher.onBackPressed() },
@@ -131,13 +132,27 @@ fun CommonQrFormScreen(
         }
     }
 
+    fun currentInput() = QrPayloadBuilder.FormInput(
+        primary = primary,
+        secondary = secondary,
+        tertiary = tertiary,
+        quaternary = quaternary
+    )
+
+    fun capField(raw: String, field: Int, barcode: Boolean = false): String {
+        val filtered = if (barcode) BarcodeSymbology.filterInput(category, raw) else raw
+        val max = QrPayloadBuilder.fieldMaxLength(category, field)
+        return if (filtered.length > max) {
+            error = QrPayloadBuilder.limitMessage(max)
+            filtered.take(max)
+        } else {
+            if (error != null) error = null
+            filtered
+        }
+    }
+
     fun attemptGenerate() {
-        val input = QrPayloadBuilder.FormInput(
-            primary = primary,
-            secondary = secondary,
-            tertiary = tertiary,
-            quaternary = quaternary
-        )
+        val input = currentInput()
         val validation = QrPayloadBuilder.validate(category, input)
         if (validation != null) {
             error = validation
@@ -145,16 +160,18 @@ fun CommonQrFormScreen(
         }
         error = null
         val built = QrPayloadBuilder.build(category, input)
-        previewLauncher.launch(
-            CreateQrIntents.openPreview(
-                context = context,
-                category = category,
-                payload = built.payload,
-                displayTitle = built.displayTitle,
-                detectedType = built.detectedType,
-                eccLevel = ecc.name
+        context.runWithClickAd("QrFormScreen") {
+            previewLauncher.launch(
+                CreateQrIntents.openPreview(
+                    context = context,
+                    category = category,
+                    payload = built.payload,
+                    displayTitle = built.displayTitle,
+                    detectedType = built.detectedType,
+                    eccLevel = ecc.name
+                )
             )
-        )
+        }
     }
 
     Column(
@@ -234,24 +251,14 @@ fun CommonQrFormScreen(
                     label = labels.primaryLabel,
                     value = primary,
                     onValueChange = {
-                        primary = if (BarcodeSymbology.isBarcode(category)) {
-                            BarcodeSymbology.filterInput(category, it)
-                        } else {
-                            it
-                        }
-                        if (error != null) error = null
+                        primary = capField(it, 0, BarcodeSymbology.isBarcode(category))
                     },
                     placeholder = labels.primaryPlaceholder,
                     keyboardType = labels.primaryKeyboard,
                     trailingPaste = {
                         val text = clipboard.getText()?.text
                         if (!text.isNullOrBlank()) {
-                            primary = if (BarcodeSymbology.isBarcode(category)) {
-                                BarcodeSymbology.filterInput(category, text)
-                            } else {
-                                text
-                            }
-                            error = null
+                            primary = capField(text, 0, BarcodeSymbology.isBarcode(category))
                         } else {
                             Toast.makeText(context, "Clipboard is empty", Toast.LENGTH_SHORT).show()
                         }
@@ -262,7 +269,7 @@ fun CommonQrFormScreen(
                     FormTextField(
                         label = labels.secondaryLabel,
                         value = secondary,
-                        onValueChange = { secondary = it },
+                        onValueChange = { secondary = capField(it, 1) },
                         placeholder = labels.secondaryPlaceholder.orEmpty(),
                         optional = labels.secondaryOptional
                     )
@@ -271,7 +278,7 @@ fun CommonQrFormScreen(
                     FormTextField(
                         label = labels.quaternaryLabel,
                         value = quaternary,
-                        onValueChange = { quaternary = it },
+                        onValueChange = { quaternary = capField(it, 3) },
                         placeholder = labels.quaternaryPlaceholder.orEmpty(),
                         optional = labels.quaternaryOptional
                     )
@@ -280,11 +287,11 @@ fun CommonQrFormScreen(
                     FormTextField(
                         label = labels.tertiaryLabel,
                         value = tertiary,
-                        onValueChange = { tertiary = it },
-                    placeholder = labels.tertiaryPlaceholder.orEmpty(),
-                    optional = true,
-                    keyboardType = labels.tertiaryKeyboard
-                )
+                        onValueChange = { tertiary = capField(it, 2) },
+                        placeholder = labels.tertiaryPlaceholder.orEmpty(),
+                        optional = labels.tertiaryOptional,
+                        keyboardType = labels.tertiaryKeyboard
+                    )
                 }
             }
 
@@ -307,7 +314,7 @@ fun CommonQrFormScreen(
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
-                        onClick = { context.runWithClickAd("QrFormScreen") { attemptGenerate() } }
+                        onClick = { attemptGenerate() }
                     ),
                 contentAlignment = Alignment.Center
             ) {
@@ -344,15 +351,16 @@ fun CommonQrFormScreen(
                     icon = Icons.Outlined.Share,
                     modifier = Modifier.weight(1f),
                     onClick = {
-                        val text = primary.trim()
-                        if (text.isEmpty()) {
-                            Toast.makeText(context, "Nothing to share yet", Toast.LENGTH_SHORT)
-                                .show()
+                        val input = currentInput()
+                        val validation = QrPayloadBuilder.validate(category, input)
+                        if (validation != null) {
+                            error = validation
                             return@SecondaryFormAction
                         }
+                        val built = QrPayloadBuilder.build(category, input)
                         val send = Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"
-                            putExtra(Intent.EXTRA_TEXT, text)
+                            putExtra(Intent.EXTRA_TEXT, built.payload)
                         }
                         context.startActivity(Intent.createChooser(send, "Share"))
                     }
@@ -370,12 +378,21 @@ private data class FormLabels(
     val secondaryOptional: Boolean = true,
     val tertiaryLabel: String? = null,
     val tertiaryPlaceholder: String? = null,
+    val tertiaryOptional: Boolean = true,
     val quaternaryLabel: String? = null,
     val quaternaryPlaceholder: String? = null,
     val quaternaryOptional: Boolean = true,
     val primaryKeyboard: KeyboardType = KeyboardType.Text,
     val tertiaryKeyboard: KeyboardType = KeyboardType.Text
 ) {
+    fun editRowCount(): Int {
+        var count = 1
+        if (secondaryLabel != null) count++
+        if (tertiaryLabel != null) count++
+        if (quaternaryLabel != null) count++
+        return count
+    }
+
     companion object {
         fun forCategory(type: QrCategoryType): FormLabels = when (type) {
             QrCategoryType.WEBSITE -> FormLabels(
@@ -413,14 +430,16 @@ private data class FormLabels(
                 primaryPlaceholder = "hello@example.com",
                 secondaryLabel = "Subject (optional)",
                 secondaryPlaceholder = "Message subject",
-                tertiaryLabel = "Body (optional)",
-                tertiaryPlaceholder = "Email body"
+                tertiaryLabel = "Body",
+                tertiaryPlaceholder = "Email body",
+                tertiaryOptional = false
             )
             QrCategoryType.SMS -> FormLabels(
                 primaryLabel = "Phone Number",
                 primaryPlaceholder = "+1 555 0100",
-                secondaryLabel = "Message (optional)",
+                secondaryLabel = "Message",
                 secondaryPlaceholder = "SMS text",
+                secondaryOptional = false,
                 primaryKeyboard = KeyboardType.Phone
             )
             QrCategoryType.WHATSAPP -> FormLabels(
@@ -439,8 +458,8 @@ private data class FormLabels(
             QrCategoryType.CALENDAR -> FormLabels(
                 primaryLabel = "Event Title",
                 primaryPlaceholder = "Team standup",
-                secondaryLabel = "Start (YYYYMMDDTHHMMSS, optional)",
-                secondaryPlaceholder = "20260921T090000"
+                secondaryLabel = "Start Date",
+                secondaryPlaceholder = "Optional"
             )
             QrCategoryType.APP_LINK -> FormLabels(
                 primaryLabel = "App URL or Package",
@@ -522,6 +541,7 @@ internal fun FormTextField(
     onClear: (() -> Unit)? = null
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        if (label.isNotBlank()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -563,6 +583,7 @@ internal fun FormTextField(
                     )
                 }
             }
+        }
         }
         Row(
             modifier = Modifier

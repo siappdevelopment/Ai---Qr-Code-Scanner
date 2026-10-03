@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import com.qrcode.scanner.ui.theme.enableThemedEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 class HistoryDetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableThemedEdgeToEdge()
         bindScreenBackAd("HistoryDetailScreen")
         val historyId = intent.getLongExtra(HistoryIntents.EXTRA_HISTORY_ID, -1L)
         setContent {

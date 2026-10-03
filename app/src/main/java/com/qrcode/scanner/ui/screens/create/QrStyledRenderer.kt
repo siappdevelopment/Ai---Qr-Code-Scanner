@@ -8,6 +8,7 @@ import android.graphics.Path
 import android.graphics.RectF
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
+import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.qrcode.QRCodeWriter
 import kotlin.math.hypot
@@ -53,7 +54,11 @@ object QrStyledRenderer {
                 ecc
             }
 
-        val matrix = encodeMatrix(payload, effectiveEcc)
+        val matrix = try {
+            encodeMatrix(payload, effectiveEcc)
+        } catch (_: WriterException) {
+            return RenderResult(null, "This is too long to fit in a QR code. Shorten the text.")
+        }
         val moduleCount = matrix.width
         val quiet = estimateQuietZone(matrix)
         val contentModules = moduleCount - quiet * 2
@@ -130,7 +135,11 @@ object QrStyledRenderer {
         validateContrast(style.foregroundColor, style.backgroundColor)?.let { err ->
             throw IllegalStateException(err)
         }
-        val matrix = encodeMatrix(payload, ecc)
+        val matrix = try {
+            encodeMatrix(payload, ecc)
+        } catch (_: WriterException) {
+            throw IllegalStateException("This is too long to fit in a QR code. Shorten the text.")
+        }
         val n = matrix.width
         val cell = sizePx.toFloat() / n
         val fg = colorToHex(style.foregroundColor)

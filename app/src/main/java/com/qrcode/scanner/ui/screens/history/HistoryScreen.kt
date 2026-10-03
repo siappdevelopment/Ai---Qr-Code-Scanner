@@ -44,6 +44,7 @@ import androidx.compose.material.icons.outlined.ViewWeek
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -68,6 +69,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.data.history.HistoryEntity
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
@@ -601,7 +603,8 @@ private fun HistoryActivityCard(
                         text = {
                             Text(
                                 text = if (entity.isFavorite) "Remove favorite" else "Add favorite",
-                                fontFamily = PlusJakartaSans
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 14.sp
                             )
                         },
                         onClick = {
@@ -609,7 +612,14 @@ private fun HistoryActivityCard(
                             onToggleFavorite()
                         },
                         leadingIcon = {
-                            Icon(Icons.Outlined.Star, contentDescription = null, tint = CobaltPrimary)
+                            Icon(
+                                painter = painterResource(
+                                    if (entity.isFavorite) R.drawable.ic_star_filled else R.drawable.ic_star
+                                ),
+                                contentDescription = null,
+                                tint = CobaltPrimary,
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
                     )
                     DropdownMenuItem(
@@ -617,7 +627,8 @@ private fun HistoryActivityCard(
                             Text(
                                 text = "Delete",
                                 color = Destructive,
-                                fontFamily = PlusJakartaSans
+                                fontFamily = PlusJakartaSans,
+                                fontSize = 14.sp
                             )
                         },
                         onClick = {
@@ -625,7 +636,12 @@ private fun HistoryActivityCard(
                             onDelete()
                         },
                         leadingIcon = {
-                            Icon(Icons.Outlined.Delete, contentDescription = null, tint = Destructive)
+                            Icon(
+                                Icons.Outlined.Delete,
+                                contentDescription = null,
+                                tint = Destructive,
+                                modifier = Modifier.size(20.dp)
+                            )
                         }
                     )
                 }

@@ -3,7 +3,7 @@ package com.qrcode.scanner
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import com.qrcode.scanner.ui.theme.enableThemedEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.qrcode.scanner.launcher.common.AdPlacement
 import com.qrcode.scanner.launcher.common.StartupFlow
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         defaultHomePopupHost.register()
         AdPlacement.requestCallEndIpCountryIfNeeded(this)
-        enableEdgeToEdge()
+        enableThemedEdgeToEdge()
         showStartupSplash = StartupFlow.shouldShowSplash(intent)
         ReminderAlarmHelper.handleReminderLaunchIntent(this, intent)
         if (!showStartupSplash) {

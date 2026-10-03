@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import com.qrcode.scanner.ui.theme.enableThemedEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -38,8 +38,6 @@ import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Link
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Share
-import androidx.compose.material.icons.outlined.Star
-import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -100,7 +98,7 @@ class QrPreviewActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableThemedEdgeToEdge()
         bindScreenBackAd("QrPreviewScreen")
         savedHistoryId = savedInstanceState?.getLong(KEY_HISTORY_ID, -1L) ?: -1L
 
@@ -185,7 +183,6 @@ private fun QrPreviewScreen(
     var exportBitmap by remember { mutableStateOf<Bitmap?>(null) }
     var encodeError by remember { mutableStateOf<String?>(null) }
     var historyId by remember { mutableLongStateOf(initialHistoryId) }
-    var favorite by remember { mutableStateOf(false) }
     var saving by remember { mutableStateOf(false) }
     var exporting by remember { mutableStateOf(false) }
     var logoBmp by remember { mutableStateOf<Bitmap?>(null) }
@@ -264,10 +261,6 @@ private fun QrPreviewScreen(
         } else {
             exportBitmap = null
         }
-
-        if (historyId > 0L) {
-            favorite = repository.getById(historyId)?.isFavorite == true
-        }
     }
 
     val typeIcon: ImageVector = when (detectedType) {
@@ -307,27 +300,6 @@ private fun QrPreviewScreen(
                 fontSize = 18.sp,
                 modifier = Modifier.weight(1f)
             )
-            PreviewIconButton(
-                icon = if (favorite) Icons.Outlined.Star else Icons.Outlined.StarBorder,
-                contentDescription = "Favorite",
-                tint = if (favorite) CobaltPrimary else TextPrimary,
-                onClick = {
-                    if (historyId <= 0L) {
-                        Toast.makeText(
-                            context,
-                            "Create first to favorite",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return@PreviewIconButton
-                    }
-                    val next = !favorite
-                    favorite = next
-                    scope.launch {
-                        repository.updateFavorite(historyId, next)
-                    }
-                }
-            )
-            Spacer(modifier = Modifier.size(8.dp))
             PreviewIconButton(
                 icon = Icons.Outlined.Share,
                 contentDescription = "Share",

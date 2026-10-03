@@ -48,6 +48,22 @@ object BarcodeSymbology {
         else -> "$length chars"
     }
 
+    /**
+     * Input cap. Fixed retail formats use their real digit length.
+     * Code 128 and Codabar have no symbol maximum, so the cap only stops a huge paste.
+     * Data Matrix, PDF417, and Aztec still report capacity from the encoder.
+     */
+    fun maxInputLength(type: QrCategoryType): Int = when (type) {
+        QrCategoryType.EAN_13 -> 13
+        QrCategoryType.EAN_8 -> 8
+        QrCategoryType.UPC_E -> 8
+        QrCategoryType.UPC_A -> 12
+        QrCategoryType.ITF, QrCategoryType.CODE_39, QrCategoryType.CODE_93 -> 80
+        QrCategoryType.CODE_128, QrCategoryType.CODABAR -> 2000
+        QrCategoryType.DATA_MATRIX, QrCategoryType.PDF_417, QrCategoryType.AZTEC -> 8000
+        else -> 2000
+    }
+
     fun filterInput(type: QrCategoryType, raw: String): String = when (type) {
         QrCategoryType.EAN_13,
         QrCategoryType.EAN_8,

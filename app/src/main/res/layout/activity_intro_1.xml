@@ -110,10 +110,10 @@
                 android:layout_centerInParent="true"
                 android:background="@color/ad_background"
                 app:shimmer_auto_start="true"
-                app:shimmer_base_alpha="1.0"
+                app:shimmer_base_alpha="0.9"
                 app:shimmer_highlight_alpha="1.0">
 
-                <View android:layout_width="match_parent" android:layout_height="match_parent" />
+                <include layout="@layout/shimmer_small_ad" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -130,19 +130,19 @@
         <RelativeLayout
             android:id="@+id/rlNativeAdView"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_110sdp">
+            android:layout_height="wrap_content">
 
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/slNativeShimmer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_110sdp"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:background="@color/ad_background"
                 app:shimmer_auto_start="true"
-                app:shimmer_base_alpha="1.0"
+                app:shimmer_base_alpha="0.9"
                 app:shimmer_highlight_alpha="1.0">
 
-                <View android:layout_width="match_parent" android:layout_height="match_parent" />
+                <include layout="@layout/shimmer_small_ad" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 

@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import com.qrcode.scanner.ui.theme.enableThemedEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,7 +31,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.Launch
-import androidx.compose.material.icons.automirrored.outlined.OpenInNew
 import androidx.compose.material.icons.outlined.Bookmark
 import androidx.compose.material.icons.outlined.BookmarkBorder
 import androidx.compose.material.icons.outlined.ContentCopy
@@ -107,7 +106,7 @@ class ScanResultActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableThemedEdgeToEdge()
         bindScreenBackAd("ScanResultScreen")
         savedHistoryId = if (savedInstanceState != null) {
             savedInstanceState.getLong(KEY_HISTORY_ID, -1L)
@@ -338,11 +337,6 @@ fun ScanResultScreen(
                     tint = if (favorite) CobaltPrimary else TextSecondary,
                     onClick = { toggleFavorite() }
                 )
-                HeaderIconButton(
-                    icon = Icons.Outlined.Share,
-                    contentDescription = "Share result",
-                    onClick = { shareResult(context, displayValue, isUrl) }
-                )
             }
         }
 
@@ -420,28 +414,14 @@ fun ScanResultScreen(
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "PAYLOAD CONTENT",
-                            color = TextSecondary,
-                            fontFamily = PlusJakartaSans,
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 12.sp,
-                            letterSpacing = 0.6.sp
-                        )
-                        if (isUrl) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.OpenInNew,
-                                contentDescription = null,
-                                tint = TextTertiary,
-                                modifier = Modifier.size(16.dp)
-                            )
-                        }
-                    }
+                    Text(
+                        text = "PAYLOAD CONTENT",
+                        color = TextSecondary,
+                        fontFamily = PlusJakartaSans,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 12.sp,
+                        letterSpacing = 0.6.sp
+                    )
                     Text(
                         text = displayValue,
                         color = TextPrimary,

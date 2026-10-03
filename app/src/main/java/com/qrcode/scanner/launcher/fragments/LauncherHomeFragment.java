@@ -84,6 +84,8 @@ public class LauncherHomeFragment extends Fragment {
 
     private static final String GOOGLE_APP_PACKAGE = "com.google.android.googlequicksearchbox";
     private static final String CHROME_PACKAGE = "com.android.chrome";
+    @Nullable
+    private String bottomCameraPackage;
     private static final long SHORTCUT_CLICK_DEBOUNCE_MS = 800L;
     private long lastShortcutLaunchElapsedMs;
 
@@ -705,7 +707,11 @@ public class LauncherHomeFragment extends Fragment {
         setBottomAppIconFromPackage(ivAppIcon2, Telephony.Sms.getDefaultSmsPackage(requireContext()), packageManager);
         setBottomAppIconFromPackage(ivAppIcon3, getBrowserPackageName(packageManager), packageManager);
 
-        ResolveInfo cameraInfo = packageManager.resolveActivity(new Intent(MediaStore.ACTION_IMAGE_CAPTURE), PackageManager.MATCH_DEFAULT_ONLY);
+        ResolveInfo cameraInfo = preferredApp(packageManager, new Intent(MediaStore.ACTION_IMAGE_CAPTURE));
+        if (cameraInfo == null) {
+            cameraInfo = preferredApp(packageManager, new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA));
+        }
+        bottomCameraPackage = cameraInfo != null && cameraInfo.activityInfo != null ? cameraInfo.activityInfo.packageName : null;
         if (cameraInfo != null) {
             setBottomAppIcon(ivAppIcon4, cameraInfo.loadIcon(packageManager));
         } else {
@@ -766,7 +772,7 @@ public class LauncherHomeFragment extends Fragment {
 
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
         browserIntent.addCategory(Intent.CATEGORY_BROWSABLE);
-        ResolveInfo resolveInfo = packageManager.resolveActivity(browserIntent, PackageManager.MATCH_DEFAULT_ONLY);
+        ResolveInfo resolveInfo = preferredApp(packageManager, browserIntent);
         if (resolveInfo != null && resolveInfo.activityInfo != null) {
             return resolveInfo.activityInfo.packageName;
         }
@@ -1147,19 +1153,63 @@ public class LauncherHomeFragment extends Fragment {
             return false;
         }
         try {
-            if (intent.resolveActivity(packageManager) == null) {
-                return false;
+            Intent launch = new Intent(intent);
+            launch.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            if (launch.getComponent() == null) {
+                ResolveInfo info = preferredApp(packageManager, launch);
+                if (info == null || info.activityInfo == null) {
+                    return false;
+                }
+                launch.setClassName(info.activityInfo.packageName, info.activityInfo.name);
             }
-            startActivity(intent);
-            String packageName = intent.getPackage();
-            if (packageName == null && intent.getComponent() != null) {
-                packageName = intent.getComponent().getPackageName();
+            startActivity(launch);
+            String packageName = launch.getPackage();
+            if (packageName == null && launch.getComponent() != null) {
+                packageName = launch.getComponent().getPackageName();
             }
-            AdPlacement.markLauncherExternalAppLaunched(requireContext(), packageName == null || packageName.trim().isEmpty() ? intent.getAction() : packageName);
+            AdPlacement.markLauncherExternalAppLaunched(requireContext(), packageName == null || packageName.trim().isEmpty() ? launch.getAction() : packageName);
             return true;
         } catch (Exception exception) {
             return false;
         }
+    }
+
+    @Nullable
+    private ResolveInfo preferredApp(@NonNull PackageManager packageManager, @NonNull Intent intent) {
+        ResolveInfo resolved = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (isConcreteApp(resolved)) {
+            return resolved;
+        }
+        ResolveInfo match = firstConcreteApp(packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY));
+        if (match != null) {
+            return match;
+        }
+        return firstConcreteApp(packageManager.queryIntentActivities(intent, 0));
+    }
+
+    @Nullable
+    private ResolveInfo firstConcreteApp(@Nullable List<ResolveInfo> matches) {
+        if (matches == null) {
+            return null;
+        }
+        for (ResolveInfo info : matches) {
+            if (isConcreteApp(info)) {
+                return info;
+            }
+        }
+        return null;
+    }
+
+    private boolean isConcreteApp(@Nullable ResolveInfo info) {
+        if (info == null || info.activityInfo == null) {
+            return false;
+        }
+        String packageName = info.activityInfo.packageName == null ? "" : info.activityInfo.packageName;
+        String className = info.activityInfo.name == null ? "" : info.activityInfo.name;
+        if ("android".equals(packageName)) {
+            return false;
+        }
+        return !className.contains("ResolverActivity") && !className.contains("ChooserActivity");
     }
 
     private void updateDateTime() {
@@ -1231,12 +1281,8 @@ public class LauncherHomeFragment extends Fragment {
 
                 Intent dialIntent = new Intent(Intent.ACTION_DIAL);
                 dialIntent.setPackage(dialerPackage);
-                if (startResolvedActivity(dialIntent, packageManager)) {
-                    return;
-                }
+                startResolvedActivity(dialIntent, packageManager);
             }
-
-            startResolvedActivity(new Intent(Intent.ACTION_DIAL), packageManager);
         } catch (Exception ignored) {
         }
     }
@@ -1266,24 +1312,34 @@ public class LauncherHomeFragment extends Fragment {
 
         PackageManager packageManager = requireContext().getPackageManager();
         String browserPackage = getBrowserPackageName(packageManager);
-        if (browserPackage != null) {
-            Intent intent = packageManager.getLaunchIntentForPackage(browserPackage);
-            if (startResolvedActivity(intent, packageManager)) {
-                return;
-            }
+        if (browserPackage == null) {
+            return;
+        }
+        Intent intent = packageManager.getLaunchIntentForPackage(browserPackage);
+        if (startResolvedActivity(intent, packageManager)) {
+            return;
         }
 
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+        browserIntent.setPackage(browserPackage);
         browserIntent.addCategory(Intent.CATEGORY_BROWSABLE);
         startResolvedActivity(browserIntent, packageManager);
     }
 
     private void launchCameraApp() {
-        if (!isFragmentReady()) {
+        if (!isFragmentReady() || bottomCameraPackage == null) {
             return;
         }
 
-        startResolvedActivity(new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA), requireContext().getPackageManager());
+        PackageManager packageManager = requireContext().getPackageManager();
+        Intent stillCamera = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+        stillCamera.setPackage(bottomCameraPackage);
+        if (startResolvedActivity(stillCamera, packageManager)) {
+            return;
+        }
+
+        Intent launchIntent = packageManager.getLaunchIntentForPackage(bottomCameraPackage);
+        startResolvedActivity(launchIntent, packageManager);
     }
 
     @Override

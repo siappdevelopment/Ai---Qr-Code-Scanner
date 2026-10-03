@@ -66,13 +66,53 @@ object QrPayloadBuilder {
         val detectedType: String
     )
 
+    /** Version 40, error correction H, byte mode is 1273 bytes. Stay under that. */
+    const val MAX_QR_PAYLOAD_BYTES = 1200
+
     fun supportsQrGeneration(type: QrCategoryType): Boolean = type != BARCODE
+
+    fun limitMessage(max: Int): String = "This field is limited to $max characters."
+
+    /** Character cap for a form slot. 0 primary, 1 secondary, 2 tertiary, 3 quaternary. */
+    fun fieldMaxLength(type: QrCategoryType, field: Int): Int {
+        if (BarcodeSymbology.isBarcode(type)) {
+            return if (field == 0) BarcodeSymbology.maxInputLength(type) else 80
+        }
+        return when (type) {
+            PLAIN_TEXT -> if (field == 0) 500 else 80
+            WEBSITE -> if (field == 0) 500 else 80
+            PHONE -> if (field == 0) 24 else 80
+            SMS -> if (field == 0) 24 else 500
+            WHATSAPP -> if (field == 0) 24 else 500
+            EMAIL -> when (field) {
+                0 -> 254
+                1 -> 120
+                else -> 500
+            }
+            CONTACT -> when (field) {
+                0 -> 80
+                1 -> 120
+                2 -> 24
+                else -> 60
+            }
+            LOCATION -> if (field == 0) 48 else 80
+            CALENDAR -> if (field == 0) 120 else 32
+            APP_LINK -> if (field == 0) 300 else 80
+            WIFI -> if (field == 0) 32 else 63
+            FACEBOOK, YOUTUBE, TWITTER, TIKTOK, INSTAGRAM, PAYPAL, SNAPCHAT, LINKEDIN, SPOTIFY ->
+                if (field == 0) 200 else 80
+            else -> 200
+        }
+    }
 
     fun validate(type: QrCategoryType, input: FormInput): String? {
         if (type == BARCODE) {
             return "Barcode / EAN generation is not available yet. Use a QR category instead."
         }
-        return when (type) {
+        if (!BarcodeSymbology.isBarcode(type)) {
+            fieldTooLong(type, input)?.let { return it }
+        }
+        val fieldError = when (type) {
             WEBSITE -> {
                 val url = input.primary.trim()
                 when {
@@ -96,6 +136,7 @@ object QrPayloadBuilder {
                 when {
                     email.isEmpty() -> "Enter an email address"
                     !email.contains('@') || !email.contains('.') -> "Enter a valid email address"
+                    input.tertiary.trim().isEmpty() -> "Enter an email body"
                     else -> null
                 }
             }
@@ -104,6 +145,7 @@ object QrPayloadBuilder {
                 when {
                     input.primary.trim().isEmpty() -> "Enter a phone number"
                     phone.length < 7 -> "Enter a valid phone number"
+                    input.secondary.trim().isEmpty() -> "Enter a message"
                     else -> null
                 }
             }
@@ -127,7 +169,7 @@ object QrPayloadBuilder {
                 if (input.primary.trim().isEmpty()) return "Enter an event title"
                 val start = input.secondary.trim()
                 if (start.isNotEmpty() && normalizeCalendarStamp(start) == null) {
-                    return "Enter start as YYYYMMDDTHHMMSS (e.g. 20260921T090000)"
+                    return "Enter a valid start date"
                 }
                 null
             }
@@ -153,12 +195,20 @@ object QrPayloadBuilder {
             }
             BARCODE -> "Barcode / EAN generation is not available yet."
         }
+        if (fieldError != null) return fieldError
+        if (BarcodeSymbology.isBarcode(type)) return null
+        val bytes = assemble(type, input).payload.toByteArray(Charsets.UTF_8).size
+        return if (bytes > MAX_QR_PAYLOAD_BYTES) QR_TOO_LONG else null
     }
 
     fun build(type: QrCategoryType, input: FormInput): BuildResult {
         validate(type, input)?.let { error ->
             throw IllegalArgumentException(error)
         }
+        return assemble(type, input)
+    }
+
+    private fun assemble(type: QrCategoryType, input: FormInput): BuildResult {
         val note = input.secondary.trim().takeIf {
             type != WIFI && type != SMS && type != CONTACT && type != EMAIL &&
                 type != CALENDAR && type != WHATSAPP && it.isNotEmpty()
@@ -274,9 +324,7 @@ object QrPayloadBuilder {
                     DEFAULT_CALENDAR_STAMP
                 } else {
                     normalizeCalendarStamp(whenText)
-                        ?: throw IllegalArgumentException(
-                            "Enter start as YYYYMMDDTHHMMSS (e.g. 20260921T090000)"
-                        )
+                        ?: throw IllegalArgumentException("Enter a valid start date")
                 }
                 val payload = buildString {
                     append("BEGIN:VCALENDAR\n")
@@ -413,6 +461,17 @@ object QrPayloadBuilder {
     }
 
     const val DEFAULT_CALENDAR_STAMP = "20260101T090000"
+
+    private const val QR_TOO_LONG = "This is too long to fit in a QR code. Shorten the text."
+
+    private fun fieldTooLong(type: QrCategoryType, input: FormInput): String? {
+        val values = listOf(input.primary, input.secondary, input.tertiary, input.quaternary)
+        for (index in values.indices) {
+            val max = fieldMaxLength(type, index)
+            if (values[index].length > max) return limitMessage(max)
+        }
+        return null
+    }
 
     private fun looksLikeUrl(value: String): Boolean =
         ScanPayloadMapper.looksLikeUrl(value) ||

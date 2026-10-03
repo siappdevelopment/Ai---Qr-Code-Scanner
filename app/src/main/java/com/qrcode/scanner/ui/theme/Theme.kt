@@ -4,7 +4,12 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.graphics.Color as AndroidColor
+import android.os.Build
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -114,7 +119,14 @@ fun QRCodeScannerTheme(
             @Suppress("DEPRECATION")
             window.statusBarColor = AndroidColor.TRANSPARENT
             @Suppress("DEPRECATION")
-            window.navigationBarColor = AndroidColor.TRANSPARENT
+            window.navigationBarColor = if (useDark) {
+                palette.pageBackground.toArgb()
+            } else {
+                AndroidColor.TRANSPARENT
+            }
+            if (useDark && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                window.isNavigationBarContrastEnforced = false
+            }
         }
     }
 
@@ -123,6 +135,23 @@ fun QRCodeScannerTheme(
         typography = Typography,
         content = content
     )
+}
+
+/** Light theme keeps the default bar. Black theme uses the dark page background. */
+fun ComponentActivity.enableThemedEdgeToEdge() {
+    val dark = readAppNightMode(this) == AppCompatDelegate.MODE_NIGHT_YES
+    if (!dark) {
+        enableEdgeToEdge()
+        return
+    }
+    val navigation = ScanPulsePalette.Dark.pageBackground.toArgb()
+    enableEdgeToEdge(
+        statusBarStyle = SystemBarStyle.dark(AndroidColor.TRANSPARENT),
+        navigationBarStyle = SystemBarStyle.dark(navigation)
+    )
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        window.isNavigationBarContrastEnforced = false
+    }
 }
 
 private fun Context.findHostActivity(): Activity? {

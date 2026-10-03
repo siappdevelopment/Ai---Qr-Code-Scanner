@@ -79,7 +79,15 @@ public class LanguageActivity extends AppCompatActivity {
 
     private void findIDs() {
         tvTitle = findViewById(R.id.tvTitle);
+        AppCompatImageView ivBack = findViewById(R.id.ivBack);
         AppCompatImageView ivDone = findViewById(R.id.ivDone);
+        if (isOpenedFromSettings()) {
+            ivBack.setVisibility(View.VISIBLE);
+            ivBack.setOnClickListener(view -> {
+                setResult(RESULT_CANCELED);
+                finish();
+            });
+        }
         RecyclerView rvLanguage = findViewById(R.id.rvLanguage);
         RelativeLayout rlAdView = findViewById(R.id.rlAdView);
         RelativeLayout rlBannerAdView = findViewById(R.id.rlBannerAdView);

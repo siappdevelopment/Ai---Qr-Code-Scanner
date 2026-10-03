@@ -172,7 +172,8 @@
             android:name="com.qrcode.scanner.ui.screens.create.CreateActivity"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.QRCodeScanner" />
+            android:theme="@style/Theme.QRCodeScanner"
+            android:windowSoftInputMode="adjustNothing" />
         <activity
             android:name="com.qrcode.scanner.ui.screens.create.CommonQrFormActivity"
             android:exported="false"

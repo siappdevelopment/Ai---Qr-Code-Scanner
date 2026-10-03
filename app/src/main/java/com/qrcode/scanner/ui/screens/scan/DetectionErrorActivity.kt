@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import com.qrcode.scanner.ui.theme.enableThemedEdgeToEdge
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -62,7 +62,7 @@ import com.qrcode.scanner.ui.theme.White
 class DetectionErrorActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableThemedEdgeToEdge()
         val imageUri = intent.getStringExtra(ScanIntents.EXTRA_IMAGE_URI)?.let(Uri::parse)
         val reason = intent.getStringExtra(ScanIntents.EXTRA_ERROR_REASON)
             ?: "No scannable code detected"

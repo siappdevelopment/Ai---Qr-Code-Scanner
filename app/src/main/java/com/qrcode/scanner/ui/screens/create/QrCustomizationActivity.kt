@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import com.qrcode.scanner.ui.theme.enableThemedEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -54,7 +55,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qrcode.scanner.ui.theme.BorderSubtle
@@ -85,7 +88,7 @@ import kotlinx.coroutines.withContext
 class QrCustomizationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableThemedEdgeToEdge()
         bindScreenBackAd("QrCustomizationScreen")
         val payload = intent.getStringExtra(CreateQrIntents.EXTRA_PAYLOAD).orEmpty()
         val eccName = intent.getStringExtra(CreateQrIntents.EXTRA_ECC_LEVEL)
@@ -224,7 +227,7 @@ private fun QrCustomizationScreen(
                 ) {
                     style = QrStyleConfig.Default
                     logoBmp = null
-                    Toast.makeText(context, "Reset to Electric Cobalt", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Reset is done", Toast.LENGTH_SHORT).show()
                 }
             )
         }
@@ -560,15 +563,15 @@ private fun SelectChip(
 ) {
     Box(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
-            .background(if (selected) CobaltSoft else NestedSurface)
+            .heightIn(min = 56.dp)
+            .background(if (selected) CobaltSoft else NestedSurface, RoundedCornerShape(12.dp))
             .border(1.dp, if (selected) CobaltPrimary else BorderSubtle, RoundedCornerShape(12.dp))
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
                 onClick = onClick
             )
-            .padding(horizontal = 12.dp, vertical = 16.dp),
+            .padding(horizontal = 8.dp, vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -576,8 +579,14 @@ private fun SelectChip(
             color = if (selected) CobaltPrimary else TextPrimary,
             fontFamily = PlusJakartaSans,
             fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
-            fontSize = 14.sp,
-            maxLines = 2
+            fontSize = 13.sp,
+            lineHeight = 16.sp,
+            textAlign = TextAlign.Center,
+            maxLines = 2,
+            style = androidx.compose.ui.text.TextStyle(
+                platformStyle = PlatformTextStyle(includeFontPadding = true)
+            ),
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

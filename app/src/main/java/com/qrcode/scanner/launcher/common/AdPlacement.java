@@ -1007,6 +1007,15 @@ public final class AdPlacement {
     }
 
     public static void requestSmallBannerAd(Activity activity, String unitId, @Nullable java.util.function.Consumer<AdView> onLoaded, @Nullable Runnable onFailed) {
+        requestBannerAd(activity, unitId, 0, onLoaded, onFailed);
+    }
+
+    /** Anchored adaptive banner. widthDp 0 uses the full screen width. */
+    public static void requestAdaptiveBannerAd(Activity activity, String unitId, int widthDp, @Nullable java.util.function.Consumer<AdView> onLoaded, @Nullable Runnable onFailed) {
+        requestBannerAd(activity, unitId, widthDp > 0 ? widthDp : -1, onLoaded, onFailed);
+    }
+
+    private static void requestBannerAd(Activity activity, String unitId, int adaptiveWidthDp, @Nullable java.util.function.Consumer<AdView> onLoaded, @Nullable Runnable onFailed) {
         if (activity != null) {
             initializeIfConfigured(activity);
         }
@@ -1018,7 +1027,12 @@ public final class AdPlacement {
             return;
         }
         AdView adView = new AdView(activity);
-        adView.setAdSize(AdSize.BANNER);
+        if (adaptiveWidthDp == 0) {
+            adView.setAdSize(AdSize.BANNER);
+        } else {
+            int width = adaptiveWidthDp > 0 ? adaptiveWidthDp : bannerWidthDp(activity);
+            adView.setAdSize(AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(activity, width));
+        }
         adView.setAdUnitId(id);
         adView.setAdListener(new AdListener() {
             @Override
@@ -1831,7 +1845,19 @@ public final class AdPlacement {
     }
 
     private static AdSize getAdaptiveAdSize(Activity activity) {
-        return getAdSize(activity);
+        return getAdaptiveAdSize(activity, -1);
+    }
+
+    private static AdSize getAdaptiveAdSize(Activity activity, int widthDp) {
+        int width = widthDp > 0 ? widthDp : bannerWidthDp(activity);
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, width);
+    }
+
+    private static int bannerWidthDp(Activity activity) {
+        Display display = activity.getWindowManager().getDefaultDisplay();
+        DisplayMetrics outMetrics = new DisplayMetrics();
+        display.getMetrics(outMetrics);
+        return Math.max(1, (int) (outMetrics.widthPixels / outMetrics.density));
     }
 
     private static void prepareBannerLoading(@Nullable ShimmerFrameLayout slBannerShimmer, @Nullable LinearLayout llBannerAd) {

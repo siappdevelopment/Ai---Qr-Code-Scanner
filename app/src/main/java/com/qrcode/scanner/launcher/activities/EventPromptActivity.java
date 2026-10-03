@@ -185,7 +185,7 @@ public class EventPromptActivity extends AppCompatActivity {
         well.setColor(adWell);
         well.setCornerRadius(16f * getResources().getDisplayMetrics().density);
         adHost.setBackground(well);
-        adHost.setPadding(dp(8), dp(8), dp(8), dp(8));
+        adHost.setPadding(0, 0, 0, 0);
     }
 
     private int batteryPercent() {
@@ -387,7 +387,6 @@ public class EventPromptActivity extends AppCompatActivity {
         GradientDrawable card = new GradientDrawable();
         card.setColor(adCardColor);
         card.setCornerRadius(12f * getResources().getDisplayMetrics().density);
-        card.setStroke(dp(1), 0xFFD5DEEA);
         slot.setBackground(card);
         if (slot instanceof ViewGroup) {
             ViewGroup group = (ViewGroup) slot;
@@ -414,28 +413,97 @@ public class EventPromptActivity extends AppCompatActivity {
         shimmer.startShimmer();
         bannerSlot.setVisibility(View.GONE);
         String bannerId = RemoteConfigValues.getEventBannerId().trim();
-        AdPlacement.requestSmallBannerAd(this, bannerId, adView -> {
-            if (request != adRequest || isFinishing()) {
-                adView.destroy();
-                return;
-            }
-            shimmer.stopShimmer();
-            shimmer.setVisibility(View.GONE);
-            bannerSlot.removeAllViews();
-            bannerSlot.addView(adView);
-            bannerSlot.setVisibility(View.VISIBLE);
-            bannerSlot.setBackgroundColor(adCardColor);
-            loadedBanner = adView;
-        }, () -> {
+        container.post(() -> {
             if (request != adRequest || isFinishing()) {
                 return;
             }
-            if (AdPlacement.getGoogleAdFailedShowQuiz() && QuizAds.showBanner(this, container, shimmer, bannerSlot)) {
-                paintNativeCard(bannerSlot);
-                return;
-            }
-            hideAdPlaceholders();
+            AdPlacement.requestAdaptiveBannerAd(this, bannerId, eventBannerWidthDp(), adView -> {
+                if (request != adRequest || isFinishing()) {
+                    adView.destroy();
+                    return;
+                }
+                shimmer.stopShimmer();
+                shimmer.setVisibility(View.GONE);
+                nativeShimmer.setVisibility(View.GONE);
+                View adCard = findViewById(R.id.eventAdCard);
+                if (adCard != null) {
+                    adCard.setVisibility(View.GONE);
+                }
+                allowBannerToDrawFully(bannerSlot);
+                showFullBanner(bannerSlot, adView);
+                loadedBanner = adView;
+            }, () -> {
+                if (request != adRequest || isFinishing()) {
+                    return;
+                }
+                if (AdPlacement.getGoogleAdFailedShowQuiz() && QuizAds.showBanner(this, container, shimmer, bannerSlot)) {
+                    paintNativeCard(bannerSlot);
+                    return;
+                }
+                hideAdPlaceholders();
+            });
         });
+    }
+
+    private void showFullBanner(LinearLayout bannerSlot, com.google.android.gms.ads.AdView adView) {
+        adView.setClipChildren(false);
+        adView.setClipToPadding(false);
+        int width = ViewGroup.LayoutParams.MATCH_PARENT;
+        int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        if (adView.getAdSize() != null) {
+            width = adView.getAdSize().getWidthInPixels(this);
+            height = adView.getAdSize().getHeightInPixels(this) + dp(8);
+        }
+        FrameLayout holder = new FrameLayout(this);
+        holder.setClipChildren(false);
+        holder.setClipToPadding(false);
+        holder.setPadding(0, dp(10), 0, dp(4));
+        FrameLayout.LayoutParams adParams = new FrameLayout.LayoutParams(width, height);
+        adParams.gravity = android.view.Gravity.CENTER_HORIZONTAL | android.view.Gravity.TOP;
+        holder.addView(adView, adParams);
+        bannerSlot.removeAllViews();
+        bannerSlot.addView(holder, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        bannerSlot.setVisibility(View.VISIBLE);
+        bannerSlot.setBackgroundColor(adCardColor);
+        adView.post(() -> unclipAdChildren(adView));
+    }
+
+    private void unclipAdChildren(ViewGroup group) {
+        group.setClipChildren(false);
+        group.setClipToPadding(false);
+        group.setClipToOutline(false);
+        for (int i = 0; i < group.getChildCount(); i++) {
+            View child = group.getChildAt(i);
+            child.setClipToOutline(false);
+            if (child instanceof ViewGroup) {
+                unclipAdChildren((ViewGroup) child);
+            }
+        }
+    }
+
+    private void allowBannerToDrawFully(@Nullable View start) {
+        View view = start;
+        while (view != null) {
+            view.setClipToOutline(false);
+            if (view instanceof ViewGroup) {
+                ViewGroup group = (ViewGroup) view;
+                group.setClipChildren(false);
+                group.setClipToPadding(false);
+            }
+            if (view.getId() == R.id.eventRoot) {
+                break;
+            }
+            view = view.getParent() instanceof View ? (View) view.getParent() : null;
+        }
+    }
+
+    private int eventBannerWidthDp() {
+        View container = findViewById(R.id.rlEventAd);
+        float density = getResources().getDisplayMetrics().density;
+        int widthPx = container != null && container.getWidth() > 0
+                ? container.getWidth()
+                : getResources().getDisplayMetrics().widthPixels - dp(32);
+        return Math.max(1, (int) Math.floor(widthPx / density));
     }
 
     private void hideAdPlaceholders() {

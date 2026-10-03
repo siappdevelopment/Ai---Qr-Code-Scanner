@@ -14,7 +14,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/event_header"
-        android:minHeight="188dp">
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:minHeight="188dp"
+        android:paddingBottom="8dp">
 
         <ImageView
             android:id="@+id/ivEventHero"
@@ -42,7 +45,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="24dp"
-            android:layout_marginEnd="150dp"
+            android:layout_marginEnd="168dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:orientation="vertical">
 
             <TextView
@@ -114,6 +119,20 @@
         android:orientation="vertical"
         android:paddingTop="20dp">
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
         <LinearLayout
             android:id="@+id/llOptimizedSpeed"
             android:layout_width="match_parent"
@@ -143,24 +162,28 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginEnd="4dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tvOptimizeTitle"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
                         android:fontFamily="@font/sans_trial_semi_bold"
                         android:includeFontPadding="false"
+                        android:maxLines="2"
                         android:text="@string/event_optimized_speed"
                         android:textColor="@color/event_title"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/tvOptimizeBadge"
@@ -179,21 +202,22 @@
 
                 <TextView
                     android:id="@+id/tvOptimizeSub"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:fontFamily="@font/sans_trial_medium"
                     android:includeFontPadding="false"
+                    android:maxLines="2"
                     android:text="@string/event_optimized_sub"
                     android:textColor="@color/event_muted"
                     android:textSize="12sp" />
             </LinearLayout>
 
             <ImageView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:contentDescription="@null"
-                android:padding="2dp"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_event_arrow" />
         </LinearLayout>
 
@@ -203,19 +227,26 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="12dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:visibility="gone">
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/eventAdCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp">
+                app:cardCornerRadius="0dp"
+                app:cardElevation="0dp"
+                app:cardPreventCornerOverlap="false">
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:clipChildren="false"
+                    android:clipToPadding="false">
 
                     <com.facebook.shimmer.ShimmerFrameLayout
                         android:id="@+id/slEventShimmerNative"
@@ -248,23 +279,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:visibility="gone" />
-
-                    <LinearLayout
-                        android:id="@+id/llEventBanner"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:visibility="gone" />
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/llEventBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                android:visibility="gone" />
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
+            </LinearLayout>
+        </ScrollView>
 
         <FrameLayout
             android:layout_width="match_parent"

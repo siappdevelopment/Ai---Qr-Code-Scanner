@@ -163,7 +163,7 @@ private fun HomeTopBar(onOpenFavorites: () -> Unit) {
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_star),
-                    contentDescription = "Favorites",
+                    contentDescription = stringResource(R.string.home_cd_favorites),
                     tint = CobaltPrimary,
                     modifier = Modifier.size(20.dp)
                 )
@@ -185,7 +185,7 @@ private fun InstantScannerHero(onOpenScanner: () -> Unit) {
         ScannerReticle()
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "Instant Scanner",
+            text = stringResource(R.string.home_instant_scanner_title),
             color = HomeColors.OnSurface,
             fontFamily = PlusJakartaSans,
             fontSize = 18.sp,
@@ -194,7 +194,7 @@ private fun InstantScannerHero(onOpenScanner: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Point at any QR code or standard barcode",
+            text = stringResource(R.string.home_instant_scanner_subtitle),
             color = HomeColors.OnSurfaceVariant,
             fontFamily = PlusJakartaSans,
             fontSize = 14.sp,
@@ -224,7 +224,7 @@ private fun InstantScannerHero(onOpenScanner: () -> Unit) {
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Open Camera Scanner",
+                text = stringResource(R.string.home_open_camera_scanner),
                 color = White,
                 fontFamily = PlusJakartaSans,
                 fontSize = 16.sp,
@@ -294,7 +294,7 @@ private fun QuickToolsSection(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
         Text(
-            text = "QUICK TOOLS",
+            text = stringResource(R.string.home_quick_tools_heading),
             color = HomeColors.OnSurfaceVariant,
             fontFamily = PlusJakartaSans,
             fontSize = 12.sp,
@@ -308,15 +308,15 @@ private fun QuickToolsSection(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 QuickToolCard(
-                    title = "Scan Barcode",
-                    subtitle = "UPC & EAN tags",
+                    title = stringResource(R.string.home_tool_scan_barcode_title),
+                    subtitle = stringResource(R.string.home_tool_scan_barcode_subtitle),
                     icon = Icons.Outlined.DocumentScanner,
                     onClick = onScanBarcode,
                     modifier = Modifier.weight(1f)
                 )
                 QuickToolCard(
-                    title = "Scan Gallery",
-                    subtitle = "From screenshots",
+                    title = stringResource(R.string.home_tool_scan_gallery_title),
+                    subtitle = stringResource(R.string.home_tool_scan_gallery_subtitle),
                     icon = Icons.Outlined.Image,
                     onClick = onScanGallery,
                     modifier = Modifier.weight(1f)
@@ -327,15 +327,15 @@ private fun QuickToolsSection(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 QuickToolCard(
-                    title = "Create QR",
-                    subtitle = "Links, Wi-Fi & vCard",
+                    title = stringResource(R.string.home_tool_create_qr_title),
+                    subtitle = stringResource(R.string.home_tool_create_qr_subtitle),
                     icon = Icons.Outlined.AddToPhotos,
                     onClick = onCreateQr,
                     modifier = Modifier.weight(1f)
                 )
                 QuickToolCard(
-                    title = "History",
-                    subtitle = "Saved scans & codes",
+                    title = stringResource(R.string.home_tool_history_title),
+                    subtitle = stringResource(R.string.home_tool_history_subtitle),
                     icon = Icons.Outlined.History,
                     onClick = onOpenHistory,
                     modifier = Modifier.weight(1f)
@@ -427,7 +427,7 @@ private fun RecentScansSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Recent Scans",
+                text = stringResource(R.string.home_recent_scans_title),
                 color = HomeColors.OnSurface,
                 fontFamily = PlusJakartaSans,
                 fontSize = 18.sp,
@@ -443,7 +443,7 @@ private fun RecentScansSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "View all",
+                    text = stringResource(R.string.home_view_all),
                     color = CobaltPrimary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp,
@@ -484,7 +484,7 @@ private fun RecentScansSection(
                     )
                 }
                 Text(
-                    text = "No recent scans yet",
+                    text = stringResource(R.string.home_no_recent_scans_title),
                     color = HomeColors.OnSurface,
                     fontFamily = PlusJakartaSans,
                     fontSize = 16.sp,
@@ -493,7 +493,7 @@ private fun RecentScansSection(
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = "Codes you scan will appear here for quick access.",
+                    text = stringResource(R.string.home_no_recent_scans_body),
                     color = HomeColors.OnSurfaceVariant,
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp,

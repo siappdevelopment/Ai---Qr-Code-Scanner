@@ -11,7 +11,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.ui.theme.TextPrimary
 
 /** Plain back arrow used on every screen header. */
@@ -32,7 +34,7 @@ fun AppBackButton(
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-            contentDescription = "Back",
+            contentDescription = stringResource(R.string.action_back),
             tint = TextPrimary,
             modifier = Modifier.size(22.dp)
         )

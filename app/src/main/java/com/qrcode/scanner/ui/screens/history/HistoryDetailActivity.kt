@@ -24,10 +24,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.ui.screens.scan.ScanResultScreen
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -116,14 +118,20 @@ private fun HistoryDetailRoute(
                 historyId = item.id,
                 initialFavorite = item.isFavorite,
                 scannedAtMillis = item.timestamp,
-                title = "History Detail",
+                title = stringResource(R.string.history_detail_title),
                 onBack = onBack,
                 onFavoriteChange = { favorite ->
                     scope.launch {
                         repository.updateFavorite(item.id, favorite)
                         Toast.makeText(
                             context,
-                            if (favorite) "Saved to your favorites" else "Removed from favorites",
+                            context.getString(
+                                if (favorite) {
+                                    R.string.scan_result_toast_saved_favorite
+                                } else {
+                                    R.string.scan_result_toast_removed_favorite
+                                }
+                            ),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -140,7 +148,11 @@ private fun HistoryDetailRoute(
                 deleting = true
                 scope.launch {
                     repository.deleteById(historyId)
-                    Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.toast_deleted),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     onBack()
                 }
             },
@@ -160,14 +172,14 @@ private fun MissingHistory(onBack: () -> Unit) {
         verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Scan not found",
+            text = stringResource(R.string.history_not_found_title),
             color = TextPrimary,
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp
         )
         Text(
-            text = "This history item may have been deleted.",
+            text = stringResource(R.string.history_not_found_body),
             color = TextSecondary,
             fontFamily = PlusJakartaSans,
             fontSize = 14.sp,
@@ -175,7 +187,7 @@ private fun MissingHistory(onBack: () -> Unit) {
         )
         TextButton(onClick = onBack) {
             Text(
-                text = "Go back",
+                text = stringResource(R.string.action_go_back),
                 color = CobaltPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold

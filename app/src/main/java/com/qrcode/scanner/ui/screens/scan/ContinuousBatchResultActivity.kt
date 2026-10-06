@@ -35,11 +35,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.mlkit.vision.barcode.common.Barcode
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -134,7 +136,7 @@ private fun ContinuousBatchResultScreen(
             AppBackButton(onClick = onBack)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Batch Results",
+                text = stringResource(R.string.batch_results_title),
                 color = TextPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -145,9 +147,9 @@ private fun ContinuousBatchResultScreen(
 
         Text(
             text = if (items.size == 1) {
-                "1 code accepted"
+                stringResource(R.string.batch_results_one_code)
             } else {
-                "${items.size} codes accepted"
+                stringResource(R.string.batch_results_many_codes, items.size)
             },
             color = TextSecondary,
             fontFamily = PlusJakartaSans,

@@ -61,7 +61,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.annotation.StringRes
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -97,16 +100,19 @@ fun CreateHubScreen(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var selectedFilter by remember { mutableStateOf(CreateFilter.All) }
+    val context = LocalContext.current
 
-    val visibleCategories by remember(searchQuery, selectedFilter) {
+    val visibleCategories by remember(searchQuery, selectedFilter, context) {
         derivedStateOf {
             CreateCategory.entries.filter { category ->
                 val matchesFilter =
                     selectedFilter == CreateFilter.All || category.filter == selectedFilter
                 val q = searchQuery.trim()
+                val title = context.getString(category.titleRes)
+                val subtitle = context.getString(category.subtitleRes)
                 val matchesSearch = q.isEmpty() ||
-                    category.title.contains(q, ignoreCase = true) ||
-                    category.subtitle.contains(q, ignoreCase = true)
+                    title.contains(q, ignoreCase = true) ||
+                    subtitle.contains(q, ignoreCase = true)
                 matchesFilter && matchesSearch
             }
         }
@@ -167,7 +173,7 @@ fun CreateHubScreen(
                 if (social.isNotEmpty()) {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Text(
-                            text = "Social",
+                            text = stringResource(R.string.create_hub_section_social),
                             color = CreateColors.TextMain,
                             fontFamily = PlusJakartaSans,
                             fontSize = 16.sp,
@@ -182,7 +188,7 @@ fun CreateHubScreen(
                 if (barcodes.isNotEmpty()) {
                     Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                         Text(
-                            text = "Barcode",
+                            text = stringResource(R.string.create_hub_section_barcode),
                             color = CreateColors.TextMain,
                             fontFamily = PlusJakartaSans,
                             fontSize = 16.sp,
@@ -213,7 +219,7 @@ private fun CreateTopBar(onBack: () -> Unit) {
         ) {
             AppBackButton(onClick = onBack)
             Text(
-                text = "Create QR Code",
+                text = stringResource(R.string.create_hub_title),
                 color = CreateColors.TextMain,
                 fontFamily = PlusJakartaSans,
                 fontSize = 18.sp,
@@ -265,7 +271,7 @@ private fun SearchField(
                 decorationBox = { inner ->
                     if (query.isEmpty()) {
                         Text(
-                            text = "Search QR format...",
+                            text = stringResource(R.string.create_hub_search_placeholder),
                             color = CreateColors.TextSecondary,
                             fontFamily = PlusJakartaSans,
                             fontSize = 14.sp
@@ -277,7 +283,7 @@ private fun SearchField(
             if (query.isNotEmpty()) {
                 Icon(
                     imageVector = Icons.Outlined.Cancel,
-                    contentDescription = "Clear search",
+                    contentDescription = stringResource(R.string.cd_clear_search),
                     tint = CreateColors.TextSecondary,
                     modifier = Modifier
                         .size(18.dp)
@@ -326,7 +332,7 @@ private fun FilterChipsRow(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = filter.label,
+                    text = stringResource(filter.labelRes),
                     color = if (active) White else CreateColors.ChipInactiveText,
                     fontFamily = PlusJakartaSans,
                     fontSize = 12.sp,
@@ -437,7 +443,7 @@ private fun CategoryCard(
         Spacer(modifier = Modifier.height(12.dp))
         Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
             Text(
-                text = category.title,
+                text = stringResource(category.titleRes),
                 color = CreateColors.TextMain,
                 fontFamily = PlusJakartaSans,
                 fontSize = 14.sp,
@@ -447,7 +453,7 @@ private fun CategoryCard(
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = category.subtitle,
+                text = stringResource(category.subtitleRes),
                 color = CreateColors.TextMuted,
                 fontFamily = PlusJakartaSans,
                 fontSize = 12.sp,
@@ -485,7 +491,7 @@ private fun NoFormatsFound(onReset: () -> Unit) {
         }
         Spacer(modifier = Modifier.height(12.dp))
         Text(
-            text = "No formats found",
+            text = stringResource(R.string.create_hub_no_formats_title),
             color = CreateColors.TextMain,
             fontFamily = PlusJakartaSans,
             fontSize = 16.sp,
@@ -494,7 +500,7 @@ private fun NoFormatsFound(onReset: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Try typing another keyword or reset the active filter",
+            text = stringResource(R.string.create_hub_no_formats_body),
             color = CreateColors.TextMuted,
             fontFamily = PlusJakartaSans,
             fontSize = 12.sp,
@@ -514,7 +520,7 @@ private fun NoFormatsFound(onReset: () -> Unit) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Reset Search",
+                text = stringResource(R.string.create_hub_reset_search),
                 color = White,
                 fontFamily = PlusJakartaSans,
                 fontSize = 12.sp,
@@ -524,16 +530,16 @@ private fun NoFormatsFound(onReset: () -> Unit) {
     }
 }
 
-private enum class CreateFilter(val label: String, val key: String) {
-    All("All Formats", "all"),
-    Web("Web & Social", "web"),
-    Comms("Communications", "comms"),
-    Utilities("Utilities", "utilities")
+private enum class CreateFilter(@StringRes val labelRes: Int, val key: String) {
+    All(R.string.create_filter_all, "all"),
+    Web(R.string.create_filter_web, "web"),
+    Comms(R.string.create_filter_comms, "comms"),
+    Utilities(R.string.create_filter_utilities, "utilities")
 }
 
 private enum class CreateCategory(
-    val title: String,
-    val subtitle: String,
+    @StringRes val titleRes: Int,
+    @StringRes val subtitleRes: Int,
     val filter: CreateFilter,
     val icon: ImageVector,
     val iconBg: Color,
@@ -548,8 +554,8 @@ private enum class CreateCategory(
     val iconRes: Int? = null
 ) {
     Website(
-        title = "Website URL",
-        subtitle = "Links, social profiles, web pages",
+        titleRes = R.string.create_cat_website_title,
+        subtitleRes = R.string.create_cat_website_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.Language,
         iconBg = Color(0xFFEFF6FF),
@@ -558,8 +564,8 @@ private enum class CreateCategory(
         categoryType = QrCategoryType.WEBSITE
     ),
     Wifi(
-        title = "Wi-Fi Network",
-        subtitle = "WPA/WPA2, SSID, auto-connect",
+        titleRes = R.string.create_cat_wifi_title,
+        subtitleRes = R.string.create_cat_wifi_subtitle,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.Wifi,
         iconBg = Color(0xFFECFDF5),
@@ -568,8 +574,8 @@ private enum class CreateCategory(
         categoryType = QrCategoryType.WIFI
     ),
     Contact(
-        title = "Contact / vCard",
-        subtitle = "Name, phone, email, address",
+        titleRes = R.string.create_cat_contact_title,
+        subtitleRes = R.string.create_cat_contact_subtitle,
         filter = CreateFilter.Comms,
         icon = Icons.Outlined.Person,
         iconBg = Color(0xFFEEF2FF),
@@ -578,8 +584,8 @@ private enum class CreateCategory(
         categoryType = QrCategoryType.CONTACT
     ),
     PlainText(
-        title = "Plain Text",
-        subtitle = "Notes, messages, raw data",
+        titleRes = R.string.create_cat_plain_text_title,
+        subtitleRes = R.string.create_cat_plain_text_subtitle,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.Description,
         iconBg = Color(0xFFF1F5F9),
@@ -588,8 +594,8 @@ private enum class CreateCategory(
         categoryType = QrCategoryType.PLAIN_TEXT
     ),
     Phone(
-        title = "Phone Call",
-        subtitle = "Direct phone dialing",
+        titleRes = R.string.create_cat_phone_title,
+        subtitleRes = R.string.create_cat_phone_subtitle,
         filter = CreateFilter.Comms,
         icon = Icons.Outlined.Call,
         iconBg = Color(0xFFECFDF5),
@@ -598,8 +604,8 @@ private enum class CreateCategory(
         categoryType = QrCategoryType.PHONE
     ),
     Email(
-        title = "Email Message",
-        subtitle = "Pre-filled recipient & subject",
+        titleRes = R.string.create_cat_email_title,
+        subtitleRes = R.string.create_cat_email_subtitle,
         filter = CreateFilter.Comms,
         icon = Icons.Outlined.Email,
         iconBg = Color(0xFFEFF6FF),
@@ -608,8 +614,8 @@ private enum class CreateCategory(
         categoryType = QrCategoryType.EMAIL
     ),
     Sms(
-        title = "SMS / Message",
-        subtitle = "Direct text message",
+        titleRes = R.string.create_cat_sms_title,
+        subtitleRes = R.string.create_cat_sms_subtitle,
         filter = CreateFilter.Comms,
         icon = Icons.Outlined.Sms,
         iconBg = Color(0xFFF0F9FF),
@@ -618,8 +624,8 @@ private enum class CreateCategory(
         categoryType = QrCategoryType.SMS
     ),
     WhatsApp(
-        title = "WhatsApp",
-        subtitle = "Direct WhatsApp chat link",
+        titleRes = R.string.create_cat_whatsapp_title,
+        subtitleRes = R.string.create_cat_whatsapp_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.Chat,
         iconBg = Color(0xFFF0FDFA),
@@ -631,8 +637,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_whatsapp
     ),
     Location(
-        title = "Location",
-        subtitle = "Google Maps coordinates / pin",
+        titleRes = R.string.create_cat_location_title,
+        subtitleRes = R.string.create_cat_location_subtitle,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.LocationOn,
         iconBg = Color(0xFFFFF1F2),
@@ -641,8 +647,8 @@ private enum class CreateCategory(
         categoryType = QrCategoryType.LOCATION
     ),
     Calendar(
-        title = "Calendar Event",
-        subtitle = "Title, date, time, reminder",
+        titleRes = R.string.create_cat_calendar_title,
+        subtitleRes = R.string.create_cat_calendar_subtitle,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.CalendarToday,
         iconBg = Color(0xFFFFFBEB),
@@ -651,8 +657,8 @@ private enum class CreateCategory(
         categoryType = QrCategoryType.CALENDAR
     ),
     AppLink(
-        title = "App Link",
-        subtitle = "Google Play & App Store links",
+        titleRes = R.string.create_cat_app_link_title,
+        subtitleRes = R.string.create_cat_app_link_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.Apps,
         iconBg = Color(0xFFF5F3FF),
@@ -661,8 +667,8 @@ private enum class CreateCategory(
         categoryType = QrCategoryType.APP_LINK
     ),
     Facebook(
-        title = "Facebook",
-        subtitle = "Profile or page",
+        titleRes = R.string.create_cat_facebook_title,
+        subtitleRes = R.string.create_cat_facebook_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.Language,
         iconBg = Color(0xFFEFF6FF),
@@ -674,8 +680,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_facebook
     ),
     YouTube(
-        title = "YouTube",
-        subtitle = "Channel or video",
+        titleRes = R.string.create_cat_youtube_title,
+        subtitleRes = R.string.create_cat_youtube_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.PlayArrow,
         iconBg = Color(0xFFFEF2F2),
@@ -687,8 +693,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_youtube
     ),
     Twitter(
-        title = "Twitter",
-        subtitle = "Profile",
+        titleRes = R.string.create_cat_twitter_title,
+        subtitleRes = R.string.create_cat_twitter_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.Language,
         iconBg = Color(0xFFF1F5F9),
@@ -700,8 +706,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_twitter
     ),
     TikTok(
-        title = "TikTok",
-        subtitle = "Profile",
+        titleRes = R.string.create_cat_tiktok_title,
+        subtitleRes = R.string.create_cat_tiktok_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.MusicNote,
         iconBg = Color(0xFFF1F5F9),
@@ -713,8 +719,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_tiktok
     ),
     Instagram(
-        title = "Instagram",
-        subtitle = "Profile",
+        titleRes = R.string.create_cat_instagram_title,
+        subtitleRes = R.string.create_cat_instagram_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.PhotoCamera,
         iconBg = Color(0xFFFDF2F8),
@@ -726,8 +732,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_instagram
     ),
     Paypal(
-        title = "PayPal",
-        subtitle = "PayPal.me link",
+        titleRes = R.string.create_cat_paypal_title,
+        subtitleRes = R.string.create_cat_paypal_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.Language,
         iconBg = Color(0xFFEFF6FF),
@@ -739,8 +745,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_paypal
     ),
     Snapchat(
-        title = "Snapchat",
-        subtitle = "Add friend",
+        titleRes = R.string.create_cat_snapchat_title,
+        subtitleRes = R.string.create_cat_snapchat_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.SentimentSatisfied,
         iconBg = Color(0xFFFEF9C3),
@@ -752,8 +758,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_snapchat
     ),
     LinkedIn(
-        title = "LinkedIn",
-        subtitle = "Profile",
+        titleRes = R.string.create_cat_linkedin_title,
+        subtitleRes = R.string.create_cat_linkedin_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.Language,
         iconBg = Color(0xFFEFF6FF),
@@ -765,8 +771,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_linkedin
     ),
     Spotify(
-        title = "Spotify",
-        subtitle = "Profile or playlist",
+        titleRes = R.string.create_cat_spotify_title,
+        subtitleRes = R.string.create_cat_spotify_subtitle,
         filter = CreateFilter.Web,
         icon = Icons.Outlined.GraphicEq,
         iconBg = Color(0xFFECFDF5),
@@ -778,8 +784,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_spotify
     ),
     Code128(
-        title = "Code 128",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_code_128_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -791,8 +797,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_code128
     ),
     DataMatrix(
-        title = "Data Matrix",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_data_matrix_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -804,8 +810,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_datamatrix
     ),
     Pdf417(
-        title = "PDF 417",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_pdf_417_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -817,8 +823,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_pdf417
     ),
     Aztec(
-        title = "Aztec",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_aztec_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -830,8 +836,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_aztec
     ),
     Ean13(
-        title = "EAN 13",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_ean_13_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -843,8 +849,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_ean13
     ),
     Ean8(
-        title = "EAN 8",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_ean_8_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -856,8 +862,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_ean8
     ),
     UpcE(
-        title = "UPC E",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_upc_e_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -869,8 +875,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_upce
     ),
     UpcA(
-        title = "UPC A",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_upc_a_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -882,8 +888,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_upca
     ),
     Code93(
-        title = "Code 93",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_code_93_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -895,8 +901,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_code93
     ),
     Code39(
-        title = "Code 39",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_code_39_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -908,8 +914,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_code39
     ),
     Codabar(
-        title = "Codabar",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_codabar_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),
@@ -921,8 +927,8 @@ private enum class CreateCategory(
         iconRes = R.drawable.ic_barcode_codabar
     ),
     Itf(
-        title = "ITF",
-        subtitle = "Barcode",
+        titleRes = R.string.create_cat_itf_title,
+        subtitleRes = R.string.create_subtitle_barcode,
         filter = CreateFilter.Utilities,
         icon = Icons.Outlined.QrCode2,
         iconBg = Color(0xFFF1F5F9),

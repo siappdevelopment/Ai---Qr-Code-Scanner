@@ -64,10 +64,12 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.abs
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -197,7 +199,7 @@ private fun GalleryCropScreen(
         }
         loading = false
         if (sourceBitmap == null) {
-            loadError = "Unable to open this image"
+            loadError = context.getString(R.string.gallery_crop_unable_open_image)
         }
     }
 
@@ -242,16 +244,17 @@ private fun GalleryCropScreen(
                 when {
                     hits.isEmpty() -> onDetectionFailed(
                         cachedImageUri(context, src, uri),
-                        "No scannable code detected"
+                        context.getString(R.string.gallery_crop_no_code_detected)
                     )
                     hits.size == 1 -> onDetectedSingle(hits.first())
                     else -> multiResults = hits
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, e.message ?: "Detection failed", Toast.LENGTH_SHORT).show()
+                val failedMsg = context.getString(R.string.gallery_crop_detection_failed)
+                Toast.makeText(context, e.message ?: failedMsg, Toast.LENGTH_SHORT).show()
                 onDetectionFailed(
                     cachedImageUri(context, src, uri),
-                    e.message ?: "Detection failed"
+                    e.message ?: failedMsg
                 )
             } finally {
                 detecting = false
@@ -273,7 +276,7 @@ private fun GalleryCropScreen(
         ) {
             AppBackButton(onClick = onBack)
             Text(
-                text = "Crop Photo",
+                text = stringResource(R.string.gallery_crop_title),
                 color = TextPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -321,7 +324,7 @@ private fun GalleryCropScreen(
                     )
                 }
                 else -> Text(
-                    text = "Select a photo to crop",
+                    text = stringResource(R.string.gallery_crop_select_photo),
                     color = TextTertiary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp
@@ -348,14 +351,14 @@ private fun GalleryCropScreen(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
             ToolChip(
-                label = "Rotate 90°",
+                label = stringResource(R.string.gallery_crop_rotate_90),
                 icon = Icons.Outlined.Rotate90DegreesCw,
                 modifier = Modifier.weight(1f),
                 enabled = sourceBitmap != null && !detecting,
                 onClick = { rotation = (rotation + 90) % 360 }
             )
             ToolChip(
-                label = "Flip",
+                label = stringResource(R.string.gallery_crop_flip),
                 icon = Icons.Outlined.Flip,
                 modifier = Modifier.weight(1f),
                 enabled = sourceBitmap != null && !detecting,
@@ -391,7 +394,11 @@ private fun GalleryCropScreen(
                     modifier = Modifier.size(20.dp)
                 )
                 Text(
-                    text = if (detecting) "Detecting…" else "Scan Selection",
+                    text = if (detecting) {
+                        stringResource(R.string.gallery_crop_detecting)
+                    } else {
+                        stringResource(R.string.gallery_crop_scan_selection)
+                    },
                     color = if (sourceBitmap == null || detecting) TextTertiary else White,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -409,7 +416,7 @@ private fun GalleryCropScreen(
                 .padding(bottom = 8.dp)
         ) {
             Text(
-                text = "Choose another photo",
+                text = stringResource(R.string.gallery_crop_choose_another),
                 color = CobaltPrimary,
                 fontFamily = PlusJakartaSans,
                 fontSize = 13.sp
@@ -422,7 +429,7 @@ private fun GalleryCropScreen(
             onDismissRequest = { multiResults = null },
             title = {
                 Text(
-                    text = "Multiple codes found",
+                    text = stringResource(R.string.gallery_crop_multiple_codes_title),
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -430,14 +437,19 @@ private fun GalleryCropScreen(
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Text(
-                        text = "Select which code to open:",
+                        text = stringResource(R.string.gallery_crop_multiple_codes_prompt),
                         color = TextSecondary,
                         fontFamily = PlusJakartaSans,
                         fontSize = 13.sp
                     )
                     results.forEachIndexed { index, code ->
                         Text(
-                            text = "${index + 1}. ${code.formatName}: ${code.rawValue.take(48)}",
+                            text = stringResource(
+                                R.string.gallery_crop_code_list_item,
+                                index + 1,
+                                code.formatName,
+                                code.rawValue.take(48)
+                            ),
                             color = TextPrimary,
                             fontFamily = PlusJakartaSans,
                             fontSize = 13.sp,
@@ -454,7 +466,7 @@ private fun GalleryCropScreen(
             },
             confirmButton = {
                 TextButton(onClick = { multiResults = null }) {
-                    Text("Cancel", color = CobaltPrimary)
+                    Text(stringResource(R.string.action_cancel), color = CobaltPrimary)
                 }
             }
         )
@@ -501,7 +513,7 @@ private fun CropCanvas(
         ) {
             Image(
                 bitmap = bitmap.asImageBitmap(),
-                contentDescription = "Selected photo",
+                contentDescription = stringResource(R.string.cd_selected_photo),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.FillBounds
             )

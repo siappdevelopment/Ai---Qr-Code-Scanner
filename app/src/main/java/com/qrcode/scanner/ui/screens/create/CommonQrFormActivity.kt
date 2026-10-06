@@ -2,6 +2,7 @@ package com.qrcode.scanner.ui.screens.create
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -52,6 +53,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.qrcode.scanner.app.R
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -92,7 +95,11 @@ class CommonQrFormActivity : ComponentActivity() {
         val type = QrCategoryType.fromIntentExtra(
             intent.getStringExtra(QrCategoryType.EXTRA_QR_CATEGORY)
         )
-        val nativeSize = if (FormLabels.forCategory(type).editRowCount() <= 2) "medium" else "small"
+        val nativeSize = if (FormLabels.forCategory(type, this).editRowCount() <= 2) {
+            "medium"
+        } else {
+            "small"
+        }
         setContent {
             QRCodeScannerTheme {
                 ScreenWithAd(screenKey = "QrFormScreen", nativeSize = nativeSize) {
@@ -116,7 +123,7 @@ fun CommonQrFormScreen(
 ) {
     val context = LocalContext.current
     val clipboard = LocalClipboardManager.current
-    val labels = remember(category) { FormLabels.forCategory(category) }
+    val labels = remember(category, context) { FormLabels.forCategory(category, context) }
     val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
     val settingsPrefs by settingsRepository.preferences.collectAsStateWithLifecycle(
         initialValue = SettingsPreferences()
@@ -148,7 +155,7 @@ fun CommonQrFormScreen(
         val filtered = if (barcode) BarcodeSymbology.filterInput(category, raw) else raw
         val max = QrPayloadBuilder.fieldMaxLength(category, field)
         return if (filtered.length > max) {
-            error = QrPayloadBuilder.limitMessage(max)
+            error = QrPayloadBuilder.limitMessage(max, context)
             filtered.take(max)
         } else {
             if (error != null) error = null
@@ -158,7 +165,7 @@ fun CommonQrFormScreen(
 
     fun attemptGenerate() {
         val input = currentInput()
-        val validation = QrPayloadBuilder.validate(category, input)
+        val validation = QrPayloadBuilder.validate(category, input, context)
         if (validation != null) {
             error = validation
             return
@@ -185,7 +192,7 @@ fun CommonQrFormScreen(
             .background(PageBackground)
             .navigationBarsPadding()
     ) {
-        FormTopBar(title = category.displayTitle, onBack = onBack)
+        FormTopBar(title = category.displayTitle(context), onBack = onBack)
 
         if (category == QrCategoryType.BARCODE) {
             Box(
@@ -203,7 +210,7 @@ fun CommonQrFormScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Barcode creation coming later",
+                        text = stringResource(R.string.create_barcode_stub_title),
                         color = TextPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -211,7 +218,7 @@ fun CommonQrFormScreen(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "This hub item is for barcodes (EAN/UPC), not QR codes. QR categories are available from Create.",
+                        text = stringResource(R.string.create_barcode_stub_body),
                         color = TextSecondary,
                         fontFamily = PlusJakartaSans,
                         fontSize = 14.sp
@@ -236,7 +243,7 @@ fun CommonQrFormScreen(
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 Text(
-                    text = category.displayTitle,
+                    text = category.displayTitle(context),
                     color = CobaltPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -265,7 +272,11 @@ fun CommonQrFormScreen(
                         if (!text.isNullOrBlank()) {
                             primary = capField(text, 0, BarcodeSymbology.isBarcode(category))
                         } else {
-                            Toast.makeText(context, "Clipboard is empty", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.toast_clipboard_empty),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     },
                     onClear = { primary = "" }
@@ -338,11 +349,13 @@ fun CommonQrFormScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = if (BarcodeSymbology.isBarcode(category)) {
-                            "Generate & Preview"
-                        } else {
-                            "Generate & Preview QR"
-                        },
+                        text = stringResource(
+                            if (BarcodeSymbology.isBarcode(category)) {
+                                R.string.create_form_generate_preview
+                            } else {
+                                R.string.create_form_generate_preview_qr
+                            }
+                        ),
                         color = White,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
@@ -362,12 +375,12 @@ fun CommonQrFormScreen(
                 horizontalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 SecondaryFormAction(
-                    label = "Instant Share",
+                    label = stringResource(R.string.create_form_instant_share),
                     icon = Icons.Outlined.Share,
                     modifier = Modifier.weight(1f),
                     onClick = {
                         val input = currentInput()
-                        val validation = QrPayloadBuilder.validate(category, input)
+                        val validation = QrPayloadBuilder.validate(category, input, context)
                         if (validation != null) {
                             error = validation
                             return@SecondaryFormAction
@@ -377,7 +390,12 @@ fun CommonQrFormScreen(
                             type = "text/plain"
                             putExtra(Intent.EXTRA_TEXT, built.payload)
                         }
-                        context.startActivity(Intent.createChooser(send, "Share"))
+                        context.startActivity(
+                            Intent.createChooser(
+                                send,
+                                context.getString(R.string.share_chooser_title)
+                            )
+                        )
                     }
                 )
             }
@@ -409,117 +427,241 @@ private data class FormLabels(
     }
 
     companion object {
-        fun forCategory(type: QrCategoryType): FormLabels = when (type) {
-            QrCategoryType.WEBSITE -> FormLabels(
-                primaryLabel = "Website URL (https://)",
-                primaryPlaceholder = "https://example.com/target-path",
-                secondaryLabel = "Display Title / Note",
-                secondaryPlaceholder = "e.g., Marketing Deck Q3 Launch"
-            )
-            QrCategoryType.PLAIN_TEXT -> FormLabels(
-                primaryLabel = "Raw Message / Payload",
-                primaryPlaceholder = "Type or paste plain text…",
-                secondaryLabel = "Display Title / Note",
-                secondaryPlaceholder = "Optional label"
-            )
-            QrCategoryType.CONTACT -> FormLabels(
-                primaryLabel = "Full Name",
-                primaryPlaceholder = "Enter contact name",
-                secondaryLabel = "Email (optional)",
-                secondaryPlaceholder = "name@email.com",
-                quaternaryLabel = "Job Title (optional)",
-                quaternaryPlaceholder = "e.g., Product Manager",
-                tertiaryLabel = "Phone (optional)",
-                tertiaryPlaceholder = "+1 555 0100",
-                tertiaryKeyboard = KeyboardType.Phone
-            )
-            QrCategoryType.PHONE -> FormLabels(
-                primaryLabel = "Phone Number",
-                primaryPlaceholder = "+1 555 0100",
-                secondaryLabel = "Display Title / Note",
-                secondaryPlaceholder = "Optional label",
-                primaryKeyboard = KeyboardType.Phone
-            )
-            QrCategoryType.EMAIL -> FormLabels(
-                primaryLabel = "Email Address",
-                primaryPlaceholder = "hello@example.com",
-                secondaryLabel = "Subject (optional)",
-                secondaryPlaceholder = "Message subject",
-                tertiaryLabel = "Body",
-                tertiaryPlaceholder = "Email body",
-                tertiaryOptional = false
-            )
-            QrCategoryType.SMS -> FormLabels(
-                primaryLabel = "Phone Number",
-                primaryPlaceholder = "+1 555 0100",
-                secondaryLabel = "Message",
-                secondaryPlaceholder = "SMS text",
-                secondaryOptional = false,
-                primaryKeyboard = KeyboardType.Phone
-            )
-            QrCategoryType.WHATSAPP -> FormLabels(
-                primaryLabel = "WhatsApp Number",
-                primaryPlaceholder = "15550100 (with country code)",
-                secondaryLabel = "Message (optional)",
-                secondaryPlaceholder = "Pre-filled chat text",
-                primaryKeyboard = KeyboardType.Phone
-            )
-            QrCategoryType.LOCATION -> FormLabels(
-                primaryLabel = "Coordinates (lat,lng)",
-                primaryPlaceholder = "37.7749,-122.4194",
-                secondaryLabel = "Place label (optional)",
-                secondaryPlaceholder = "Golden Gate Bridge"
-            )
-            QrCategoryType.CALENDAR -> FormLabels(
-                primaryLabel = "Event Title",
-                primaryPlaceholder = "Team standup",
-                secondaryLabel = "Start Date",
-                secondaryPlaceholder = "Select date",
-                secondaryOptional = false
-            )
-            QrCategoryType.APP_LINK -> FormLabels(
-                primaryLabel = "App URL or Package",
-                primaryPlaceholder = "com.example.app or https://play.google.com/…",
-                secondaryLabel = "Display Title / Note",
-                secondaryPlaceholder = "Optional label"
-            )
-            QrCategoryType.FACEBOOK -> socialForm("Facebook", "username or https://facebook.com/…")
-            QrCategoryType.YOUTUBE -> socialForm("YouTube", "@channel or https://youtube.com/…")
-            QrCategoryType.TWITTER -> socialForm("Twitter", "username or https://x.com/…")
-            QrCategoryType.TIKTOK -> socialForm("TikTok", "@username or https://tiktok.com/…")
-            QrCategoryType.INSTAGRAM -> socialForm("Instagram", "username or https://instagram.com/…")
-            QrCategoryType.PAYPAL -> socialForm("PayPal", "paypal.me name or https://paypal.me/…")
-            QrCategoryType.SNAPCHAT -> socialForm("Snapchat", "username or https://snapchat.com/add/…")
-            QrCategoryType.LINKEDIN -> socialForm("LinkedIn", "profile name or https://linkedin.com/in/…")
-            QrCategoryType.SPOTIFY -> socialForm("Spotify", "user id or https://open.spotify.com/…")
-            QrCategoryType.CODE_128 -> barcodeForm("Code 128 value", "Text or numbers")
-            QrCategoryType.DATA_MATRIX -> barcodeForm("Data Matrix value", "Text or numbers")
-            QrCategoryType.PDF_417 -> barcodeForm("PDF 417 value", "Text or numbers")
-            QrCategoryType.AZTEC -> barcodeForm("Aztec value", "Text or numbers")
-            QrCategoryType.EAN_13 -> barcodeForm("EAN 13 digits", "12 or 13 digits", numeric = true)
-            QrCategoryType.EAN_8 -> barcodeForm("EAN 8 digits", "7 or 8 digits", numeric = true)
-            QrCategoryType.UPC_E -> barcodeForm("UPC E digits", "7 or 8 digits (starts with 0 or 1)", numeric = true)
-            QrCategoryType.UPC_A -> barcodeForm("UPC A digits", "11 digits, or 12 with check digit", numeric = true)
-            QrCategoryType.CODE_93 -> barcodeForm("Code 93 value", "ASCII text")
-            QrCategoryType.CODE_39 -> barcodeForm("Code 39 value", "Text or numbers")
-            QrCategoryType.CODABAR -> barcodeForm("Codabar value", "Digits, optional start/stop")
-            QrCategoryType.ITF -> barcodeForm("ITF digits", "Even number of digits", numeric = true)
-            else -> FormLabels(
-                primaryLabel = "Payload",
-                primaryPlaceholder = "Enter value"
-            )
+        fun forCategory(type: QrCategoryType, context: Context): FormLabels {
+            val noteLabel = context.getString(R.string.form_display_title_note_label)
+            val notePlaceholder = context.getString(R.string.form_display_title_note_placeholder)
+            val optionalLabel = context.getString(R.string.form_optional_label_placeholder)
+            val socialNote = context.getString(R.string.form_social_display_title_label)
+            return when (type) {
+                QrCategoryType.WEBSITE -> FormLabels(
+                    primaryLabel = context.getString(R.string.form_website_url_label),
+                    primaryPlaceholder = context.getString(R.string.form_website_url_placeholder),
+                    secondaryLabel = noteLabel,
+                    secondaryPlaceholder = notePlaceholder
+                )
+                QrCategoryType.PLAIN_TEXT -> FormLabels(
+                    primaryLabel = context.getString(R.string.form_plain_text_label),
+                    primaryPlaceholder = context.getString(R.string.form_plain_text_placeholder),
+                    secondaryLabel = noteLabel,
+                    secondaryPlaceholder = optionalLabel
+                )
+                QrCategoryType.CONTACT -> FormLabels(
+                    primaryLabel = context.getString(R.string.form_contact_name_label),
+                    primaryPlaceholder = context.getString(R.string.form_contact_name_placeholder),
+                    secondaryLabel = context.getString(R.string.form_contact_email_label),
+                    secondaryPlaceholder = context.getString(R.string.form_contact_email_placeholder),
+                    quaternaryLabel = context.getString(R.string.form_contact_job_title_label),
+                    quaternaryPlaceholder = context.getString(R.string.form_contact_job_title_placeholder),
+                    tertiaryLabel = context.getString(R.string.form_contact_phone_label),
+                    tertiaryPlaceholder = context.getString(R.string.form_contact_phone_placeholder),
+                    tertiaryKeyboard = KeyboardType.Phone
+                )
+                QrCategoryType.PHONE -> FormLabels(
+                    primaryLabel = context.getString(R.string.form_phone_number_label),
+                    primaryPlaceholder = context.getString(R.string.form_contact_phone_placeholder),
+                    secondaryLabel = noteLabel,
+                    secondaryPlaceholder = optionalLabel,
+                    primaryKeyboard = KeyboardType.Phone
+                )
+                QrCategoryType.EMAIL -> FormLabels(
+                    primaryLabel = context.getString(R.string.form_email_address_label),
+                    primaryPlaceholder = context.getString(R.string.form_email_address_placeholder),
+                    secondaryLabel = context.getString(R.string.form_email_subject_label),
+                    secondaryPlaceholder = context.getString(R.string.form_email_subject_placeholder),
+                    tertiaryLabel = context.getString(R.string.form_email_body_label),
+                    tertiaryPlaceholder = context.getString(R.string.form_email_body_placeholder),
+                    tertiaryOptional = false
+                )
+                QrCategoryType.SMS -> FormLabels(
+                    primaryLabel = context.getString(R.string.form_phone_number_label),
+                    primaryPlaceholder = context.getString(R.string.form_contact_phone_placeholder),
+                    secondaryLabel = context.getString(R.string.form_sms_message_label),
+                    secondaryPlaceholder = context.getString(R.string.form_sms_message_placeholder),
+                    secondaryOptional = false,
+                    primaryKeyboard = KeyboardType.Phone
+                )
+                QrCategoryType.WHATSAPP -> FormLabels(
+                    primaryLabel = context.getString(R.string.form_whatsapp_number_label),
+                    primaryPlaceholder = context.getString(R.string.form_whatsapp_number_placeholder),
+                    secondaryLabel = context.getString(R.string.form_whatsapp_message_label),
+                    secondaryPlaceholder = context.getString(R.string.form_whatsapp_message_placeholder),
+                    primaryKeyboard = KeyboardType.Phone
+                )
+                QrCategoryType.LOCATION -> FormLabels(
+                    primaryLabel = context.getString(R.string.form_location_coords_label),
+                    primaryPlaceholder = context.getString(R.string.form_location_coords_placeholder),
+                    secondaryLabel = context.getString(R.string.form_location_place_label),
+                    secondaryPlaceholder = context.getString(R.string.form_location_place_placeholder)
+                )
+                QrCategoryType.CALENDAR -> FormLabels(
+                    primaryLabel = "Event Title",
+                    primaryPlaceholder = "Team standup",
+                    secondaryLabel = "Start Date",
+                    secondaryPlaceholder = "Select date",
+                    secondaryOptional = false
+                )
+                QrCategoryType.APP_LINK -> FormLabels(
+                    primaryLabel = context.getString(R.string.form_app_link_label),
+                    primaryPlaceholder = context.getString(R.string.form_app_link_placeholder),
+                    secondaryLabel = noteLabel,
+                    secondaryPlaceholder = optionalLabel
+                )
+                QrCategoryType.FACEBOOK -> socialForm(
+                    context,
+                    R.string.form_social_facebook_primary_label,
+                    R.string.form_social_facebook_primary_placeholder,
+                    socialNote,
+                    optionalLabel
+                )
+                QrCategoryType.YOUTUBE -> socialForm(
+                    context,
+                    R.string.form_social_youtube_primary_label,
+                    R.string.form_social_youtube_primary_placeholder,
+                    socialNote,
+                    optionalLabel
+                )
+                QrCategoryType.TWITTER -> socialForm(
+                    context,
+                    R.string.form_social_twitter_primary_label,
+                    R.string.form_social_twitter_primary_placeholder,
+                    socialNote,
+                    optionalLabel
+                )
+                QrCategoryType.TIKTOK -> socialForm(
+                    context,
+                    R.string.form_social_tiktok_primary_label,
+                    R.string.form_social_tiktok_primary_placeholder,
+                    socialNote,
+                    optionalLabel
+                )
+                QrCategoryType.INSTAGRAM -> socialForm(
+                    context,
+                    R.string.form_social_instagram_primary_label,
+                    R.string.form_social_instagram_primary_placeholder,
+                    socialNote,
+                    optionalLabel
+                )
+                QrCategoryType.PAYPAL -> socialForm(
+                    context,
+                    R.string.form_social_paypal_primary_label,
+                    R.string.form_social_paypal_primary_placeholder,
+                    socialNote,
+                    optionalLabel
+                )
+                QrCategoryType.SNAPCHAT -> socialForm(
+                    context,
+                    R.string.form_social_snapchat_primary_label,
+                    R.string.form_social_snapchat_primary_placeholder,
+                    socialNote,
+                    optionalLabel
+                )
+                QrCategoryType.LINKEDIN -> socialForm(
+                    context,
+                    R.string.form_social_linkedin_primary_label,
+                    R.string.form_social_linkedin_primary_placeholder,
+                    socialNote,
+                    optionalLabel
+                )
+                QrCategoryType.SPOTIFY -> socialForm(
+                    context,
+                    R.string.form_social_spotify_primary_label,
+                    R.string.form_social_spotify_primary_placeholder,
+                    socialNote,
+                    optionalLabel
+                )
+                QrCategoryType.CODE_128 -> barcodeForm(
+                    context,
+                    R.string.form_barcode_code_128_label,
+                    R.string.form_barcode_code_128_placeholder
+                )
+                QrCategoryType.DATA_MATRIX -> barcodeForm(
+                    context,
+                    R.string.form_barcode_data_matrix_label,
+                    R.string.form_barcode_generic_placeholder
+                )
+                QrCategoryType.PDF_417 -> barcodeForm(
+                    context,
+                    R.string.form_barcode_pdf_417_label,
+                    R.string.form_barcode_generic_placeholder
+                )
+                QrCategoryType.AZTEC -> barcodeForm(
+                    context,
+                    R.string.form_barcode_aztec_label,
+                    R.string.form_barcode_generic_placeholder
+                )
+                QrCategoryType.EAN_13 -> barcodeForm(
+                    context,
+                    R.string.form_barcode_ean_13_label,
+                    R.string.form_barcode_ean_13_placeholder,
+                    numeric = true
+                )
+                QrCategoryType.EAN_8 -> barcodeForm(
+                    context,
+                    R.string.form_barcode_ean_8_label,
+                    R.string.form_barcode_ean_8_placeholder,
+                    numeric = true
+                )
+                QrCategoryType.UPC_E -> barcodeForm(
+                    context,
+                    R.string.form_barcode_upc_e_label,
+                    R.string.form_barcode_upc_e_placeholder,
+                    numeric = true
+                )
+                QrCategoryType.UPC_A -> barcodeForm(
+                    context,
+                    R.string.form_barcode_upc_a_label,
+                    R.string.form_barcode_upc_a_placeholder,
+                    numeric = true
+                )
+                QrCategoryType.CODE_93 -> barcodeForm(
+                    context,
+                    R.string.form_barcode_code_93_label,
+                    R.string.form_barcode_code_93_placeholder
+                )
+                QrCategoryType.CODE_39 -> barcodeForm(
+                    context,
+                    R.string.form_barcode_code_39_label,
+                    R.string.form_barcode_generic_placeholder
+                )
+                QrCategoryType.CODABAR -> barcodeForm(
+                    context,
+                    R.string.form_barcode_codabar_label,
+                    R.string.form_barcode_codabar_placeholder
+                )
+                QrCategoryType.ITF -> barcodeForm(
+                    context,
+                    R.string.form_barcode_itf_label,
+                    R.string.form_barcode_itf_placeholder,
+                    numeric = true
+                )
+                else -> FormLabels(
+                    primaryLabel = context.getString(R.string.form_payload_label),
+                    primaryPlaceholder = context.getString(R.string.form_payload_placeholder)
+                )
+            }
         }
 
-        private fun socialForm(name: String, example: String) = FormLabels(
-            primaryLabel = "$name username or link",
-            primaryPlaceholder = example,
-            secondaryLabel = "Display title (optional)",
-            secondaryPlaceholder = "Optional label"
+        private fun socialForm(
+            context: Context,
+            primaryLabelRes: Int,
+            primaryPlaceholderRes: Int,
+            secondaryLabel: String,
+            secondaryPlaceholder: String
+        ) = FormLabels(
+            primaryLabel = context.getString(primaryLabelRes),
+            primaryPlaceholder = context.getString(primaryPlaceholderRes),
+            secondaryLabel = secondaryLabel,
+            secondaryPlaceholder = secondaryPlaceholder
         )
 
-        private fun barcodeForm(label: String, example: String, numeric: Boolean = false) = FormLabels(
-            primaryLabel = label,
-            primaryPlaceholder = example,
+        private fun barcodeForm(
+            context: Context,
+            labelRes: Int,
+            placeholderRes: Int,
+            numeric: Boolean = false
+        ) = FormLabels(
+            primaryLabel = context.getString(labelRes),
+            primaryPlaceholder = context.getString(placeholderRes),
             primaryKeyboard = if (numeric) KeyboardType.Number else KeyboardType.Text
         )
     }
@@ -556,6 +698,7 @@ internal fun FormTextField(
     trailingPaste: (() -> Unit)? = null,
     onClear: (() -> Unit)? = null
 ) {
+    val optionalSuffix = stringResource(R.string.form_label_optional_suffix, label)
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
         if (label.isNotBlank()) {
         Row(
@@ -565,7 +708,7 @@ internal fun FormTextField(
         ) {
             Text(
                 text = if (optional && !label.contains("optional", ignoreCase = true)) {
-                    "$label (Optional)"
+                    optionalSuffix
                 } else {
                     label
                 },
@@ -591,7 +734,7 @@ internal fun FormTextField(
                         modifier = Modifier.size(14.dp)
                     )
                     Text(
-                        text = "Paste",
+                        text = stringResource(R.string.action_paste),
                         color = CobaltPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Medium,
@@ -638,7 +781,7 @@ internal fun FormTextField(
             if (onClear != null && value.isNotEmpty()) {
                 Icon(
                     imageVector = Icons.Outlined.Clear,
-                    contentDescription = "Clear",
+                    contentDescription = stringResource(R.string.cd_clear),
                     tint = TextTertiary,
                     modifier = Modifier
                         .size(20.dp)

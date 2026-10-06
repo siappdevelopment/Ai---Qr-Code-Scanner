@@ -1,5 +1,7 @@
 package com.qrcode.scanner.ui.screens.create
 
+import androidx.annotation.StringRes
+import com.qrcode.scanner.app.R
 import java.io.Serializable
 
 /**
@@ -19,31 +21,34 @@ data class QrStyleConfig(
     val previewDarkCanvas: Boolean = false
 ) : Serializable {
 
-    enum class BodyPattern(val label: String) : Serializable {
-        CLASSIC("Classic (Square)"),
-        ROUNDED("Rounded"),
-        DOTS("Radial Dots"),
-        DIAMOND("Diamond Mesh")
+    enum class BodyPattern(@StringRes val labelRes: Int) : Serializable {
+        CLASSIC(R.string.qr_pattern_classic),
+        ROUNDED(R.string.qr_pattern_rounded),
+        DOTS(R.string.qr_pattern_dots),
+        DIAMOND(R.string.qr_pattern_diamond)
     }
 
-    enum class EyeStyle(val label: String) : Serializable {
-        SQUARE("Square"),
-        SOFT("Soft Curve"),
-        CIRCLE("Circle Eye")
+    enum class EyeStyle(@StringRes val labelRes: Int) : Serializable {
+        SQUARE(R.string.qr_eye_square),
+        SOFT(R.string.qr_eye_soft),
+        CIRCLE(R.string.qr_eye_circle)
     }
 
-    enum class CenterIcon(val label: String) : Serializable {
-        NONE("None"),
-        WIFI("Wi-Fi"),
-        GLOBE("Globe"),
-        CUSTOM("Custom")
+    enum class CenterIcon(@StringRes val labelRes: Int) : Serializable {
+        NONE(R.string.qr_icon_none),
+        WIFI(R.string.qr_icon_wifi),
+        GLOBE(R.string.qr_icon_globe),
+        CUSTOM(R.string.qr_icon_custom)
     }
 
-    enum class FrameTemplate(val label: String, val subtitle: String) : Serializable {
-        NONE("None", "Clean borderless matrix"),
-        PILL("Scan Me Pill", "Badge attached footer"),
-        BANNER("Banner Top", "Top accent header band"),
-        CYBER("Cyber Reticle", "Cobalt HUD view corners")
+    enum class FrameTemplate(
+        @StringRes val labelRes: Int,
+        @StringRes val subtitleRes: Int
+    ) : Serializable {
+        NONE(R.string.qr_frame_none_title, R.string.qr_frame_none_subtitle),
+        PILL(R.string.qr_frame_pill_title, R.string.qr_frame_pill_subtitle),
+        BANNER(R.string.qr_frame_banner_title, R.string.qr_frame_banner_subtitle),
+        CYBER(R.string.qr_frame_cyber_title, R.string.qr_frame_cyber_subtitle)
     }
 
     companion object {

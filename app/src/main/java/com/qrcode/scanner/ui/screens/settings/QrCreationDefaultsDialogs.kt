@@ -26,11 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.data.settings.QrDefaultEcc
 import com.qrcode.scanner.data.settings.QrDefaultOutputFormat
 import com.qrcode.scanner.ui.theme.BorderSubtle
@@ -49,12 +51,17 @@ internal fun QrDefaultEccPickerDialog(
     onDismiss: () -> Unit
 ) {
     SettingsChoiceDialog(
-        title = "Default Correction Level",
+        title = stringResource(R.string.settings_dialog_default_ecc_title),
         onDismiss = onDismiss
     ) {
         QrDefaultEcc.entries.forEach { option ->
             SettingsChoiceRow(
-                title = option.selectionTitle(),
+                title = when (option) {
+                    QrDefaultEcc.L -> stringResource(R.string.settings_ecc_low_option)
+                    QrDefaultEcc.M -> stringResource(R.string.settings_ecc_medium_option)
+                    QrDefaultEcc.Q -> stringResource(R.string.settings_ecc_quartile_option)
+                    QrDefaultEcc.H -> stringResource(R.string.settings_ecc_high_option)
+                },
                 selected = option == selected,
                 onClick = { onSelect(option) }
             )
@@ -69,12 +76,15 @@ internal fun QrDefaultFormatPickerDialog(
     onDismiss: () -> Unit
 ) {
     SettingsChoiceDialog(
-        title = "Default QR Format",
+        title = stringResource(R.string.settings_dialog_default_format_title),
         onDismiss = onDismiss
     ) {
         QrDefaultOutputFormat.entries.forEach { option ->
             SettingsChoiceRow(
-                title = option.selectionTitle(),
+                title = when (option) {
+                    QrDefaultOutputFormat.SVG -> stringResource(R.string.settings_format_svg)
+                    QrDefaultOutputFormat.PNG -> stringResource(R.string.settings_format_png)
+                },
                 selected = option == selected,
                 onClick = { onSelect(option) }
             )
@@ -140,7 +150,7 @@ private fun SettingsChoiceDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = stringResource(R.string.action_cancel),
                         color = TextPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,

@@ -26,11 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.data.settings.AppThemeMode
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
@@ -81,7 +83,7 @@ internal fun AppThemePickerDialog(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "Theme",
+                    text = stringResource(R.string.settings_dialog_theme_title),
                     color = TextPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -89,7 +91,10 @@ internal fun AppThemePickerDialog(
                 )
                 AppThemeMode.entries.forEach { option ->
                     ThemeChoiceRow(
-                        title = option.selectionTitle(),
+                        title = when (option) {
+                            AppThemeMode.LIGHT -> stringResource(R.string.settings_theme_light)
+                            AppThemeMode.DARK -> stringResource(R.string.settings_theme_dark)
+                        },
                         selected = option == selected,
                         onClick = { onSelect(option) }
                     )
@@ -108,7 +113,7 @@ internal fun AppThemePickerDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = stringResource(R.string.action_cancel),
                         color = TextPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,

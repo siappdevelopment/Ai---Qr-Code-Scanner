@@ -53,6 +53,7 @@ import com.qrcode.scanner.app.R
 import com.qrcode.scanner.launcher.activities.LauncherSettingsActivity
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.ui.navigation.ThemeNavigation
+import com.qrcode.scanner.data.settings.AppThemeMode
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.launcher.common.AppUtils
@@ -115,17 +116,20 @@ fun SettingsScreen(
         ) {
             BigNativeAd(slot = ScreenNativeAds.Slot.SETTINGS)
 
-            SettingsSectionCard(title = "Appearance") {
+            SettingsSectionCard(title = stringResource(R.string.settings_section_appearance)) {
                 SettingsNavRow(
-                    title = "Theme",
-                    subtitle = preferences.appTheme.settingsSubtitle(),
+                    title = stringResource(R.string.settings_theme_title),
+                    subtitle = when (preferences.appTheme) {
+                        AppThemeMode.LIGHT -> stringResource(R.string.settings_theme_light)
+                        AppThemeMode.DARK -> stringResource(R.string.settings_theme_dark)
+                    },
                     icon = Icons.Outlined.DarkMode,
                     enabled = true,
                     onClick = { showThemeDialog = true }
                 )
                 SettingsRowDivider()
                 SettingsNavRow(
-                    title = "Language",
+                    title = stringResource(R.string.settings_language_title),
                     // Only English UI is shipped; preference (system vs en-US) is set on Language screen.
                     subtitle = currentLanguageLabel(context),
                     icon = Icons.Outlined.Language,
@@ -134,8 +138,8 @@ fun SettingsScreen(
                 )
                 SettingsRowDivider()
                 SettingsNavRow(
-                    title = "Launcher Setting",
-                    subtitle = "Icon size, labels, and app order",
+                    title = stringResource(R.string.settings_launcher_title),
+                    subtitle = stringResource(R.string.settings_launcher_subtitle),
                     icon = Icons.Outlined.Apps,
                     enabled = true,
                     onClick = {
@@ -144,10 +148,10 @@ fun SettingsScreen(
                 )
             }
 
-            SettingsSectionCard(title = "Scanner & Hardware") {
+            SettingsSectionCard(title = stringResource(R.string.settings_section_scanner)) {
                 SettingsToggleRow(
-                    title = "Vibrate on Detection",
-                    subtitle = "Haptic pulse when matrix resolves",
+                    title = stringResource(R.string.settings_vibrate_title),
+                    subtitle = stringResource(R.string.settings_vibrate_subtitle),
                     icon = Icons.Outlined.Vibration,
                     checked = preferences.vibrateOnDetection,
                     onCheckedChange = { enabled ->
@@ -156,8 +160,8 @@ fun SettingsScreen(
                 )
                 SettingsRowDivider()
                 SettingsToggleRow(
-                    title = "Beep Sound",
-                    subtitle = "Audio tone confirmation",
+                    title = stringResource(R.string.settings_beep_title),
+                    subtitle = stringResource(R.string.settings_beep_subtitle),
                     icon = Icons.AutoMirrored.Outlined.VolumeUp,
                     checked = preferences.beepOnDetection,
                     onCheckedChange = { enabled ->
@@ -166,8 +170,8 @@ fun SettingsScreen(
                 )
                 SettingsRowDivider()
                 SettingsToggleRow(
-                    title = "Auto-Open URLs",
-                    subtitle = "Opens website links in the browser after a scan",
+                    title = stringResource(R.string.settings_auto_open_urls_title),
+                    subtitle = stringResource(R.string.settings_auto_open_urls_subtitle),
                     icon = Icons.Outlined.OpenInBrowser,
                     checked = preferences.autoOpenUrls,
                     onCheckedChange = { enabled ->
@@ -176,8 +180,8 @@ fun SettingsScreen(
                 )
                 SettingsRowDivider()
                 SettingsNavRow(
-                    title = "Clear Scan & Create History",
-                    subtitle = "Remove non-favorite items · favorites kept",
+                    title = stringResource(R.string.settings_clear_history_title),
+                    subtitle = stringResource(R.string.settings_clear_history_subtitle),
                     icon = Icons.Outlined.DeleteSweep,
                     titleColor = Destructive,
                     iconTint = Destructive,
@@ -188,9 +192,9 @@ fun SettingsScreen(
                 )
             }
 
-            SettingsSectionCard(title = "About & Legal") {
+            SettingsSectionCard(title = stringResource(R.string.settings_section_about)) {
                 SettingsNavRow(
-                    title = "About",
+                    title = stringResource(R.string.settings_about_title),
                     subtitle = "",
                     icon = Icons.Outlined.Info,
                     enabled = true,
@@ -198,7 +202,7 @@ fun SettingsScreen(
                 )
                 SettingsRowDivider()
                 SettingsNavRow(
-                    title = "Privacy Policy",
+                    title = stringResource(R.string.settings_privacy_policy_title),
                     subtitle = "",
                     icon = Icons.Outlined.PrivacyTip,
                     showChevron = false,
@@ -208,7 +212,7 @@ fun SettingsScreen(
                 )
                 SettingsRowDivider()
                 SettingsNavRow(
-                    title = "Share",
+                    title = stringResource(R.string.settings_share_title),
                     subtitle = "",
                     icon = Icons.Outlined.Share,
                     enabled = true,
@@ -216,7 +220,7 @@ fun SettingsScreen(
                 )
                 SettingsRowDivider()
                 SettingsNavRow(
-                    title = "Rate",
+                    title = stringResource(R.string.settings_rate_title),
                     subtitle = "",
                     icon = Icons.Outlined.Star,
                     showChevron = false,
@@ -247,7 +251,11 @@ fun SettingsScreen(
                 showClearDialog = false
                 scope.launch {
                     historyRepository.clearHistoryKeepingFavorites()
-                    Toast.makeText(context, "History cleared", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.toast_history_cleared),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             },
             onDismiss = { showClearDialog = false }
@@ -281,7 +289,7 @@ private fun SettingsTopBar() {
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Settings",
+            text = stringResource(R.string.settings_title),
             color = TextPrimary,
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.SemiBold,
@@ -308,7 +316,7 @@ private fun SettingsPreferencesHero() {
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "Preferences",
+                    text = stringResource(R.string.settings_preferences_title),
                     color = TextPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
@@ -325,7 +333,7 @@ private fun SettingsPreferencesHero() {
                         .padding(horizontal = 8.dp, vertical = 2.dp)
                 ) {
                     Text(
-                        text = "Engine v2.4.0",
+                        text = stringResource(R.string.settings_engine_version),
                         color = CobaltPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -335,7 +343,7 @@ private fun SettingsPreferencesHero() {
             }
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "High-speed optical matrix & synthesis parameters",
+                text = stringResource(R.string.settings_preferences_subtitle),
                 color = TextSecondary,
                 fontFamily = PlusJakartaSans,
                 fontSize = 13.sp,
@@ -378,7 +386,7 @@ private fun SettingsFooter() {
                     .background(Color(0xFF22C55E), CircleShape)
             )
             Text(
-                text = "OPTICAL CV PIPELINE ONLINE",
+                text = stringResource(R.string.settings_pipeline_online),
                 color = TextTertiary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -387,7 +395,7 @@ private fun SettingsFooter() {
             )
         }
         Text(
-            text = stringResource(R.string.app_name) + " Pro · Device Acceleration Verified",
+            text = stringResource(R.string.settings_pro_footer, stringResource(R.string.app_name)),
             color = TextTertiary,
             fontFamily = PlusJakartaSans,
             fontSize = 11.sp
@@ -402,7 +410,9 @@ private fun shareApp(context: android.content.Context) {
         putExtra(Intent.EXTRA_SUBJECT, context.applicationInfo.loadLabel(context.packageManager))
         putExtra(Intent.EXTRA_TEXT, url)
     }
-    context.startActivity(Intent.createChooser(intent, "Share"))
+    context.startActivity(
+        Intent.createChooser(intent, context.getString(R.string.share_chooser_title))
+    )
 }
 
 private fun rateApp(context: android.content.Context) {
@@ -425,24 +435,24 @@ private fun rateApp(context: android.content.Context) {
 
 private fun currentLanguageLabel(context: android.content.Context): String {
     return when (AppUtils.getLanguage(context)) {
-        "hi" -> "Hindi"
-        "ru" -> "Russian"
-        "it" -> "Italian"
-        "fr" -> "French"
-        "es" -> "Spanish"
-        "ja" -> "Japanese"
-        "ko" -> "Korean"
-        "de" -> "German"
-        "zh" -> "Chinese"
-        "th" -> "Thai"
-        "el" -> "Greek"
-        "pt" -> "Portuguese (Portugal)"
-        "pt-BR" -> "Portuguese (Brazil)"
-        "nl" -> "Dutch"
-        "fil" -> "Filipino"
-        "tr" -> "Turkish"
-        "id" -> "Indonesian"
-        "af" -> "Afrikaans"
-        else -> "English"
+        "hi" -> context.getString(R.string.settings_language_hindi)
+        "ru" -> context.getString(R.string.settings_language_russian)
+        "it" -> context.getString(R.string.settings_language_italian)
+        "fr" -> context.getString(R.string.settings_language_french)
+        "es" -> context.getString(R.string.settings_language_spanish)
+        "ja" -> context.getString(R.string.settings_language_japanese)
+        "ko" -> context.getString(R.string.settings_language_korean)
+        "de" -> context.getString(R.string.settings_language_german)
+        "zh" -> context.getString(R.string.settings_language_chinese)
+        "th" -> context.getString(R.string.settings_language_thai)
+        "el" -> context.getString(R.string.settings_language_greek)
+        "pt" -> context.getString(R.string.settings_language_portuguese_pt)
+        "pt-BR" -> context.getString(R.string.settings_language_portuguese_br)
+        "nl" -> context.getString(R.string.settings_language_dutch)
+        "fil" -> context.getString(R.string.settings_language_filipino)
+        "tr" -> context.getString(R.string.settings_language_turkish)
+        "id" -> context.getString(R.string.settings_language_indonesian)
+        "af" -> context.getString(R.string.settings_language_afrikaans)
+        else -> context.getString(R.string.settings_language_english)
     }
 }

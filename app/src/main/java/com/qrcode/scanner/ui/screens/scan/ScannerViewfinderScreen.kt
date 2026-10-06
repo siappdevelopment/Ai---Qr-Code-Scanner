@@ -79,6 +79,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -95,6 +96,7 @@ import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.ui.theme.BorderSubtle
@@ -627,12 +629,28 @@ private fun ScannerHudOverlay(
     onZoomSelected: (Float) -> Unit,
     onOpenGallery: () -> Unit
 ) {
+    val labelFlash = stringResource(R.string.scan_hud_flash)
+    val labelGallery = stringResource(R.string.scan_hud_gallery)
+    val labelFlip = stringResource(R.string.scan_hud_flip)
+    val cdFlash = stringResource(R.string.cd_toggle_flashlight)
+    val cdGallery = stringResource(R.string.cd_scan_image_from_gallery)
+    val cdFlip = stringResource(R.string.cd_flip_camera_lens)
     Column(
         modifier = Modifier
             .fillMaxSize()
             .then(
                 if (safeContentPadding != null) {
-                    Modifier.padding(safeContentPadding)
+                    // Launcher: full scaffold insets. Standalone Scan: bottom-only + statusBars for HUD.
+                    val top = safeContentPadding.calculateTopPadding()
+                    Modifier
+                        .then(
+                            if (top.value == 0f) {
+                                Modifier.statusBarsPadding()
+                            } else {
+                                Modifier
+                            }
+                        )
+                        .padding(safeContentPadding)
                 } else {
                     Modifier
                         .statusBarsPadding()
@@ -653,21 +671,21 @@ private fun ScannerHudOverlay(
                 } else {
                     Icons.Outlined.FlashlightOff
                 },
-                label = "FLASH",
-                contentDescription = "Toggle flashlight",
+                label = labelFlash,
+                contentDescription = cdFlash,
                 selected = torchEnabled,
                 onClick = onToggleTorch
             )
             HudIconButton(
                 icon = Icons.Outlined.PhotoLibrary,
-                label = "GALLERY",
-                contentDescription = "Scan image from gallery",
+                label = labelGallery,
+                contentDescription = cdGallery,
                 onClick = onOpenGallery
             )
             HudIconButton(
                 icon = Icons.Outlined.FlipCameraAndroid,
-                label = "FLIP",
-                contentDescription = "Flip camera lens",
+                label = labelFlip,
+                contentDescription = cdFlip,
                 onClick = onFlipCamera
             )
         }
@@ -712,7 +730,7 @@ private fun ScannerHudOverlay(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "${z.toInt()}x",
+                        text = stringResource(R.string.scan_zoom_level, z.toInt()),
                         color = if (selected) White else TextSecondary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -870,6 +888,14 @@ private fun PermissionDeniedPanel(
     onRequestAgain: () -> Unit,
     onBack: () -> Unit
 ) {
+    val title = stringResource(R.string.scan_camera_permission_title)
+    val bodySettings = stringResource(R.string.scan_camera_permission_body_settings)
+    val bodyGrant = stringResource(R.string.scan_camera_permission_body)
+    val actionPrimary = if (needsSettings) {
+        stringResource(R.string.scan_open_settings)
+    } else {
+        stringResource(R.string.scan_grant_permission)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -879,7 +905,7 @@ private fun PermissionDeniedPanel(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Camera permission required",
+            text = title,
             color = TextPrimary,
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.Bold,
@@ -888,11 +914,7 @@ private fun PermissionDeniedPanel(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = if (needsSettings) {
-                "Camera access is turned off. Open Settings, enable Camera, then return here to scan."
-            } else {
-                "Allow camera access to scan QR codes and barcodes."
-            },
+            text = if (needsSettings) bodySettings else bodyGrant,
             color = TextSecondary,
             fontFamily = PlusJakartaSans,
             fontSize = 14.sp,
@@ -912,7 +934,7 @@ private fun PermissionDeniedPanel(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = if (needsSettings) "Open Settings" else "Grant permission",
+                text = actionPrimary,
                 color = White,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -933,7 +955,7 @@ private fun PermissionDeniedPanel(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Go back",
+                text = stringResource(R.string.action_go_back),
                 color = TextPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,

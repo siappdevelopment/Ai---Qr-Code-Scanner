@@ -100,7 +100,7 @@ fun AboutScreen(
             AppBackButton(onClick = onBack)
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "About",
+                text = stringResource(R.string.about_title),
                 color = TextPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -150,7 +150,7 @@ fun AboutScreen(
                 )
                 // Existing Splash tagline.
                 Text(
-                    text = "Instant QR & Barcode Intelligence",
+                    text = stringResource(R.string.about_tagline),
                     color = TextTertiary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 13.sp
@@ -165,21 +165,30 @@ fun AboutScreen(
                     .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                AboutMetaRow(label = "Version", value = versionName)
+                AboutMetaRow(
+                    label = stringResource(R.string.about_meta_version),
+                    value = versionName
+                )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
                         .background(BorderSubtle)
                 )
-                AboutMetaRow(label = "Build", value = versionCode.toString())
+                AboutMetaRow(
+                    label = stringResource(R.string.about_meta_build),
+                    value = versionCode.toString()
+                )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
                         .background(BorderSubtle)
                 )
-                AboutMetaRow(label = "Package", value = context.packageName)
+                AboutMetaRow(
+                    label = stringResource(R.string.about_meta_package),
+                    value = context.packageName
+                )
             }
 
             // Existing Settings footer branding — informational only (no subscription logic).
@@ -191,7 +200,7 @@ fun AboutScreen(
                     .padding(horizontal = 14.dp, vertical = 12.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.app_name) + " Pro · Device Acceleration Verified",
+                    text = stringResource(R.string.settings_pro_footer, stringResource(R.string.app_name)),
                     color = TextTertiary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 12.sp

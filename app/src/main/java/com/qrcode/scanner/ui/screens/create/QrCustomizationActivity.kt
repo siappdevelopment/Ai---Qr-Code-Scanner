@@ -55,6 +55,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.annotation.StringRes
+import com.qrcode.scanner.app.R
 import androidx.compose.ui.text.PlatformTextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -153,13 +156,14 @@ private fun QrCustomizationScreen(
                 )
             }
         }.onFailure {
-            Toast.makeText(context, "Unable to load logo", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.qr_customize_toast_unable_load_logo), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
     LaunchedEffect(style, payload, ecc, logoBmp) {
         if (payload.isBlank()) {
-            error = "Nothing to customize"
+            error = context.getString(R.string.qr_customize_nothing)
             previewBmp = null
             return@LaunchedEffect
         }
@@ -208,7 +212,7 @@ private fun QrCustomizationScreen(
         ) {
             AppBackButton(onClick = onBack)
             Text(
-                text = "Customize QR",
+                text = stringResource(R.string.qr_customize_title),
                 color = TextPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -216,7 +220,7 @@ private fun QrCustomizationScreen(
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = "Reset",
+                text = stringResource(R.string.action_reset),
                 color = CobaltPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -227,7 +231,11 @@ private fun QrCustomizationScreen(
                 ) {
                     style = QrStyleConfig.Default
                     logoBmp = null
-                    Toast.makeText(context, "Reset is done", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.qr_customize_toast_reset_done),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             )
         }
@@ -259,12 +267,12 @@ private fun QrCustomizationScreen(
                     )
                     previewBmp != null -> Image(
                         bitmap = previewBmp!!.asImageBitmap(),
-                        contentDescription = "Styled QR preview",
+                        contentDescription = stringResource(R.string.cd_styled_qr_preview),
                         modifier = Modifier.fillMaxSize(0.92f),
                         contentScale = ContentScale.Fit
                     )
                     else -> Text(
-                        text = "Rendering…",
+                        text = stringResource(R.string.qr_customize_rendering),
                         color = TextTertiary,
                         fontFamily = PlusJakartaSans,
                         fontSize = 14.sp
@@ -273,7 +281,7 @@ private fun QrCustomizationScreen(
             }
 
             // Body Pattern
-            SectionCard(title = "Body Pattern") {
+            SectionCard(title = stringResource(R.string.qr_customize_section_body_pattern)) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     QrStyleConfig.BodyPattern.entries.chunked(2).forEach { row ->
                         Row(
@@ -282,7 +290,7 @@ private fun QrCustomizationScreen(
                         ) {
                             row.forEach { pat ->
                                 SelectChip(
-                                    label = pat.label,
+                                    label = stringResource(pat.labelRes),
                                     selected = style.bodyPattern == pat,
                                     modifier = Modifier.weight(1f),
                                     onClick = { style = style.copy(bodyPattern = pat) }
@@ -295,14 +303,14 @@ private fun QrCustomizationScreen(
             }
 
             // Corner Eye
-            SectionCard(title = "Corner Eye Style") {
+            SectionCard(title = stringResource(R.string.qr_customize_section_corner_eye)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     QrStyleConfig.EyeStyle.entries.forEach { eye ->
                         SelectChip(
-                            label = eye.label,
+                            label = stringResource(eye.labelRes),
                             selected = style.eyeStyle == eye,
                             modifier = Modifier.weight(1f),
                             onClick = { style = style.copy(eyeStyle = eye) }
@@ -312,7 +320,7 @@ private fun QrCustomizationScreen(
             }
 
             // Color Palette — solid only
-            SectionCard(title = "Color Palette") {
+            SectionCard(title = stringResource(R.string.qr_customize_section_color_palette)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -326,7 +334,7 @@ private fun QrCustomizationScreen(
                         onClick = {
                             style = style.copy(
                                 paletteKey = QrStyleConfig.PALETTE_COBALT,
-                                paletteName = "Electric Cobalt",
+                                paletteName = context.getString(R.string.qr_palette_electric_cobalt),
                                 foregroundColor = QrStyleConfig.COLOR_COBALT,
                                 backgroundColor = QrStyleConfig.COLOR_WHITE
                             )
@@ -338,7 +346,7 @@ private fun QrCustomizationScreen(
                         onClick = {
                             style = style.copy(
                                 paletteKey = QrStyleConfig.PALETTE_SAPPHIRE,
-                                paletteName = "Deep Sapphire",
+                                paletteName = context.getString(R.string.qr_palette_deep_sapphire),
                                 foregroundColor = QrStyleConfig.COLOR_SAPPHIRE,
                                 backgroundColor = QrStyleConfig.COLOR_WHITE
                             )
@@ -350,7 +358,7 @@ private fun QrCustomizationScreen(
                         onClick = {
                             style = style.copy(
                                 paletteKey = QrStyleConfig.PALETTE_CYAN,
-                                paletteName = "Neon Cyan",
+                                paletteName = context.getString(R.string.qr_palette_neon_cyan),
                                 foregroundColor = QrStyleConfig.COLOR_CYAN,
                                 backgroundColor = QrStyleConfig.COLOR_WHITE
                             )
@@ -362,7 +370,7 @@ private fun QrCustomizationScreen(
                         onClick = {
                             style = style.copy(
                                 paletteKey = QrStyleConfig.PALETTE_SLATE,
-                                paletteName = "Monochrome Slate",
+                                paletteName = context.getString(R.string.qr_palette_monochrome_slate),
                                 foregroundColor = QrStyleConfig.COLOR_SLATE,
                                 backgroundColor = QrStyleConfig.COLOR_WHITE
                             )
@@ -375,7 +383,7 @@ private fun QrCustomizationScreen(
                             onClick = {
                                 style = style.copy(
                                     paletteKey = extra.key,
-                                    paletteName = extra.name,
+                                    paletteName = context.getString(extra.nameRes),
                                     foregroundColor = extra.color,
                                     backgroundColor = QrStyleConfig.COLOR_WHITE
                                 )
@@ -386,13 +394,13 @@ private fun QrCustomizationScreen(
             }
 
             // Center icon
-            SectionCard(title = "Center Icon") {
+            SectionCard(title = stringResource(R.string.qr_customize_section_center_icon)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     IconOption(
-                        label = "None",
+                        label = stringResource(R.string.qr_icon_none),
                         selected = style.centerIcon == QrStyleConfig.CenterIcon.NONE,
                         modifier = Modifier.weight(1f),
                         onClick = {
@@ -403,7 +411,7 @@ private fun QrCustomizationScreen(
                         Text("—", color = TextSecondary, fontWeight = FontWeight.Bold)
                     }
                     IconOption(
-                        label = "Wi-Fi",
+                        label = stringResource(R.string.qr_icon_wifi),
                         selected = style.centerIcon == QrStyleConfig.CenterIcon.WIFI,
                         modifier = Modifier.weight(1f),
                         onClick = {
@@ -413,7 +421,7 @@ private fun QrCustomizationScreen(
                         Icon(Icons.Outlined.Wifi, null, tint = CobaltPrimary, modifier = Modifier.size(22.dp))
                     }
                     IconOption(
-                        label = "Globe",
+                        label = stringResource(R.string.qr_icon_globe),
                         selected = style.centerIcon == QrStyleConfig.CenterIcon.GLOBE,
                         modifier = Modifier.weight(1f),
                         onClick = {
@@ -423,7 +431,7 @@ private fun QrCustomizationScreen(
                         Icon(Icons.Outlined.Public, null, tint = CobaltPrimary, modifier = Modifier.size(22.dp))
                     }
                     IconOption(
-                        label = "Custom",
+                        label = stringResource(R.string.qr_icon_custom),
                         selected = style.centerIcon == QrStyleConfig.CenterIcon.CUSTOM,
                         modifier = Modifier.weight(1f),
                         onClick = { pickLogo.launch("image/*") }
@@ -434,7 +442,7 @@ private fun QrCustomizationScreen(
             }
 
             // Frame
-            SectionCard(title = "Frame Template") {
+            SectionCard(title = stringResource(R.string.qr_customize_section_frame)) {
                 Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     QrStyleConfig.FrameTemplate.entries.forEach { frame ->
                         val selected = style.frame == frame
@@ -455,14 +463,14 @@ private fun QrCustomizationScreen(
                                 .padding(horizontal = 14.dp, vertical = 16.dp)
                         ) {
                             Text(
-                                text = frame.label,
+                                text = stringResource(frame.labelRes),
                                 color = if (selected) CobaltPrimary else TextPrimary,
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = FontWeight.SemiBold,
                                 fontSize = 16.sp
                             )
                             Text(
-                                text = frame.subtitle,
+                                text = stringResource(frame.subtitleRes),
                                 color = TextSecondary,
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 13.sp,
@@ -510,7 +518,7 @@ private fun QrCustomizationScreen(
                     modifier = Modifier.size(20.dp)
                 )
                 Text(
-                    text = "Save & Export Custom QR",
+                    text = stringResource(R.string.qr_customize_save_export),
                     color = if (previewBmp == null || error != null) TextTertiary else White,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -521,13 +529,13 @@ private fun QrCustomizationScreen(
     }
 }
 
-private data class ExtraPalette(val key: String, val name: String, val color: Int)
+private data class ExtraPalette(val key: String, @StringRes val nameRes: Int, val color: Int)
 
 private val ExtraPalettes = listOf(
-    ExtraPalette("crimson", "Crimson", 0xFFDC2626.toInt()),
-    ExtraPalette("emerald", "Emerald", 0xFF059669.toInt()),
-    ExtraPalette("violet", "Violet", 0xFF7C3AED.toInt()),
-    ExtraPalette("amber", "Amber", 0xFFD97706.toInt())
+    ExtraPalette("crimson", R.string.qr_palette_crimson, 0xFFDC2626.toInt()),
+    ExtraPalette("emerald", R.string.qr_palette_emerald, 0xFF059669.toInt()),
+    ExtraPalette("violet", R.string.qr_palette_violet, 0xFF7C3AED.toInt()),
+    ExtraPalette("amber", R.string.qr_palette_amber, 0xFFD97706.toInt())
 )
 
 @Composable

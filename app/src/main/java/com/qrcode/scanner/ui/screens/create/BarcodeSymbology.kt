@@ -1,9 +1,12 @@
 package com.qrcode.scanner.ui.screens.create
 
+import android.content.Context
+import androidx.annotation.StringRes
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.FormatException
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.oned.UPCEReader
+import com.qrcode.scanner.app.R
 
 /**
  * Input rules for Create barcode formats, aligned with ZXing core 3.5.3 writers.
@@ -39,13 +42,34 @@ object BarcodeSymbology {
     }
 
     /** Typed length label. Fixed formats include the accepted full length. No invented maximums. */
-    fun counterText(type: QrCategoryType, length: Int): String = when (type) {
-        QrCategoryType.EAN_13 -> if (length <= 12) "$length/12" else "$length/13"
-        QrCategoryType.EAN_8 -> if (length <= 7) "$length/7" else "$length/8"
-        QrCategoryType.UPC_E -> if (length <= 7) "$length/7" else "$length/8"
-        QrCategoryType.UPC_A -> if (length <= 11) "$length/11" else "$length/12"
-        QrCategoryType.ITF -> "$length digits"
-        else -> "$length chars"
+    fun counterText(type: QrCategoryType, length: Int, context: Context? = null): String = when (type) {
+        QrCategoryType.EAN_13 -> if (length <= 12) {
+            msg(context, R.string.barcode_counter_ean_13_short, "$length/12", length)
+        } else {
+            msg(context, R.string.barcode_counter_ean_13_long, "$length/13", length)
+        }
+        QrCategoryType.EAN_8 -> if (length <= 7) {
+            msg(context, R.string.barcode_counter_ean_8_short, "$length/7", length)
+        } else {
+            msg(context, R.string.barcode_counter_ean_8_long, "$length/8", length)
+        }
+        QrCategoryType.UPC_E -> if (length <= 7) {
+            msg(context, R.string.barcode_counter_upc_e_short, "$length/7", length)
+        } else {
+            msg(context, R.string.barcode_counter_upc_e_long, "$length/8", length)
+        }
+        QrCategoryType.UPC_A -> if (length <= 11) {
+            msg(context, R.string.barcode_counter_upc_a_short, "$length/11", length)
+        } else {
+            msg(context, R.string.barcode_counter_upc_a_long, "$length/12", length)
+        }
+        QrCategoryType.ITF -> msg(
+            context,
+            R.string.barcode_counter_itf_digits,
+            "$length digits",
+            length
+        )
+        else -> msg(context, R.string.barcode_counter_chars, "$length chars", length)
     }
 
     /**
@@ -75,41 +99,60 @@ object BarcodeSymbology {
         else -> raw
     }
 
-    fun validate(type: QrCategoryType, raw: String): String? {
+    fun validate(type: QrCategoryType, raw: String, context: Context? = null): String? {
         if (!isBarcode(type)) return null
-        if (raw.isEmpty()) return emptyMessage(type)
+        if (raw.isEmpty()) return emptyMessage(type, context)
         val value = raw
         return when (type) {
             QrCategoryType.EAN_13 -> digitLengthMessage(
                 value,
                 12,
                 13,
-                "Enter 12 digits, or 13 digits including the check digit."
+                msg(
+                    context,
+                    R.string.barcode_validation_ean_13_length,
+                    "Enter 12 digits, or 13 digits including the check digit."
+                ),
+                context
             )
             QrCategoryType.EAN_8 -> digitLengthMessage(
                 value,
                 7,
                 8,
-                "Enter 7 digits, or 8 digits including the check digit."
+                msg(
+                    context,
+                    R.string.barcode_validation_ean_8_length,
+                    "Enter 7 digits, or 8 digits including the check digit."
+                ),
+                context
             )
             QrCategoryType.UPC_A -> digitsMessage(
                 value,
                 11,
                 12,
-                "Enter 11 digits, or 12 digits including the check digit."
+                msg(
+                    context,
+                    R.string.barcode_validation_upc_a_length,
+                    "Enter 11 digits, or 12 digits including the check digit."
+                ),
+                context
             )
-            QrCategoryType.UPC_E -> validateUpcE(value)
-            QrCategoryType.ITF -> validateItf(value)
+            QrCategoryType.UPC_E -> validateUpcE(value, context)
+            QrCategoryType.ITF -> validateItf(value, context)
             QrCategoryType.CODE_128 -> validateAscii(
                 value,
-                "Code 128 only supports characters up to ASCII 127."
+                msg(
+                    context,
+                    R.string.barcode_validation_code_128_ascii,
+                    "Code 128 only supports characters up to ASCII 127."
+                )
             )
-            QrCategoryType.CODE_93 -> validateCode93(value)
-            QrCategoryType.CODE_39 -> validateCode39(value)
-            QrCategoryType.CODABAR -> validateCodabar(value)
+            QrCategoryType.CODE_93 -> validateCode93(value, context)
+            QrCategoryType.CODE_39 -> validateCode39(value, context)
+            QrCategoryType.CODABAR -> validateCodabar(value, context)
             QrCategoryType.DATA_MATRIX,
             QrCategoryType.PDF_417,
-            QrCategoryType.AZTEC -> ensureFits(type, value)
+            QrCategoryType.AZTEC -> ensureFits(type, value, context)
             else -> null
         }
     }
@@ -139,88 +182,233 @@ object BarcodeSymbology {
         return ('0' + ((10 - (sum % 10)) % 10))
     }
 
-    private fun emptyMessage(type: QrCategoryType): String = when (type) {
-        QrCategoryType.EAN_13 -> "Enter 12 digits, or 13 digits including the check digit."
-        QrCategoryType.EAN_8 -> "Enter 7 digits, or 8 digits including the check digit."
-        QrCategoryType.UPC_A -> "Enter 11 digits, or 12 digits including the check digit."
-        QrCategoryType.UPC_E -> "Enter 7 digits, or 8 digits including the check digit."
-        QrCategoryType.ITF -> "Enter an even number of digits."
-        QrCategoryType.CODE_128 -> "Enter a Code 128 value."
-        QrCategoryType.CODE_93 -> "Enter a Code 93 value."
-        QrCategoryType.CODE_39 -> "Enter a Code 39 value."
-        QrCategoryType.CODABAR -> "Enter a Codabar value."
-        QrCategoryType.DATA_MATRIX -> "Enter a Data Matrix value."
-        QrCategoryType.PDF_417 -> "Enter a PDF417 value."
-        QrCategoryType.AZTEC -> "Enter an Aztec value."
-        else -> "Enter a value to encode"
+    private fun emptyMessage(type: QrCategoryType, context: Context?): String = when (type) {
+        QrCategoryType.EAN_13 -> msg(
+            context,
+            R.string.barcode_validation_ean_13_length,
+            "Enter 12 digits, or 13 digits including the check digit."
+        )
+        QrCategoryType.EAN_8 -> msg(
+            context,
+            R.string.barcode_validation_ean_8_length,
+            "Enter 7 digits, or 8 digits including the check digit."
+        )
+        QrCategoryType.UPC_A -> msg(
+            context,
+            R.string.barcode_validation_upc_a_length,
+            "Enter 11 digits, or 12 digits including the check digit."
+        )
+        QrCategoryType.UPC_E -> msg(
+            context,
+            R.string.barcode_validation_upc_e_length,
+            "Enter 7 digits, or 8 digits including the check digit."
+        )
+        QrCategoryType.ITF -> msg(
+            context,
+            R.string.barcode_validation_itf_even,
+            "Enter an even number of digits."
+        )
+        QrCategoryType.CODE_128 -> msg(
+            context,
+            R.string.barcode_validation_enter_code_128,
+            "Enter a Code 128 value."
+        )
+        QrCategoryType.CODE_93 -> msg(
+            context,
+            R.string.barcode_validation_enter_code_93,
+            "Enter a Code 93 value."
+        )
+        QrCategoryType.CODE_39 -> msg(
+            context,
+            R.string.barcode_validation_enter_code_39,
+            "Enter a Code 39 value."
+        )
+        QrCategoryType.CODABAR -> msg(
+            context,
+            R.string.barcode_validation_enter_codabar,
+            "Enter a Codabar value."
+        )
+        QrCategoryType.DATA_MATRIX -> msg(
+            context,
+            R.string.barcode_validation_enter_data_matrix,
+            "Enter a Data Matrix value."
+        )
+        QrCategoryType.PDF_417 -> msg(
+            context,
+            R.string.barcode_validation_enter_pdf417,
+            "Enter a PDF417 value."
+        )
+        QrCategoryType.AZTEC -> msg(
+            context,
+            R.string.barcode_validation_enter_aztec,
+            "Enter an Aztec value."
+        )
+        else -> msg(
+            context,
+            R.string.create_validation_enter_value,
+            "Enter a value to encode"
+        )
     }
 
-    private fun digitsMessage(value: String, short: Int, full: Int, lengthMessage: String): String? {
-        if (!value.all { it.isDigit() }) return "Digits only."
+    private fun digitsMessage(
+        value: String,
+        short: Int,
+        full: Int,
+        lengthMessage: String,
+        context: Context?
+    ): String? {
+        if (!value.all { it.isDigit() }) {
+            return msg(context, R.string.barcode_validation_digits_only, "Digits only.")
+        }
         if (value.length != short && value.length != full) return lengthMessage
-        if (value.length == full && !hasValidCheckDigit(value)) return "Check digit does not match."
+        if (value.length == full && !hasValidCheckDigit(value)) {
+            return msg(
+                context,
+                R.string.barcode_validation_check_digit_mismatch,
+                "Check digit does not match."
+            )
+        }
         return null
     }
 
     /** Length and digits only. Check digit is corrected in [normalize]. */
-    private fun digitLengthMessage(value: String, short: Int, full: Int, lengthMessage: String): String? {
-        if (!value.all { it.isDigit() }) return "Digits only."
+    private fun digitLengthMessage(
+        value: String,
+        short: Int,
+        full: Int,
+        lengthMessage: String,
+        context: Context?
+    ): String? {
+        if (!value.all { it.isDigit() }) {
+            return msg(context, R.string.barcode_validation_digits_only, "Digits only.")
+        }
         if (value.length != short && value.length != full) return lengthMessage
         return null
     }
 
-    private fun validateUpcE(value: String): String? {
-        if (!value.all { it.isDigit() }) return "Digits only."
-        if (value.length != 7 && value.length != 8) {
-            return "Enter 7 digits, or 8 digits including the check digit."
+    private fun validateUpcE(value: String, context: Context?): String? {
+        if (!value.all { it.isDigit() }) {
+            return msg(context, R.string.barcode_validation_digits_only, "Digits only.")
         }
-        if (value[0] != '0' && value[0] != '1') return "Invalid UPC-E value."
+        if (value.length != 7 && value.length != 8) {
+            return msg(
+                context,
+                R.string.barcode_validation_upc_e_length,
+                "Enter 7 digits, or 8 digits including the check digit."
+            )
+        }
+        if (value[0] != '0' && value[0] != '1') {
+            return msg(
+                context,
+                R.string.barcode_validation_upc_e_invalid,
+                "Invalid UPC-E value."
+            )
+        }
         // Expansion uses the first 7 digits; check digit is corrected in [normalize].
-        if (expandUpcE(value.take(7)) == null) return "Invalid UPC-E value."
+        if (expandUpcE(value.take(7)) == null) {
+            return msg(
+                context,
+                R.string.barcode_validation_upc_e_invalid,
+                "Invalid UPC-E value."
+            )
+        }
         return null
     }
 
-    private fun validateItf(value: String): String? {
-        if (!value.all { it.isDigit() }) return "Digits only."
-        if (value.length < 2) return "ITF needs at least 2 digits."
-        if (value.length % 2 != 0) return "Enter an even number of digits."
-        if (value.length > 80) return "ITF cannot be longer than 80 digits."
+    private fun validateItf(value: String, context: Context?): String? {
+        if (!value.all { it.isDigit() }) {
+            return msg(context, R.string.barcode_validation_digits_only, "Digits only.")
+        }
+        if (value.length < 2) {
+            return msg(context, R.string.barcode_validation_itf_min, "ITF needs at least 2 digits.")
+        }
+        if (value.length % 2 != 0) {
+            return msg(
+                context,
+                R.string.barcode_validation_itf_even,
+                "Enter an even number of digits."
+            )
+        }
+        if (value.length > 80) {
+            return msg(
+                context,
+                R.string.barcode_validation_itf_max,
+                "ITF cannot be longer than 80 digits."
+            )
+        }
         return null
     }
 
     private fun validateAscii(value: String, highMessage: String): String? =
         if (value.any { it.code > 127 }) highMessage else null
 
-    private fun validateCode93(value: String): String? {
+    private fun validateCode93(value: String, context: Context?): String? {
         if (value.any { it.code > 127 }) {
-            return "Code 93 only supports characters up to ASCII 127."
+            return msg(
+                context,
+                R.string.barcode_validation_code_93_ascii,
+                "Code 93 only supports characters up to ASCII 127."
+            )
         }
         val expanded = code93ExtendedLength(value)
-        return if (expanded > 80) "This value is too long for Code 93." else null
+        return if (expanded > 80) {
+            msg(
+                context,
+                R.string.barcode_validation_code_93_too_long,
+                "This value is too long for Code 93."
+            )
+        } else {
+            null
+        }
     }
 
-    private fun validateCode39(value: String): String? {
-        if (value.any { it == '*' }) return "Code 39 cannot encode this character."
-        if (value.any { it.code > 127 }) return "Code 39 cannot encode this character."
+    private fun validateCode39(value: String, context: Context?): String? {
+        val badChar = msg(
+            context,
+            R.string.barcode_validation_code_39_unsupported,
+            "Code 39 cannot encode this character."
+        )
+        if (value.any { it == '*' }) return badChar
+        if (value.any { it.code > 127 }) return badChar
         val expanded = if (value.all { it in CODE_39_NATIVE }) {
             value.length
         } else {
-            code39Extended(value)?.length ?: return "Code 39 cannot encode this character."
+            code39Extended(value)?.length ?: return badChar
         }
-        return if (expanded > 80) "This value is too long for Code 39." else null
+        return if (expanded > 80) {
+            msg(
+                context,
+                R.string.barcode_validation_code_39_too_long,
+                "This value is too long for Code 39."
+            )
+        } else {
+            null
+        }
     }
 
-    private fun validateCodabar(value: String): String? {
-        if (value.any { it == ' ' }) {
-            return "Codabar only allows digits and - $ : / . +."
-        }
+    private fun validateCodabar(value: String, context: Context?): String? {
+        val charsMsg = msg(
+            context,
+            R.string.barcode_validation_codabar_chars,
+            "Codabar only allows digits and - \$ : / . +."
+        )
+        if (value.any { it == ' ' }) return charsMsg
         val upper = value.uppercase()
-        val guarded = codabarGuards(upper) ?: return "Start and stop characters must both be present."
+        val guarded = codabarGuards(upper)
+            ?: return msg(
+                context,
+                R.string.barcode_validation_codabar_guards,
+                "Start and stop characters must both be present."
+            )
         val data = if (guarded) upper.substring(1, upper.length - 1) else upper
-        if (data.isEmpty()) return "Enter a Codabar value."
-        if (data.any { it !in CODABAR_DATA }) {
-            return "Codabar only allows digits and - $ : / . +."
+        if (data.isEmpty()) {
+            return msg(
+                context,
+                R.string.barcode_validation_enter_codabar,
+                "Enter a Codabar value."
+            )
         }
+        if (data.any { it !in CODABAR_DATA }) return charsMsg
         return null
     }
 
@@ -274,20 +462,43 @@ object BarcodeSymbology {
         null
     }
 
-    private fun ensureFits(type: QrCategoryType, value: String): String? {
+    private fun ensureFits(type: QrCategoryType, value: String, context: Context?): String? {
         val format = formatOf(type) ?: return null
         return try {
             MultiFormatWriter().encode(value, format, 1, 1)
             null
         } catch (_: Throwable) {
             when (type) {
-                QrCategoryType.DATA_MATRIX -> "This value is too large for a Data Matrix symbol."
-                QrCategoryType.PDF_417 -> "This value is too large for a PDF417 symbol."
-                QrCategoryType.AZTEC -> "This value is too large for an Aztec symbol."
-                else -> "This value cannot be encoded."
+                QrCategoryType.DATA_MATRIX -> msg(
+                    context,
+                    R.string.barcode_validation_too_large_data_matrix,
+                    "This value is too large for a Data Matrix symbol."
+                )
+                QrCategoryType.PDF_417 -> msg(
+                    context,
+                    R.string.barcode_validation_too_large_pdf417,
+                    "This value is too large for a PDF417 symbol."
+                )
+                QrCategoryType.AZTEC -> msg(
+                    context,
+                    R.string.barcode_validation_too_large_aztec,
+                    "This value is too large for an Aztec symbol."
+                )
+                else -> msg(
+                    context,
+                    R.string.barcode_validation_cannot_encode,
+                    "This value cannot be encoded."
+                )
             }
         }
     }
+
+    private fun msg(context: Context?, @StringRes resId: Int, english: String, vararg formatArgs: Any): String =
+        if (context != null) {
+            if (formatArgs.isEmpty()) context.getString(resId) else context.getString(resId, *formatArgs)
+        } else {
+            english
+        }
 
     /** Matches ZXing 3.5.3 Code93Writer.convertToExtended length, not a second encoder. */
     private fun code93ExtendedLength(contents: String): Int {

@@ -1,5 +1,8 @@
 package com.qrcode.scanner.ui.screens.create
 
+import android.content.Context
+import androidx.annotation.StringRes
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.data.history.ScanPayloadMapper
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.APP_LINK
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.AZTEC
@@ -53,12 +56,15 @@ object QrPayloadBuilder {
         val wifiHidden: Boolean = false
     )
 
-    enum class WifiSecurity(val label: String, val wifiT: String) {
-        WPA("WPA/WPA2", "WPA"),
-        WPA3("WPA3", "WPA"),
-        WEP("WEP", "WEP"),
-        OPEN("Open", "nopass")
+    enum class WifiSecurity(@StringRes val labelRes: Int, val wifiT: String) {
+        WPA(R.string.wifi_security_wpa, "WPA"),
+        WPA3(R.string.wifi_security_wpa3, "WPA"),
+        WEP(R.string.wifi_security_wep, "WEP"),
+        OPEN(R.string.wifi_security_open, "nopass")
     }
+
+    fun wifiSecurityLabel(security: WifiSecurity, context: Context): String =
+        context.getString(security.labelRes)
 
     data class BuildResult(
         val payload: String,
@@ -71,7 +77,9 @@ object QrPayloadBuilder {
 
     fun supportsQrGeneration(type: QrCategoryType): Boolean = type != BARCODE
 
-    fun limitMessage(max: Int): String = "This field is limited to $max characters."
+    fun limitMessage(max: Int, context: Context? = null): String =
+        context?.getString(R.string.create_validation_field_limit, max)
+            ?: "This field is limited to $max characters."
 
     /** Character cap for a form slot. 0 primary, 1 secondary, 2 tertiary, 3 quaternary. */
     fun fieldMaxLength(type: QrCategoryType, field: Int): Int {
@@ -105,63 +113,135 @@ object QrPayloadBuilder {
         }
     }
 
-    fun validate(type: QrCategoryType, input: FormInput): String? {
+    fun validate(
+        type: QrCategoryType,
+        input: FormInput,
+        context: Context? = null
+    ): String? {
         if (type == BARCODE) {
-            return "Barcode / EAN generation is not available yet. Use a QR category instead."
+            return msg(
+                context,
+                R.string.create_validation_barcode_unavailable,
+                "Barcode / EAN generation is not available yet. Use a QR category instead."
+            )
         }
         if (!BarcodeSymbology.isBarcode(type)) {
-            fieldTooLong(type, input)?.let { return it }
+            fieldTooLong(type, input, context)?.let { return it }
         }
         val fieldError = when (type) {
             WEBSITE -> {
                 val url = input.primary.trim()
                 when {
-                    url.isEmpty() -> "Enter a website URL"
-                    !looksLikeUrl(url) -> "Enter a valid URL (https://…)"
+                    url.isEmpty() -> msg(
+                        context,
+                        R.string.form_validation_enter_website_url,
+                        "Enter a website URL"
+                    )
+                    !looksLikeUrl(url) -> msg(
+                        context,
+                        R.string.form_validation_enter_valid_url,
+                        "Enter a valid URL (https://…)"
+                    )
                     else -> null
                 }
             }
-            PLAIN_TEXT -> if (input.primary.trim().isEmpty()) "Enter text to encode" else null
-            CONTACT -> if (input.primary.trim().isEmpty()) "Enter a contact name" else null
+            PLAIN_TEXT -> if (input.primary.trim().isEmpty()) {
+                msg(context, R.string.form_validation_enter_text, "Enter text to encode")
+            } else {
+                null
+            }
+            CONTACT -> if (input.primary.trim().isEmpty()) {
+                msg(context, R.string.form_validation_enter_contact_name, "Enter a contact name")
+            } else {
+                null
+            }
             PHONE -> {
                 val phone = digitsPhone(input.primary)
                 when {
-                    input.primary.trim().isEmpty() -> "Enter a phone number"
-                    phone.length < 7 -> "Enter a valid phone number"
+                    input.primary.trim().isEmpty() -> msg(
+                        context,
+                        R.string.form_validation_enter_phone,
+                        "Enter a phone number"
+                    )
+                    phone.length < 7 -> msg(
+                        context,
+                        R.string.form_validation_enter_valid_phone,
+                        "Enter a valid phone number"
+                    )
                     else -> null
                 }
             }
             EMAIL -> {
                 val email = input.primary.trim()
                 when {
-                    email.isEmpty() -> "Enter an email address"
-                    !email.contains('@') || !email.contains('.') -> "Enter a valid email address"
-                    input.tertiary.trim().isEmpty() -> "Enter an email body"
+                    email.isEmpty() -> msg(
+                        context,
+                        R.string.form_validation_enter_email,
+                        "Enter an email address"
+                    )
+                    !email.contains('@') || !email.contains('.') -> msg(
+                        context,
+                        R.string.form_validation_enter_valid_email,
+                        "Enter a valid email address"
+                    )
+                    input.tertiary.trim().isEmpty() -> msg(
+                        context,
+                        R.string.form_validation_enter_email_body,
+                        "Enter an email body"
+                    )
                     else -> null
                 }
             }
             SMS -> {
                 val phone = digitsPhone(input.primary)
                 when {
-                    input.primary.trim().isEmpty() -> "Enter a phone number"
-                    phone.length < 7 -> "Enter a valid phone number"
-                    input.secondary.trim().isEmpty() -> "Enter a message"
+                    input.primary.trim().isEmpty() -> msg(
+                        context,
+                        R.string.form_validation_enter_phone,
+                        "Enter a phone number"
+                    )
+                    phone.length < 7 -> msg(
+                        context,
+                        R.string.form_validation_enter_valid_phone,
+                        "Enter a valid phone number"
+                    )
+                    input.secondary.trim().isEmpty() -> msg(
+                        context,
+                        R.string.form_validation_enter_message,
+                        "Enter a message"
+                    )
                     else -> null
                 }
             }
             WHATSAPP -> {
                 val phone = digitsOnlyPhone(input.primary)
                 when {
-                    input.primary.trim().isEmpty() -> "Enter a WhatsApp number (with country code)"
-                    phone.length < 8 -> "Enter a valid WhatsApp number with country code"
+                    input.primary.trim().isEmpty() -> msg(
+                        context,
+                        R.string.form_validation_enter_whatsapp_number,
+                        "Enter a WhatsApp number (with country code)"
+                    )
+                    phone.length < 8 -> msg(
+                        context,
+                        R.string.form_validation_enter_valid_whatsapp_number,
+                        "Enter a valid WhatsApp number with country code"
+                    )
                     else -> null
                 }
             }
             LOCATION -> {
                 val coords = parseLatLng(input.primary.trim())
                 when {
-                    input.primary.trim().isEmpty() -> "Enter coordinates as lat,lng"
-                    coords == null -> "Enter valid coordinates (e.g. 37.7749,-122.4194)"
+                    input.primary.trim().isEmpty() -> msg(
+                        context,
+                        R.string.form_validation_enter_coordinates,
+                        "Enter coordinates as lat,lng"
+                    )
+                    coords == null -> msg(
+                        context,
+                        R.string.form_validation_enter_valid_coordinates,
+                        "Enter valid coordinates (e.g. 37.7749,-122.4194)"
+                    )
                     else -> null
                 }
             }
@@ -169,36 +249,61 @@ object QrPayloadBuilder {
                 when {
                     input.primary.trim().isEmpty() -> "Enter an event title"
                     input.secondary.trim().isEmpty() -> "Select a start date"
-                    normalizeCalendarStamp(input.secondary.trim()) == null -> "Enter a valid start date"
+                    normalizeCalendarStamp(input.secondary.trim()) == null ->
+                        "Enter a valid start date"
                     else -> null
                 }
             }
             APP_LINK -> {
                 val v = input.primary.trim()
                 when {
-                    v.isEmpty() -> "Enter an app URL or package name"
+                    v.isEmpty() -> msg(
+                        context,
+                        R.string.form_validation_enter_app_url,
+                        "Enter an app URL or package name"
+                    )
                     looksLikeUrl(v) || v.contains('.') -> null
-                    else -> "Enter a store URL or package like com.example.app"
+                    else -> msg(
+                        context,
+                        R.string.form_validation_enter_store_or_package,
+                        "Enter a store URL or package like com.example.app"
+                    )
                 }
             }
             FACEBOOK, YOUTUBE, TWITTER, TIKTOK, INSTAGRAM, PAYPAL, SNAPCHAT, LINKEDIN, SPOTIFY ->
-                validateSocialHandle(input.primary)
+                validateSocialHandle(input.primary, context)
             CODE_128, DATA_MATRIX, PDF_417, AZTEC, EAN_13, EAN_8, UPC_E, UPC_A, CODE_93, CODE_39,
-            CODABAR, ITF -> BarcodeSymbology.validate(type, input.primary)
+            CODABAR, ITF -> BarcodeSymbology.validate(type, input.primary, context)
             WIFI -> {
                 when {
-                    input.primary.trim().isEmpty() -> "Enter a network name (SSID)"
+                    input.primary.trim().isEmpty() -> msg(
+                        context,
+                        R.string.wifi_validation_enter_ssid,
+                        "Enter a network name (SSID)"
+                    )
                     input.wifiSecurity != WifiSecurity.OPEN &&
-                        input.secondary.trim().isEmpty() -> "Enter the Wi-Fi password"
+                        input.secondary.trim().isEmpty() -> msg(
+                        context,
+                        R.string.wifi_validation_enter_password,
+                        "Enter the Wi-Fi password"
+                    )
                     else -> null
                 }
             }
-            BARCODE -> "Barcode / EAN generation is not available yet."
+            BARCODE -> msg(
+                context,
+                R.string.create_validation_barcode_unavailable,
+                "Barcode / EAN generation is not available yet."
+            )
         }
         if (fieldError != null) return fieldError
         if (BarcodeSymbology.isBarcode(type)) return null
         val bytes = assemble(type, input).payload.toByteArray(Charsets.UTF_8).size
-        return if (bytes > MAX_QR_PAYLOAD_BYTES) QR_TOO_LONG else null
+        return if (bytes > MAX_QR_PAYLOAD_BYTES) {
+            msg(context, R.string.create_validation_qr_too_long, QR_TOO_LONG)
+        } else {
+            null
+        }
     }
 
     fun build(type: QrCategoryType, input: FormInput): BuildResult {
@@ -460,27 +565,37 @@ object QrPayloadBuilder {
         }
     }
 
+    const val DEFAULT_CALENDAR_STAMP = "20260101T090000"
+
     private const val QR_TOO_LONG = "This is too long to fit in a QR code. Shorten the text."
 
-    private fun fieldTooLong(type: QrCategoryType, input: FormInput): String? {
+    private fun fieldTooLong(type: QrCategoryType, input: FormInput, context: Context?): String? {
         val values = listOf(input.primary, input.secondary, input.tertiary, input.quaternary)
         for (index in values.indices) {
             val max = fieldMaxLength(type, index)
-            if (values[index].length > max) return limitMessage(max)
+            if (values[index].length > max) return limitMessage(max, context)
         }
         return null
     }
+
+    private fun msg(context: Context?, @StringRes resId: Int, english: String): String =
+        context?.getString(resId) ?: english
 
     private fun looksLikeUrl(value: String): Boolean =
         ScanPayloadMapper.looksLikeUrl(value) ||
             value.contains('.') && !value.contains(' ')
 
-    private fun validateSocialHandle(raw: String): String? {
+    private fun validateSocialHandle(raw: String, context: Context? = null): String? {
         val value = raw.trim()
+        val prompt = msg(
+            context,
+            R.string.form_validation_enter_username_or_link,
+            "Enter a username or a full link"
+        )
         return when {
-            value.isEmpty() -> "Enter a username or a full link"
+            value.isEmpty() -> prompt
             isDirectLink(value) -> null
-            value.any { it.isWhitespace() } -> "Enter a username or a full link"
+            value.any { it.isWhitespace() } -> prompt
             else -> null
         }
     }

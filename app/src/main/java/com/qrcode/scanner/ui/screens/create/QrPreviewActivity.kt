@@ -57,6 +57,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.qrcode.scanner.app.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -125,7 +127,7 @@ class QrPreviewActivity : ComponentActivity() {
                 QrPreviewScreen(
                     category = category,
                     payload = payload,
-                    displayTitle = title.ifBlank { category.displayTitle },
+                    displayTitle = title.ifBlank { category.displayTitle(this@QrPreviewActivity) },
                     detectedType = detectedType,
                     ecc = ecc,
                     initialStyle = restoredStyle,
@@ -215,7 +217,7 @@ private fun QrPreviewScreen(
 
     LaunchedEffect(payload, ecc, style, logoBmp, category) {
         if (payload.isBlank()) {
-            encodeError = "Nothing to preview"
+            encodeError = context.getString(R.string.qr_preview_nothing_to_preview)
             bitmap = null
             exportBitmap = null
             return@LaunchedEffect
@@ -230,7 +232,8 @@ private fun QrPreviewScreen(
                 bitmap = image
                 exportBitmap = image
             }.onFailure { error ->
-                encodeError = error.message ?: "Unable to encode barcode"
+                encodeError = error.message
+                    ?: context.getString(R.string.qr_preview_unable_encode_barcode)
                 bitmap = null
                 exportBitmap = null
             }
@@ -272,7 +275,8 @@ private fun QrPreviewScreen(
     fun withExportBmp(block: (Bitmap) -> Unit) {
         val bmp = exportBitmap ?: bitmap
         if (bmp == null) {
-            Toast.makeText(context, "QR not ready", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.qr_preview_toast_not_ready), Toast.LENGTH_SHORT)
+                .show()
             return
         }
         block(bmp)
@@ -293,7 +297,7 @@ private fun QrPreviewScreen(
         ) {
             AppBackButton(onClick = onBack)
             Text(
-                text = "QR Preview",
+                text = stringResource(R.string.qr_preview_title),
                 color = TextPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -302,7 +306,7 @@ private fun QrPreviewScreen(
             )
             PreviewIconButton(
                 icon = Icons.Outlined.Share,
-                contentDescription = "Share",
+                contentDescription = stringResource(R.string.cd_share),
                 onClick = {
                     withExportBmp { bmp ->
                         val result = QrExportHelper.shareBitmap(context, bmp, displayTitle)
@@ -349,12 +353,12 @@ private fun QrPreviewScreen(
                         )
                         bitmap != null -> Image(
                             bitmap = bitmap!!.asImageBitmap(),
-                            contentDescription = "Generated QR code",
+                            contentDescription = stringResource(R.string.cd_generated_qr_code),
                             modifier = Modifier.fillMaxSize(),
                             contentScale = ContentScale.Fit
                         )
                         else -> Text(
-                            text = "Generating…",
+                            text = stringResource(R.string.qr_preview_generating),
                             color = TextTertiary,
                             fontFamily = PlusJakartaSans,
                             fontSize = 14.sp
@@ -374,7 +378,7 @@ private fun QrPreviewScreen(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = category.displayTitle.uppercase(),
+                        text = category.displayTitle(context).uppercase(),
                         color = CobaltPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -430,7 +434,7 @@ private fun QrPreviewScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Customize Style & Colors",
+                        text = stringResource(R.string.qr_preview_customize_style),
                         color = TextPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -474,7 +478,11 @@ private fun QrPreviewScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = if (exporting) "Saving..." else "Save Image",
+                        text = if (exporting) {
+                            stringResource(R.string.qr_preview_saving)
+                        } else {
+                            stringResource(R.string.qr_preview_save_image)
+                        },
                         color = if (bitmap != null && !exporting) White else TextTertiary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -513,13 +521,16 @@ private fun QrPreviewScreen(
                                         onHistoryIdAssigned(it)
                                     }
                                 }
-                                Toast.makeText(context, "Qr code generated", Toast.LENGTH_SHORT)
-                                    .show()
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.qr_preview_toast_generated),
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 onSavedAndDone(id)
                             } catch (e: Exception) {
                                 Toast.makeText(
                                     context,
-                                    e.message ?: "Unable to save",
+                                    e.message ?: context.getString(R.string.qr_preview_toast_unable_save),
                                     Toast.LENGTH_SHORT
                                 ).show()
                             } finally {
@@ -541,7 +552,11 @@ private fun QrPreviewScreen(
 //                        modifier = Modifier.size(20.dp)
 //                    )
                     Text(
-                        text = if (saving) "Creating..." else "Create",
+                        text = if (saving) {
+                            stringResource(R.string.qr_preview_creating)
+                        } else {
+                            stringResource(R.string.qr_preview_create)
+                        },
                         color = if (saving || bitmap == null) TextTertiary else White,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -558,7 +573,7 @@ private fun QrPreviewScreen(
                     .padding(16.dp)
             ) {
                 Text(
-                    text = "Code Specifications",
+                    text = stringResource(R.string.qr_preview_code_specifications),
                     color = TextPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -566,8 +581,16 @@ private fun QrPreviewScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Row(modifier = Modifier.fillMaxWidth()) {
-                    SpecCell("Export", "1024 × 1024", Modifier.weight(1f))
-                    SpecCell("Style", style.bodyPattern.label, Modifier.weight(1f))
+                    SpecCell(
+                        stringResource(R.string.qr_preview_spec_export),
+                        stringResource(R.string.qr_preview_spec_export_size),
+                        Modifier.weight(1f)
+                    )
+                    SpecCell(
+                        stringResource(R.string.qr_preview_spec_style),
+                        stringResource(style.bodyPattern.labelRes),
+                        Modifier.weight(1f)
+                    )
                 }
             }
         }

@@ -60,6 +60,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -166,7 +167,7 @@ fun HistoryScreen(
         ) {
             AppBackButton(onClick = onBack)
             Text(
-                text = "History",
+                text = stringResource(R.string.history_title),
                 color = TextPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -175,7 +176,7 @@ fun HistoryScreen(
                 modifier = Modifier.weight(1f)
             )
             Text(
-                text = "Clear",
+                text = stringResource(R.string.action_clear),
                 color = if (isEmpty) TextTertiary else CobaltPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -226,7 +227,7 @@ fun HistoryScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "No matches for your search",
+                        text = stringResource(R.string.history_no_matches),
                         color = TextSecondary,
                         fontFamily = PlusJakartaSans,
                         fontSize = 14.sp,
@@ -246,7 +247,7 @@ fun HistoryScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     sections.forEach { section ->
-                        item(key = "header_${section.label}") {
+                        item(key = "header_${section.kind}") {
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -255,14 +256,32 @@ fun HistoryScreen(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Text(
-                                    text = section.label,
+                                    text = when (section.kind) {
+                                        DaySectionKind.Today ->
+                                            stringResource(R.string.history_section_today)
+                                        DaySectionKind.Yesterday ->
+                                            stringResource(R.string.history_section_yesterday)
+                                        DaySectionKind.Earlier ->
+                                            stringResource(R.string.history_section_earlier)
+                                    },
                                     color = TextPrimary,
                                     fontFamily = PlusJakartaSans,
                                     fontWeight = FontWeight.SemiBold,
                                     fontSize = 16.sp
                                 )
                                 Text(
-                                    text = section.countLabel,
+                                    text = when (section.kind) {
+                                        DaySectionKind.Today -> if (section.count == 1) {
+                                            stringResource(R.string.history_section_count_scan, section.count)
+                                        } else {
+                                            stringResource(R.string.history_section_count_scans, section.count)
+                                        }
+                                        else -> if (section.count == 1) {
+                                            stringResource(R.string.history_section_count_item, section.count)
+                                        } else {
+                                            stringResource(R.string.history_section_count_items, section.count)
+                                        }
+                                    },
                                     color = TextSecondary,
                                     fontFamily = PlusJakartaSans,
                                     fontSize = 12.sp
@@ -275,7 +294,11 @@ fun HistoryScreen(
                                 onClick = { onOpenDetail(entity.id) },
                                 onCopy = {
                                     copyText(context, entity.rawValue)
-                                    Toast.makeText(context, "Copied", Toast.LENGTH_SHORT).show()
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.toast_copied),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 },
                                 onShare = { shareText(context, entity.rawValue) },
                                 onDelete = { pendingDeleteId = entity.id },
@@ -299,7 +322,11 @@ fun HistoryScreen(
                 showClearDialog = false
                 scope.launch {
                     repository.deleteAll()
-                    Toast.makeText(context, "History cleared", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.toast_history_cleared),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             },
             onDismiss = { showClearDialog = false }
@@ -312,7 +339,11 @@ fun HistoryScreen(
                 pendingDeleteId = null
                 scope.launch {
                     repository.deleteById(deleteId)
-                    Toast.makeText(context, "Deleted", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.toast_deleted),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             },
             onDismiss = { pendingDeleteId = null }
@@ -358,7 +389,7 @@ private fun SearchField(
             decorationBox = { inner ->
                 if (query.isEmpty()) {
                     Text(
-                        text = "Search codes, URLs, titles...",
+                        text = stringResource(R.string.history_search_placeholder),
                         color = TextTertiary,
                         fontFamily = PlusJakartaSans,
                         fontSize = 14.sp
@@ -370,7 +401,7 @@ private fun SearchField(
         if (query.isNotEmpty()) {
             Icon(
                 imageVector = Icons.Outlined.Close,
-                contentDescription = "Clear search",
+                contentDescription = stringResource(R.string.cd_clear_search),
                 tint = TextTertiary,
                 modifier = Modifier
                     .size(20.dp)
@@ -400,19 +431,19 @@ private fun FilterTabs(
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         FilterTab(
-            label = "All ($allCount)",
+            label = stringResource(R.string.history_filter_all, allCount),
             selected = filter == HistoryFilter.All,
             onClick = { onFilterChange(HistoryFilter.All) },
             modifier = Modifier.weight(1f)
         )
         FilterTab(
-            label = "Scanned ($scannedCount)",
+            label = stringResource(R.string.history_filter_scanned, scannedCount),
             selected = filter == HistoryFilter.Scanned,
             onClick = { onFilterChange(HistoryFilter.Scanned) },
             modifier = Modifier.weight(1f)
         )
         FilterTab(
-            label = "Created ($createdCount)",
+            label = stringResource(R.string.history_filter_created, createdCount),
             selected = filter == HistoryFilter.Created,
             onClick = { onFilterChange(HistoryFilter.Created) },
             modifier = Modifier.weight(1f)
@@ -461,6 +492,11 @@ private fun HistoryActivityCard(
     onToggleFavorite: () -> Unit
 ) {
     var menuOpen by remember { mutableStateOf(false) }
+    val copyLabel = stringResource(R.string.action_copy)
+    val shareLabel = stringResource(R.string.action_share)
+    val addFavoriteLabel = stringResource(R.string.history_menu_add_favorite)
+    val removeFavoriteLabel = stringResource(R.string.history_menu_remove_favorite)
+    val deleteLabel = stringResource(R.string.action_delete)
     val title = ScanPayloadMapper.titleFor(entity)
     val subtitle = ScanPayloadMapper.subtitleFor(entity)
     val badge = ScanPayloadMapper.badgeLabel(entity)
@@ -556,7 +592,7 @@ private fun HistoryActivityCard(
                     if (entity.isFavorite) {
                         Icon(
                             imageVector = Icons.Outlined.Star,
-                            contentDescription = "Favorite",
+                            contentDescription = stringResource(R.string.cd_favorite),
                             tint = CobaltPrimary,
                             modifier = Modifier.size(14.dp)
                         )
@@ -571,12 +607,12 @@ private fun HistoryActivityCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             CardActionChip(
-                label = "Copy",
+                label = copyLabel,
                 icon = Icons.Outlined.ContentCopy,
                 onClick = onCopy
             )
             CardActionChip(
-                label = "Share",
+                label = shareLabel,
                 icon = Icons.Outlined.Share,
                 onClick = onShare
             )
@@ -584,7 +620,7 @@ private fun HistoryActivityCard(
             Box {
                 Icon(
                     imageVector = Icons.Outlined.MoreVert,
-                    contentDescription = "More",
+                    contentDescription = stringResource(R.string.cd_more),
                     tint = TextSecondary,
                     modifier = Modifier
                         .size(28.dp)
@@ -601,7 +637,7 @@ private fun HistoryActivityCard(
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = if (entity.isFavorite) "Remove favorite" else "Add favorite",
+                                text = if (entity.isFavorite) removeFavoriteLabel else addFavoriteLabel,
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 14.sp
                             )
@@ -624,7 +660,7 @@ private fun HistoryActivityCard(
                     DropdownMenuItem(
                         text = {
                             Text(
-                                text = "Delete",
+                                text = deleteLabel,
                                 color = Destructive,
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 14.sp
@@ -722,7 +758,7 @@ private fun HistoryEmptyState(
 //        )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "No Scan History Yet",
+            text = stringResource(R.string.history_empty_title),
             color = TextPrimary,
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.ExtraBold,
@@ -763,7 +799,7 @@ private fun HistoryEmptyState(
                     modifier = Modifier.size(20.dp)
                 )
                 Text(
-                    text = "Launch Scanner Now",
+                    text = stringResource(R.string.history_empty_launch_scanner),
                     color = White,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -828,14 +864,14 @@ internal fun DeleteHistoryItemDialog(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = "Delete this history item?",
+                            text = stringResource(R.string.history_delete_item_title),
                             color = TextPrimary,
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 16.sp
                         )
                         Text(
-                            text = "This action cannot be undone",
+                            text = stringResource(R.string.history_delete_item_subtitle),
                             color = TextSecondary,
                             fontFamily = PlusJakartaSans,
                             fontSize = 12.sp
@@ -843,7 +879,7 @@ internal fun DeleteHistoryItemDialog(
                     }
                 }
                 Text(
-                    text = "This will permanently remove this item from your local device history.",
+                    text = stringResource(R.string.history_delete_item_body),
                     color = TextSecondary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp,
@@ -873,7 +909,7 @@ internal fun DeleteHistoryItemDialog(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "Delete",
+                            text = stringResource(R.string.action_delete),
                             color = White,
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.SemiBold,
@@ -895,7 +931,7 @@ internal fun DeleteHistoryItemDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = stringResource(R.string.action_cancel),
                         color = TextPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -961,7 +997,7 @@ internal fun ClearHistoryDialog(
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
                         Text(
-                            text = "Clear Scan & Create History?",
+                            text = stringResource(R.string.history_clear_all_title),
                             color = TextPrimary,
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.SemiBold,
@@ -976,7 +1012,7 @@ internal fun ClearHistoryDialog(
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "$itemCount stored items",
+                                text = stringResource(R.string.history_stored_items_count, itemCount),
                                 color = TextSecondary,
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 12.sp
@@ -985,14 +1021,14 @@ internal fun ClearHistoryDialog(
                     }
                 }
                 Text(
-                    text = "This will permanently remove every history item from your local device, including liked and favorited items.",
+                    text = stringResource(R.string.history_clear_all_body),
                     color = TextSecondary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 14.sp,
                     lineHeight = 20.sp
                 )
                 Text(
-                    text = "Items cannot be restored once purged.",
+                    text = stringResource(R.string.history_clear_all_warning),
                     color = TextTertiary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 12.sp
@@ -1021,7 +1057,7 @@ internal fun ClearHistoryDialog(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "Clear All History",
+                            text = stringResource(R.string.history_clear_all_confirm),
                             color = White,
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.SemiBold,
@@ -1043,7 +1079,7 @@ internal fun ClearHistoryDialog(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Cancel",
+                        text = stringResource(R.string.action_cancel),
                         color = TextPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -1055,9 +1091,11 @@ internal fun ClearHistoryDialog(
     }
 }
 
+private enum class DaySectionKind { Today, Yesterday, Earlier }
+
 private data class DaySection(
-    val label: String,
-    val countLabel: String,
+    val kind: DaySectionKind,
+    val count: Int,
     val items: List<HistoryEntity>
 )
 
@@ -1084,8 +1122,8 @@ private fun groupByDay(items: List<HistoryEntity>): List<DaySection> {
         if (today.isNotEmpty()) {
             add(
                 DaySection(
-                    label = "Today",
-                    countLabel = "${today.size} ${if (today.size == 1) "scan" else "scans"}",
+                    kind = DaySectionKind.Today,
+                    count = today.size,
                     items = today
                 )
             )
@@ -1093,8 +1131,8 @@ private fun groupByDay(items: List<HistoryEntity>): List<DaySection> {
         if (yesterday.isNotEmpty()) {
             add(
                 DaySection(
-                    label = "Yesterday",
-                    countLabel = "${yesterday.size} ${if (yesterday.size == 1) "item" else "items"}",
+                    kind = DaySectionKind.Yesterday,
+                    count = yesterday.size,
                     items = yesterday
                 )
             )
@@ -1102,8 +1140,8 @@ private fun groupByDay(items: List<HistoryEntity>): List<DaySection> {
         if (older.isNotEmpty()) {
             add(
                 DaySection(
-                    label = "Earlier",
-                    countLabel = "${older.size} ${if (older.size == 1) "item" else "items"}",
+                    kind = DaySectionKind.Earlier,
+                    count = older.size,
                     items = older
                 )
             )
@@ -1141,5 +1179,7 @@ private fun shareText(context: Context, text: String) {
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, text)
     }
-    context.startActivity(Intent.createChooser(send, "Share"))
+    context.startActivity(
+        Intent.createChooser(send, context.getString(R.string.share_chooser_title))
+    )
 }

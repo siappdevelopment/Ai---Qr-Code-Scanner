@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Shared actions -->
+    <string name="action_back">Back</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_copy">Copy</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_go_back">Go back</string>
+    <string name="action_paste">Paste</string>
+    <string name="action_share">Share</string>
+    <string name="action_reset">Reset</string>
+    <string name="cd_clear">Clear</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="cd_favorite">Favorite</string>
+    <string name="cd_more">More</string>
+    <string name="cd_add_to_favorites">Add to favorites</string>
+    <string name="toast_copied">Copied</string>
+    <string name="toast_deleted">Deleted</string>
+    <string name="toast_history_cleared">History cleared</string>
+    <string name="toast_clipboard_empty">Clipboard is empty</string>
+    <string name="toast_unable_to_open_link">Unable to open link</string>
+    <string name="share_chooser_title">Share</string>
+    <string name="form_label_optional_suffix">%1$s (Optional)</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_scan">Scan</string>
+    <string name="nav_settings">Settings</string>
+    <string name="cd_quick_scan">Quick Scan</string>
+
+    <!-- Home -->
+    <string name="home_cd_favorites">Favorites</string>
+    <string name="home_instant_scanner_title">Instant Scanner</string>
+    <string name="home_instant_scanner_subtitle">Point at any QR code or standard barcode</string>
+    <string name="home_open_camera_scanner">Open Camera Scanner</string>
+    <string name="home_quick_tools_heading">QUICK TOOLS</string>
+    <string name="home_tool_scan_barcode_title">Scan Barcode</string>
+    <string name="home_tool_scan_barcode_subtitle">UPC &amp; EAN tags</string>
+    <string name="home_tool_scan_gallery_title">Scan Gallery</string>
+    <string name="home_tool_scan_gallery_subtitle">From screenshots</string>
+    <string name="home_tool_create_qr_title">Create QR</string>
+    <string name="home_tool_create_qr_subtitle">Links, Wi-Fi &amp; vCard</string>
+    <string name="home_tool_history_title">History</string>
+    <string name="home_tool_history_subtitle">Saved scans &amp; codes</string>
+    <string name="home_recent_scans_title">Recent Scans</string>
+    <string name="home_view_all">View all</string>
+    <string name="home_no_recent_scans_title">No recent scans yet</string>
+    <string name="home_no_recent_scans_body">Codes you scan will appear here for quick access.</string>
+
+    <!-- History -->
+    <string name="history_title">History</string>
+    <string name="history_search_placeholder">Search codes, URLs, titles…</string>
+    <string name="history_no_matches">No matches for your search</string>
+    <string name="history_filter_all">All (%1$d)</string>
+    <string name="history_filter_scanned">Scanned (%1$d)</string>
+    <string name="history_filter_created">Created (%1$d)</string>
+    <string name="history_section_today">Today</string>
+    <string name="history_section_yesterday">Yesterday</string>
+    <string name="history_section_earlier">Earlier</string>
+    <string name="history_section_count_scans">%1$d scans</string>
+    <string name="history_section_count_scan">%1$d scan</string>
+    <string name="history_section_count_items">%1$d items</string>
+    <string name="history_section_count_item">%1$d item</string>
+    <string name="history_menu_add_favorite">Add favorite</string>
+    <string name="history_menu_remove_favorite">Remove favorite</string>
+    <string name="history_empty_title">No Scan History Yet</string>
+    <string name="history_empty_launch_scanner">Launch Scanner Now</string>
+    <string name="history_detail_title">History Detail</string>
+    <string name="history_not_found_title">Scan not found</string>
+    <string name="history_not_found_body">This history item may have been deleted.</string>
+    <string name="history_delete_item_title">Delete this history item?</string>
+    <string name="history_delete_item_subtitle">This action cannot be undone</string>
+    <string name="history_delete_item_body">This will permanently remove this item from your local device history.</string>
+    <string name="history_clear_all_title">Clear Scan &amp; Create History?</string>
+    <string name="history_stored_items_count">%1$d stored items</string>
+    <string name="history_clear_all_body">This will permanently remove every history item from your local device, including liked and favorited items.</string>
+    <string name="history_clear_all_warning">Items cannot be restored once purged.</string>
+    <string name="history_clear_all_confirm">Clear All History</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">Favorites</string>
+    <string name="favorites_empty">No favorites yet</string>
+
+    <!-- Scan / viewfinder -->
+    <string name="scan_hud_flash">FLASH</string>
+    <string name="scan_hud_gallery">GALLERY</string>
+    <string name="scan_hud_flip">FLIP</string>
+    <string name="cd_toggle_flashlight">Toggle flashlight</string>
+    <string name="cd_scan_image_from_gallery">Scan image from gallery</string>
+    <string name="cd_flip_camera_lens">Flip camera lens</string>
+    <string name="scan_zoom_level">%1$dx</string>
+    <string name="scan_camera_permission_title">Camera permission required</string>
+    <string name="scan_camera_permission_body">Allow camera access to scan QR codes and barcodes.</string>
+    <string name="scan_camera_permission_body_settings">Camera access is turned off. Open Settings, enable Camera, then return here to scan.</string>
+    <string name="scan_grant_permission">Grant permission</string>
+    <string name="scan_open_settings">Open Settings</string>
+
+    <!-- Gallery crop -->
+    <string name="gallery_crop_title">Crop Photo</string>
+    <string name="gallery_crop_select_photo">Select a photo to crop</string>
+    <string name="gallery_crop_rotate_90">Rotate 90°</string>
+    <string name="gallery_crop_flip">Flip</string>
+    <string name="gallery_crop_detecting">Detecting…</string>
+    <string name="gallery_crop_scan_selection">Scan Selection</string>
+    <string name="gallery_crop_choose_another">Choose another photo</string>
+    <string name="gallery_crop_unable_open_image">Unable to open this image</string>
+    <string name="gallery_crop_no_code_detected">No scannable code detected</string>
+    <string name="gallery_crop_detection_failed">Detection failed</string>
+    <string name="gallery_crop_multiple_codes_title">Multiple codes found</string>
+    <string name="gallery_crop_multiple_codes_prompt">Select which code to open:</string>
+    <string name="gallery_crop_code_list_item">%1$d. %2$s: %3$s</string>
+    <string name="cd_selected_photo">Selected photo</string>
+    <string name="wifi_preview_enter_ssid">Enter SSID</string>
+
+    <!-- Detection error -->
+    <string name="detection_error_title">Detection Failed</string>
+    <string name="detection_error_badge">DETECTION FAILED</string>
+    <string name="detection_error_headline">No Scannable Code Detected</string>
+    <string name="detection_error_checklist_title">Optimization Checklist</string>
+    <string name="detection_error_tip_steady">Hold steady and keep the code fully inside the crop frame</string>
+    <string name="detection_error_tip_lighting">Use a sharp, well-lit photo without heavy blur</string>
+    <string name="detection_error_tip_rotate">Try Rotate or Flip if the code appears sideways</string>
+    <string name="detection_error_tip_formats">Supported: QR, Aztec, Data Matrix, EAN, UPC, Code 128/39, PDF417</string>
+    <string name="detection_error_retry">Scan Again / Retry</string>
+    <string name="detection_error_pick_gallery">Select Another Photo from Gallery</string>
+
+    <!-- Batch results -->
+    <string name="batch_results_title">Batch Results</string>
+    <string name="batch_results_one_code">1 code accepted</string>
+    <string name="batch_results_many_codes">%1$d codes accepted</string>
+
+    <!-- Scan result -->
+    <string name="scan_result_title">Scan Result</string>
+    <string name="scan_result_payload_heading">PAYLOAD CONTENT</string>
+    <string name="scan_result_empty_payload">(empty)</string>
+    <string name="scan_result_kind_website">Website / URL</string>
+    <string name="scan_result_kind_wifi">Wi-Fi Network</string>
+    <string name="scan_result_kind_plain_text">Plain Text</string>
+    <string name="scan_result_kind_qr_code">QR Code</string>
+    <string name="scan_result_kind_barcode">Barcode</string>
+    <string name="scan_result_url_detected_banner">Website / URL payload detected</string>
+    <string name="scan_result_copy_link">Copy Link</string>
+    <string name="scan_result_open_in_browser">Open in Browser</string>
+    <string name="scan_result_toast_link_copied">Link copied to clipboard</string>
+    <string name="scan_result_toast_copied">Copied to clipboard</string>
+    <string name="scan_result_toast_saved_favorite">Saved to your favorites</string>
+    <string name="scan_result_toast_removed_favorite">Removed from favorites</string>
+    <string name="share_scanned_url_title">Scanned URL</string>
+    <string name="share_scan_result_title">Scan Result</string>
+
+    <!-- Create hub -->
+    <string name="create_hub_title">Create QR Code</string>
+    <string name="create_hub_search_placeholder">Search QR format…</string>
+    <string name="create_hub_no_formats_title">No formats found</string>
+    <string name="create_hub_no_formats_body">Try typing another keyword or reset the active filter</string>
+    <string name="create_hub_reset_search">Reset Search</string>
+    <string name="create_hub_section_social">Social</string>
+    <string name="create_hub_section_barcode">Barcode</string>
+    <string name="create_filter_all">All Formats</string>
+    <string name="create_filter_web">Web &amp; Social</string>
+    <string name="create_filter_comms">Communications</string>
+    <string name="create_filter_utilities">Utilities</string>
+    <string name="create_subtitle_barcode">Barcode</string>
+
+    <!-- Create hub category cards -->
+    <string name="create_cat_website_title">Website URL</string>
+    <string name="create_cat_website_subtitle">Links, social profiles, web pages</string>
+    <string name="create_cat_wifi_title">Wi-Fi Network</string>
+    <string name="create_cat_wifi_subtitle">WPA/WPA2, SSID, auto-connect</string>
+    <string name="create_cat_contact_title">Contact / vCard</string>
+    <string name="create_cat_contact_subtitle">Name, phone, email, address</string>
+    <string name="create_cat_plain_text_title">Plain Text</string>
+    <string name="create_cat_plain_text_subtitle">Notes, messages, raw data</string>
+    <string name="create_cat_phone_title">Phone Call</string>
+    <string name="create_cat_phone_subtitle">Direct phone dialing</string>
+    <string name="create_cat_email_title">Email Message</string>
+    <string name="create_cat_email_subtitle">Pre-filled recipient &amp; subject</string>
+    <string name="create_cat_sms_title">SMS / Message</string>
+    <string name="create_cat_sms_subtitle">Direct text message</string>
+    <string name="create_cat_whatsapp_title">WhatsApp</string>
+    <string name="create_cat_whatsapp_subtitle">Direct WhatsApp chat link</string>
+    <string name="create_cat_location_title">Location</string>
+    <string name="create_cat_location_subtitle">Google Maps coordinates / pin</string>
+    <string name="create_cat_calendar_title">Calendar Event</string>
+    <string name="create_cat_calendar_subtitle">Title, date, time, reminder</string>
+    <string name="create_cat_app_link_title">App Link</string>
+    <string name="create_cat_app_link_subtitle">Google Play &amp; App Store links</string>
+    <string name="create_cat_facebook_title">Facebook</string>
+    <string name="create_cat_facebook_subtitle">Profile or page</string>
+    <string name="create_cat_youtube_title">YouTube</string>
+    <string name="create_cat_youtube_subtitle">Channel or video</string>
+    <string name="create_cat_twitter_title">Twitter</string>
+    <string name="create_cat_twitter_subtitle">Profile</string>
+    <string name="create_cat_tiktok_title">TikTok</string>
+    <string name="create_cat_tiktok_subtitle">Profile</string>
+    <string name="create_cat_instagram_title">Instagram</string>
+    <string name="create_cat_instagram_subtitle">Profile</string>
+    <string name="create_cat_paypal_title">PayPal</string>
+    <string name="create_cat_paypal_subtitle">PayPal.me link</string>
+    <string name="create_cat_snapchat_title">Snapchat</string>
+    <string name="create_cat_snapchat_subtitle">Add friend</string>
+    <string name="create_cat_linkedin_title">LinkedIn</string>
+    <string name="create_cat_linkedin_subtitle">Profile</string>
+    <string name="create_cat_spotify_title">Spotify</string>
+    <string name="create_cat_spotify_subtitle">Profile or playlist</string>
+    <string name="create_cat_code_128_title">Code 128</string>
+    <string name="create_cat_data_matrix_title">Data Matrix</string>
+    <string name="create_cat_pdf_417_title">PDF 417</string>
+    <string name="create_cat_aztec_title">Aztec</string>
+    <string name="create_cat_ean_13_title">EAN 13</string>
+    <string name="create_cat_ean_8_title">EAN 8</string>
+    <string name="create_cat_upc_e_title">UPC E</string>
+    <string name="create_cat_upc_a_title">UPC A</string>
+    <string name="create_cat_code_93_title">Code 93</string>
+    <string name="create_cat_code_39_title">Code 39</string>
+    <string name="create_cat_codabar_title">Codabar</string>
+    <string name="create_cat_itf_title">ITF</string>
+    <string name="create_cat_barcode_title">Barcode / EAN</string>
+
+    <!-- Create forms — shared -->
+    <string name="create_form_generate_preview">Generate &amp; Preview</string>
+    <string name="create_form_generate_preview_qr">Generate &amp; Preview QR</string>
+    <string name="create_form_instant_share">Instant Share</string>
+    <string name="create_barcode_stub_title">Barcode creation coming later</string>
+    <string name="create_barcode_stub_body">This hub item is for barcodes (EAN/UPC), not QR codes. QR categories are available from Create.</string>
+    <string name="create_validation_field_limit">This field is limited to %1$d characters.</string>
+    <string name="create_validation_qr_too_long">This is too long to fit in a QR code. Shorten the text.</string>
+    <string name="create_validation_barcode_unavailable">Barcode / EAN generation is not available yet. Use a QR category instead.</string>
+    <string name="create_validation_enter_value">Enter a value to encode</string>
+
+    <!-- Create forms — website -->
+    <string name="form_website_url_label">Website URL (https://)</string>
+    <string name="form_website_url_placeholder">https://example.com/target-path</string>
+    <string name="form_display_title_note_label">Display Title / Note</string>
+    <string name="form_display_title_note_placeholder">e.g., Marketing Deck Q3 Launch</string>
+    <string name="form_validation_enter_website_url">Enter a website URL</string>
+    <string name="form_validation_enter_valid_url">Enter a valid URL (https://…)</string>
+
+    <!-- Create forms — plain text -->
+    <string name="form_plain_text_label">Raw Message / Payload</string>
+    <string name="form_plain_text_placeholder">Type or paste plain text…</string>
+    <string name="form_optional_label_placeholder">Optional label</string>
+    <string name="form_validation_enter_text">Enter text to encode</string>
+
+    <!-- Create forms — contact -->
+    <string name="form_contact_name_label">Full Name</string>
+    <string name="form_contact_name_placeholder">Enter contact name</string>
+    <string name="form_contact_email_label">Email (optional)</string>
+    <string name="form_contact_email_placeholder">name@email.com</string>
+    <string name="form_contact_job_title_label">Job Title (optional)</string>
+    <string name="form_contact_job_title_placeholder">e.g., Product Manager</string>
+    <string name="form_contact_phone_label">Phone (optional)</string>
+    <string name="form_contact_phone_placeholder">+1 555 0100</string>
+    <string name="form_validation_enter_contact_name">Enter a contact name</string>
+
+    <!-- Create forms — phone -->
+    <string name="form_phone_number_label">Phone Number</string>
+    <string name="form_validation_enter_phone">Enter a phone number</string>
+    <string name="form_validation_enter_valid_phone">Enter a valid phone number</string>
+
+    <!-- Create forms — email -->
+    <string name="form_email_address_label">Email Address</string>
+    <string name="form_email_address_placeholder">hello@example.com</string>
+    <string name="form_email_subject_label">Subject (optional)</string>
+    <string name="form_email_subject_placeholder">Message subject</string>
+    <string name="form_email_body_label">Body</string>
+    <string name="form_email_body_placeholder">Email body</string>
+    <string name="form_validation_enter_email">Enter an email address</string>
+    <string name="form_validation_enter_valid_email">Enter a valid email address</string>
+    <string name="form_validation_enter_email_body">Enter an email body</string>
+
+    <!-- Create forms — SMS -->
+    <string name="form_sms_message_label">Message</string>
+    <string name="form_sms_message_placeholder">SMS text</string>
+    <string name="form_validation_enter_message">Enter a message</string>
+
+    <!-- Create forms — WhatsApp -->
+    <string name="form_whatsapp_number_label">WhatsApp Number</string>
+    <string name="form_whatsapp_number_placeholder">15550100 (with country code)</string>
+    <string name="form_whatsapp_message_label">Message (optional)</string>
+    <string name="form_whatsapp_message_placeholder">Pre-filled chat text</string>
+    <string name="form_validation_enter_whatsapp_number">Enter a WhatsApp number (with country code)</string>
+    <string name="form_validation_enter_valid_whatsapp_number">Enter a valid WhatsApp number with country code</string>
+
+    <!-- Create forms — location -->
+    <string name="form_location_coords_label">Coordinates (lat,lng)</string>
+    <string name="form_location_coords_placeholder">37.7749,-122.4194</string>
+    <string name="form_location_place_label">Place label (optional)</string>
+    <string name="form_location_place_placeholder">Golden Gate Bridge</string>
+    <string name="form_validation_enter_coordinates">Enter coordinates as lat,lng</string>
+    <string name="form_validation_enter_valid_coordinates">Enter valid coordinates (e.g. 37.7749,-122.4194)</string>
+
+    <!-- Create forms — app link -->
+    <string name="form_app_link_label">App URL or Package</string>
+    <string name="form_app_link_placeholder">com.example.app or https://play.google.com/…</string>
+    <string name="form_validation_enter_app_url">Enter an app URL or package name</string>
+    <string name="form_validation_enter_store_or_package">Enter a store URL or package like com.example.app</string>
+
+    <!-- Create forms — social -->
+    <string name="form_social_display_title_label">Display title (optional)</string>
+    <string name="form_validation_enter_username_or_link">Enter a username or a full link</string>
+    <string name="form_social_facebook_primary_label">Facebook username or link</string>
+    <string name="form_social_facebook_primary_placeholder">username or https://facebook.com/…</string>
+    <string name="form_social_youtube_primary_label">YouTube username or link</string>
+    <string name="form_social_youtube_primary_placeholder">@channel or https://youtube.com/…</string>
+    <string name="form_social_twitter_primary_label">Twitter username or link</string>
+    <string name="form_social_twitter_primary_placeholder">username or https://x.com/…</string>
+    <string name="form_social_tiktok_primary_label">TikTok username or link</string>
+    <string name="form_social_tiktok_primary_placeholder">@username or https://tiktok.com/…</string>
+    <string name="form_social_instagram_primary_label">Instagram username or link</string>
+    <string name="form_social_instagram_primary_placeholder">username or https://instagram.com/…</string>
+    <string name="form_social_paypal_primary_label">PayPal username or link</string>
+    <string name="form_social_paypal_primary_placeholder">paypal.me name or https://paypal.me/…</string>
+    <string name="form_social_snapchat_primary_label">Snapchat username or link</string>
+    <string name="form_social_snapchat_primary_placeholder">username or https://snapchat.com/add/…</string>
+    <string name="form_social_linkedin_primary_label">LinkedIn username or link</string>
+    <string name="form_social_linkedin_primary_placeholder">profile name or https://linkedin.com/in/…</string>
+    <string name="form_social_spotify_primary_label">Spotify username or link</string>
+    <string name="form_social_spotify_primary_placeholder">user id or https://open.spotify.com/…</string>
+
+    <!-- Create forms — barcode payloads -->
+    <string name="form_barcode_code_128_label">Code 128 value</string>
+    <string name="form_barcode_code_128_placeholder">Text or numbers</string>
+    <string name="form_barcode_data_matrix_label">Data Matrix value</string>
+    <string name="form_barcode_pdf_417_label">PDF 417 value</string>
+    <string name="form_barcode_aztec_label">Aztec value</string>
+    <string name="form_barcode_ean_13_label">EAN 13 digits</string>
+    <string name="form_barcode_ean_13_placeholder">12 or 13 digits</string>
+    <string name="form_barcode_ean_8_label">EAN 8 digits</string>
+    <string name="form_barcode_ean_8_placeholder">7 or 8 digits</string>
+    <string name="form_barcode_upc_e_label">UPC E digits</string>
+    <string name="form_barcode_upc_e_placeholder">7 or 8 digits (starts with 0 or 1)</string>
+    <string name="form_barcode_upc_a_label">UPC A digits</string>
+    <string name="form_barcode_upc_a_placeholder">11 digits, or 12 with check digit</string>
+    <string name="form_barcode_code_93_label">Code 93 value</string>
+    <string name="form_barcode_code_93_placeholder">ASCII text</string>
+    <string name="form_barcode_code_39_label">Code 39 value</string>
+    <string name="form_barcode_codabar_label">Codabar value</string>
+    <string name="form_barcode_codabar_placeholder">Digits, optional start/stop</string>
+    <string name="form_barcode_itf_label">ITF digits</string>
+    <string name="form_barcode_itf_placeholder">Even number of digits</string>
+    <string name="form_barcode_generic_placeholder">Text or numbers</string>
+    <string name="form_payload_label">Payload</string>
+    <string name="form_payload_placeholder">Enter value</string>
+
+    <!-- Barcode validation -->
+    <string name="barcode_validation_digits_only">Digits only.</string>
+    <string name="barcode_validation_check_digit_mismatch">Check digit does not match.</string>
+    <string name="barcode_validation_ean_13_length">Enter 12 digits, or 13 digits including the check digit.</string>
+    <string name="barcode_validation_ean_8_length">Enter 7 digits, or 8 digits including the check digit.</string>
+    <string name="barcode_validation_upc_a_length">Enter 11 digits, or 12 digits including the check digit.</string>
+    <string name="barcode_validation_upc_e_length">Enter 7 digits, or 8 digits including the check digit.</string>
+    <string name="barcode_validation_upc_e_invalid">Invalid UPC-E value.</string>
+    <string name="barcode_validation_itf_even">Enter an even number of digits.</string>
+    <string name="barcode_validation_itf_min">ITF needs at least 2 digits.</string>
+    <string name="barcode_validation_itf_max">ITF cannot be longer than 80 digits.</string>
+    <string name="barcode_validation_code_128_ascii">Code 128 only supports characters up to ASCII 127.</string>
+    <string name="barcode_validation_code_93_ascii">Code 93 only supports characters up to ASCII 127.</string>
+    <string name="barcode_validation_code_93_too_long">This value is too long for Code 93.</string>
+    <string name="barcode_validation_code_39_unsupported">Code 39 cannot encode this character.</string>
+    <string name="barcode_validation_code_39_too_long">This value is too long for Code 39.</string>
+    <string name="barcode_validation_codabar_chars">Codabar only allows digits and - \$ : / . +.</string>
+    <string name="barcode_validation_codabar_guards">Start and stop characters must both be present.</string>
+    <string name="barcode_validation_enter_codabar">Enter a Codabar value.</string>
+    <string name="barcode_validation_enter_code_128">Enter a Code 128 value.</string>
+    <string name="barcode_validation_enter_code_93">Enter a Code 93 value.</string>
+    <string name="barcode_validation_enter_code_39">Enter a Code 39 value.</string>
+    <string name="barcode_validation_enter_data_matrix">Enter a Data Matrix value.</string>
+    <string name="barcode_validation_enter_pdf417">Enter a PDF417 value.</string>
+    <string name="barcode_validation_enter_aztec">Enter an Aztec value.</string>
+    <string name="barcode_validation_too_large_data_matrix">This value is too large for a Data Matrix symbol.</string>
+    <string name="barcode_validation_too_large_pdf417">This value is too large for a PDF417 symbol.</string>
+    <string name="barcode_validation_too_large_aztec">This value is too large for an Aztec symbol.</string>
+    <string name="barcode_validation_cannot_encode">This value cannot be encoded.</string>
+    <string name="barcode_counter_ean_13_short">%1$d/12</string>
+    <string name="barcode_counter_ean_13_long">%1$d/13</string>
+    <string name="barcode_counter_ean_8_short">%1$d/7</string>
+    <string name="barcode_counter_ean_8_long">%1$d/8</string>
+    <string name="barcode_counter_upc_e_short">%1$d/7</string>
+    <string name="barcode_counter_upc_e_long">%1$d/8</string>
+    <string name="barcode_counter_upc_a_short">%1$d/11</string>
+    <string name="barcode_counter_upc_a_long">%1$d/12</string>
+    <string name="barcode_counter_itf_digits">%1$d digits</string>
+    <string name="barcode_counter_chars">%1$d chars</string>
+
+    <!-- Wi-Fi create form -->
+    <string name="wifi_form_title">Wi-Fi Network</string>
+    <string name="wifi_network_name_heading">NETWORK NAME (SSID)</string>
+    <string name="wifi_ssid_placeholder">Enter Wi-Fi SSID</string>
+    <string name="wifi_security_type_heading">SECURITY TYPE</string>
+    <string name="wifi_security_recommended">Recommended: WPA/WPA2</string>
+    <string name="wifi_security_wpa">WPA/WPA2</string>
+    <string name="wifi_security_wpa3">WPA3</string>
+    <string name="wifi_security_wep">WEP</string>
+    <string name="wifi_security_open">Open</string>
+    <string name="wifi_password_heading">PASSWORD</string>
+    <string name="wifi_password_placeholder">Wi-Fi Password</string>
+    <string name="cd_toggle_password">Toggle password</string>
+    <string name="wifi_hidden_network_title">Hidden Network</string>
+    <string name="wifi_hidden_network_subtitle">SSID is not broadcasted publicly</string>
+    <string name="wifi_guest_scan_hint">Guests scan this QR with their camera app to connect without typing the Wi-Fi password.</string>
+    <string name="wifi_validation_enter_ssid">Enter a network name (SSID)</string>
+    <string name="wifi_validation_enter_password">Enter the Wi-Fi password</string>
+
+    <!-- QR preview -->
+    <string name="qr_preview_title">QR Preview</string>
+    <string name="cd_share">Share</string>
+    <string name="cd_generated_qr_code">Generated QR code</string>
+    <string name="qr_preview_generating">Generating…</string>
+    <string name="qr_preview_nothing_to_preview">Nothing to preview</string>
+    <string name="qr_preview_unable_encode_barcode">Unable to encode barcode</string>
+    <string name="qr_preview_customize_style">Customize Style &amp; Colors</string>
+    <string name="qr_preview_save_image">Save Image</string>
+    <string name="qr_preview_saving">Saving…</string>
+    <string name="qr_preview_create">Create</string>
+    <string name="qr_preview_creating">Creating…</string>
+    <string name="qr_preview_code_specifications">Code Specifications</string>
+    <string name="qr_preview_spec_export">Export</string>
+    <string name="qr_preview_spec_export_size">1024 × 1024</string>
+    <string name="qr_preview_spec_style">Style</string>
+    <string name="qr_preview_toast_not_ready">QR not ready</string>
+    <string name="qr_preview_toast_generated">Qr code generated</string>
+    <string name="qr_preview_toast_unable_save">Unable to save</string>
+    <string name="export_png_saved">PNG saved to Gallery (1024×1024)</string>
+    <string name="export_png_failed">PNG export failed</string>
+    <string name="export_unable_create_entry">Unable to create MediaStore entry</string>
+    <string name="export_png_compress_failed">PNG compress failed</string>
+    <string name="export_unable_open_stream">Unable to open output stream</string>
+    <string name="export_svg_ready">SVG ready to share</string>
+    <string name="export_svg_failed">SVG export failed</string>
+    <string name="export_share_opened">Share sheet opened</string>
+    <string name="export_share_failed">Share failed</string>
+    <string name="export_send_code_chooser">Send Code</string>
+    <string name="export_vector_chooser">Export Vector</string>
+
+    <!-- QR customize -->
+    <string name="qr_customize_title">Customize QR</string>
+    <string name="qr_customize_nothing">Nothing to customize</string>
+    <string name="cd_styled_qr_preview">Styled QR preview</string>
+    <string name="qr_customize_rendering">Rendering…</string>
+    <string name="qr_customize_section_body_pattern">Body Pattern</string>
+    <string name="qr_customize_section_corner_eye">Corner Eye Style</string>
+    <string name="qr_customize_section_color_palette">Color Palette</string>
+    <string name="qr_customize_section_center_icon">Center Icon</string>
+    <string name="qr_customize_section_frame">Frame Template</string>
+    <string name="qr_customize_save_export">Save &amp; Export Custom QR</string>
+    <string name="qr_customize_toast_unable_load_logo">Unable to load logo</string>
+    <string name="qr_customize_toast_reset_done">Reset is done</string>
+    <string name="qr_pattern_classic">Classic (Square)</string>
+    <string name="qr_pattern_rounded">Rounded</string>
+    <string name="qr_pattern_dots">Radial Dots</string>
+    <string name="qr_pattern_diamond">Diamond Mesh</string>
+    <string name="qr_eye_square">Square</string>
+    <string name="qr_eye_soft">Soft Curve</string>
+    <string name="qr_eye_circle">Circle Eye</string>
+    <string name="qr_icon_none">None</string>
+    <string name="qr_icon_wifi">Wi-Fi</string>
+    <string name="qr_icon_globe">Globe</string>
+    <string name="qr_icon_custom">Custom</string>
+    <string name="qr_palette_electric_cobalt">Electric Cobalt</string>
+    <string name="qr_palette_deep_sapphire">Deep Sapphire</string>
+    <string name="qr_palette_neon_cyan">Neon Cyan</string>
+    <string name="qr_palette_monochrome_slate">Monochrome Slate</string>
+    <string name="qr_palette_crimson">Crimson</string>
+    <string name="qr_palette_emerald">Emerald</string>
+    <string name="qr_palette_violet">Violet</string>
+    <string name="qr_palette_amber">Amber</string>
+    <string name="qr_frame_none_title">None</string>
+    <string name="qr_frame_none_subtitle">Clean borderless matrix</string>
+    <string name="qr_frame_pill_title">Scan Me Pill</string>
+    <string name="qr_frame_pill_subtitle">Badge attached footer</string>
+    <string name="qr_frame_banner_title">Banner Top</string>
+    <string name="qr_frame_banner_subtitle">Top accent header band</string>
+    <string name="qr_frame_cyber_title">Cyber Reticle</string>
+    <string name="qr_frame_cyber_subtitle">Cobalt HUD view corners</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_preferences_title">Preferences</string>
+    <string name="settings_engine_version">Engine v2.4.0</string>
+    <string name="settings_preferences_subtitle">High-speed optical matrix &amp; synthesis parameters</string>
+    <string name="settings_pipeline_online">OPTICAL CV PIPELINE ONLINE</string>
+    <string name="settings_pro_footer">%1$s Pro · Device Acceleration Verified</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_language_title">Language</string>
+    <string name="settings_launcher_title">Launcher Setting</string>
+    <string name="settings_launcher_subtitle">Icon size, labels, and app order</string>
+    <string name="settings_section_scanner">Scanner &amp; Hardware</string>
+    <string name="settings_vibrate_title">Vibrate on Detection</string>
+    <string name="settings_vibrate_subtitle">Haptic pulse when matrix resolves</string>
+    <string name="settings_beep_title">Beep Sound</string>
+    <string name="settings_beep_subtitle">Audio tone confirmation</string>
+    <string name="settings_auto_open_urls_title">Auto-Open URLs</string>
+    <string name="settings_auto_open_urls_subtitle">Opens website links in the browser after a scan</string>
+    <string name="settings_clear_history_title">Clear Scan &amp; Create History</string>
+    <string name="settings_clear_history_subtitle">Remove non-favorite items · favorites kept</string>
+    <string name="settings_section_about">About &amp; Legal</string>
+    <string name="settings_about_title">About</string>
+    <string name="settings_privacy_policy_title">Privacy Policy</string>
+    <string name="settings_share_title">Share</string>
+    <string name="settings_rate_title">Rate</string>
+    <string name="settings_dialog_theme_title">Theme</string>
+    <string name="settings_dialog_default_ecc_title">Default Correction Level</string>
+    <string name="settings_dialog_default_format_title">Default QR Format</string>
+    <string name="settings_ecc_low_subtitle">Low (7% ECC)</string>
+    <string name="settings_ecc_medium_subtitle">Medium (15% ECC)</string>
+    <string name="settings_ecc_quartile_subtitle">Quartile (25% ECC)</string>
+    <string name="settings_ecc_high_subtitle">High (30% ECC) · Optimal redundancy</string>
+    <string name="settings_ecc_low_option">Low / L / 7%</string>
+    <string name="settings_ecc_medium_option">Medium / M / 15%</string>
+    <string name="settings_ecc_quartile_option">Quartile / Q / 25%</string>
+    <string name="settings_ecc_high_option">High / H / 30%</string>
+    <string name="settings_format_svg">Vector SVG / Sharp 1024px</string>
+    <string name="settings_format_png">PNG / 1024px</string>
+    <string name="settings_language_system">System Synced</string>
+    <string name="settings_language_system_subtitle">Follow device language</string>
+    <string name="settings_language_english_us">English (US)</string>
+    <string name="settings_language_hindi">Hindi</string>
+    <string name="settings_language_russian">Russian</string>
+    <string name="settings_language_italian">Italian</string>
+    <string name="settings_language_french">French</string>
+    <string name="settings_language_spanish">Spanish</string>
+    <string name="settings_language_japanese">Japanese</string>
+    <string name="settings_language_korean">Korean</string>
+    <string name="settings_language_german">German</string>
+    <string name="settings_language_chinese">Chinese</string>
+    <string name="settings_language_thai">Thai</string>
+    <string name="settings_language_greek">Greek</string>
+    <string name="settings_language_portuguese_pt">Portuguese (Portugal)</string>
+    <string name="settings_language_portuguese_br">Portuguese (Brazil)</string>
+    <string name="settings_language_dutch">Dutch</string>
+    <string name="settings_language_filipino">Filipino</string>
+    <string name="settings_language_turkish">Turkish</string>
+    <string name="settings_language_indonesian">Indonesian</string>
+    <string name="settings_language_afrikaans">Afrikaans</string>
+    <string name="settings_language_english">English</string>
+
+    <!-- About -->
+    <string name="about_title">About</string>
+    <string name="about_tagline">Instant QR &amp; Barcode Intelligence</string>
+    <string name="about_meta_version">Version</string>
+    <string name="about_meta_build">Build</string>
+    <string name="about_meta_package">Package</string>
+
+</resources>

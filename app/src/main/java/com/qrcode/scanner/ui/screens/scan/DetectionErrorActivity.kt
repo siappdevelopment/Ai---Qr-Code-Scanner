@@ -38,9 +38,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.CobaltPrimary
@@ -65,7 +67,7 @@ class DetectionErrorActivity : ComponentActivity() {
         enableThemedEdgeToEdge()
         val imageUri = intent.getStringExtra(ScanIntents.EXTRA_IMAGE_URI)?.let(Uri::parse)
         val reason = intent.getStringExtra(ScanIntents.EXTRA_ERROR_REASON)
-            ?: "No scannable code detected"
+            ?: getString(R.string.gallery_crop_no_code_detected)
         val scanMode = intent.getStringExtra(ScanIntents.EXTRA_SCAN_MODE) ?: ScanIntents.MODE_BATCH
 
         setContent {
@@ -138,7 +140,7 @@ private fun DetectionErrorScreen(
         ) {
             AppBackButton(onClick = onBack)
             Text(
-                text = "Detection Failed",
+                text = stringResource(R.string.detection_error_title),
                 color = TextPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -170,7 +172,7 @@ private fun DetectionErrorScreen(
                     modifier = Modifier.size(16.dp)
                 )
                 Text(
-                    text = "DETECTION FAILED",
+                    text = stringResource(R.string.detection_error_badge),
                     color = CobaltPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -204,7 +206,7 @@ private fun DetectionErrorScreen(
                     )
                 }
                 Text(
-                    text = "No Scannable Code Detected",
+                    text = stringResource(R.string.detection_error_headline),
                     color = TextPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -227,16 +229,16 @@ private fun DetectionErrorScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
-                    text = "Optimization Checklist",
+                    text = stringResource(R.string.detection_error_checklist_title),
                     color = TextPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 14.sp
                 )
-                TipLine("Hold steady and keep the code fully inside the crop frame")
-                TipLine("Use a sharp, well-lit photo without heavy blur")
-                TipLine("Try Rotate or Flip if the code appears sideways")
-                TipLine("Supported: QR, Aztec, Data Matrix, EAN, UPC, Code 128/39, PDF417")
+                TipLine(stringResource(R.string.detection_error_tip_steady))
+                TipLine(stringResource(R.string.detection_error_tip_lighting))
+                TipLine(stringResource(R.string.detection_error_tip_rotate))
+                TipLine(stringResource(R.string.detection_error_tip_formats))
             }
 
             Box(
@@ -258,7 +260,7 @@ private fun DetectionErrorScreen(
                 ) {
                     Icon(Icons.Outlined.Refresh, null, tint = White, modifier = Modifier.size(20.dp))
                     Text(
-                        text = "Scan Again / Retry",
+                        text = stringResource(R.string.detection_error_retry),
                         color = White,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -295,7 +297,7 @@ private fun DetectionErrorScreen(
                         modifier = Modifier.size(20.dp)
                     )
                     Text(
-                        text = "Select Another Photo from Gallery",
+                        text = stringResource(R.string.detection_error_pick_gallery),
                         color = TextPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,

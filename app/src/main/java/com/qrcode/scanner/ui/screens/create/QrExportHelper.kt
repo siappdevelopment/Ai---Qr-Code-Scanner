@@ -14,6 +14,7 @@ import android.print.PrintDocumentInfo
 import android.print.PrintManager
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
+import com.qrcode.scanner.app.R
 import java.io.File
 import java.io.FileOutputStream
 
@@ -42,20 +43,23 @@ object QrExportHelper {
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI
             }
             val uri = resolver.insert(collection, values)
-                ?: return ExportResult(false, "Unable to create MediaStore entry")
+                ?: return ExportResult(
+                    false,
+                    context.getString(R.string.export_unable_create_entry)
+                )
             resolver.openOutputStream(uri)?.use { out ->
                 if (!bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) {
-                    return ExportResult(false, "PNG compress failed")
+                    return ExportResult(false, context.getString(R.string.export_png_compress_failed))
                 }
-            } ?: return ExportResult(false, "Unable to open output stream")
+            } ?: return ExportResult(false, context.getString(R.string.export_unable_open_stream))
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 values.clear()
                 values.put(MediaStore.Images.Media.IS_PENDING, 0)
                 resolver.update(uri, values, null, null)
             }
-            ExportResult(true, "PNG saved to Gallery (1024×1024)", uri)
+            ExportResult(true, context.getString(R.string.export_png_saved), uri)
         } catch (e: Exception) {
-            ExportResult(false, e.message ?: "PNG export failed")
+            ExportResult(false, e.message ?: context.getString(R.string.export_png_failed))
         }
     }
 
@@ -73,9 +77,9 @@ object QrExportHelper {
                 "${context.packageName}.fileprovider",
                 file
             )
-            ExportResult(true, "SVG ready to share", uri)
+            ExportResult(true, context.getString(R.string.export_svg_ready), uri)
         } catch (e: Exception) {
-            ExportResult(false, e.message ?: "SVG export failed")
+            ExportResult(false, e.message ?: context.getString(R.string.export_svg_failed))
         }
     }
 
@@ -101,10 +105,12 @@ object QrExportHelper {
                 putExtra(Intent.EXTRA_TITLE, title)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            context.startActivity(Intent.createChooser(send, "Send Code"))
-            ExportResult(true, "Share sheet opened", uri)
+            context.startActivity(
+                Intent.createChooser(send, context.getString(R.string.export_send_code_chooser))
+            )
+            ExportResult(true, context.getString(R.string.export_share_opened), uri)
         } catch (e: Exception) {
-            ExportResult(false, e.message ?: "Share failed")
+            ExportResult(false, e.message ?: context.getString(R.string.export_share_failed))
         }
     }
 
@@ -115,7 +121,9 @@ object QrExportHelper {
             putExtra(Intent.EXTRA_TITLE, title)
             addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        context.startActivity(Intent.createChooser(send, "Export Vector"))
+        context.startActivity(
+            Intent.createChooser(send, context.getString(R.string.export_vector_chooser))
+        )
     }
 
     fun printBitmap(context: Context, bitmap: Bitmap, jobName: String = "QR Code & Scanner") {

@@ -62,11 +62,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.data.history.ScanPayloadMapper
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
@@ -243,7 +245,11 @@ private fun ScanResultRoute(
                 repository.updateFavorite(historyId, next)
                 Toast.makeText(
                     context,
-                    if (next) "Saved to your favorites" else "Removed from favorites",
+                    if (next) {
+                        context.getString(R.string.scan_result_toast_saved_favorite)
+                    } else {
+                        context.getString(R.string.scan_result_toast_removed_favorite)
+                    },
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -251,15 +257,21 @@ private fun ScanResultRoute(
     )
 }
 
-private enum class ResultKind(
-    val label: String,
-    val icon: ImageVector
-) {
-    Website("Website / URL", Icons.Outlined.Language),
-    Wifi("Wi-Fi Network", Icons.Outlined.Wifi),
-    PlainText("Plain Text", Icons.Outlined.Description),
-    QrCode("QR Code", Icons.Outlined.QrCode2),
-    Barcode("Barcode", Icons.Outlined.ViewWeek)
+private enum class ResultKind(val icon: ImageVector) {
+    Website(Icons.Outlined.Language),
+    Wifi(Icons.Outlined.Wifi),
+    PlainText(Icons.Outlined.Description),
+    QrCode(Icons.Outlined.QrCode2),
+    Barcode(Icons.Outlined.ViewWeek)
+}
+
+@Composable
+private fun ResultKind.label(): String = when (this) {
+    ResultKind.Website -> stringResource(R.string.scan_result_kind_website)
+    ResultKind.Wifi -> stringResource(R.string.scan_result_kind_wifi)
+    ResultKind.PlainText -> stringResource(R.string.scan_result_kind_plain_text)
+    ResultKind.QrCode -> stringResource(R.string.scan_result_kind_qr_code)
+    ResultKind.Barcode -> stringResource(R.string.scan_result_kind_barcode)
 }
 
 private fun resolveKind(detectedType: String): ResultKind = when (detectedType) {
@@ -280,7 +292,7 @@ fun ScanResultScreen(
     historyId: Long = -1L,
     initialFavorite: Boolean = false,
     scannedAtMillis: Long = System.currentTimeMillis(),
-    title: String = "Scan Result",
+    title: String? = null,
     onFavoriteChange: (Boolean) -> Unit = {},
     onDeleteRequest: (() -> Unit)? = null
 ) {
@@ -295,9 +307,15 @@ fun ScanResultScreen(
     val scannedAt = remember(scannedAtMillis) {
         SimpleDateFormat("MMM d, HH:mm", Locale.getDefault()).format(Date(scannedAtMillis))
     }
-    val displayValue = rawValue.ifBlank { "(empty)" }
-    val copyLabel = if (isUrl) "Copy Link" else "Copy"
-    val openLabel = if (isUrl) "Open in Browser" else null
+    val displayValue = rawValue.ifBlank { stringResource(R.string.scan_result_empty_payload) }
+    val copyLabel = if (isUrl) {
+        stringResource(R.string.scan_result_copy_link)
+    } else {
+        stringResource(R.string.action_copy)
+    }
+    val openLabel = if (isUrl) stringResource(R.string.scan_result_open_in_browser) else null
+    val headerTitle = title ?: stringResource(R.string.scan_result_title)
+    val cdFavorite = stringResource(R.string.cd_add_to_favorites)
 
     fun toggleFavorite() {
         val next = !favorite
@@ -322,7 +340,7 @@ fun ScanResultScreen(
                 AppBackButton(onClick = onBack)
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = title,
+                    text = headerTitle,
                     color = TextPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -333,7 +351,7 @@ fun ScanResultScreen(
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 HeaderIconButton(
                     icon = if (favorite) Icons.Outlined.Star else Icons.Outlined.StarBorder,
-                    contentDescription = "Add to favorites",
+                    contentDescription = cdFavorite,
                     tint = if (favorite) CobaltPrimary else TextSecondary,
                     onClick = { toggleFavorite() }
                 )
@@ -378,7 +396,7 @@ fun ScanResultScreen(
                             modifier = Modifier.size(16.dp)
                         )
                         Text(
-                            text = kind.label,
+                            text = kind.label(),
                             color = CobaltPrimary,
                             fontFamily = PlusJakartaSans,
                             fontWeight = FontWeight.SemiBold,
@@ -415,7 +433,7 @@ fun ScanResultScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "PAYLOAD CONTENT",
+                        text = stringResource(R.string.scan_result_payload_heading),
                         color = TextSecondary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.SemiBold,
@@ -448,7 +466,7 @@ fun ScanResultScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            text = "Website / URL payload detected",
+                            text = stringResource(R.string.scan_result_url_detected_banner),
                             color = TextPrimary,
                             fontFamily = PlusJakartaSans,
                             fontSize = 12.sp,
@@ -512,13 +530,17 @@ fun ScanResultScreen(
                         copyToClipboard(context, displayValue)
                         Toast.makeText(
                             context,
-                            if (isUrl) "Link copied to clipboard" else "Copied to clipboard",
+                            if (isUrl) {
+                                context.getString(R.string.scan_result_toast_link_copied)
+                            } else {
+                                context.getString(R.string.scan_result_toast_copied)
+                            },
                             Toast.LENGTH_SHORT
                         ).show()
                     }
                 )
                 SecondaryAction(
-                    label = "Share",
+                    label = stringResource(R.string.action_share),
                     icon = Icons.Outlined.Share,
                     modifier = Modifier.weight(1f),
                     onClick = { shareResult(context, displayValue, isUrl) }
@@ -531,7 +553,7 @@ fun ScanResultScreen(
 //                )
                 if (onDeleteRequest != null) {
                     SecondaryAction(
-                        label = "Delete",
+                        label = stringResource(R.string.action_delete),
                         icon = Icons.Outlined.Delete,
                         iconTint = Destructive,
                         modifier = Modifier.weight(1f),
@@ -631,9 +653,18 @@ private fun shareResult(context: Context, text: String, isUrl: Boolean) {
     val send = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, text)
-        putExtra(Intent.EXTRA_TITLE, if (isUrl) "Scanned URL" else "Scan Result")
+        putExtra(
+            Intent.EXTRA_TITLE,
+            if (isUrl) {
+                context.getString(R.string.share_scanned_url_title)
+            } else {
+                context.getString(R.string.share_scan_result_title)
+            }
+        )
     }
-    context.startActivity(Intent.createChooser(send, "Share"))
+    context.startActivity(
+        Intent.createChooser(send, context.getString(R.string.share_chooser_title))
+    )
 }
 
 private fun openUrl(context: Context, raw: String) {
@@ -641,6 +672,6 @@ private fun openUrl(context: Context, raw: String) {
         val uri = Uri.parse(ScanPayloadMapper.normalizeUrl(raw))
         context.startActivity(Intent(Intent.ACTION_VIEW, uri))
     } catch (_: Exception) {
-        Toast.makeText(context, "Unable to open link", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, context.getString(R.string.toast_unable_to_open_link), Toast.LENGTH_SHORT).show()
     }
 }

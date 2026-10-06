@@ -45,6 +45,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import com.qrcode.scanner.app.R
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -127,7 +129,7 @@ fun WifiQrFormScreen(
             wifiSecurity = security,
             wifiHidden = hidden
         )
-        val validation = QrPayloadBuilder.validate(QrCategoryType.WIFI, input)
+        val validation = QrPayloadBuilder.validate(QrCategoryType.WIFI, input, context)
         if (validation != null) {
             error = validation
             return
@@ -154,7 +156,7 @@ fun WifiQrFormScreen(
             .background(PageBackground)
             .navigationBarsPadding()
     ) {
-        FormTopBar(title = "Wi-Fi Network", onBack = onBack)
+        FormTopBar(title = stringResource(R.string.wifi_form_title), onBack = onBack)
 
         Spacer(Modifier.height(16.dp))
 
@@ -184,7 +186,7 @@ fun WifiQrFormScreen(
                     modifier = Modifier.size(18.dp)
                 )
                 Text(
-                    text = ssid.ifBlank { "Enter SSID" },
+                    text = ssid.ifBlank { stringResource(R.string.wifi_preview_enter_ssid) },
                     color = TextPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -194,7 +196,7 @@ fun WifiQrFormScreen(
                     modifier = Modifier.weight(1f)
                 )
                 Text(
-                    text = security.label.uppercase(),
+                    text = QrPayloadBuilder.wifiSecurityLabel(security, context).uppercase(),
                     color = CobaltPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
@@ -212,7 +214,7 @@ fun WifiQrFormScreen(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Text(
-                    text = "NETWORK NAME (SSID)",
+                    text = stringResource(R.string.wifi_network_name_heading),
                     color = TextSecondary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
@@ -225,14 +227,14 @@ fun WifiQrFormScreen(
                     onValueChange = {
                         val max = QrPayloadBuilder.fieldMaxLength(QrCategoryType.WIFI, 0)
                         ssid = if (it.length > max) {
-                            error = QrPayloadBuilder.limitMessage(max)
+                            error = QrPayloadBuilder.limitMessage(max, context)
                             it.take(max)
                         } else {
                             if (error != null) error = null
                             it
                         }
                     },
-                    placeholder = "Enter Wi-Fi SSID",
+                    placeholder = stringResource(R.string.wifi_ssid_placeholder),
                     onClear = { ssid = "" }
                 )
             }
@@ -246,7 +248,7 @@ fun WifiQrFormScreen(
                 verticalArrangement = Arrangement.spacedBy(10.dp)
             ) {
                 Text(
-                    text = "SECURITY TYPE",
+                    text = stringResource(R.string.wifi_security_type_heading),
                     color = TextSecondary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.Bold,
@@ -254,7 +256,7 @@ fun WifiQrFormScreen(
                     letterSpacing = 0.6.sp
                 )
                 Text(
-                    text = "Recommended: WPA/WPA2",
+                    text = stringResource(R.string.wifi_security_recommended),
                     color = CobaltPrimary,
                     fontFamily = PlusJakartaSans,
                     fontWeight = FontWeight.SemiBold,
@@ -289,7 +291,7 @@ fun WifiQrFormScreen(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = option.label,
+                                text = QrPayloadBuilder.wifiSecurityLabel(option, context),
                                 color = if (selected) White else TextSecondary,
                                 fontFamily = PlusJakartaSans,
                                 fontWeight = if (selected) FontWeight.Bold else FontWeight.SemiBold,
@@ -312,7 +314,7 @@ fun WifiQrFormScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "PASSWORD",
+                        text = stringResource(R.string.wifi_password_heading),
                         color = TextSecondary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
@@ -334,7 +336,7 @@ fun WifiQrFormScreen(
                             onValueChange = {
                                 val max = QrPayloadBuilder.fieldMaxLength(QrCategoryType.WIFI, 1)
                                 password = if (it.length > max) {
-                                    error = QrPayloadBuilder.limitMessage(max)
+                                    error = QrPayloadBuilder.limitMessage(max, context)
                                     it.take(max)
                                 } else {
                                     if (error != null) error = null
@@ -358,7 +360,7 @@ fun WifiQrFormScreen(
                             decorationBox = { inner ->
                                 if (password.isEmpty()) {
                                     Text(
-                                        text = "Wi-Fi Password",
+                                        text = stringResource(R.string.wifi_password_placeholder),
                                         color = TextTertiary,
                                         fontFamily = PlusJakartaSans,
                                         fontSize = 14.sp
@@ -373,7 +375,7 @@ fun WifiQrFormScreen(
                             } else {
                                 Icons.Outlined.Visibility
                             },
-                            contentDescription = "Toggle password",
+                            contentDescription = stringResource(R.string.cd_toggle_password),
                             tint = TextTertiary,
                             modifier = Modifier
                                 .size(20.dp)
@@ -397,7 +399,7 @@ fun WifiQrFormScreen(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "Hidden Network",
+                        text = stringResource(R.string.wifi_hidden_network_title),
                         color = TextPrimary,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,
@@ -405,7 +407,7 @@ fun WifiQrFormScreen(
                     )
                     Spacer(Modifier.height(2.dp))
                     Text(
-                        text = "SSID is not broadcasted publicly",
+                        text = stringResource(R.string.wifi_hidden_network_subtitle),
                         color = TextSecondary,
                         fontFamily = PlusJakartaSans,
                         fontSize = 12.sp
@@ -448,7 +450,7 @@ fun WifiQrFormScreen(
                     modifier = Modifier.size(16.dp)
                 )
                 Text(
-                    text = "Guests scan this QR with their camera app to connect without typing the Wi-Fi password.",
+                    text = stringResource(R.string.wifi_guest_scan_hint),
                     color = TextSecondary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 12.sp,
@@ -484,7 +486,7 @@ fun WifiQrFormScreen(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "Generate & Preview",
+                        text = stringResource(R.string.create_form_generate_preview),
                         color = White,
                         fontFamily = PlusJakartaSans,
                         fontWeight = FontWeight.Bold,

@@ -33,9 +33,11 @@ import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.ui.navigation.AppDestination
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
@@ -112,7 +114,7 @@ fun ScanPulseBottomBar(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 NavTab(
-                    label = "Home",
+                    label = stringResource(R.string.nav_home),
                     selected = currentRoute == AppDestination.Home.route,
                     icon = ScanPulseIcons.Home,
                     onClick = { onNavigate(AppDestination.Home) },
@@ -125,7 +127,7 @@ fun ScanPulseBottomBar(
                     modifier = Modifier.weight(1f)
                 )
                 NavTab(
-                    label = "Settings",
+                    label = stringResource(R.string.nav_settings),
                     selected = currentRoute == AppDestination.Settings.route,
                     icon = ScanPulseIcons.Settings,
                     onClick = { onNavigate(AppDestination.Settings) },
@@ -222,14 +224,14 @@ private fun ScanFabTab(
             ) {
                 Icon(
                     imageVector = ScanPulseIcons.ScanReticle,
-                    contentDescription = "Quick Scan",
+                    contentDescription = stringResource(R.string.cd_quick_scan),
                     tint = White,
                     modifier = Modifier.size(28.dp)
                 )
             }
         }
         Text(
-            text = "Scan",
+            text = stringResource(R.string.nav_scan),
             color = CobaltPrimary,
             fontSize = 13.sp,
             fontWeight = FontWeight.Bold,

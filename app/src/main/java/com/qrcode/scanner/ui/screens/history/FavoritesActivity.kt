@@ -30,11 +30,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.qrcode.scanner.app.R
 import com.qrcode.scanner.data.history.HistoryEntity
 import com.qrcode.scanner.ui.components.AppBackButton
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
@@ -102,7 +104,7 @@ private fun FavoritesScreen(
         ) {
             AppBackButton(onClick = onBack)
             Text(
-                text = "Favorites",
+                text = stringResource(R.string.favorites_title),
                 color = TextPrimary,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,
@@ -115,7 +117,7 @@ private fun FavoritesScreen(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "No favorites yet",
+                    text = stringResource(R.string.favorites_empty),
                     color = TextSecondary,
                     fontFamily = PlusJakartaSans,
                     fontSize = 15.sp

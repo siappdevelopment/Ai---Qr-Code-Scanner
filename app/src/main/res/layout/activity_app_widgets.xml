@@ -410,6 +410,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/onboarding_native_bg"
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="0dp">
 
@@ -422,7 +423,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
-                        android:background="@color/ad_background"
+                        android:background="@color/onboarding_native_bg"
                         app:shimmer_auto_start="true"
                         app:shimmer_base_alpha="1.0"
                         app:shimmer_highlight_alpha="1.0">

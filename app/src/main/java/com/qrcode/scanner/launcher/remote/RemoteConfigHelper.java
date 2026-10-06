@@ -282,7 +282,8 @@ public final class RemoteConfigHelper {
 
     private static void applyAdFields(JSONObject jsonObject, JSONObject screen) {
         AdPlacement.setAdPriority(jsonObject.optString("Ad_Priority", ""));
-        AdPlacement.setGoogleAdFailedShowQuiz(jsonObject.optBoolean("Google_Ad_Failed_Show_Quiz", false));
+        boolean googleAdFailedShowQuiz = jsonObject.optBoolean("Google_Ad_Failed_Show_Quiz", false);
+        AdPlacement.setGoogleAdFailedShowQuiz(googleAdFailedShowQuiz);
         AdPlacement.setNativeAdLabelColor(jsonObject.optString("Native_Ad_Label_Color", ""));
         AdPlacement.setNativeAdButtonColor(jsonObject.optString("Native_Ad_Button_Color", ""));
         AdPlacement.setAppOpenId(jsonObject.optString("App_Open_Id", ""));
@@ -359,7 +360,11 @@ public final class RemoteConfigHelper {
         AdPlacement.setLauncherAppBackCount(launcherAppScreen.optInt("LauncherApp_Back_Count", 0));
         AdPlacement.setLauncherAppBackAdSequence(readAdTypeSequence(launcherAppScreen, "LauncherApp_Back_Ad_Type"));
         AdPlacement.setLauncherAppBackInterstitialId(launcherAppScreen.optString("LauncherApp_Back_Interstitial_Id", ""));
-        AdPlacement.setLauncherGoogleAdFailedShowQuiz(launcherAppScreen.optBoolean("Google_Ad_Failed_Show_Quiz", false));
+        // LauncherAppScreen often omits this key — fall back to root Google_Ad_Failed_Show_Quiz.
+        boolean launcherQuizOnFail = launcherAppScreen.has("Google_Ad_Failed_Show_Quiz")
+                ? launcherAppScreen.optBoolean("Google_Ad_Failed_Show_Quiz", false)
+                : googleAdFailedShowQuiz;
+        AdPlacement.setLauncherGoogleAdFailedShowQuiz(launcherQuizOnFail);
     }
 
     private static ArrayList<String> readAdTypeSequence(JSONObject screen, String key) {

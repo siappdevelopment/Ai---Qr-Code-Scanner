@@ -16,25 +16,31 @@ public final class AdTheme {
     }
 
     public static Context forApp(Context context) {
-        return withNight(context, isDark(context));
+        return withForcedNight(context, isDark(context));
+    }
+
+    /** Use saved app theme, or force light when a screen always shows white ads. */
+    public static Context forAds(Context context, boolean forceLight) {
+        return withForcedNight(context, !forceLight && isDark(context));
     }
 
     public static Context forLauncher(Context context) {
-        return withNight(context, isDark(context));
+        return withForcedNight(context, isDark(context));
     }
 
     public static boolean launcherIsDark(Context context) {
         return isDark(context);
     }
 
-    private static boolean isDark(Context context) {
-        return SettingsRepositoryKt.readAppNightMode(context) == AppCompatDelegate.MODE_NIGHT_YES;
-    }
-
-    private static Context withNight(Context context, boolean dark) {
+    /** Force light or dark resource resolution regardless of the phone theme. */
+    public static Context withForcedNight(Context context, boolean dark) {
         Configuration config = new Configuration(context.getResources().getConfiguration());
         int night = dark ? Configuration.UI_MODE_NIGHT_YES : Configuration.UI_MODE_NIGHT_NO;
         config.uiMode = (config.uiMode & ~Configuration.UI_MODE_NIGHT_MASK) | night;
         return context.createConfigurationContext(config);
+    }
+
+    private static boolean isDark(Context context) {
+        return SettingsRepositoryKt.readAppNightMode(context) == AppCompatDelegate.MODE_NIGHT_YES;
     }
 }

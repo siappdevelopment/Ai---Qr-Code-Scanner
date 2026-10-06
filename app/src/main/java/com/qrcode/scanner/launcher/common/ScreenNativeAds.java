@@ -33,10 +33,16 @@ public final class ScreenNativeAds {
     }
 
     public static boolean isEnabled(Slot slot) {
-        if (slot == Slot.HOME) {
-            return RemoteConfigValues.getMainBigTopAdShow() && !unitId(slot).isEmpty();
+        boolean show = slot == Slot.HOME
+                ? RemoteConfigValues.getMainBigTopAdShow()
+                : RemoteConfigValues.getSettingsFragmentNativeAdShow();
+        if (!show) {
+            return false;
         }
-        return RemoteConfigValues.getSettingsFragmentNativeAdShow() && !unitId(slot).isEmpty();
+        if (AdPlacement.shouldUseQuizPriority()) {
+            return true;
+        }
+        return !unitId(slot).isEmpty();
     }
 
     public static void attach(Activity activity, FrameLayout host, Slot slot) {
@@ -87,15 +93,19 @@ public final class ScreenNativeAds {
 
     private static void showOrLoad(Activity activity, Slot slot) {
         SlotState state = state(slot);
-        if (remainingWait(slot) > 0L && state.ad != null) {
-            showCachedAd(activity, state);
-            return;
-        }
-        if (remainingWait(slot) > 0L && state.quizVisible) {
-            if (!showQuiz(activity, state)) {
-                hideSlot(state);
+        if (remainingWait(slot) > 0L) {
+            if (AdPlacement.shouldUseQuizPriority() || state.quizVisible) {
+                if (!showQuiz(activity, state)) {
+                    hideSlot(state);
+                } else {
+                    state.quizVisible = true;
+                }
+                return;
             }
-            return;
+            if (state.ad != null) {
+                showCachedAd(activity, state);
+                return;
+            }
         }
         if (state.loading) {
             showShimmer(state);
@@ -127,6 +137,21 @@ public final class ScreenNativeAds {
         }
         state.loading = true;
         showShimmer(state);
+        if (AdPlacement.shouldUseQuizPriority()) {
+            state.loading = false;
+            state.lastCycleAt = System.currentTimeMillis();
+            if (showQuiz(activity, state)) {
+                state.quizVisible = true;
+                if (state.ad != null) {
+                    state.ad.destroy();
+                    state.ad = null;
+                }
+            } else {
+                state.quizVisible = false;
+                hideSlot(state);
+            }
+            return;
+        }
         AdPlacement.requestLargeNativeAd(activity, unitId(slot), nativeAd -> onLoaded(slot, nativeAd), () -> onFailed(slot));
     }
 

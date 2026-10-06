@@ -43,6 +43,34 @@ object LauncherQrSystemBars {
             .isAppearanceLightStatusBars = false
     }
 
+    /**
+     * MainActivity only (app not set as default launcher): transparent status bar,
+     * camera edge-to-edge, system nav swipe-to-show. Must not be used on LauncherHomeActivity.
+     */
+    fun applyStandaloneAppScanBars(activity: Activity) {
+        val window = activity.window
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isStatusBarContrastEnforced = false
+            window.isNavigationBarContrastEnforced = false
+        }
+        @Suppress("DEPRECATION")
+        window.statusBarColor = Color.TRANSPARENT
+        @Suppress("DEPRECATION")
+        window.navigationBarColor = Color.TRANSPARENT
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            @Suppress("DEPRECATION")
+            window.navigationBarDividerColor = Color.TRANSPARENT
+        }
+        val controller = WindowCompat.getInsetsController(window, window.decorView)
+        controller.isAppearanceLightStatusBars = false
+        controller.isAppearanceLightNavigationBars = false
+        controller.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        controller.show(WindowInsetsCompat.Type.statusBars())
+        controller.hide(WindowInsetsCompat.Type.navigationBars())
+    }
+
     /** Hides the navigation bar until the user swipes it in. Status bar stays visible. */
     fun hideNavigationBar(activity: Activity) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {

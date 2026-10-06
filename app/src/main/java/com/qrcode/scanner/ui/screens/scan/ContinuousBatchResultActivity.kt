@@ -72,7 +72,7 @@ class ContinuousBatchResultActivity : ComponentActivity() {
         }
         setContent {
             QRCodeScannerTheme {
-                ScreenWithAd(screenKey = "OtherScreen") {
+                ScreenWithAd(screenKey = "OtherScreen", bindBackAd = true) {
                 ContinuousBatchResultScreen(
                     items = items,
                     onBack = { onBackPressedDispatcher.onBackPressed() },

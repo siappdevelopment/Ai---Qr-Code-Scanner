@@ -201,12 +201,21 @@ public final class RemoteConfigValues {
         clEndNativeId = clEndScreen.optString("ClEnd_Native_Id", "");
         clEndBackAdShow = clEndScreen.optBoolean("ClEnd_Back_Ad_Show", false);
         clEndBackAdType = clEndScreen.optString("ClEnd_Back_Ad_Type", "inter").trim();
-        clEndBackAdSequence = parseBackAdSequence(clEndScreen.optJSONArray("ClEnd_Back_Ad_Sequence"));
+        String previousSequence = formatBackAdSequence(clEndBackAdSequence);
+        clEndBackAdSequence = parseBackAdSequenceField(clEndScreen);
         clEndBackAdShowAfterDay = clEndScreen.optInt("ClEnd_Back_Ad_Show_After_Day", 0);
         clEndBackAdShowPerDay = clEndScreen.optInt("ClEnd_Back_Ad_Show_Per_Day", 0);
         clEndBackAdInterstitialId = clEndScreen.optString("ClEnd_Back_Ad_Interstitial_Id", "");
         clEndBackAdNativeId = clEndScreen.optString("ClEnd_Back_Ad_Native_Id", "");
         clEndBackAdCountryIP = clEndScreen.optBoolean("ClEnd_Back_Ad_Country_IP", false);
+        String nextSequence = formatBackAdSequence(clEndBackAdSequence);
+        if (context != null && !previousSequence.equals(nextSequence)) {
+            context.getApplicationContext()
+                    .getSharedPreferences("cl_end_ad_preferences", Context.MODE_PRIVATE)
+                    .edit()
+                    .putLong("back_ad_sequence_cursor", 0L)
+                    .apply();
+        }
         clEndBackAdShowCountryList = parseCountryArray(clEndScreen.optJSONArray("ClEnd_Back_Ad_Show_Country"));
         notificationInstallDays = clEndScreen.optInt("Notification_Install_Days", 0);
         notificationCallInstallDays = clEndScreen.optInt("Notification_Call_Install_Days", 0);
@@ -546,12 +555,22 @@ public final class RemoteConfigValues {
 
     @NonNull
     public static String getClEndBackAdInterstitialId() {
-        return clEndBackAdInterstitialId == null ? "" : clEndBackAdInterstitialId;
+        // Prefer ClEnd_Back_Ad_Interstitial_Id; fall back to inter_ads_id only if missing.
+        String id = clEndBackAdInterstitialId == null ? "" : clEndBackAdInterstitialId.trim();
+        if (!id.isEmpty()) {
+            return id;
+        }
+        return interAdsId == null ? "" : interAdsId.trim();
     }
 
     @NonNull
     public static String getClEndBackAdNativeId() {
-        return clEndBackAdNativeId == null ? "" : clEndBackAdNativeId;
+        // Back Google_Native uses ClEnd_Native_Id (same as Call End screen native).
+        String screenNative = clEndNativeId == null ? "" : clEndNativeId.trim();
+        if (!screenNative.isEmpty()) {
+            return screenNative;
+        }
+        return clEndBackAdNativeId == null ? "" : clEndBackAdNativeId.trim();
     }
 
     public static boolean getClEndBackAdCountryIP() {
@@ -925,6 +944,25 @@ public final class RemoteConfigValues {
         return countryList;
     }
 
+    @NonNull
+    private static ArrayList<String[]> parseBackAdSequenceField(@NonNull JSONObject clEndScreen) {
+        JSONArray sequence = clEndScreen.optJSONArray("ClEnd_Back_Ad_Sequence");
+        if (sequence == null) {
+            String raw = clEndScreen.optString("ClEnd_Back_Ad_Sequence", "").trim();
+            if (!raw.isEmpty()) {
+                try {
+                    sequence = new JSONArray(raw);
+                } catch (Exception ignored) {
+                    ArrayList<String[]> fromStored = parseStoredBackAdSequence(raw);
+                    if (!fromStored.isEmpty()) {
+                        return fromStored;
+                    }
+                }
+            }
+        }
+        return parseBackAdSequence(sequence);
+    }
+
     private static ArrayList<String[]> parseBackAdSequence(@Nullable JSONArray sequence) {
         ArrayList<String[]> steps = new ArrayList<>();
         if (sequence == null) {
@@ -932,7 +970,21 @@ public final class RemoteConfigValues {
         }
         for (int i = 0; i < sequence.length(); i++) {
             JSONArray pair = sequence.optJSONArray(i);
-            if (pair == null || pair.length() < 2) {
+            if (pair == null) {
+                Object item = sequence.opt(i);
+                if (item instanceof String) {
+                    String[] parts = ((String) item).split(",", 2);
+                    if (parts.length >= 2) {
+                        String type = normalizeBackAdFormat(parts[0]);
+                        int count = parsePositiveCount(parts[1]);
+                        if (!type.isEmpty() && count > 0) {
+                            steps.add(new String[]{type, Integer.toString(count)});
+                        }
+                    }
+                }
+                continue;
+            }
+            if (pair.length() < 2) {
                 continue;
             }
             String type = normalizeBackAdFormat(pair.optString(0, ""));
@@ -992,9 +1044,23 @@ public final class RemoteConfigValues {
         if (type == null) {
             return "";
         }
-        String value = type.trim().toLowerCase(Locale.US);
-        if ("inter".equals(value) || "appopen".equals(value) || "native".equals(value)) {
-            return value;
+        String value = type.trim().toLowerCase(Locale.US).replace('-', '_');
+        if ("inter".equals(value)
+                || "interstitial".equals(value)
+                || "google_inter".equals(value)
+                || "google_interstitial".equals(value)) {
+            return "inter";
+        }
+        if ("appopen".equals(value)
+                || "app_open".equals(value)
+                || "google_appopen".equals(value)
+                || "google_app_open".equals(value)) {
+            return "appopen";
+        }
+        if ("native".equals(value)
+                || "google_native".equals(value)
+                || "quiz_native".equals(value)) {
+            return "native";
         }
         return "";
     }

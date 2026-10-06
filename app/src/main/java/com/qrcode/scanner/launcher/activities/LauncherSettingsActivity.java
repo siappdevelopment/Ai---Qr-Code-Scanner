@@ -36,9 +36,10 @@ import androidx.appcompat.widget.SwitchCompat;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.common.AdPlacement;
-import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 import com.qrcode.scanner.launcher.common.AppUtils;
+import com.qrcode.scanner.launcher.common.ScreenInterAds;
 import com.qrcode.scanner.launcher.helpers.LauncherSettingsHelper;
+import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 import java.util.function.IntConsumer;
 
@@ -108,8 +109,10 @@ public class LauncherSettingsActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                LauncherSettingsActivity.this.finish();
-                overridePendingTransition(0, 0);
+                ScreenInterAds.onBack(LauncherSettingsActivity.this, "LauncherSettingsScreen", () -> {
+                    finish();
+                    overridePendingTransition(0, 0);
+                });
             }
         });
 

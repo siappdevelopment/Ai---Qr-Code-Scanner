@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,6 +22,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.qrcode.scanner.MainActivity
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
+import com.qrcode.scanner.launcher.common.ScreenInterAds
 import com.qrcode.scanner.launcher.common.ScreenLoadAd
 import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars
 
@@ -28,9 +31,15 @@ fun ScreenWithAd(
     screenKey: String,
     modifier: Modifier = Modifier,
     nativeSize: String = "medium",
+    /** When true, system/UI back runs ScreenInterAds for this screenKey first. */
+    bindBackAd: Boolean = false,
+    onBackLeave: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     HideNavigationBarOnAdScreen()
+    if (bindBackAd) {
+        BindScreenBackInterAd(screenKey = screenKey, onLeave = onBackLeave)
+    }
     Column(modifier = modifier.fillMaxSize()) {
         Box(
             modifier = Modifier
@@ -70,6 +79,30 @@ fun FirebaseScreenAd(
         },
         onRelease = { host -> ScreenLoadAd.detach(host) }
     )
+}
+
+@Composable
+private fun BindScreenBackInterAd(
+    screenKey: String,
+    onLeave: (() -> Unit)?
+) {
+    val context = LocalContext.current
+    val activity = context.findActivity() as? ComponentActivity ?: return
+    DisposableEffect(screenKey, activity) {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                ScreenInterAds.onBack(activity, screenKey) {
+                    if (onLeave != null) {
+                        onLeave()
+                    } else {
+                        activity.finish()
+                    }
+                }
+            }
+        }
+        activity.onBackPressedDispatcher.addCallback(activity, callback)
+        onDispose { callback.remove() }
+    }
 }
 
 @Composable

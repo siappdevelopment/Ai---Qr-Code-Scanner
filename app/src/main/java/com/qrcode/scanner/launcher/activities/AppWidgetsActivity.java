@@ -16,6 +16,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.common.AdPlacement;
+import com.qrcode.scanner.launcher.common.ScreenInterAds;
 import com.qrcode.scanner.launcher.common.WidgetType;
 import com.qrcode.scanner.launcher.helpers.WidgetPinHelper;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
@@ -73,8 +74,10 @@ public class AppWidgetsActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                AppWidgetsActivity.this.finish();
-                overridePendingTransition(0, 0);
+                ScreenInterAds.onBack(AppWidgetsActivity.this, "OtherScreen", () -> {
+                    finish();
+                    overridePendingTransition(0, 0);
+                });
             }
         });
 

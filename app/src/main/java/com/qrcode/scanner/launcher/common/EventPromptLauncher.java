@@ -45,6 +45,10 @@ public final class EventPromptLauncher {
             Log.d("EventPrompt", "open skipped: " + kind + " flag is false");
             return;
         }
+        if (!AdPlacement.isNetworkAvailable(context)) {
+            Log.d("EventPrompt", "open skipped: no internet for " + kind);
+            return;
+        }
         long now = System.currentTimeMillis();
         if (kind.equals(lastKind) && now - lastOpenAt < 1500L) {
             Log.d("EventPrompt", "open skipped: duplicate " + kind + " within 1500ms");

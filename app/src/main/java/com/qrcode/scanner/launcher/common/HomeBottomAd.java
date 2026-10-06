@@ -327,11 +327,13 @@ public final class HomeBottomAd {
         setGone(STATE.bannerContainer);
         setVisible(STATE.nativeContainer);
         stopShimmer(STATE.nativeShimmer);
-        NativeAdView adView = (NativeAdView) LayoutInflater.from(STATE.nativeContent.getContext()).inflate(R.layout.native_small_ad_layout, STATE.nativeContent, false);
+        NativeAdView adView = (NativeAdView) LayoutInflater.from(AdTheme.forApp(activity)).inflate(R.layout.native_small_ad_layout, STATE.nativeContent, false);
         AdPlacement.populateNativeAdView(STATE.nativeAd, adView, "small");
         STATE.nativeContent.removeAllViews();
         STATE.nativeContent.addView(GestureSafeNativeAdView.wrap(adView));
         STATE.nativeContent.setVisibility(View.VISIBLE);
+        AdPlacement.paintNativeFill(STATE.nativeContainer, AdPlacement.onboardingNativeColor(activity));
+        AdPlacement.paintNativeFill(STATE.nativeContent, AdPlacement.onboardingNativeColor(activity));
     }
 
     private static boolean showQuiz(Activity activity) {

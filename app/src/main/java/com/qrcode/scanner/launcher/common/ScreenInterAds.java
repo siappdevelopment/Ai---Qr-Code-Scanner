@@ -158,9 +158,9 @@ public final class ScreenInterAds {
             }
             return;
         }
-        Dialog shimmer = showDialog(activity, R.layout.dialog_inter_quiz_shimmer);
+        Dialog loading = showDialog(activity, R.layout.dialog_loading_ads);
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            dismiss(shimmer);
+            dismiss(loading);
             if (activity.isFinishing()) {
                 run(next);
                 return;
@@ -256,6 +256,9 @@ public final class ScreenInterAds {
         String id;
         if (kind == KIND_BACK) {
             id = RemoteConfigValues.getInterBackAdsId();
+            if (id == null || id.trim().isEmpty()) {
+                id = RemoteConfigValues.getInterAdsId();
+            }
         } else if (kind == KIND_BOTTOM) {
             id = RemoteConfigValues.getBottomNavInterAdsId();
         } else {
@@ -398,7 +401,7 @@ public final class ScreenInterAds {
         try {
             Dialog dialog = new Dialog(activity);
             dialog.requestWindowFeature(android.view.Window.FEATURE_NO_TITLE);
-            dialog.setContentView(layout);
+            dialog.setContentView(android.view.LayoutInflater.from(AdTheme.forApp(activity)).inflate(layout, null, false));
             if (dialog.getWindow() != null) {
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }

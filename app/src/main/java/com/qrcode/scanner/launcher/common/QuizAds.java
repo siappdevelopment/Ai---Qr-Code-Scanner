@@ -3,8 +3,8 @@ package com.qrcode.scanner.launcher.common;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -24,6 +24,7 @@ import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -61,6 +62,10 @@ public final class QuizAds {
     }
 
     public static boolean showBanner(Activity activity, RelativeLayout container, ShimmerFrameLayout shimmer, LinearLayout content) {
+        return showBanner(activity, container, shimmer, content, false);
+    }
+
+    public static boolean showBanner(Activity activity, RelativeLayout container, ShimmerFrameLayout shimmer, LinearLayout content, boolean forceLightTheme) {
         try {
             int itemCount = RemoteConfigValues.getQuizSyncedItemCount();
             if (itemCount <= 0 || activity == null || container == null || content == null) {
@@ -70,7 +75,7 @@ public final class QuizAds {
                 shimmer.setVisibility(View.GONE);
             }
             content.removeAllViews();
-            View view = LayoutInflater.from(content.getContext()).inflate(R.layout.qz_banner_ad, content, false);
+            View view = LayoutInflater.from(AdTheme.forAds(activity, forceLightTheme)).inflate(R.layout.qz_banner_ad, content, false);
             int index = new Random().nextInt(itemCount);
             bindText(view, index, RemoteConfigValues.getQuizBannerTitleList(), RemoteConfigValues.getQuizBannerDescriptionList());
             loadImage(view, view.findViewById(R.id.ivQZAppIcon), RemoteConfigValues.getQuizAppIconList(), index, R.id.qzShimmerIcon);
@@ -78,6 +83,9 @@ public final class QuizAds {
             content.addView(view);
             content.setVisibility(View.VISIBLE);
             container.setVisibility(View.VISIBLE);
+            int fill = AdPlacement.onboardingNativeColor(activity, forceLightTheme);
+            AdPlacement.paintNativeFill(container, fill);
+            AdPlacement.paintNativeFill(content, fill);
             return true;
         } catch (Exception ignored) {
             return false;
@@ -85,6 +93,10 @@ public final class QuizAds {
     }
 
     public static boolean showNative(Activity activity, RelativeLayout container, ShimmerFrameLayout shimmer, FrameLayout content, @Nullable String type) {
+        return showNative(activity, container, shimmer, content, type, false);
+    }
+
+    public static boolean showNative(Activity activity, RelativeLayout container, ShimmerFrameLayout shimmer, FrameLayout content, @Nullable String type, boolean forceLightTheme) {
         try {
             int itemCount = RemoteConfigValues.getQuizSyncedItemCount();
             if (itemCount <= 0 || activity == null || container == null || content == null) {
@@ -95,7 +107,7 @@ public final class QuizAds {
                 shimmer.setVisibility(View.GONE);
             }
             content.removeAllViews();
-            View view = LayoutInflater.from(content.getContext()).inflate(nativeLayout(type), content, false);
+            View view = LayoutInflater.from(AdTheme.forAds(activity, forceLightTheme)).inflate(nativeLayout(type), content, false);
             int index = new Random().nextInt(itemCount);
             bindText(view, index, RemoteConfigValues.getQuizNativeTitleList(), RemoteConfigValues.getQuizNativeDescriptionList());
             loadImage(view, view.findViewById(R.id.ivQZAppIcon), RemoteConfigValues.getQuizAppIconList(), index, R.id.qzShimmerIcon);
@@ -107,6 +119,9 @@ public final class QuizAds {
             content.addView(view);
             content.setVisibility(View.VISIBLE);
             container.setVisibility(View.VISIBLE);
+            int fill = AdPlacement.onboardingNativeColor(activity, forceLightTheme);
+            AdPlacement.paintNativeFill(container, fill);
+            AdPlacement.paintNativeFill(content, fill);
             return true;
         } catch (Exception ignored) {
             return false;
@@ -120,7 +135,13 @@ public final class QuizAds {
                 return false;
             }
             Dialog dialog = fullscreenDialog(activity, R.layout.qz_interstitial_ad, R.style.Theme_QuizInterstitial);
-            View root = ((android.view.ViewGroup) dialog.getWindow().getDecorView()).getChildAt(0);
+            if (dialog.getWindow() == null) {
+                return false;
+            }
+            View root = quizInterstitialRoot(dialog.getWindow());
+            if (root == null) {
+                return false;
+            }
             int index = new Random().nextInt(itemCount);
             bindText(root, index, RemoteConfigValues.getQuizInterstitialTitleList(), RemoteConfigValues.getQuizInterstitialDescriptionList());
             loadImage(root, root.findViewById(R.id.ivQZAppIcon), RemoteConfigValues.getQuizAppIconList(), index, R.id.qzShimmerIcon);
@@ -169,11 +190,9 @@ public final class QuizAds {
                 });
             }
             wireLink(activity, root, root.findViewById(R.id.btnQZClick));
-            final int previousStatusColor = activity.getWindow().getStatusBarColor();
-            final int previousNavigationColor = activity.getWindow().getNavigationBarColor();
             dialog.setOnShowListener(shown -> matchQuizSystemBars(activity, dialog.getWindow()));
-            dialog.setOnDismissListener(dismissed -> restoreHostSystemBars(activity, previousStatusColor, previousNavigationColor));
             dialog.show();
+            matchQuizSystemBars(activity, dialog.getWindow());
             return true;
         } catch (Exception ignored) {
             return false;
@@ -186,8 +205,14 @@ public final class QuizAds {
             if (itemCount <= 0 || activity == null || activity.isFinishing()) {
                 return false;
             }
-            Dialog dialog = fullscreenDialog(activity, R.layout.qz_app_open_ad);
-            View root = ((android.view.ViewGroup) dialog.getWindow().getDecorView()).getChildAt(0);
+            Dialog dialog = fullscreenDialog(activity, R.layout.qz_app_open_ad, R.style.Theme_QuizInterstitial);
+            if (dialog.getWindow() == null) {
+                return false;
+            }
+            View root = quizInterstitialRoot(dialog.getWindow());
+            if (root == null) {
+                return false;
+            }
             int index = new Random().nextInt(itemCount);
             loadImage(root, root.findViewById(R.id.ivQZAppIcon), RemoteConfigValues.getQuizAppIconList(), index, R.id.qzShimmerIcon);
             loadImage(root, root.findViewById(R.id.ivQZAppMedia), RemoteConfigValues.getQuizAppOpenMediaList(), index, R.id.qzShimmer);
@@ -215,7 +240,9 @@ public final class QuizAds {
             if (button != null) {
                 button.setOnClickListener(v -> openLink(activity, RemoteConfigValues.pickQuizLink()));
             }
+            dialog.setOnShowListener(shown -> matchQuizSystemBars(activity, dialog.getWindow()));
             dialog.show();
+            matchQuizSystemBars(activity, dialog.getWindow());
             return true;
         } catch (Exception ignored) {
             return false;
@@ -255,23 +282,7 @@ public final class QuizAds {
                     }
                 });
             }
-            Window host = activity.getWindow();
-            final int savedStatusColor = host.getStatusBarColor();
-            final int savedNavColor = host.getNavigationBarColor();
-            WindowInsetsControllerCompat hostController = WindowCompat.getInsetsController(host, host.getDecorView());
-            final boolean savedLightStatus = hostController.isAppearanceLightStatusBars();
-            final boolean savedLightNav = hostController.isAppearanceLightNavigationBars();
-            final boolean savedStatusContrast = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && host.isStatusBarContrastEnforced();
-            final boolean savedNavContrast = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && host.isNavigationBarContrastEnforced();
             dialog.setOnDismissListener(d -> {
-                host.setStatusBarColor(savedStatusColor);
-                host.setNavigationBarColor(savedNavColor);
-                hostController.setAppearanceLightStatusBars(savedLightStatus);
-                hostController.setAppearanceLightNavigationBars(savedLightNav);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    host.setStatusBarContrastEnforced(savedStatusContrast);
-                    host.setNavigationBarContrastEnforced(savedNavContrast);
-                }
                 if (onDismiss != null) {
                     onDismiss.run();
                 }
@@ -372,13 +383,14 @@ public final class QuizAds {
         return R.layout.qz_native_small_ad;
     }
 
-    /** Same status and navigation treatment as the Google Native full ad. */
+    /** Same status and navigation treatment as the Google Native full ad. Dialog window only. */
     private static void matchQuizNativeFullBars(Activity activity, @Nullable Window window, @NonNull View content) {
         if (window == null) {
             return;
         }
-        int color = ContextCompat.getColor(activity, R.color.surface_primary);
-        boolean night = (activity.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        Context themed = AdTheme.forApp(activity);
+        int color = ContextCompat.getColor(themed, R.color.surface_primary);
+        boolean night = AdTheme.launcherIsDark(activity);
         WindowCompat.setDecorFitsSystemWindows(window, false);
         window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
@@ -403,18 +415,22 @@ public final class QuizAds {
         }
         final int[] basePadding = (int[]) content.getTag();
         View close = content.findViewById(R.id.ivClose);
+        if (close == null) {
+            close = content.findViewById(R.id.ivQZClose);
+        }
         if (close != null && !(close.getTag() instanceof Integer) && close.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             close.setTag(((ViewGroup.MarginLayoutParams) close.getLayoutParams()).topMargin);
         }
         final int closeBaseTop = close != null && close.getTag() instanceof Integer ? (Integer) close.getTag() : 0;
         View statusScrim = content.findViewById(R.id.statusBarScrim);
+        final View closeButton = close;
         ViewCompat.setOnApplyWindowInsetsListener(content, (view, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             view.setPadding(basePadding[0], basePadding[1], basePadding[2], basePadding[3] + bars.bottom);
-            if (close != null && close.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) close.getLayoutParams();
+            if (closeButton != null && closeButton.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) closeButton.getLayoutParams();
                 lp.topMargin = closeBaseTop + bars.top;
-                close.setLayoutParams(lp);
+                closeButton.setLayoutParams(lp);
             }
             if (statusScrim != null) {
                 ViewGroup.LayoutParams scrimParams = statusScrim.getLayoutParams();
@@ -426,11 +442,7 @@ public final class QuizAds {
         ViewCompat.requestApplyInsets(window.getDecorView());
         ViewCompat.requestApplyInsets(content);
         applyQuizNativeBarIcons(window, night, color);
-        applyQuizNativeBarIcons(activity.getWindow(), night, color);
-        window.getDecorView().post(() -> {
-            applyQuizNativeBarIcons(window, night, color);
-            applyQuizNativeBarIcons(activity.getWindow(), night, color);
-        });
+        window.getDecorView().post(() -> applyQuizNativeBarIcons(window, night, color));
     }
 
     private static void applyQuizNativeBarIcons(@Nullable Window window, boolean night, int navigationColor) {
@@ -457,18 +469,26 @@ public final class QuizAds {
         }
     }
 
+    /** Style only the dialog window so the host screen does not change underneath. */
     private static void matchQuizSystemBars(Activity activity, @Nullable Window window) {
         if (activity == null || window == null) {
             return;
         }
-        boolean isNight = (activity.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
-        int color = ContextCompat.getColor(activity, R.color.surface_primary);
+        Context themed = AdTheme.forApp(activity);
+        boolean isNight = AdTheme.launcherIsDark(activity);
+        int color = ContextCompat.getColor(themed, R.color.surface_primary);
         WindowCompat.setDecorFitsSystemWindows(window, false);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND | WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         window.setBackgroundDrawable(new ColorDrawable(color));
         window.setStatusBarColor(color);
         window.setNavigationBarColor(color);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            WindowManager.LayoutParams attrs = window.getAttributes();
+            attrs.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
+            window.setAttributes(attrs);
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.setStatusBarContrastEnforced(false);
             window.setNavigationBarContrastEnforced(false);
@@ -488,33 +508,8 @@ public final class QuizAds {
             });
             ViewCompat.requestApplyInsets(layout);
         }
-        WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(window, window.getDecorView());
-        controller.setAppearanceLightStatusBars(!isNight);
-        controller.setAppearanceLightNavigationBars(!isNight);
-        Window host = activity.getWindow();
-        host.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        host.setStatusBarColor(color);
-        host.setNavigationBarColor(color);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            host.setStatusBarContrastEnforced(false);
-            host.setNavigationBarContrastEnforced(false);
-        }
-        WindowInsetsControllerCompat hostController = WindowCompat.getInsetsController(host, host.getDecorView());
-        hostController.setAppearanceLightStatusBars(!isNight);
-        hostController.setAppearanceLightNavigationBars(!isNight);
-    }
-
-    private static void restoreHostSystemBars(Activity activity, int statusColor, int navigationColor) {
-        if (activity == null || activity.isFinishing()) {
-            return;
-        }
-        Window host = activity.getWindow();
-        host.setStatusBarColor(statusColor);
-        host.setNavigationBarColor(navigationColor);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            host.setStatusBarContrastEnforced(true);
-            host.setNavigationBarContrastEnforced(true);
-        }
+        applyQuizNativeBarIcons(window, isNight, color);
+        window.getDecorView().post(() -> applyQuizNativeBarIcons(window, isNight, color));
     }
 
     @Nullable
@@ -527,21 +522,20 @@ public final class QuizAds {
     }
 
     private static Dialog fullscreenDialog(Activity activity, int layout) {
-        return fullscreenDialog(activity, layout, 0);
+        return fullscreenDialog(activity, layout, R.style.Theme_QuizInterstitial);
     }
 
     private static Dialog fullscreenDialog(Activity activity, int layout, int themeRes) {
-        Dialog dialog = themeRes == 0 ? new Dialog(activity) : new Dialog(activity, themeRes);
-        if (themeRes == 0) {
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        }
-        dialog.setContentView(layout);
+        int theme = themeRes != 0 ? themeRes : R.style.Theme_QuizInterstitial;
+        // Dialog must use the Activity for a valid window token.
+        Dialog dialog = new Dialog(activity, theme);
+        Context inflateCtx = new ContextThemeWrapper(AdTheme.forApp(activity), theme);
+        View content = LayoutInflater.from(inflateCtx).inflate(layout, null, false);
+        dialog.setContentView(content);
         dialog.setCancelable(false);
         if (dialog.getWindow() != null) {
             dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-            if (themeRes == 0) {
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            }
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(inflateCtx, R.color.surface_primary)));
         }
         return dialog;
     }

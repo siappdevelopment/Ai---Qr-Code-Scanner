@@ -8,12 +8,12 @@ import android.view.View
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -37,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.qrcode.scanner.MainActivity
 import com.qrcode.scanner.launcher.activities.LanguageActivity
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
 import com.qrcode.scanner.launcher.common.ScreenInterAds
@@ -89,6 +91,8 @@ fun ScanPulseNavHost(
         currentRoute != AppDestination.Splash.route
     val hostActivity = LocalContext.current.findHostActivity()
     val useDark = ScanPulseThemeState.palette == ScanPulsePalette.Dark
+    val inLauncher = hostActivity is LauncherHomeActivity
+    // Launcher QR page: original bar behavior only (do not change LauncherScreen).
     SideEffect {
         val launcher = hostActivity as? LauncherHomeActivity ?: return@SideEffect
         if (launcher.launcherCurrentItem != com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter.PAGE_RIGHT) {
@@ -100,7 +104,29 @@ fun ScanPulseNavHost(
             LauncherQrSystemBars.applyHeaderStatusBar(launcher, useDark)
         }
     }
-    val inLauncher = hostActivity is LauncherHomeActivity
+    // MainActivity only (default launcher not set): camera under status bar + swipe system nav.
+    DisposableEffect(hostActivity, isScan, showBottomBar, useDark, matchHeaderStatus) {
+        val activity = hostActivity as? MainActivity
+        if (activity == null || !showBottomBar) {
+            return@DisposableEffect onDispose { }
+        }
+        fun applyBars() {
+            if (isScan) {
+                LauncherQrSystemBars.applyStandaloneAppScanBars(activity)
+            } else {
+                LauncherQrSystemBars.applyHeaderStatusBar(activity, useDark)
+                LauncherQrSystemBars.hideNavigationBarUntilSwipe(activity)
+            }
+        }
+        applyBars()
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                applyBars()
+            }
+        }
+        activity.lifecycle.addObserver(observer)
+        onDispose { activity.lifecycle.removeObserver(observer) }
+    }
     val reopenSettings = remember { ThemeNavigation.consumeReopenSettings() }
     var tabBeforeScan by remember { mutableStateOf(AppDestination.Home.route) }
     LaunchedEffect(currentRoute) {
@@ -151,9 +177,18 @@ fun ScanPulseNavHost(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
-            containerColor = if (isScan) Color.Transparent else PageBackground,
+            containerColor = when {
+                isScan && !inLauncher -> Color.Black
+                isScan -> Color.Transparent
+                else -> PageBackground
+            },
             contentColor = Color.Unspecified,
-            contentWindowInsets = if (inLauncher) WindowInsets.statusBars else WindowInsets.systemBars,
+            // Launcher unchanged; MainActivity Scan draws camera under transparent status bar.
+            contentWindowInsets = when {
+                isScan && !inLauncher -> WindowInsets(0, 0, 0, 0)
+                inLauncher -> WindowInsets.statusBars
+                else -> WindowInsets.statusBars
+            },
             bottomBar = {
                 if (showBottomBar) {
                     Column(modifier = Modifier.fillMaxWidth()) {
@@ -161,7 +196,8 @@ fun ScanPulseNavHost(
                             currentRoute = currentRoute,
                             onNavigate = { destination -> openRootTabWithAd(destination.route) },
                             onScanClick = { openRootTabWithAd(AppDestination.Scan.route) },
-                            includeNavigationBarPadding = !inLauncher
+                            // Never pad between app nav and ad (causes black gap). System nav is swipe-hide on MainActivity.
+                            includeNavigationBarPadding = false
                         )
                         HomeBottomAdSlot()
                     }
@@ -262,7 +298,12 @@ fun ScanPulseNavHost(
                 composable(AppDestination.Scan.route) {
                     ScanScreen(
                         onClose = { openRootTab(tabBeforeScan) },
-                        safeContentPadding = innerPadding
+                        safeContentPadding = if (inLauncher) {
+                            innerPadding
+                        } else {
+                            // Standalone app: camera under status bar; HUD only needs bottom bar clearance.
+                            PaddingValues(bottom = innerPadding.calculateBottomPadding())
+                        }
                     )
                 }
                 composable(AppDestination.Settings.route) {
@@ -295,8 +336,13 @@ fun ScanPulseNavHost(
                 PlaceholderScreen(title = "QR Preview & Export")
             }
             composable(AppDestination.About.route) {
-                ScreenWithAd(screenKey = "OtherScreen") {
-                    AboutScreen(onBack = { navController.popBackStack() })
+                val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+                ScreenWithAd(
+                    screenKey = "OtherScreen",
+                    bindBackAd = true,
+                    onBackLeave = { navController.popBackStack() }
+                ) {
+                    AboutScreen(onBack = { backDispatcher?.onBackPressed() })
                 }
             }
         }

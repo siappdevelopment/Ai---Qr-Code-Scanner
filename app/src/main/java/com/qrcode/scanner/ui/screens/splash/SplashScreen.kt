@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,6 +39,7 @@ import com.qrcode.scanner.data.settings.AppThemeMode
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.data.settings.readAppNightMode
+import com.qrcode.scanner.launcher.common.AdTheme
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.ScanPulsePalette
 
@@ -136,8 +136,7 @@ fun SplashScreen(
 
         AndroidView(
             factory = { context ->
-                val themed = ContextThemeWrapper(context, R.style.Theme_LauncherSettings)
-                LayoutInflater.from(themed).inflate(R.layout.layout_splash_startup_ads, null, false)
+                LayoutInflater.from(AdTheme.forApp(context)).inflate(R.layout.layout_splash_startup_ads, null, false)
             },
             modifier = Modifier
                 .align(Alignment.BottomCenter)

@@ -63,7 +63,7 @@ class FavoritesActivity : ComponentActivity() {
         enableThemedEdgeToEdge()
         setContent {
             QRCodeScannerTheme {
-                ScreenWithAd(screenKey = "OtherScreen") {
+                ScreenWithAd(screenKey = "OtherScreen", bindBackAd = true) {
                 val context = LocalContext.current
                 FavoritesScreen(
                     onBack = { onBackPressedDispatcher.onBackPressed() },

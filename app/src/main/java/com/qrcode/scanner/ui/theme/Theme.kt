@@ -25,6 +25,7 @@ import com.qrcode.scanner.data.settings.AppThemeMode
 import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.data.settings.readAppNightMode
+import com.qrcode.scanner.MainActivity
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
 
 /**
@@ -109,7 +110,8 @@ fun QRCodeScannerTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val activity = view.context.findHostActivity() ?: return@SideEffect
-            if (activity is LauncherHomeActivity) {
+            // Launcher owns its bars. MainActivity Scan bars are applied in ScanPulseNavHost.
+            if (activity is LauncherHomeActivity || activity is MainActivity) {
                 return@SideEffect
             }
             val window = activity.window
@@ -137,21 +139,28 @@ fun QRCodeScannerTheme(
     )
 }
 
-/** Light theme keeps the default bar. Black theme uses the dark page background. */
+/** Edge-to-edge; status + nav bars stay transparent (swipe-in system nav is see-through). */
 fun ComponentActivity.enableThemedEdgeToEdge() {
     val dark = readAppNightMode(this) == AppCompatDelegate.MODE_NIGHT_YES
-    if (!dark) {
-        enableEdgeToEdge()
-        return
-    }
-    val navigation = ScanPulsePalette.Dark.pageBackground.toArgb()
     enableEdgeToEdge(
-        statusBarStyle = SystemBarStyle.dark(AndroidColor.TRANSPARENT),
-        navigationBarStyle = SystemBarStyle.dark(navigation)
+        statusBarStyle = if (dark) {
+            SystemBarStyle.dark(AndroidColor.TRANSPARENT)
+        } else {
+            SystemBarStyle.light(AndroidColor.TRANSPARENT, AndroidColor.TRANSPARENT)
+        },
+        navigationBarStyle = if (dark) {
+            SystemBarStyle.dark(AndroidColor.TRANSPARENT)
+        } else {
+            SystemBarStyle.light(AndroidColor.TRANSPARENT, AndroidColor.TRANSPARENT)
+        }
     )
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
         window.isNavigationBarContrastEnforced = false
     }
+    @Suppress("DEPRECATION")
+    window.navigationBarColor = AndroidColor.TRANSPARENT
+    @Suppress("DEPRECATION")
+    window.statusBarColor = AndroidColor.TRANSPARENT
 }
 
 private fun Context.findHostActivity(): Activity? {

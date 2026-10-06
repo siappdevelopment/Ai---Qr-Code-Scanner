@@ -36,6 +36,7 @@ import com.qrcode.scanner.data.settings.SettingsRepositoryKt;
 import com.qrcode.scanner.launcher.adapters.ClEndPagerAdapter;
 import com.qrcode.scanner.launcher.common.ADSNativeFullDisplay;
 import com.qrcode.scanner.launcher.common.AdPlacement;
+import com.qrcode.scanner.launcher.common.AdTheme;
 import com.qrcode.scanner.launcher.common.CallEndBackAd;
 import com.qrcode.scanner.launcher.common.CallEndPendingLaunch;
 
@@ -125,7 +126,7 @@ public class ClEndActivity extends AppCompatActivity {
         NativeAd preloadedAd = ADSNativeFullDisplay.AdmobNativeAd;
         ADSNativeFullDisplay.AdmobNativeAd = null;
 
-        NativeAdView adView = (NativeAdView) LayoutInflater.from(this).inflate(R.layout.notification_full_ad, null);
+        NativeAdView adView = (NativeAdView) LayoutInflater.from(AdTheme.forApp(this)).inflate(R.layout.notification_full_ad, null);
         AdPlacement.populateNativeAdView(preloadedAd, adView, "large");
         fullAdContainer.removeAllViews();
         fullAdContainer.addView(adView);
@@ -177,7 +178,8 @@ public class ClEndActivity extends AppCompatActivity {
     }
 
     private void initialClicks() {
-        if (AdPlacement.canShowClEndBackAdOnPress(this, isNotificationCallEndFlow(), isFullAdVisible())) {
+        if (AdPlacement.isNetworkAvailable(this)
+                && (AdPlacement.getClEndBackAdShow() || isNotificationCallEndFlow())) {
             CallEndBackAd.loadAd(this);
         }
 

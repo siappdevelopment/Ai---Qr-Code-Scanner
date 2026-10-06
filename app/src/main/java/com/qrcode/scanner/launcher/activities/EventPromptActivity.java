@@ -60,6 +60,11 @@ public class EventPromptActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("EventPrompt", "activity created kind=" + kindFrom(getIntent()));
+        if (!AdPlacement.isNetworkAvailable(this)) {
+            Log.d("EventPrompt", "finish: no internet");
+            finish();
+            return;
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
@@ -357,7 +362,7 @@ public class EventPromptActivity extends AppCompatActivity {
         bannerSlot.setVisibility(View.GONE);
         shimmer.stopShimmer();
         shimmer.setVisibility(View.GONE);
-        AdPlacement.showLargeNative(this, nativeSlot, ready);
+        AdPlacement.showLargeNative(this, nativeSlot, ready, true);
         paintNativeCard(nativeSlot);
         loadedNativeAd = ready;
     }
@@ -452,12 +457,12 @@ public class EventPromptActivity extends AppCompatActivity {
             if (request != adRequest || isFinishing()) {
                 return;
             }
-            if (AdPlacement.getGoogleAdFailedShowQuiz() && QuizAds.showNative(this, container, shimmer, nativeSlot, "large")) {
+            if (AdPlacement.getGoogleAdFailedShowQuiz() && QuizAds.showNative(this, container, shimmer, nativeSlot, "large", true)) {
                 paintNativeCard(nativeSlot);
                 return;
             }
             hideAdPlaceholders();
-        }, true);
+        }, true, AdPlacement.onboardingNativeColor(this, true), true);
     }
 
     /** The ad layout ships with a white fill, so it blends into the sheet. Repaint that fill to the Fast Charging card. */
@@ -524,7 +529,7 @@ public class EventPromptActivity extends AppCompatActivity {
                 if (request != adRequest || isFinishing()) {
                     return;
                 }
-                if (AdPlacement.getGoogleAdFailedShowQuiz() && QuizAds.showBanner(this, container, shimmer, bannerSlot)) {
+                if (AdPlacement.getGoogleAdFailedShowQuiz() && QuizAds.showBanner(this, container, shimmer, bannerSlot, true)) {
                     return;
                 }
                 hideAdPlaceholders();

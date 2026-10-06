@@ -14,8 +14,8 @@
     <color name="text_secondary">@color/text_secondary_light</color>
     <color name="surface_primary">@color/surface_primary_light</color>
     <color name="surface_secondary">@color/surface_secondary_light</color>
-    <color name="ad_background">@color/surface_primary</color>
     <color name="onboarding_native_bg">#F5F5F5</color>
+    <color name="ad_background">@color/onboarding_native_bg</color>
     <color name="ad_shimmer">#E8EAED</color>
     <color name="splash_ad_card">#FFFFFF</color>
     <color name="splash_ad_stroke">#D5DEEA</color>

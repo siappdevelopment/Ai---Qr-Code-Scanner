@@ -894,14 +894,18 @@ public final class AdPlacement {
     }
 
     public static int onboardingNativeColor(@Nullable Context context) {
+        return onboardingNativeColor(context, false);
+    }
+
+    public static int onboardingNativeColor(@Nullable Context context, boolean forceLight) {
         if (context == null) {
             return 0;
         }
-        return ContextCompat.getColor(context, R.color.onboarding_native_bg);
+        return ContextCompat.getColor(AdTheme.forAds(context, forceLight), R.color.onboarding_native_bg);
     }
 
     public static void showSlot(Activity activity, boolean showFlag, String adType, String bannerId, String nativeId, String nativeSize, RelativeLayout rlAdView, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd, RelativeLayout rlNativeAdView, ShimmerFrameLayout slNativeShimmer, FrameLayout flNativeAd, boolean adaptiveBanner) {
-        showSlot(activity, showFlag, adType, bannerId, nativeId, nativeSize, rlAdView, rlBannerAdView, slBannerShimmer, llBannerAd, rlNativeAdView, slNativeShimmer, flNativeAd, adaptiveBanner, 0);
+        showSlot(activity, showFlag, adType, bannerId, nativeId, nativeSize, rlAdView, rlBannerAdView, slBannerShimmer, llBannerAd, rlNativeAdView, slNativeShimmer, flNativeAd, adaptiveBanner, onboardingNativeColor(activity));
     }
 
     public static void showSlot(Activity activity, boolean showFlag, String adType, String bannerId, String nativeId, String nativeSize, RelativeLayout rlAdView, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd, RelativeLayout rlNativeAdView, ShimmerFrameLayout slNativeShimmer, FrameLayout flNativeAd, boolean adaptiveBanner, int nativeFillColor) {
@@ -1040,22 +1044,28 @@ public final class AdPlacement {
     }
 
     public static void loadNativeAd(Activity activity, String nativeId, RelativeLayout rlNativeAdView, ShimmerFrameLayout slNativeShimmer, FrameLayout flNativeAd, String type, @Nullable java.util.function.Consumer<NativeAd> onAdLoaded, @Nullable Runnable onAdFailed, boolean googleOnly) {
-        loadNativeAd(activity, nativeId, rlNativeAdView, slNativeShimmer, flNativeAd, type, onAdLoaded, onAdFailed, googleOnly, 0);
+        loadNativeAd(activity, nativeId, rlNativeAdView, slNativeShimmer, flNativeAd, type, onAdLoaded, onAdFailed, googleOnly, onboardingNativeColor(activity), false);
     }
 
     public static void loadNativeAd(Activity activity, String nativeId, RelativeLayout rlNativeAdView, ShimmerFrameLayout slNativeShimmer, FrameLayout flNativeAd, String type, @Nullable java.util.function.Consumer<NativeAd> onAdLoaded, @Nullable Runnable onAdFailed, boolean googleOnly, int nativeFillColor) {
+        loadNativeAd(activity, nativeId, rlNativeAdView, slNativeShimmer, flNativeAd, type, onAdLoaded, onAdFailed, googleOnly, nativeFillColor, false);
+    }
+
+    public static void loadNativeAd(Activity activity, String nativeId, RelativeLayout rlNativeAdView, ShimmerFrameLayout slNativeShimmer, FrameLayout flNativeAd, String type, @Nullable java.util.function.Consumer<NativeAd> onAdLoaded, @Nullable Runnable onAdFailed, boolean googleOnly, int nativeFillColor, boolean forceLightTheme) {
         if (activity != null) {
             initializeIfConfigured(activity);
         }
+        final boolean lightAds = forceLightTheme;
+        final int fillColor = nativeFillColor != 0 ? nativeFillColor : onboardingNativeColor(activity, lightAds);
         String unitId = nativeId == null ? "" : nativeId.trim();
         if (!googleOnly && shouldUseQuizPriority()) {
-            if (!QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type)) {
+            if (!QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type, lightAds)) {
                 hideNativeContainer(rlNativeAdView, slNativeShimmer, flNativeAd);
                 if (onAdFailed != null) {
                     onAdFailed.run();
                 }
             } else {
-                paintOnboardingNative(flNativeAd, nativeFillColor);
+                paintOnboardingNative(flNativeAd, fillColor);
                 if (onAdLoaded != null) {
                     onAdLoaded.accept(null);
                 }
@@ -1069,10 +1079,11 @@ public final class AdPlacement {
             }
             return;
         }
+        paintOnboardingNative(rlNativeAdView, fillColor);
         if (slNativeShimmer != null) {
             slNativeShimmer.setVisibility(View.VISIBLE);
             slNativeShimmer.startShimmer();
-            paintOnboardingNative(slNativeShimmer, nativeFillColor);
+            paintOnboardingNative(slNativeShimmer, fillColor);
         }
         AdLoader adLoader = new AdLoader.Builder(activity, unitId).forNativeAd(nativeAd -> {
             if (activity.isFinishing() || activity.isDestroyed() || flNativeAd == null) {
@@ -1080,7 +1091,8 @@ public final class AdPlacement {
                 return;
             }
             nativeAd.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
-            NativeAdView adView = (NativeAdView) LayoutInflater.from(flNativeAd.getContext()).inflate(resolveGoogleNativeLayout(type), flNativeAd, false);
+            Context adContext = AdTheme.forAds(activity, lightAds);
+            NativeAdView adView = (NativeAdView) LayoutInflater.from(adContext).inflate(resolveGoogleNativeLayout(type), flNativeAd, false);
             populateNativeAdView(nativeAd, adView, type);
             flNativeAd.removeAllViews();
             flNativeAd.addView(GestureSafeNativeAdView.wrap(adView));
@@ -1092,15 +1104,17 @@ public final class AdPlacement {
             if (rlNativeAdView != null) {
                 rlNativeAdView.setVisibility(View.VISIBLE);
             }
-            paintOnboardingNative(flNativeAd, nativeFillColor);
+            paintOnboardingNative(rlNativeAdView, fillColor);
+            paintOnboardingNative(slNativeShimmer, fillColor);
+            paintOnboardingNative(flNativeAd, fillColor);
             if (onAdLoaded != null) {
                 onAdLoaded.accept(nativeAd);
             }
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
-                if (!googleOnly && getGoogleAdFailedShowQuiz() && QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type)) {
-                    paintOnboardingNative(flNativeAd, nativeFillColor);
+                if (!googleOnly && getGoogleAdFailedShowQuiz() && QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type, lightAds)) {
+                    paintOnboardingNative(flNativeAd, fillColor);
                     if (onAdLoaded != null) {
                         onAdLoaded.accept(null);
                     }
@@ -1192,14 +1206,20 @@ public final class AdPlacement {
     }
 
     public static void showLargeNative(Activity activity, FrameLayout container, NativeAd nativeAd) {
+        showLargeNative(activity, container, nativeAd, false);
+    }
+
+    public static void showLargeNative(Activity activity, FrameLayout container, NativeAd nativeAd, boolean forceLightTheme) {
         if (activity == null || activity.isFinishing() || container == null || nativeAd == null) {
             return;
         }
-        NativeAdView adView = (NativeAdView) LayoutInflater.from(container.getContext()).inflate(R.layout.native_large_ad_layout, container, false);
+        Context adContext = AdTheme.forAds(activity, forceLightTheme);
+        NativeAdView adView = (NativeAdView) LayoutInflater.from(adContext).inflate(R.layout.native_large_ad_layout, container, false);
         populateNativeAdView(nativeAd, adView, "large");
         container.removeAllViews();
         container.addView(GestureSafeNativeAdView.wrap(adView));
         container.setVisibility(View.VISIBLE);
+        paintOnboardingNative(container, onboardingNativeColor(activity, forceLightTheme));
     }
 
     public static void loadLanguageInterstitialAd(Activity activity, OnInterstitialAdListener listener) {
@@ -1433,17 +1453,22 @@ public final class AdPlacement {
         return type;
     }
 
+    private static boolean launcherQuizOnGoogleFail() {
+        return launcherGoogleAdFailedShowQuiz || getGoogleAdFailedShowQuiz();
+    }
+
     private static void executeLauncherAppAd(Activity activity, Runnable continueAction, String adType, @Nullable String interstitialId) {
+        boolean quizOnFail = launcherQuizOnGoogleFail();
         if (LAUNCHER_APP_AD_TYPE_GOOGLE_INTER.equals(adType)) {
-            loadInterstitialAdInternal(activity, interstitialId, () -> continueAction.run(), true, false, launcherGoogleAdFailedShowQuiz);
+            loadInterstitialAdInternal(activity, interstitialId, () -> continueAction.run(), true, false, quizOnFail);
             return;
         }
         if (LAUNCHER_APP_AD_TYPE_GOOGLE_APP_OPEN.equals(adType)) {
-            loadAppOpenAdInternal(activity, getAppOpenId(), () -> continueAction.run(), false, launcherGoogleAdFailedShowQuiz, true);
+            loadAppOpenAdInternal(activity, getAppOpenId(), () -> continueAction.run(), false, quizOnFail, true);
             return;
         }
         if (LAUNCHER_APP_AD_TYPE_GOOGLE_NATIVE.equals(adType)) {
-            showLauncherNativeFull(activity, continueAction, launcherGoogleAdFailedShowQuiz);
+            showLauncherNativeFull(activity, continueAction, quizOnFail);
             return;
         }
         if (LAUNCHER_APP_AD_TYPE_QUIZ_INTER.equals(adType)) {
@@ -1473,16 +1498,22 @@ public final class AdPlacement {
 
     private static void showLauncherNativeFull(Activity activity, Runnable continueAction, boolean quizOnFail) {
         String nativeId = getLauncherAppNativeId();
+        AtomicBoolean completed = new AtomicBoolean(false);
+        OnInterstitialAdListener listener = () -> continueAction.run();
         if (!canLoad(activity, nativeId)) {
+            if (quizOnFail && QuizAds.showNativeFull(activity, () -> notifyComplete(listener, completed))) {
+                return;
+            }
             continueAction.run();
             return;
         }
-        AtomicBoolean completed = new AtomicBoolean(false);
-        OnInterstitialAdListener listener = () -> continueAction.run();
         Dialog dialog = showInterstitialLoadingDialog(activity);
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable timeout = () -> {
             dismissInterstitialLoadingDialog(dialog);
+            if (quizOnFail && QuizAds.showNativeFull(activity, () -> notifyComplete(listener, completed))) {
+                return;
+            }
             notifyComplete(listener, completed);
         };
         handler.postDelayed(timeout, INTERSTITIAL_LOADING_DIALOG_TIMEOUT_MS);
@@ -1691,6 +1722,9 @@ public final class AdPlacement {
             return;
         }
         if (!canLoad(activity, interstitialId)) {
+            if (quizOnFail && QuizAds.showInterstitial(activity, () -> notifyComplete(listener, completed))) {
+                return;
+            }
             notifyComplete(listener, completed);
             return;
         }
@@ -1702,6 +1736,9 @@ public final class AdPlacement {
             }
             interstitialLoadToken.incrementAndGet();
             dismissInterstitialLoadingDialog(loadingDialog);
+            if (quizOnFail && QuizAds.showInterstitial(activity, () -> notifyComplete(listener, completed))) {
+                return;
+            }
             notifyComplete(listener, completed);
         };
         if (loadingDialog != null) {
@@ -1724,6 +1761,9 @@ public final class AdPlacement {
 
                     @Override
                     public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                        if (quizOnFail && QuizAds.showInterstitial(activity, () -> notifyComplete(listener, completed))) {
+                            return;
+                        }
                         notifyComplete(listener, completed);
                     }
                 });
@@ -1763,6 +1803,9 @@ public final class AdPlacement {
             return;
         }
         if (!canLoad(activity, appOpenUnitId)) {
+            if (quizOnFail && QuizAds.showAppOpen(activity, () -> notifyComplete(listener, completed))) {
+                return;
+            }
             notifyComplete(listener, completed);
             return;
         }
@@ -1774,6 +1817,9 @@ public final class AdPlacement {
             }
             appOpenLoadToken.incrementAndGet();
             dismissInterstitialLoadingDialog(loadingDialog);
+            if (quizOnFail && QuizAds.showAppOpen(activity, () -> notifyComplete(listener, completed))) {
+                return;
+            }
             notifyComplete(listener, completed);
         };
         if (loadingDialog != null) {
@@ -1784,6 +1830,10 @@ public final class AdPlacement {
             public void onAdLoaded(@NonNull AppOpenAd ad) {
                 if (token != appOpenLoadToken.get() || activity.isFinishing()) {
                     dismissInterstitialLoadingDialog(loadingDialog);
+                    if (quizOnFail && !activity.isFinishing()
+                            && QuizAds.showAppOpen(activity, () -> notifyComplete(listener, completed))) {
+                        return;
+                    }
                     notifyComplete(listener, completed);
                     return;
                 }
@@ -1798,6 +1848,9 @@ public final class AdPlacement {
 
                     @Override
                     public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                        if (quizOnFail && QuizAds.showAppOpen(activity, () -> notifyComplete(listener, completed))) {
+                            return;
+                        }
                         notifyComplete(listener, completed);
                     }
                 });
@@ -2031,16 +2084,32 @@ public final class AdPlacement {
         }
     }
 
+    /** Repaint native ad chrome to the saved Light/Dark app theme. */
+    public static void paintNativeFill(@Nullable View root, int fillColor) {
+        paintOnboardingNative(root, fillColor);
+    }
+
     private static void paintOnboardingNative(@Nullable View root, int fillColor) {
         if (root == null || fillColor == 0) {
             return;
         }
-        int pageFill = ContextCompat.getColor(root.getContext(), R.color.ad_background);
-        paintMatchingFill(root, pageFill, fillColor);
+        Context light = AdTheme.withForcedNight(root.getContext(), false);
+        Context dark = AdTheme.withForcedNight(root.getContext(), true);
+        paintMatchingFill(root, ContextCompat.getColor(light, R.color.onboarding_native_bg), fillColor);
+        paintMatchingFill(root, ContextCompat.getColor(dark, R.color.onboarding_native_bg), fillColor);
+        paintMatchingFill(root, ContextCompat.getColor(light, R.color.ad_background), fillColor);
+        paintMatchingFill(root, ContextCompat.getColor(dark, R.color.ad_background), fillColor);
+        paintMatchingFill(root, ContextCompat.getColor(light, R.color.surface_secondary), fillColor);
+        paintMatchingFill(root, ContextCompat.getColor(dark, R.color.surface_secondary), fillColor);
     }
 
     private static void paintMatchingFill(View view, int fromColor, int toColor) {
-        if (view.getBackground() instanceof ColorDrawable && ((ColorDrawable) view.getBackground()).getColor() == fromColor) {
+        if (view instanceof androidx.cardview.widget.CardView) {
+            androidx.cardview.widget.CardView card = (androidx.cardview.widget.CardView) view;
+            if (card.getCardBackgroundColor().getDefaultColor() == fromColor) {
+                card.setCardBackgroundColor(toColor);
+            }
+        } else if (view.getBackground() instanceof ColorDrawable && ((ColorDrawable) view.getBackground()).getColor() == fromColor) {
             view.setBackgroundColor(toColor);
         }
         if (view instanceof android.view.ViewGroup) {
@@ -2082,7 +2151,7 @@ public final class AdPlacement {
         try {
             Dialog dialog = new Dialog(activity);
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            dialog.setContentView(R.layout.dialog_loading_ads);
+            dialog.setContentView(LayoutInflater.from(AdTheme.forApp(activity)).inflate(R.layout.dialog_loading_ads, null, false));
             if (dialog.getWindow() != null) {
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }

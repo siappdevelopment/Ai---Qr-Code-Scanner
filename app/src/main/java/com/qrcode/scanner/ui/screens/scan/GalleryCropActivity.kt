@@ -103,7 +103,7 @@ class GalleryCropActivity : ComponentActivity() {
 
         setContent {
             QRCodeScannerTheme {
-                ScreenWithAd(screenKey = "OtherScreen", nativeSize = "small") {
+                ScreenWithAd(screenKey = "OtherScreen", nativeSize = "small", bindBackAd = true) {
                 GalleryCropScreen(
                     initialUri = initialUri,
                     autoPick = autoPick,

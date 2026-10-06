@@ -70,7 +70,7 @@ class DetectionErrorActivity : ComponentActivity() {
 
         setContent {
             QRCodeScannerTheme {
-                ScreenWithAd(screenKey = "OtherScreen") {
+                ScreenWithAd(screenKey = "OtherScreen", bindBackAd = true) {
                 DetectionErrorScreen(
                     reason = reason,
                     onBack = { onBackPressedDispatcher.onBackPressed() },

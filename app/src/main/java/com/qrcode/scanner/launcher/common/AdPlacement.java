@@ -1059,7 +1059,8 @@ public final class AdPlacement {
         final int fillColor = nativeFillColor != 0 ? nativeFillColor : onboardingNativeColor(activity, lightAds);
         String unitId = nativeId == null ? "" : nativeId.trim();
         if (!googleOnly && shouldUseQuizPriority()) {
-            if (!QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type, lightAds)) {
+            // Do not reveal container here — sticky hosts (app drawer) must park/position first.
+            if (!QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type, lightAds, false)) {
                 hideNativeContainer(rlNativeAdView, slNativeShimmer, flNativeAd);
                 if (onAdFailed != null) {
                     onAdFailed.run();
@@ -1068,6 +1069,9 @@ public final class AdPlacement {
                 paintOnboardingNative(flNativeAd, fillColor);
                 if (onAdLoaded != null) {
                     onAdLoaded.accept(null);
+                }
+                if (rlNativeAdView != null && rlNativeAdView.getVisibility() != View.VISIBLE) {
+                    rlNativeAdView.setVisibility(View.VISIBLE);
                 }
             }
             return;
@@ -1113,10 +1117,14 @@ public final class AdPlacement {
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
-                if (!googleOnly && getGoogleAdFailedShowQuiz() && QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type, lightAds)) {
+                if (!googleOnly && getGoogleAdFailedShowQuiz()
+                        && QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type, lightAds, false)) {
                     paintOnboardingNative(flNativeAd, fillColor);
                     if (onAdLoaded != null) {
                         onAdLoaded.accept(null);
+                    }
+                    if (rlNativeAdView != null && rlNativeAdView.getVisibility() != View.VISIBLE) {
+                        rlNativeAdView.setVisibility(View.VISIBLE);
                     }
                     return;
                 }

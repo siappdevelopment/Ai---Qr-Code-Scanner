@@ -6,6 +6,7 @@
     android:layout_marginHorizontal="@dimen/launcher_native_list_margin">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cvNativeListSpacer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/launcher_native_list_ad_height"
         android:layout_gravity="center"

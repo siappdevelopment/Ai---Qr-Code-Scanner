@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Mirrors native_medium_ad_layout (Google) — same structure/sizing; Quiz view ids only. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/ad_background"
-    android:gravity="center_vertical"
     android:orientation="vertical"
     android:padding="@dimen/_10sdp">
 
@@ -37,6 +37,7 @@
                 android:id="@+id/ivQZAppMedia"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:scaleType="centerCrop"
                 android:visibility="gone" />
 
         </RelativeLayout>
@@ -85,21 +86,12 @@
 
                     </com.facebook.shimmer.ShimmerFrameLayout>
 
-                    <androidx.cardview.widget.CardView
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/ivQZAppIcon"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:cardBackgroundColor="@android:color/transparent"
-                        app:cardCornerRadius="@dimen/_10sdp"
-                        app:cardElevation="0dp">
-
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:id="@+id/ivQZAppIcon"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:scaleType="centerCrop"
-                            android:visibility="gone" />
-
-                    </androidx.cardview.widget.CardView>
+                        android:scaleType="centerCrop"
+                        android:visibility="gone" />
 
                 </RelativeLayout>
 
@@ -111,7 +103,7 @@
                     android:fontFamily="@font/sans_trial_medium"
                     android:includeFontPadding="false"
                     android:maxLines="2"
-                    android:text="App Title"
+                    android:text="Ad Headline"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/_11sdp"
                     tools:ignore="HardcodedText" />
@@ -126,7 +118,7 @@
                 android:fontFamily="@font/sans_trial_regular"
                 android:includeFontPadding="false"
                 android:maxLines="3"
-                android:text="App Description"
+                android:text="Ad Body"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_10sdp"
                 tools:ignore="HardcodedText" />
@@ -142,12 +134,18 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:background="@drawable/custom_radius_12"
         android:backgroundTint="@color/primary"
+        android:elevation="0dp"
+        android:ellipsize="end"
         android:fontFamily="@font/sans_trial_medium"
         android:gravity="center"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:minWidth="0dp"
+        android:minHeight="0dp"
         android:paddingHorizontal="@dimen/_6sdp"
-        android:paddingBottom="@dimen/_1sdp"
-        android:singleLine="true"
-        android:text="Click Here"
+        android:stateListAnimator="@null"
+        android:text="Install"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="@dimen/_12sdp"
         tools:ignore="HardcodedText" />

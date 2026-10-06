@@ -1100,6 +1100,11 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
             }
             return;
         }
+        // Quiz is sync — wait for the grid layout so sticky math matches Google's async path.
+        if (AdPlacement.shouldUseQuizPriority() && rvApps != null && (rvApps.getHeight() <= 0 || !rvApps.isLaidOut())) {
+            rvApps.post(this::maybeLoadNativeListAd);
+            return;
+        }
         if (launcherAppsAdapter != null) {
             launcherAppsAdapter.setListNativePlaceholderEnabled(true);
         }
@@ -1113,8 +1118,7 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
             if (launcherAppsAdapter != null) {
                 launcherAppsAdapter.setListNativeShimmerVisible(false);
             }
-            rlNativeListAdView.setVisibility(VISIBLE);
-            updateStickyNativeListAdPosition();
+            revealNativeListAdAfterBind();
             return;
         }
         final int requestToken = ++nativeListAdRequestToken;
@@ -1150,11 +1154,9 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
                 slNativeListShimmer.stopShimmer();
                 slNativeListShimmer.setVisibility(GONE);
                 flNativeListAd.setVisibility(VISIBLE);
-                rlNativeListAdView.setVisibility(VISIBLE);
                 AdPlacement.setLauncherAppNativeListLastShowTime(requireContext(), System.currentTimeMillis());
                 applyNativeListBottomPadding(true);
-                updateStickyNativeListAdPosition();
-                rlNativeListAdView.post(this::updateStickyNativeListAdPosition);
+                revealNativeListAdAfterBind();
             } else {
                 destroyLoadedNativeListAd();
                 hideNativeListAdContainer();
@@ -1173,6 +1175,20 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
                 launcherAppsAdapter.setListNativePlaceholderEnabled(false);
             }
         });
+    }
+
+    /** Park → show → align to list spacer (Quiz sync must not flash at bottom over apps). */
+    private void revealNativeListAdAfterBind() {
+        if (rlNativeListAdView == null) {
+            return;
+        }
+        parkNativeListAdOffScreen();
+        rlNativeListAdView.setVisibility(VISIBLE);
+        updateStickyNativeListAdPosition();
+        rlNativeListAdView.post(this::updateStickyNativeListAdPosition);
+        if (AdPlacement.shouldUseQuizPriority()) {
+            rlNativeListAdView.post(() -> rlNativeListAdView.post(this::updateStickyNativeListAdPosition));
+        }
     }
 
     private boolean isActiveNativeListAdRequest(int requestToken) {
@@ -1214,15 +1230,30 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
         rvApps.setPadding(rvApps.getPaddingLeft(), rvApps.getPaddingTop(), rvApps.getPaddingRight(), bottom);
     }
 
+    private void parkNativeListAdOffScreen() {
+        if (rlNativeListAdView == null) {
+            return;
+        }
+        View parent = (View) rlNativeListAdView.getParent();
+        int parentH = parent != null ? parent.getHeight() : 0;
+        int adH = rlNativeListAdView.getHeight();
+        rlNativeListAdView.setTranslationY(parentH > 0 ? parentH : Math.max(adH, 1) + 4000);
+    }
+
     private void updateStickyNativeListAdPosition() {
         if (!nativeListAdVisible || rlNativeListAdView == null || rvApps == null || launcherAppsAdapter == null) {
             return;
         }
-        if (rlNativeListAdView.getVisibility() != VISIBLE || rlNativeListAdView.getHeight() <= 0) {
+        if (rlNativeListAdView.getVisibility() != VISIBLE) {
             return;
         }
         View parent = (View) rlNativeListAdView.getParent();
-        if (parent == null || parent.getHeight() <= 0) {
+        if (parent == null) {
+            return;
+        }
+        if (rlNativeListAdView.getHeight() <= 0 || parent.getHeight() <= 0) {
+            parkNativeListAdOffScreen();
+            rlNativeListAdView.post(this::updateStickyNativeListAdPosition);
             return;
         }
 
@@ -1242,7 +1273,8 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
                 rlNativeListAdView.setTranslationY(0f);
             } else {
                 // Slot not laid out yet (still below fold) — keep off-screen, never flash at bottom.
-                rlNativeListAdView.setTranslationY(parent.getHeight());
+                parkNativeListAdOffScreen();
+                rlNativeListAdView.post(this::updateStickyNativeListAdPosition);
             }
             return;
         }

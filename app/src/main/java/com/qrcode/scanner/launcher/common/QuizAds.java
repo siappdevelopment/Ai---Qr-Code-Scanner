@@ -93,10 +93,18 @@ public final class QuizAds {
     }
 
     public static boolean showNative(Activity activity, RelativeLayout container, ShimmerFrameLayout shimmer, FrameLayout content, @Nullable String type) {
-        return showNative(activity, container, shimmer, content, type, false);
+        return showNative(activity, container, shimmer, content, type, false, true);
     }
 
     public static boolean showNative(Activity activity, RelativeLayout container, ShimmerFrameLayout shimmer, FrameLayout content, @Nullable String type, boolean forceLightTheme) {
+        return showNative(activity, container, shimmer, content, type, forceLightTheme, true);
+    }
+
+    /**
+     * @param revealContainer false = bind ad content only; caller shows the container after positioning
+     *                        (needed for sticky overlays where sync Quiz would otherwise cover apps).
+     */
+    public static boolean showNative(Activity activity, RelativeLayout container, ShimmerFrameLayout shimmer, FrameLayout content, @Nullable String type, boolean forceLightTheme, boolean revealContainer) {
         try {
             int itemCount = RemoteConfigValues.getQuizSyncedItemCount();
             if (itemCount <= 0 || activity == null || container == null || content == null) {
@@ -118,7 +126,9 @@ public final class QuizAds {
             wireLink(activity, view, view.findViewById(R.id.btnQZClick));
             content.addView(view);
             content.setVisibility(View.VISIBLE);
-            container.setVisibility(View.VISIBLE);
+            if (revealContainer) {
+                container.setVisibility(View.VISIBLE);
+            }
             int fill = AdPlacement.onboardingNativeColor(activity, forceLightTheme);
             AdPlacement.paintNativeFill(container, fill);
             AdPlacement.paintNativeFill(content, fill);
@@ -558,9 +568,17 @@ public final class QuizAds {
             return;
         }
         String text = RemoteConfigValues.getQuizButtonText();
-        if (!text.isEmpty()) {
-            button.setText(text);
+        if (text == null || text.trim().isEmpty()) {
+            text = "Install";
         }
+        button.setSingleLine(false);
+        button.setHorizontallyScrolling(false);
+        button.setMaxLines(1);
+        button.setEllipsize(android.text.TextUtils.TruncateAt.END);
+        button.setGravity(android.view.Gravity.CENTER);
+        button.setAllCaps(false);
+        button.setText(text.trim());
+        button.setTextColor(Color.WHITE);
     }
 
     private static void applyColors(View root) {

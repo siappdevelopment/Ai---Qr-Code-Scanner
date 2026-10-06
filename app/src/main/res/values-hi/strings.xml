@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_back">वापस</string>
+    <string name="action_cancel">रद्द करें</string>
+    <string name="action_clear">साफ़ करें</string>
+    <string name="action_copy">कॉपी करें</string>
+    <string name="action_delete">हटाएँ</string>
+    <string name="action_go_back">वापस जाएँ</string>
+    <string name="action_paste">पेस्ट करें</string>
+    <string name="action_share">साझा करें</string>
+    <string name="action_reset">रीसेट करें</string>
+    <string name="cd_clear">साफ़ करें</string>
+    <string name="cd_clear_search">खोज साफ़ करें</string>
+    <string name="cd_favorite">पसंदीदा</string>
+    <string name="cd_more">अधिक</string>
+    <string name="cd_add_to_favorites">पसंदीदा में जोड़ें</string>
+    <string name="toast_copied">कॉपी हो गया</string>
+    <string name="toast_deleted">हटा दिया गया</string>
+    <string name="toast_history_cleared">इतिहास साफ़ कर दिया गया</string>
+    <string name="toast_clipboard_empty">क्लिपबोर्ड खाली है</string>
+    <string name="toast_unable_to_open_link">लिंक खोलने में असमर्थ</string>
+    <string name="share_chooser_title">साझा करें</string>
+    <string name="form_label_optional_suffix">%1$s (वैकल्पिक)</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">होम</string>
+    <string name="nav_scan">स्कैन</string>
+    <string name="nav_settings">सेटिंग्स</string>
+    <string name="cd_quick_scan">त्वरित स्कैन</string>
+
+    <!-- Home -->
+    <string name="home_cd_favorites">पसंदीदा</string>
+    <string name="home_instant_scanner_title">इंस्टेंट स्कैनर</string>
+    <string name="home_instant_scanner_subtitle">किसी भी QR कोड या सामान्य बारकोड पर इंगित करें</string>
+    <string name="home_open_camera_scanner">कैमरा स्कैनर खोलें</string>
+    <string name="home_quick_tools_heading">त्वरित उपकरण</string>
+    <string name="home_tool_scan_barcode_title">बारकोड स्कैन करें</string>
+    <string name="home_tool_scan_barcode_subtitle">UPC और EAN टैग</string>
+    <string name="home_tool_scan_gallery_title">गैलरी स्कैन करें</string>
+    <string name="home_tool_scan_gallery_subtitle">स्क्रीनशॉट से</string>
+    <string name="home_tool_create_qr_title">QR बनाएँ</string>
+    <string name="home_tool_create_qr_subtitle">लिंक, वाई-फ़ाई और vCard</string>
+    <string name="home_tool_history_title">इतिहास</string>
+    <string name="home_tool_history_subtitle">सहेजे गए स्कैन और कोड</string>
+    <string name="home_recent_scans_title">हाल के स्कैन</string>
+    <string name="home_view_all">सभी देखें</string>
+    <string name="home_no_recent_scans_title">अभी तक कोई हालिया स्कैन नहीं</string>
+    <string name="home_no_recent_scans_body">आपके द्वारा स्कैन किए गए कोड यहाँ त्वरित पहुँच के लिए दिखाई देंगे।</string>
+
+    <!-- History -->
+    <string name="history_title">इतिहास</string>
+    <string name="history_search_placeholder">कोड, URL, शीर्षक खोजें…</string>
+    <string name="history_no_matches">आपकी खोज के लिए कोई मेल नहीं</string>
+    <string name="history_filter_all">सभी (%1$d)</string>
+    <string name="history_filter_scanned">स्कैन किए गए (%1$d)</string>
+    <string name="history_filter_created">बनाए गए (%1$d)</string>
+    <string name="history_section_today">आज</string>
+    <string name="history_section_yesterday">कल</string>
+    <string name="history_section_earlier">पहले</string>
+    <string name="history_section_count_scans">%1$d स्कैन</string>
+    <string name="history_section_count_scan">%1$d स्कैन</string>
+    <string name="history_section_count_items">%1$d आइटम</string>
+    <string name="history_section_count_item">%1$d आइटम</string>
+    <string name="history_menu_add_favorite">पसंदीदा में जोड़ें</string>
+    <string name="history_menu_remove_favorite">पसंदीदा से हटाएँ</string>
+    <string name="history_empty_title">अभी तक कोई स्कैन इतिहास नहीं</string>
+    <string name="history_empty_launch_scanner">अभी स्कैनर शुरू करें</string>
+    <string name="history_detail_title">इतिहास विवरण</string>
+    <string name="history_not_found_title">स्कैन नहीं मिला</string>
+    <string name="history_not_found_body">यह इतिहास आइटम हटा दिया गया हो सकता है।</string>
+    <string name="history_delete_item_title">यह इतिहास आइटम हटाएँ?</string>
+    <string name="history_delete_item_subtitle">यह क्रिया पूर्ववत नहीं की जा सकती</string>
+    <string name="history_delete_item_body">यह आइटम आपके स्थानीय डिवाइस इतिहास से स्थायी रूप से हटा दिया जाएगा।</string>
+    <string name="history_clear_all_title">स्कैन और बनाने का इतिहास साफ़ करें?</string>
+    <string name="history_stored_items_count">%1$d संग्रहीत आइटम</string>
+    <string name="history_clear_all_body">यह आपके स्थानीय डिवाइस से हर इतिहास आइटम को स्थायी रूप से हटा देगा, जिसमें पसंद किए गए और पसंदीदा आइटम भी शामिल हैं।</string>
+    <string name="history_clear_all_warning">साफ़ होने के बाद आइटम पुनर्स्थापित नहीं किए जा सकते।</string>
+    <string name="history_clear_all_confirm">सारा इतिहास साफ़ करें</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">पसंदीदा</string>
+    <string name="favorites_empty">अभी तक कोई पसंदीदा नहीं</string>
+
+    <!-- Scan / viewfinder -->
+    <string name="scan_hud_flash">फ़्लैश</string>
+    <string name="scan_hud_gallery">गैलरी</string>
+    <string name="scan_hud_flip">फ़्लिप</string>
+    <string name="cd_toggle_flashlight">फ़्लैशलाइट टॉगल करें</string>
+    <string name="cd_scan_image_from_gallery">गैलरी से छवि स्कैन करें</string>
+    <string name="cd_flip_camera_lens">कैमरा लेंस फ़्लिप करें</string>
+    <string name="scan_zoom_level">%1$dx</string>
+    <string name="scan_camera_permission_title">कैमरा अनुमति आवश्यक</string>
+    <string name="scan_camera_permission_body">QR कोड और बारकोड स्कैन करने के लिए कैमरा एक्सेस की अनुमति दें।</string>
+    <string name="scan_camera_permission_body_settings">कैमरा एक्सेस बंद है। सेटिंग्स खोलें, कैमरा सक्षम करें, फिर स्कैन करने के लिए यहाँ लौटें।</string>
+    <string name="scan_grant_permission">अनुमति दें</string>
+    <string name="scan_open_settings">सेटिंग्स खोलें</string>
+
+    <!-- Gallery crop -->
+    <string name="gallery_crop_title">फ़ोटो क्रॉप करें</string>
+    <string name="gallery_crop_select_photo">क्रॉप करने के लिए फ़ोटो चुनें</string>
+    <string name="gallery_crop_rotate_90">90° घुमाएँ</string>
+    <string name="gallery_crop_flip">फ़्लिप करें</string>
+    <string name="gallery_crop_detecting">पता लगा रहे हैं…</string>
+    <string name="gallery_crop_scan_selection">चयन स्कैन करें</string>
+    <string name="gallery_crop_choose_another">दूसरी फ़ोटो चुनें</string>
+    <string name="gallery_crop_unable_open_image">यह छवि खोलने में असमर्थ</string>
+    <string name="gallery_crop_no_code_detected">कोई स्कैन करने योग्य कोड नहीं मिला</string>
+    <string name="gallery_crop_detection_failed">पहचान विफल</string>
+    <string name="gallery_crop_multiple_codes_title">कई कोड मिले</string>
+    <string name="gallery_crop_multiple_codes_prompt">कौन सा कोड खोलना है चुनें:</string>
+    <string name="gallery_crop_code_list_item">%1$d. %2$s: %3$s</string>
+    <string name="cd_selected_photo">चयनित फ़ोटो</string>
+    <string name="wifi_preview_enter_ssid">SSID दर्ज करें</string>
+
+    <!-- Detection error -->
+    <string name="detection_error_title">पहचान विफल</string>
+    <string name="detection_error_badge">पहचान विफल</string>
+    <string name="detection_error_headline">कोई स्कैन करने योग्य कोड नहीं मिला</string>
+    <string name="detection_error_checklist_title">अनुकूलन चेकलिस्ट</string>
+    <string name="detection_error_tip_steady">स्थिर रखें और कोड को पूरी तरह क्रॉप फ़्रेम के अंदर रखें</string>
+    <string name="detection_error_tip_lighting">तेज़, अच्छी रोशनी वाली फ़ोटो का उपयोग करें, धुंधलापन न हो</string>
+    <string name="detection_error_tip_rotate">अगर कोड तिरछा दिखे तो रोटेट या फ़्लिप आज़माएँ</string>
+    <string name="detection_error_tip_formats">समर्थित: QR, Aztec, Data Matrix, EAN, UPC, Code 128/39, PDF417</string>
+    <string name="detection_error_retry">फिर से स्कैन करें / पुनः प्रयास करें</string>
+    <string name="detection_error_pick_gallery">गैलरी से दूसरी फ़ोटो चुनें</string>
+
+    <!-- Batch results -->
+    <string name="batch_results_title">बैच परिणाम</string>
+    <string name="batch_results_one_code">1 कोड स्वीकृत</string>
+    <string name="batch_results_many_codes">%1$d कोड स्वीकृत</string>
+
+    <!-- Scan result -->
+    <string name="scan_result_title">स्कैन परिणाम</string>
+    <string name="scan_result_payload_heading">पेलोड सामग्री</string>
+    <string name="scan_result_empty_payload">(खाली)</string>
+    <string name="scan_result_kind_website">वेबसाइट / URL</string>
+    <string name="scan_result_kind_wifi">वाई-फ़ाई नेटवर्क</string>
+    <string name="scan_result_kind_plain_text">सादा टेक्स्ट</string>
+    <string name="scan_result_kind_qr_code">QR कोड</string>
+    <string name="scan_result_kind_barcode">बारकोड</string>
+    <string name="scan_result_url_detected_banner">वेबसाइट / URL पेलोड मिला</string>
+    <string name="scan_result_copy_link">लिंक कॉपी करें</string>
+    <string name="scan_result_open_in_browser">ब्राउज़र में खोलें</string>
+    <string name="scan_result_toast_link_copied">लिंक क्लिपबोर्ड पर कॉपी हो गया</string>
+    <string name="scan_result_toast_copied">क्लिपबोर्ड पर कॉपी हो गया</string>
+    <string name="scan_result_toast_saved_favorite">आपके पसंदीदा में सहेजा गया</string>
+    <string name="scan_result_toast_removed_favorite">पसंदीदा से हटाया गया</string>
+    <string name="share_scanned_url_title">स्कैन किया गया URL</string>
+    <string name="share_scan_result_title">स्कैन परिणाम</string>
+
+    <!-- Create hub -->
+    <string name="create_hub_title">QR कोड बनाएँ</string>
+    <string name="create_hub_search_placeholder">QR प्रारूप खोजें…</string>
+    <string name="create_hub_no_formats_title">कोई प्रारूप नहीं मिला</string>
+    <string name="create_hub_no_formats_body">कोई अन्य कीवर्ड टाइप करें या सक्रिय फ़िल्टर रीसेट करें</string>
+    <string name="create_hub_reset_search">खोज रीसेट करें</string>
+    <string name="create_hub_section_social">सोशल</string>
+    <string name="create_hub_section_barcode">बारकोड</string>
+    <string name="create_filter_all">सभी प्रारूप</string>
+    <string name="create_filter_web">वेब और सोशल</string>
+    <string name="create_filter_comms">संचार</string>
+    <string name="create_filter_utilities">उपयोगिताएँ</string>
+    <string name="create_subtitle_barcode">बारकोड</string>
+
+    <!-- Create hub category cards -->
+    <string name="create_cat_website_title">वेबसाइट URL</string>
+    <string name="create_cat_website_subtitle">लिंक, सोशल प्रोफ़ाइल, वेब पेज</string>
+    <string name="create_cat_wifi_title">वाई-फ़ाई नेटवर्क</string>
+    <string name="create_cat_wifi_subtitle">WPA/WPA2, SSID, ऑटो-कनेक्ट</string>
+    <string name="create_cat_contact_title">संपर्क / vCard</string>
+    <string name="create_cat_contact_subtitle">नाम, फ़ोन, ईमेल, पता</string>
+    <string name="create_cat_plain_text_title">सादा टेक्स्ट</string>
+    <string name="create_cat_plain_text_subtitle">नोट्स, संदेश, कच्चा डेटा</string>
+    <string name="create_cat_phone_title">फ़ोन कॉल</string>
+    <string name="create_cat_phone_subtitle">सीधा फ़ोन डायलिंग</string>
+    <string name="create_cat_email_title">ईमेल संदेश</string>
+    <string name="create_cat_email_subtitle">पहले से भरा प्राप्तकर्ता और विषय</string>
+    <string name="create_cat_sms_title">SMS / संदेश</string>
+    <string name="create_cat_sms_subtitle">सीधा टेक्स्ट संदेश</string>
+    <string name="create_cat_whatsapp_title">WhatsApp</string>
+    <string name="create_cat_whatsapp_subtitle">सीधा WhatsApp चैट लिंक</string>
+    <string name="create_cat_location_title">स्थान</string>
+    <string name="create_cat_location_subtitle">Google Maps निर्देशांक / पिन</string>
+    <string name="create_cat_calendar_title">कैलेंडर इवेंट</string>
+    <string name="create_cat_calendar_subtitle">शीर्षक, तारीख, समय, रिमाइंडर</string>
+    <string name="create_cat_app_link_title">ऐप लिंक</string>
+    <string name="create_cat_app_link_subtitle">Google Play और App Store लिंक</string>
+    <string name="create_cat_facebook_title">Facebook</string>
+    <string name="create_cat_facebook_subtitle">प्रोफ़ाइल या पेज</string>
+    <string name="create_cat_youtube_title">YouTube</string>
+    <string name="create_cat_youtube_subtitle">चैनल या वीडियो</string>
+    <string name="create_cat_twitter_title">Twitter</string>
+    <string name="create_cat_twitter_subtitle">प्रोफ़ाइल</string>
+    <string name="create_cat_tiktok_title">TikTok</string>
+    <string name="create_cat_tiktok_subtitle">प्रोफ़ाइल</string>
+    <string name="create_cat_instagram_title">Instagram</string>
+    <string name="create_cat_instagram_subtitle">प्रोफ़ाइल</string>
+    <string name="create_cat_paypal_title">PayPal</string>
+    <string name="create_cat_paypal_subtitle">PayPal.me लिंक</string>
+    <string name="create_cat_snapchat_title">Snapchat</string>
+    <string name="create_cat_snapchat_subtitle">मित्र जोड़ें</string>
+    <string name="create_cat_linkedin_title">LinkedIn</string>
+    <string name="create_cat_linkedin_subtitle">प्रोफ़ाइल</string>
+    <string name="create_cat_spotify_title">Spotify</string>
+    <string name="create_cat_spotify_subtitle">प्रोफ़ाइल या प्लेलिस्ट</string>
+    <string name="create_cat_code_128_title">Code 128</string>
+    <string name="create_cat_data_matrix_title">Data Matrix</string>
+    <string name="create_cat_pdf_417_title">PDF 417</string>
+    <string name="create_cat_aztec_title">Aztec</string>
+    <string name="create_cat_ean_13_title">EAN 13</string>
+    <string name="create_cat_ean_8_title">EAN 8</string>
+    <string name="create_cat_upc_e_title">UPC E</string>
+    <string name="create_cat_upc_a_title">UPC A</string>
+    <string name="create_cat_code_93_title">Code 93</string>
+    <string name="create_cat_code_39_title">Code 39</string>
+    <string name="create_cat_codabar_title">Codabar</string>
+    <string name="create_cat_itf_title">ITF</string>
+    <string name="create_cat_barcode_title">बारकोड / EAN</string>
+
+    <!-- Create forms — shared -->
+    <string name="create_form_generate_preview">बनाएँ और पूर्वावलोकन करें</string>
+    <string name="create_form_generate_preview_qr">QR बनाएँ और पूर्वावलोकन करें</string>
+    <string name="create_form_instant_share">तुरंत साझा करें</string>
+    <string name="create_barcode_stub_title">बारकोड निर्माण बाद में आएगा</string>
+    <string name="create_barcode_stub_body">यह हब आइटम बारकोड (EAN/UPC) के लिए है, QR कोड के लिए नहीं। QR श्रेणियाँ Create से उपलब्ध हैं।</string>
+    <string name="create_validation_field_limit">यह फ़ील्ड %1$d वर्णों तक सीमित है।</string>
+    <string name="create_validation_qr_too_long">यह QR कोड में फ़िट होने के लिए बहुत लंबा है। टेक्स्ट छोटा करें।</string>
+    <string name="create_validation_barcode_unavailable">बारकोड / EAN निर्माण अभी उपलब्ध नहीं है। इसके बजाय QR श्रेणी का उपयोग करें।</string>
+    <string name="create_validation_enter_value">एन्कोड करने के लिए मान दर्ज करें</string>
+
+    <!-- Create forms — website -->
+    <string name="form_website_url_label">वेबसाइट URL (https://)</string>
+    <string name="form_website_url_placeholder">https://example.com/target-path</string>
+    <string name="form_display_title_note_label">प्रदर्शित शीर्षक / नोट</string>
+    <string name="form_display_title_note_placeholder">जैसे, मार्केटिंग डेक Q3 लॉन्च</string>
+    <string name="form_validation_enter_website_url">वेबसाइट URL दर्ज करें</string>
+    <string name="form_validation_enter_valid_url">मान्य URL दर्ज करें (https://…)</string>
+
+    <!-- Create forms — plain text -->
+    <string name="form_plain_text_label">कच्चा संदेश / पेलोड</string>
+    <string name="form_plain_text_placeholder">सादा टेक्स्ट टाइप करें या पेस्ट करें…</string>
+    <string name="form_optional_label_placeholder">वैकल्पिक लेबल</string>
+    <string name="form_validation_enter_text">एन्कोड करने के लिए टेक्स्ट दर्ज करें</string>
+
+    <!-- Create forms — contact -->
+    <string name="form_contact_name_label">पूरा नाम</string>
+    <string name="form_contact_name_placeholder">संपर्क नाम दर्ज करें</string>
+    <string name="form_contact_email_label">ईमेल (वैकल्पिक)</string>
+    <string name="form_contact_email_placeholder">name@email.com</string>
+    <string name="form_contact_job_title_label">नौकरी का शीर्षक (वैकल्पिक)</string>
+    <string name="form_contact_job_title_placeholder">जैसे, प्रोडक्ट मैनेजर</string>
+    <string name="form_contact_phone_label">फ़ोन (वैकल्पिक)</string>
+    <string name="form_contact_phone_placeholder">+1 555 0100</string>
+    <string name="form_validation_enter_contact_name">संपर्क नाम दर्ज करें</string>
+
+    <!-- Create forms — phone -->
+    <string name="form_phone_number_label">फ़ोन नंबर</string>
+    <string name="form_validation_enter_phone">फ़ोन नंबर दर्ज करें</string>
+    <string name="form_validation_enter_valid_phone">मान्य फ़ोन नंबर दर्ज करें</string>
+
+    <!-- Create forms — email -->
+    <string name="form_email_address_label">ईमेल पता</string>
+    <string name="form_email_address_placeholder">hello@example.com</string>
+    <string name="form_email_subject_label">विषय (वैकल्पिक)</string>
+    <string name="form_email_subject_placeholder">संदेश का विषय</string>
+    <string name="form_email_body_label">मुख्य भाग</string>
+    <string name="form_email_body_placeholder">ईमेल का मुख्य भाग</string>
+    <string name="form_validation_enter_email">ईमेल पता दर्ज करें</string>
+    <string name="form_validation_enter_valid_email">मान्य ईमेल पता दर्ज करें</string>
+    <string name="form_validation_enter_email_body">ईमेल का मुख्य भाग दर्ज करें</string>
+
+    <!-- Create forms — SMS -->
+    <string name="form_sms_message_label">संदेश</string>
+    <string name="form_sms_message_placeholder">SMS टेक्स्ट</string>
+    <string name="form_validation_enter_message">संदेश दर्ज करें</string>
+
+    <!-- Create forms — WhatsApp -->
+    <string name="form_whatsapp_number_label">WhatsApp नंबर</string>
+    <string name="form_whatsapp_number_placeholder">15550100 (देश कोड के साथ)</string>
+    <string name="form_whatsapp_message_label">संदेश (वैकल्पिक)</string>
+    <string name="form_whatsapp_message_placeholder">पहले से भरा चैट टेक्स्ट</string>
+    <string name="form_validation_enter_whatsapp_number">WhatsApp नंबर दर्ज करें (देश कोड के साथ)</string>
+    <string name="form_validation_enter_valid_whatsapp_number">देश कोड के साथ मान्य WhatsApp नंबर दर्ज करें</string>
+
+    <!-- Create forms — location -->
+    <string name="form_location_coords_label">निर्देशांक (lat,lng)</string>
+    <string name="form_location_coords_placeholder">37.7749,-122.4194</string>
+    <string name="form_location_place_label">स्थान लेबल (वैकल्पिक)</string>
+    <string name="form_location_place_placeholder">गोल्डन गेट ब्रिज</string>
+    <string name="form_validation_enter_coordinates">निर्देशांक lat,lng के रूप में दर्ज करें</string>
+    <string name="form_validation_enter_valid_coordinates">मान्य निर्देशांक दर्ज करें (जैसे 37.7749,-122.4194)</string>
+
+    <!-- Create forms — app link -->
+    <string name="form_app_link_label">ऐप URL या पैकेज</string>
+    <string name="form_app_link_placeholder">com.example.app या https://play.google.com/…</string>
+    <string name="form_validation_enter_app_url">ऐप URL या पैकेज नाम दर्ज करें</string>
+    <string name="form_validation_enter_store_or_package">स्टोर URL या com.example.app जैसा पैकेज दर्ज करें</string>
+
+    <!-- Create forms — social -->
+    <string name="form_social_display_title_label">प्रदर्शित शीर्षक (वैकल्पिक)</string>
+    <string name="form_validation_enter_username_or_link">उपयोगकर्ता नाम या पूरा लिंक दर्ज करें</string>
+    <string name="form_social_facebook_primary_label">Facebook उपयोगकर्ता नाम या लिंक</string>
+    <string name="form_social_facebook_primary_placeholder">उपयोगकर्ता नाम या https://facebook.com/…</string>
+    <string name="form_social_youtube_primary_label">YouTube उपयोगकर्ता नाम या लिंक</string>
+    <string name="form_social_youtube_primary_placeholder">@channel या https://youtube.com/…</string>
+    <string name="form_social_twitter_primary_label">Twitter उपयोगकर्ता नाम या लिंक</string>
+    <string name="form_social_twitter_primary_placeholder">उपयोगकर्ता नाम या https://x.com/…</string>
+    <string name="form_social_tiktok_primary_label">TikTok उपयोगकर्ता नाम या लिंक</string>
+    <string name="form_social_tiktok_primary_placeholder">@username या https://tiktok.com/…</string>
+    <string name="form_social_instagram_primary_label">Instagram उपयोगकर्ता नाम या लिंक</string>
+    <string name="form_social_instagram_primary_placeholder">उपयोगकर्ता नाम या https://instagram.com/…</string>
+    <string name="form_social_paypal_primary_label">PayPal उपयोगकर्ता नाम या लिंक</string>
+    <string name="form_social_paypal_primary_placeholder">paypal.me नाम या https://paypal.me/…</string>
+    <string name="form_social_snapchat_primary_label">Snapchat उपयोगकर्ता नाम या लिंक</string>
+    <string name="form_social_snapchat_primary_placeholder">उपयोगकर्ता नाम या https://snapchat.com/add/…</string>
+    <string name="form_social_linkedin_primary_label">LinkedIn उपयोगकर्ता नाम या लिंक</string>
+    <string name="form_social_linkedin_primary_placeholder">प्रोफ़ाइल नाम या https://linkedin.com/in/…</string>
+    <string name="form_social_spotify_primary_label">Spotify उपयोगकर्ता नाम या लिंक</string>
+    <string name="form_social_spotify_primary_placeholder">उपयोगकर्ता ID या https://open.spotify.com/…</string>
+
+    <!-- Create forms — barcode payloads -->
+    <string name="form_barcode_code_128_label">Code 128 मान</string>
+    <string name="form_barcode_code_128_placeholder">टेक्स्ट या संख्याएँ</string>
+    <string name="form_barcode_data_matrix_label">Data Matrix मान</string>
+    <string name="form_barcode_pdf_417_label">PDF 417 मान</string>
+    <string name="form_barcode_aztec_label">Aztec मान</string>
+    <string name="form_barcode_ean_13_label">EAN 13 अंक</string>
+    <string name="form_barcode_ean_13_placeholder">12 या 13 अंक</string>
+    <string name="form_barcode_ean_8_label">EAN 8 अंक</string>
+    <string name="form_barcode_ean_8_placeholder">7 या 8 अंक</string>
+    <string name="form_barcode_upc_e_label">UPC E अंक</string>
+    <string name="form_barcode_upc_e_placeholder">7 या 8 अंक (0 या 1 से शुरू)</string>
+    <string name="form_barcode_upc_a_label">UPC A अंक</string>
+    <string name="form_barcode_upc_a_placeholder">11 अंक, या चेक डिजिट के साथ 12</string>
+    <string name="form_barcode_code_93_label">Code 93 मान</string>
+    <string name="form_barcode_code_93_placeholder">ASCII टेक्स्ट</string>
+    <string name="form_barcode_code_39_label">Code 39 मान</string>
+    <string name="form_barcode_codabar_label">Codabar मान</string>
+    <string name="form_barcode_codabar_placeholder">अंक, वैकल्पिक स्टार्ट/स्टॉप</string>
+    <string name="form_barcode_itf_label">ITF अंक</string>
+    <string name="form_barcode_itf_placeholder">सम संख्या में अंक</string>
+    <string name="form_barcode_generic_placeholder">टेक्स्ट या संख्याएँ</string>
+    <string name="form_payload_label">पेलोड</string>
+    <string name="form_payload_placeholder">मान दर्ज करें</string>
+
+    <!-- Barcode validation -->
+    <string name="barcode_validation_digits_only">केवल अंक।</string>
+    <string name="barcode_validation_check_digit_mismatch">चेक डिजिट मेल नहीं खाता।</string>
+    <string name="barcode_validation_ean_13_length">12 अंक दर्ज करें, या चेक डिजिट सहित 13 अंक।</string>
+    <string name="barcode_validation_ean_8_length">7 अंक दर्ज करें, या चेक डिजिट सहित 8 अंक।</string>
+    <string name="barcode_validation_upc_a_length">11 अंक दर्ज करें, या चेक डिजिट सहित 12 अंक।</string>
+    <string name="barcode_validation_upc_e_length">7 अंक दर्ज करें, या चेक डिजिट सहित 8 अंक।</string>
+    <string name="barcode_validation_upc_e_invalid">अमान्य UPC-E मान।</string>
+    <string name="barcode_validation_itf_even">सम संख्या में अंक दर्ज करें।</string>
+    <string name="barcode_validation_itf_min">ITF के लिए कम से कम 2 अंक चाहिए।</string>
+    <string name="barcode_validation_itf_max">ITF 80 अंकों से अधिक नहीं हो सकता।</string>
+    <string name="barcode_validation_code_128_ascii">Code 128 केवल ASCII 127 तक के वर्णों का समर्थन करता है।</string>
+    <string name="barcode_validation_code_93_ascii">Code 93 केवल ASCII 127 तक के वर्णों का समर्थन करता है।</string>
+    <string name="barcode_validation_code_93_too_long">यह मान Code 93 के लिए बहुत लंबा है।</string>
+    <string name="barcode_validation_code_39_unsupported">Code 39 इस वर्ण को एन्कोड नहीं कर सकता।</string>
+    <string name="barcode_validation_code_39_too_long">यह मान Code 39 के लिए बहुत लंबा है।</string>
+    <string name="barcode_validation_codabar_chars">Codabar केवल अंक और - \$ : / . + की अनुमति देता है।</string>
+    <string name="barcode_validation_codabar_guards">स्टार्ट और स्टॉप वर्ण दोनों मौजूद होने चाहिए।</string>
+    <string name="barcode_validation_enter_codabar">Codabar मान दर्ज करें।</string>
+    <string name="barcode_validation_enter_code_128">Code 128 मान दर्ज करें।</string>
+    <string name="barcode_validation_enter_code_93">Code 93 मान दर्ज करें।</string>
+    <string name="barcode_validation_enter_code_39">Code 39 मान दर्ज करें।</string>
+    <string name="barcode_validation_enter_data_matrix">Data Matrix मान दर्ज करें।</string>
+    <string name="barcode_validation_enter_pdf417">PDF417 मान दर्ज करें।</string>
+    <string name="barcode_validation_enter_aztec">Aztec मान दर्ज करें।</string>
+    <string name="barcode_validation_too_large_data_matrix">यह मान Data Matrix सिंबल के लिए बहुत बड़ा है।</string>
+    <string name="barcode_validation_too_large_pdf417">यह मान PDF417 सिंबल के लिए बहुत बड़ा है।</string>
+    <string name="barcode_validation_too_large_aztec">यह मान Aztec सिंबल के लिए बहुत बड़ा है।</string>
+    <string name="barcode_validation_cannot_encode">यह मान एन्कोड नहीं किया जा सकता।</string>
+    <string name="barcode_counter_ean_13_short">%1$d/12</string>
+    <string name="barcode_counter_ean_13_long">%1$d/13</string>
+    <string name="barcode_counter_ean_8_short">%1$d/7</string>
+    <string name="barcode_counter_ean_8_long">%1$d/8</string>
+    <string name="barcode_counter_upc_e_short">%1$d/7</string>
+    <string name="barcode_counter_upc_e_long">%1$d/8</string>
+    <string name="barcode_counter_upc_a_short">%1$d/11</string>
+    <string name="barcode_counter_upc_a_long">%1$d/12</string>
+    <string name="barcode_counter_itf_digits">%1$d अंक</string>
+    <string name="barcode_counter_chars">%1$d वर्ण</string>
+
+    <!-- Wi-Fi create form -->
+    <string name="wifi_form_title">वाई-फ़ाई नेटवर्क</string>
+    <string name="wifi_network_name_heading">नेटवर्क नाम (SSID)</string>
+    <string name="wifi_ssid_placeholder">वाई-फ़ाई SSID दर्ज करें</string>
+    <string name="wifi_security_type_heading">सुरक्षा प्रकार</string>
+    <string name="wifi_security_recommended">अनुशंसित: WPA/WPA2</string>
+    <string name="wifi_security_wpa">WPA/WPA2</string>
+    <string name="wifi_security_wpa3">WPA3</string>
+    <string name="wifi_security_wep">WEP</string>
+    <string name="wifi_security_open">खुला</string>
+    <string name="wifi_password_heading">पासवर्ड</string>
+    <string name="wifi_password_placeholder">वाई-फ़ाई पासवर्ड</string>
+    <string name="cd_toggle_password">पासवर्ड टॉगल करें</string>
+    <string name="wifi_hidden_network_title">छिपा हुआ नेटवर्क</string>
+    <string name="wifi_hidden_network_subtitle">SSID सार्वजनिक रूप से प्रसारित नहीं होता</string>
+    <string name="wifi_guest_scan_hint">मेहमान वाई-फ़ाई पासवर्ड टाइप किए बिना कनेक्ट करने के लिए अपने कैमरा ऐप से यह QR स्कैन कर सकते हैं।</string>
+    <string name="wifi_validation_enter_ssid">नेटवर्क नाम (SSID) दर्ज करें</string>
+    <string name="wifi_validation_enter_password">वाई-फ़ाई पासवर्ड दर्ज करें</string>
+
+    <!-- QR preview -->
+    <string name="qr_preview_title">QR पूर्वावलोकन</string>
+    <string name="cd_share">साझा करें</string>
+    <string name="cd_generated_qr_code">जनरेट किया गया QR कोड</string>
+    <string name="qr_preview_generating">जनरेट हो रहा है…</string>
+    <string name="qr_preview_nothing_to_preview">पूर्वावलोकन के लिए कुछ नहीं</string>
+    <string name="qr_preview_unable_encode_barcode">बारकोड एन्कोड करने में असमर्थ</string>
+    <string name="qr_preview_customize_style">शैली और रंग अनुकूलित करें</string>
+    <string name="qr_preview_save_image">छवि सहेजें</string>
+    <string name="qr_preview_saving">सहेजा जा रहा है…</string>
+    <string name="qr_preview_create">बनाएँ</string>
+    <string name="qr_preview_creating">बनाया जा रहा है…</string>
+    <string name="qr_preview_code_specifications">कोड विशिष्टताएँ</string>
+    <string name="qr_preview_spec_export">निर्यात</string>
+    <string name="qr_preview_spec_export_size">1024 × 1024</string>
+    <string name="qr_preview_spec_style">शैली</string>
+    <string name="qr_preview_toast_not_ready">QR तैयार नहीं</string>
+    <string name="qr_preview_toast_generated">QR कोड जनरेट हो गया</string>
+    <string name="qr_preview_toast_unable_save">सहेजने में असमर्थ</string>
+    <string name="export_png_saved">PNG गैलरी में सहेजा गया (1024×1024)</string>
+    <string name="export_png_failed">PNG निर्यात विफल</string>
+    <string name="export_unable_create_entry">MediaStore प्रविष्टि बनाने में असमर्थ</string>
+    <string name="export_png_compress_failed">PNG संपीड़न विफल</string>
+    <string name="export_unable_open_stream">आउटपुट स्ट्रीम खोलने में असमर्थ</string>
+    <string name="export_svg_ready">SVG साझा करने के लिए तैयार</string>
+    <string name="export_svg_failed">SVG निर्यात विफल</string>
+    <string name="export_share_opened">साझा शीट खुल गई</string>
+    <string name="export_share_failed">साझा करना विफल</string>
+    <string name="export_send_code_chooser">कोड भेजें</string>
+    <string name="export_vector_chooser">वेक्टर निर्यात करें</string>
+
+    <!-- QR customize -->
+    <string name="qr_customize_title">QR अनुकूलित करें</string>
+    <string name="qr_customize_nothing">अनुकूलित करने के लिए कुछ नहीं</string>
+    <string name="cd_styled_qr_preview">शैलीबद्ध QR पूर्वावलोकन</string>
+    <string name="qr_customize_rendering">रेंडर हो रहा है…</string>
+    <string name="qr_customize_section_body_pattern">बॉडी पैटर्न</string>
+    <string name="qr_customize_section_corner_eye">कोना आई शैली</string>
+    <string name="qr_customize_section_color_palette">रंग पैलेट</string>
+    <string name="qr_customize_section_center_icon">केंद्र आइकन</string>
+    <string name="qr_customize_section_frame">फ़्रेम टेम्पलेट</string>
+    <string name="qr_customize_save_export">अनुकूलित QR सहेजें और निर्यात करें</string>
+    <string name="qr_customize_toast_unable_load_logo">लोगो लोड करने में असमर्थ</string>
+    <string name="qr_customize_toast_reset_done">रीसेट हो गया</string>
+    <string name="qr_pattern_classic">क्लासिक (वर्ग)</string>
+    <string name="qr_pattern_rounded">गोलाकार</string>
+    <string name="qr_pattern_dots">रेडियल डॉट्स</string>
+    <string name="qr_pattern_diamond">डायमंड मेश</string>
+    <string name="qr_eye_square">वर्ग</string>
+    <string name="qr_eye_soft">सॉफ़्ट कर्व</string>
+    <string name="qr_eye_circle">सर्कल आई</string>
+    <string name="qr_icon_none">कोई नहीं</string>
+    <string name="qr_icon_wifi">वाई-फ़ाई</string>
+    <string name="qr_icon_globe">ग्लोब</string>
+    <string name="qr_icon_custom">कस्टम</string>
+    <string name="qr_palette_electric_cobalt">इलेक्ट्रिक कोबाल्ट</string>
+    <string name="qr_palette_deep_sapphire">डीप सैफायर</string>
+    <string name="qr_palette_neon_cyan">नियॉन सियान</string>
+    <string name="qr_palette_monochrome_slate">मोनोक्रोम स्लेट</string>
+    <string name="qr_palette_crimson">क्रिमसन</string>
+    <string name="qr_palette_emerald">एमराल्ड</string>
+    <string name="qr_palette_violet">वायलेट</string>
+    <string name="qr_palette_amber">एम्बर</string>
+    <string name="qr_frame_none_title">कोई नहीं</string>
+    <string name="qr_frame_none_subtitle">साफ़ बॉर्डरलेस मैट्रिक्स</string>
+    <string name="qr_frame_pill_title">स्कैन मी पिल</string>
+    <string name="qr_frame_pill_subtitle">बैज संलग्न फ़ुटर</string>
+    <string name="qr_frame_banner_title">बैनर टॉप</string>
+    <string name="qr_frame_banner_subtitle">शीर्ष एक्सेंट हेडर बैंड</string>
+    <string name="qr_frame_cyber_title">साइबर रेटिकल</string>
+    <string name="qr_frame_cyber_subtitle">कोबाल्ट HUD व्यू कोने</string>
+
+    <!-- Settings -->
+    <string name="settings_title">सेटिंग्स</string>
+    <string name="settings_preferences_title">प्राथमिकताएँ</string>
+    <string name="settings_engine_version">इंजन v2.4.0</string>
+    <string name="settings_preferences_subtitle">हाई-स्पीड ऑप्टिकल मैट्रिक्स और सिंथेसिस पैरामीटर</string>
+    <string name="settings_pipeline_online">ऑप्टिकल CV पाइपलाइन ऑनलाइन</string>
+    <string name="settings_pro_footer">%1$s प्रो · डिवाइस एक्सेलेरेशन सत्यापित</string>
+    <string name="settings_section_appearance">रूप</string>
+    <string name="settings_theme_title">थीम</string>
+    <string name="settings_theme_light">लाइट</string>
+    <string name="settings_theme_dark">डार्क</string>
+    <string name="settings_language_title">भाषा</string>
+    <string name="settings_launcher_title">लॉन्चर सेटिंग</string>
+    <string name="settings_launcher_subtitle">आइकन आकार, लेबल और ऐप क्रम</string>
+    <string name="settings_section_scanner">स्कैनर और हार्डवेयर</string>
+    <string name="settings_vibrate_title">पहचान पर कंपन</string>
+    <string name="settings_vibrate_subtitle">मैट्रिक्स हल होने पर हैप्टिक पल्स</string>
+    <string name="settings_beep_title">बीप ध्वनि</string>
+    <string name="settings_beep_subtitle">ऑडियो टोन पुष्टि</string>
+    <string name="settings_auto_open_urls_title">URL स्वतः खोलें</string>
+    <string name="settings_auto_open_urls_subtitle">स्कैन के बाद वेबसाइट लिंक ब्राउज़र में खोलता है</string>
+    <string name="settings_clear_history_title">स्कैन और बनाने का इतिहास साफ़ करें</string>
+    <string name="settings_clear_history_subtitle">गैर-पसंदीदा आइटम हटाएँ · पसंदीदा रखे जाएँ</string>
+    <string name="settings_section_about">परिचय और कानूनी</string>
+    <string name="settings_about_title">परिचय</string>
+    <string name="settings_privacy_policy_title">गोपनीयता नीति</string>
+    <string name="settings_share_title">साझा करें</string>
+    <string name="settings_rate_title">रेट करें</string>
+    <string name="settings_dialog_theme_title">थीम</string>
+    <string name="settings_dialog_default_ecc_title">डिफ़ॉल्ट सुधार स्तर</string>
+    <string name="settings_dialog_default_format_title">डिफ़ॉल्ट QR प्रारूप</string>
+    <string name="settings_ecc_low_subtitle">कम (7% ECC)</string>
+    <string name="settings_ecc_medium_subtitle">मध्यम (15% ECC)</string>
+    <string name="settings_ecc_quartile_subtitle">चतुर्थक (25% ECC)</string>
+    <string name="settings_ecc_high_subtitle">उच्च (30% ECC) · इष्टतम अतिरेक</string>
+    <string name="settings_ecc_low_option">कम / L / 7%</string>
+    <string name="settings_ecc_medium_option">मध्यम / M / 15%</string>
+    <string name="settings_ecc_quartile_option">चतुर्थक / Q / 25%</string>
+    <string name="settings_ecc_high_option">उच्च / H / 30%</string>
+    <string name="settings_format_svg">वेक्टर SVG / शार्प 1024px</string>
+    <string name="settings_format_png">PNG / 1024px</string>
+    <string name="settings_language_system">सिस्टम सिंक</string>
+    <string name="settings_language_system_subtitle">डिवाइस भाषा का पालन करें</string>
+    <string name="settings_language_english_us">अंग्रेज़ी (US)</string>
+    <string name="settings_language_hindi">हिन्दी</string>
+    <string name="settings_language_russian">रूसी</string>
+    <string name="settings_language_italian">इतालवी</string>
+    <string name="settings_language_french">फ़्रेंच</string>
+    <string name="settings_language_spanish">स्पैनिश</string>
+    <string name="settings_language_japanese">जापानी</string>
+    <string name="settings_language_korean">कोरियाई</string>
+    <string name="settings_language_german">जर्मन</string>
+    <string name="settings_language_chinese">चीनी</string>
+    <string name="settings_language_thai">थाई</string>
+    <string name="settings_language_greek">यूनानी</string>
+    <string name="settings_language_portuguese_pt">पुर्तगाली (पुर्तगाल)</string>
+    <string name="settings_language_portuguese_br">पुर्तगाली (ब्राज़ील)</string>
+    <string name="settings_language_dutch">डच</string>
+    <string name="settings_language_filipino">फ़िलिपिनो</string>
+    <string name="settings_language_turkish">तुर्की</string>
+    <string name="settings_language_indonesian">इंडोनेशियाई</string>
+    <string name="settings_language_afrikaans">अफ़्रीकी</string>
+    <string name="settings_language_english">अंग्रेज़ी</string>
+
+    <!-- About -->
+    <string name="about_title">परिचय</string>
+    <string name="about_tagline">तत्काल QR और बारकोड इंटेलिजेंस</string>
+    <string name="about_meta_version">संस्करण</string>
+    <string name="about_meta_build">बिल्ड</string>
+    <string name="about_meta_package">पैकेज</string>
+
+    <!-- New strings (Reminder / Events / Launcher / Widgets / Language / Privacy / Permission / Default / Intro / Ads) -->
+    <string name="reminder_notification_title">रिमाइंडर</string>
+    <string name="reminder_notification_channel_desc">निर्धारित रिमाइंडर अलर्ट</string>
+    <string name="event_uninstall_title">अनइंस्टॉल किया?</string>
+    <string name="event_uninstall_success">सफ़ाई पूरी</string>
+    <string name="event_uninstall_sub">ऐप सफलतापूर्वक अनइंस्टॉल हो गया</string>
+    <string name="event_uninstall_body">कैश किए गए स्कैन फ़ाइलें और अस्थायी डेटा आपके डिवाइस से साफ़ कर दिए गए हैं।</string>
+    <string name="event_uninstall_chip">सुरक्षित और पूर्ण</string>
+    <string name="event_charge_in_title">पावर प्लग इन</string>
+    <string name="event_charge_in_success">%1$d%%</string>
+    <string name="event_charge_in_sub">कनेक्टेड</string>
+    <string name="event_charge_in_body">फ़ास्ट चार्जिंग सक्रिय है।</string>
+    <string name="event_charge_in_chip">फ़ास्ट चार्जिंग सक्रिय</string>
+    <string name="event_charge_out_title">चार्जर अनप्लग</string>
+    <string name="event_charge_out_success">%1$d%% इष्टतम</string>
+    <string name="event_charge_out_sub">डिस्कनेक्टेड</string>
+    <string name="event_charge_out_body">पावर केबल डिस्कनेक्ट हो गई।</string>
+    <string name="event_charge_out_chip">पावर डिस्कनेक्टेड</string>
+    <string name="event_optimized_speed">अनुकूलित गति</string>
+    <string name="event_fast">तेज़</string>
+    <string name="event_optimized_sub">सब कुछ सुचारू रूप से चल रहा है।</string>
+    <string name="event_done">हो गया</string>
+    <string name="launcher_settings">लॉन्चर सेटिंग्स</string>
+    <string name="serialize">क्रमबद्ध करें</string>
+    <string name="by_name_asc_a_to_z">नाम से ASC (A से Z)</string>
+    <string name="by_name_desc_z_to_a">नाम से DESC (Z से A)</string>
+    <string name="by_installed_date">इंस्टॉल तिथि से</string>
+    <string name="preview">पूर्वावलोकन</string>
+    <string name="label_visibility">लेबल दृश्यता</string>
+    <string name="hide_app_name">ऐप नाम छिपाएँ</string>
+    <string name="app_icon_size">ऐप आइकन आकार</string>
+    <string name="app_label_size">ऐप लेबल आकार</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">ऐप विजेट</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">अपने होम स्क्रीन से सीधे QR टूल तक त्वरित पहुँच के लिए विजेट चुनें।</string>
+    <string name="quick_access">त्वरित पहुँच</string>
+    <string name="app_icon_1x1">ऐप आइकन 1 x 1</string>
+    <string name="qr_scanner_generator">QR स्कैनर और जेनरेटर</string>
+    <string name="create_1_x_1">1 x 1 बनाएँ</string>
+    <string name="style_a">शैली A</string>
+    <string name="style_b">शैली B</string>
+    <string name="style_c">शैली C</string>
+    <string name="scan_qr">QR स्कैन करें</string>
+    <string name="cl_end_scan_subtitle">कैमरा खोलें और QR कोड स्कैन करें</string>
+    <string name="cl_end_scan_action">स्कैन</string>
+    <string name="cl_end_history">इतिहास</string>
+    <string name="cl_end_history_subtitle">अपना स्कैन किया गया QR इतिहास देखें</string>
+    <string name="cl_end_widgets_subtitle">अपने होम स्क्रीन में QR टूल जोड़ें</string>
+    <string name="create_qr">QR बनाएँ</string>
+    <string name="widget_pin_not_supported">इस डिवाइस पर विजेट पिनिंग समर्थित नहीं है</string>
+    <string name="widget_pin_failed">विजेट जोड़ने में असमर्थ। कृपया पुनः प्रयास करें।</string>
+    <string name="choose_your_language">अपनी भाषा चुनें</string>
+    <string name="collection_title">आपकी गोपनीयता के बारे में एक संक्षिप्त नोट</string>
+    <string name="collection_intro_1">हम QR स्कैनर को तेज़, सुरक्षित और विश्वसनीय बनाए रखने, QR कोड स्कैनिंग और जनरेशन सुविधाएँ प्रदान करने, ऐप को मुफ़्त रखने में मदद करने वाले विज्ञापन दिखाने और आपके समग्र अनुभव को बेहतर बनाने के लिए सीमित डिवाइस और ऐप जानकारी का उपयोग करते हैं।</string>
+    <string name="collection_intro_2">आपकी स्कैन की गई सामग्री, व्यक्तिगत फ़ाइलें, फ़ोटो, वीडियो और अन्य निजी डेटा एनालिटिक्स या विज्ञापन के लिए एकत्र नहीं किए जाते और आपके नियंत्रण में रहते हैं।</string>
+    <string name="collection_what_we_use">हम क्या उपयोग करते हैं और क्यों:</string>
+    <string name="collection_bullet_1">⦿ कैमरा एक्सेस - QR कोड और बारकोड को सटीक रूप से स्कैन करने और तत्काल परिणाम देने के लिए।</string>
+    <string name="collection_bullet_2">⦿ ऐप उपयोग जानकारी - जैसे आप जिन स्कैनिंग और QR जनरेशन सुविधाओं का उपयोग करते हैं और जो स्क्रीन खोलते हैं - ऐप प्रदर्शन, स्थिरता और उपयोगकर्ता अनुभव को बेहतर बनाने के लिए।</string>
+    <string name="collection_bullet_3">⦿ डिवाइस और ऐप पहचानकर्ता - आपकी प्राथमिकताएँ सहेजने, ऐप स्थिरता सुधारने, त्रुटियाँ रोकने और आवश्यक ऐप कार्यक्षमता का समर्थन करने के लिए।</string>
+    <string name="collection_bullet_4">⦿ विज्ञापन पहचानकर्ता - ऐप को मुफ़्त रखने में मदद करने वाले विज्ञापन दिखाने और मापने के लिए।</string>
+    <string name="collection_footer">Agree &amp; Continue पर टैप करके, आप हमारी गोपनीयता नीति को स्वीकार करते हैं। हम केवल QR कोड स्कैनिंग, QR कोड जनरेशन, ऐप सुरक्षा और अन्य आवश्यक सुविधाएँ प्रदान करने, ऐप को बेहतर बनाने और विज्ञापन का समर्थन करने के लिए आवश्यक जानकारी का उपयोग करते हैं। आपकी स्कैन की गई सामग्री और निजी डेटा आपके नियंत्रण में रहते हैं।</string>
+    <string name="collection_agree_checkbox">मैं इस डेटा संग्रह से सहमत हूँ</string>
+    <string name="collection_agree_continue">सहमत हूँ और जारी रखें</string>
+    <string name="collection_agree_toast">जारी रखने के लिए कृपया डेटा संग्रह से सहमत हों।</string>
+    <string name="privacy_policy">गोपनीयता नीति</string>
+    <string name="this_action_may_contain_ads">इस क्रिया में विज्ञापन हो सकते हैं</string>
+    <string name="marketing_converter1">gclid</string>
+    <string name="utm_source_apps_facebook_com">utm_source=apps.facebook.com</string>
+    <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
+    <string name="utm_source_marketing">utm_source=marketing</string>
+    <string name="permission_title">कैमरा एक्सेस आवश्यक</string>
+    <string name="permission_description">QR कोड और स्कैनर को QR कोड, वाई-फ़ाई क्रेडेंशियल और बारकोड को सीधे रीयल-टाइम में तुरंत स्कैन करने के लिए कैमरा एक्सेस की आवश्यकता है।</string>
+    <string name="permission_local_title">तत्काल स्थानीय स्कैनिंग</string>
+    <string name="permission_local_desc">स्कैन पूरी तरह डिवाइस पर प्रोसेस होते हैं, शून्य सर्वर विलंबता के साथ।</string>
+    <string name="permission_privacy_title">100% गोपनीयता सुरक्षित</string>
+    <string name="permission_privacy_desc">कोई वीडियो फ़्रेम या कच्चे कैप्चर कभी अपलोड या कैटलॉग नहीं किए जाते।</string>
+    <string name="permission_gallery_title">गैलरी विकल्प</string>
+    <string name="permission_gallery_desc">कैमरा अनुमति के बिना कभी भी अपनी लाइब्रेरी से सीधे फ़ोटो आयात करें।</string>
+    <string name="allow_permission">अनुमति दें</string>
+    <string name="default_title">QR कोड और स्कैनर को अपना डिफ़ॉल्ट होम लॉन्चर बनाएँ</string>
+    <string name="default_description">होम स्क्रीन से एक स्वाइप दाएँ के साथ तत्काल QR स्कैनर पहुँच, कस्टम विजेट नियंत्रण और व्यवस्थित ऐप दराज़।</string>
+    <string name="default_swipe_title">स्कैन करने के लिए दाएँ स्वाइप करें</string>
+    <string name="default_swipe_desc">होम स्क्रीन पर कहीं से भी शून्य विलंबता के साथ तुरंत व्यूफ़ाइंडर लॉन्च करें।</string>
+    <string name="default_widgets_title">स्मार्ट त्वरित विजेट</string>
+    <string name="default_widgets_desc">QR जेनरेटर शॉर्टकट, क्लिपबोर्ड मॉनिटर और बैटरी इंटेलिजेंस सीधे होम पर पिन करें।</string>
+    <string name="default_drawer_title">कस्टम ऐप दराज़ और फ़ोल्डर</string>
+    <string name="default_drawer_desc">ऐप व्यवस्थित करें, लेबल छिपाएँ, ग्रिड कॉलम अनुकूलित करें और लाइट और डार्क थीम के बीच स्विच करें।</string>
+    <string name="set_as_default">डिफ़ॉल्ट के रूप में सेट करें</string>
+    <string name="intro_title_1">QR कोड तुरंत स्कैन करें</string>
+    <string name="intro_desc_1">अपने कैमरे से QR कोड जल्दी स्कैन करें और सेकंडों में जानकारी प्राप्त करें</string>
+    <string name="intro_title_2">आसानी से बारकोड स्कैन करें</string>
+    <string name="intro_desc_2">उत्पाद बारकोड जल्दी स्कैन करें और सेकंडों में सटीक परिणाम प्राप्त करें</string>
+    <string name="intro_title_3">अपने तरीके से QR कोड बनाएँ</string>
+    <string name="intro_desc_3">अपनी सभी डिजिटल आवश्यकताओं के लिए पेशेवर QR कोड जनरेट और अनुकूलित करें।</string>
+    <string name="next">आगे</string>
+    <string name="loading_ads_title">विज्ञापन लोड हो रहे हैं</string>
+    <string name="loading_ads_desc">कृपया प्रतीक्षा करें, विज्ञापन दिखाई देंगे...</string>
+</resources>

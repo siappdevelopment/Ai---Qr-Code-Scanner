@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -232,9 +233,17 @@ public class LauncherAppsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (listNativeShimmerVisible) {
             holder.slNativeListItemShimmer.setVisibility(VISIBLE);
             holder.slNativeListItemShimmer.startShimmer();
+            if (holder.spacerCard != null) {
+                holder.spacerCard.setCardBackgroundColor(
+                        ContextCompat.getColor(holder.itemView.getContext(), R.color.ad_background));
+            }
         } else {
+            // Sticky overlay draws the real ad — keep slot transparent (Quiz sync used to leave a blank card).
             holder.slNativeListItemShimmer.stopShimmer();
             holder.slNativeListItemShimmer.setVisibility(GONE);
+            if (holder.spacerCard != null) {
+                holder.spacerCard.setCardBackgroundColor(android.graphics.Color.TRANSPARENT);
+            }
         }
     }
 
@@ -346,10 +355,13 @@ public class LauncherAppsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final class NativeSpacerViewHolder extends RecyclerView.ViewHolder {
         @Nullable
         final com.facebook.shimmer.ShimmerFrameLayout slNativeListItemShimmer;
+        @Nullable
+        final androidx.cardview.widget.CardView spacerCard;
 
         NativeSpacerViewHolder(@NonNull View itemView) {
             super(itemView);
             slNativeListItemShimmer = itemView.findViewById(R.id.slNativeListItemShimmer);
+            spacerCard = itemView.findViewById(R.id.cvNativeListSpacer);
         }
     }
 

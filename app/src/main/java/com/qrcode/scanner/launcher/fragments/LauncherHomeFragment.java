@@ -278,7 +278,7 @@ public class LauncherHomeFragment extends Fragment {
             }
         });
 
-        setupSwipeAwareClick(llScan, () -> navigateViaRightSwipeFlow(this::openScanner));
+        setupSwipeAwareClick(llScan, () -> navigateViaRightSwipeFlow(this::openQrShell));
         setupSwipeAwareClick(llCreate, () -> navigateViaRightSwipeFlow(this::openCreate));
         setupSwipeAwareClick(llHistory, () -> navigateViaRightSwipeFlow(this::openHistory));
         setupSwipeAwareClick(llSetting, () -> navigateViaRightSwipeFlow(this::openSettingsTodo));

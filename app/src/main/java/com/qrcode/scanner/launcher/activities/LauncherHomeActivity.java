@@ -129,6 +129,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        AdPlacement.prepareRightSwipePreload(this);
         hideLauncherFromRecents();
         if (shouldHandleAfterDefaultSetup()) {
             completeAfterDefaultSetup();

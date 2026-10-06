@@ -70,9 +70,9 @@ public final class RemoteConfigHelper {
         FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(0)
                 .build();
-        firebaseRemoteConfig.setConfigSettingsAsync(settings);
         firebaseRemoteConfig.setDefaultsAsync(R.xml.default_config);
-        firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
+        firebaseRemoteConfig.setConfigSettingsAsync(settings).addOnCompleteListener(settingsTask ->
+                firebaseRemoteConfig.fetchAndActivate().addOnCompleteListener(task -> {
             boolean fetchSucceeded = false;
             if (task.isSuccessful()) {
                 try {
@@ -110,7 +110,7 @@ public final class RemoteConfigHelper {
                 ScreenFlowConfig.ensureShowScreenFlow(appContext);
             }
             dispatchPending(fetchSucceeded);
-        });
+        }));
     }
 
     public static void watchNetwork(@Nullable Context context) {

@@ -172,7 +172,7 @@ public class PermissionActivity extends AppCompatActivity {
         RelativeLayout rlNativeAdView = findViewById(R.id.rlNativeAdView);
         ShimmerFrameLayout slNativeShimmer = findViewById(R.id.slNativeShimmer);
         FrameLayout flNativeAd = findViewById(R.id.flNativeAd);
-        AdPlacement.showSlot(this, AdPlacement.getPermissionDefaultAdShow(), AdPlacement.getPermissionDefaultAdType(), AdPlacement.getPermissionDefaultBannerId(), AdPlacement.getPermissionDefaultNativeId(), "small", rlAdView, rlBannerAdView, slBannerShimmer, llBannerAd, rlNativeAdView, slNativeShimmer, flNativeAd, false);
+        AdPlacement.showSlot(this, AdPlacement.getPermissionDefaultAdShow(), AdPlacement.getPermissionDefaultAdType(), AdPlacement.getPermissionDefaultBannerId(), AdPlacement.getPermissionDefaultNativeId(), "small", rlAdView, rlBannerAdView, slBannerShimmer, llBannerAd, rlNativeAdView, slNativeShimmer, flNativeAd, false, AdPlacement.onboardingNativeColor(this));
 
         initialClicks();
     }

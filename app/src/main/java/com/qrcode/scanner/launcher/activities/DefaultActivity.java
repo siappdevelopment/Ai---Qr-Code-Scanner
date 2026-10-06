@@ -80,7 +80,7 @@ public class DefaultActivity extends AppCompatActivity {
                 controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
             }
         }
-        AdPlacement.showSlot(this, AdPlacement.getPermissionDefaultAdShow(), AdPlacement.getPermissionDefaultAdType(), AdPlacement.getPermissionDefaultBannerId(), AdPlacement.getPermissionDefaultNativeId(), "small", findViewById(R.id.rlAdView), findViewById(R.id.rlBannerAdView), findViewById(R.id.slBannerShimmer), findViewById(R.id.llBannerAd), findViewById(R.id.rlNativeAdView), findViewById(R.id.slNativeShimmer), findViewById(R.id.flNativeAd), false);
+        AdPlacement.showSlot(this, AdPlacement.getPermissionDefaultAdShow(), AdPlacement.getPermissionDefaultAdType(), AdPlacement.getPermissionDefaultBannerId(), AdPlacement.getPermissionDefaultNativeId(), "small", findViewById(R.id.rlAdView), findViewById(R.id.rlBannerAdView), findViewById(R.id.slBannerShimmer), findViewById(R.id.llBannerAd), findViewById(R.id.rlNativeAdView), findViewById(R.id.slNativeShimmer), findViewById(R.id.flNativeAd), false, AdPlacement.onboardingNativeColor(this));
         AdPlacement.preloadAfterDefaultAd(this);
         AppCompatTextView btnSetAsDefault = findViewById(R.id.btnSetAsDefault);
         btnSetAsDefault.setOnClickListener(view -> handleSetAsDefaultClick());

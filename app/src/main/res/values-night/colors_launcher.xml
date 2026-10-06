@@ -7,6 +7,7 @@
     <color name="surface_primary">@color/surface_primary_dark</color>
     <color name="surface_secondary">@color/surface_secondary_dark</color>
     <color name="ad_background">@color/surface_secondary_dark</color>
+    <color name="onboarding_native_bg">#242833</color>
     <color name="ad_shimmer">#2A2F38</color>
     <color name="splash_ad_card">#242833</color>
     <color name="splash_ad_stroke">#3A4150</color>

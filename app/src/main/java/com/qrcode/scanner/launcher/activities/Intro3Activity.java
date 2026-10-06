@@ -27,7 +27,7 @@ public class Intro3Activity extends AppCompatActivity {
                 controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
             }
         }
-        AdPlacement.showSlot(this, AdPlacement.getIntroAdShow(), AdPlacement.getIntroAdType(), AdPlacement.getIntroBannerId(), AdPlacement.getIntroNativeId(), "intro", findViewById(R.id.rlAdView), findViewById(R.id.rlBannerAdView), findViewById(R.id.slBannerShimmer), findViewById(R.id.llBannerAd), findViewById(R.id.rlNativeAdView), findViewById(R.id.slNativeShimmer), findViewById(R.id.flNativeAd), false);
+        AdPlacement.showSlot(this, AdPlacement.getIntroAdShow(), AdPlacement.getIntroAdType(), AdPlacement.getIntroBannerId(), AdPlacement.getIntroNativeId(), "intro", findViewById(R.id.rlAdView), findViewById(R.id.rlBannerAdView), findViewById(R.id.slBannerShimmer), findViewById(R.id.llBannerAd), findViewById(R.id.rlNativeAdView), findViewById(R.id.slNativeShimmer), findViewById(R.id.flNativeAd), false, AdPlacement.onboardingNativeColor(this));
         LinearLayout llIndicator = findViewById(R.id.llIndicator);
         AppCompatTextView btnNext = findViewById(R.id.btnNext);
         IntroNavigation.setupIntroButtonIndicators(this, llIndicator, 3);

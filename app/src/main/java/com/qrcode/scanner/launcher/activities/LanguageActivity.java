@@ -115,7 +115,7 @@ public class LanguageActivity extends AppCompatActivity {
         } else {
             rlBannerAdView.setVisibility(View.GONE);
             rlNativeAdView.setVisibility(View.VISIBLE);
-            AdPlacement.loadNativeAd(this, AdPlacement.getLanguageNativeId(), rlNativeAdView, slNativeShimmer, flNativeAd, "large");
+            AdPlacement.loadNativeAd(this, AdPlacement.getLanguageNativeId(), rlNativeAdView, slNativeShimmer, flNativeAd, "large", null, null, false, AdPlacement.onboardingNativeColor(this));
         }
     }
 

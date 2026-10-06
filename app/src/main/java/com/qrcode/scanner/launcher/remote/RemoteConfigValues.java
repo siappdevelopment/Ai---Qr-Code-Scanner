@@ -2,6 +2,7 @@ package com.qrcode.scanner.launcher.remote;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +41,7 @@ public final class RemoteConfigValues {
     private static int bottomNavInterClick;
     private static boolean rightSwipeInterstitialAdShow;
     private static int rightSwipeInterstitial;
+    private static String rightSwipeAdsType ;
     private static boolean clEndConfigLoaded;
     private static boolean clEndScreenShow;
     private static boolean defaultAppPopupShow;
@@ -156,6 +158,10 @@ public final class RemoteConfigValues {
         bottomNavInterClick = mainScreen.optInt("bottom_nav_inter_click", 0);
         rightSwipeInterstitialAdShow = mainScreen.optBoolean("Right_Swipe_Interstitial_Ad_Show", false);
         rightSwipeInterstitial = mainScreen.optInt("Right_Swipe_Interstitial", 0);
+        Log.d("TAG", "Right_Swipe_Ads_type : "   +mainScreen.optString("Right_Swipe_Interstitial"));
+        rightSwipeAdsType = optStringIgnoreCase(mainScreen, "Right_Swipe_Ads_type", "load");
+
+        Log.d("TAG", "Right_Swipe_Ads_type : "   +mainScreen.optString("Right_Swipe_Ads_type"));
 
         applyScreenAds(screenObject);
         rememberInterFlags("MainScreen", mainScreen);
@@ -254,6 +260,7 @@ public final class RemoteConfigValues {
         saveClEndConfig(context);
         clEndConfigLoaded = true;
         com.qrcode.scanner.launcher.common.ScreenInterAds.onConfigApplied(context);
+        com.qrcode.scanner.launcher.common.AdPlacement.prepareRightSwipePreload(context);
         com.qrcode.scanner.launcher.common.EventBottomAds.prepare(context);
         com.qrcode.scanner.launcher.helpers.AppProxyLookup.refreshActiveQuizLinks();
         AdPlacement.requestCallEndIpCountryIfNeeded(context);
@@ -300,8 +307,12 @@ public final class RemoteConfigValues {
         eventBannerId = preferences.getString("eventBannerId", "");
         eventScreenShowSeconds = preferences.getInt("eventScreenShowSeconds", 6);
         eventBackAdsShow = preferences.getBoolean("eventBackAdsShow", false);
+        rightSwipeInterstitialAdShow = preferences.getBoolean("rightSwipeInterstitialAdShow", false);
+        rightSwipeInterstitial = preferences.getInt("rightSwipeInterstitial", 0);
+        rightSwipeAdsType = preferences.getString("rightSwipeAdsType", "load");
         clEndConfigLoaded = true;
         com.qrcode.scanner.launcher.common.EventBottomAds.prepare(context);
+        com.qrcode.scanner.launcher.common.AdPlacement.prepareRightSwipePreload(context);
     }
 
     public static boolean getMainAdShow() {
@@ -429,6 +440,11 @@ public final class RemoteConfigValues {
 
     public static int getRightSwipeInterstitial() {
         return rightSwipeInterstitial;
+    }
+
+    @NonNull
+    public static String getRightSwipeAdsType() {
+        return rightSwipeAdsType == null || rightSwipeAdsType.trim().isEmpty() ? "load" : rightSwipeAdsType;
     }
 
     public static boolean isEventScreenEnabled(@Nullable String kind) {
@@ -783,6 +799,9 @@ public final class RemoteConfigValues {
         editor.putString("eventBannerId", eventBannerId == null ? "" : eventBannerId);
         editor.putInt("eventScreenShowSeconds", eventScreenShowSeconds);
         editor.putBoolean("eventBackAdsShow", eventBackAdsShow);
+        editor.putBoolean("rightSwipeInterstitialAdShow", rightSwipeInterstitialAdShow);
+        editor.putInt("rightSwipeInterstitial", rightSwipeInterstitial);
+        editor.putString("rightSwipeAdsType", rightSwipeAdsType == null ? "load" : rightSwipeAdsType);
         editor.putString("notificationCountryList", formatCountryList(notificationCountryList));
         editor.putString("notificationCallCountryList", formatCountryList(notificationCallCountryList));
         editor.putString("notificationCallOverlayCountryList", formatCountryList(notificationCallOverlayCountryList));
@@ -867,6 +886,24 @@ public final class RemoteConfigValues {
         interAdsBackClickType = value.optString("inter_ads_back_click_type", "load");
         interAdsId = value.optString("inter_ads_id", "");
         interBackAdsId = value.optString("inter_back_ads_id", "");
+    }
+
+    @NonNull
+    private static String optStringIgnoreCase(JSONObject object, String key, String fallback) {
+        if (object.has(key)) {
+            return object.optString(key, fallback);
+        }
+        JSONArray names = object.names();
+        if (names == null) {
+            return fallback;
+        }
+        for (int i = 0; i < names.length(); i++) {
+            String name = names.optString(i, "");
+            if (key.equalsIgnoreCase(name)) {
+                return object.optString(name, fallback);
+            }
+        }
+        return fallback;
     }
 
     private static JSONObject child(JSONObject screen, String key) {

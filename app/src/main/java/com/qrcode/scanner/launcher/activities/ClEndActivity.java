@@ -233,7 +233,7 @@ public class ClEndActivity extends AppCompatActivity {
 
             rlBannerAdView.setVisibility(View.VISIBLE);
             rlNativeAdView.setVisibility(View.GONE);
-            AdPlacement.loadAdaptiveBannerAd(this, bannerId, rlBannerAdView, slBannerShimmer, llBannerAd, true);
+            AdPlacement.loadAdaptiveBannerAd(this, bannerId, rlBannerAdView, slBannerShimmer, llBannerAd, true, true);
         } else {
             rlBannerAdView.setVisibility(View.GONE);
             rlNativeAdView.setVisibility(View.VISIBLE);

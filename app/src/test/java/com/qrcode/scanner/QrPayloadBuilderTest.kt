@@ -263,11 +263,16 @@ class QrPayloadBuilderTest {
         assertTrue(valid.payload.contains("DTSTART:20260921T090000"))
         assertTrue(valid.payload.contains("SUMMARY:Standup\\; Daily"))
 
-        val emptyStart = QrPayloadBuilder.build(
+        val dateOnly = QrPayloadBuilder.build(
+            QrCategoryType.CALENDAR,
+            QrPayloadBuilder.FormInput(primary = "Event", secondary = "20261006")
+        )
+        assertTrue(dateOnly.payload.contains("DTSTART;VALUE=DATE:20261006"))
+
+        assertNotNull(QrPayloadBuilder.validate(
             QrCategoryType.CALENDAR,
             QrPayloadBuilder.FormInput(primary = "Event")
-        )
-        assertTrue(emptyStart.payload.contains("DTSTART:${QrPayloadBuilder.DEFAULT_CALENDAR_STAMP}"))
+        ))
 
         assertNull(QrPayloadBuilder.normalizeCalendarStamp("not-a-date"))
         assertNull(QrPayloadBuilder.normalizeCalendarStamp("20261301T090000")) // invalid month
@@ -291,7 +296,7 @@ class QrPayloadBuilderTest {
 
         val unicode = QrPayloadBuilder.build(
             QrCategoryType.CALENDAR,
-            QrPayloadBuilder.FormInput(primary = "会議 🚀")
+            QrPayloadBuilder.FormInput(primary = "会議 🚀", secondary = "20261006")
         )
         assertTrue(unicode.payload.contains("SUMMARY:会議 🚀"))
     }

@@ -80,13 +80,13 @@ object BarcodeSymbology {
         if (raw.isEmpty()) return emptyMessage(type)
         val value = raw
         return when (type) {
-            QrCategoryType.EAN_13 -> digitsMessage(
+            QrCategoryType.EAN_13 -> digitLengthMessage(
                 value,
                 12,
                 13,
                 "Enter 12 digits, or 13 digits including the check digit."
             )
-            QrCategoryType.EAN_8 -> digitsMessage(
+            QrCategoryType.EAN_8 -> digitLengthMessage(
                 value,
                 7,
                 8,
@@ -114,15 +114,16 @@ object BarcodeSymbology {
         }
     }
 
-    /** Value that will actually be encoded. Never replaces a rejected check digit. */
+    /** Value that will actually be encoded. Retail formats correct the check digit when needed. */
     fun normalize(type: QrCategoryType, raw: String): String {
         validate(type, raw)?.let { throw IllegalArgumentException(it) }
         val value = raw
         return when (type) {
-            QrCategoryType.EAN_13 -> withCheckDigit(value, 12)
-            QrCategoryType.EAN_8 -> withCheckDigit(value, 7)
+            // Always encode from the data digits so a mistyped last digit still works.
+            QrCategoryType.EAN_13 -> ensureCheckDigit(value, 12)
+            QrCategoryType.EAN_8 -> ensureCheckDigit(value, 7)
             QrCategoryType.UPC_A -> withCheckDigit(value, 11)
-            QrCategoryType.UPC_E -> if (value.length == 7) value + upcECheckDigit(value) else value
+            QrCategoryType.UPC_E -> ensureUpcE(value)
             QrCategoryType.CODABAR -> normalizeCodabar(value)
             else -> value
         }
@@ -161,16 +162,21 @@ object BarcodeSymbology {
         return null
     }
 
+    /** Length and digits only. Check digit is corrected in [normalize]. */
+    private fun digitLengthMessage(value: String, short: Int, full: Int, lengthMessage: String): String? {
+        if (!value.all { it.isDigit() }) return "Digits only."
+        if (value.length != short && value.length != full) return lengthMessage
+        return null
+    }
+
     private fun validateUpcE(value: String): String? {
         if (!value.all { it.isDigit() }) return "Digits only."
         if (value.length != 7 && value.length != 8) {
             return "Enter 7 digits, or 8 digits including the check digit."
         }
         if (value[0] != '0' && value[0] != '1') return "Invalid UPC-E value."
-        val expanded = expandUpcE(value) ?: return "Invalid UPC-E value."
-        if (value.length == 8 && !hasValidCheckDigit(expanded)) {
-            return "Check digit does not match."
-        }
+        // Expansion uses the first 7 digits; check digit is corrected in [normalize].
+        if (expandUpcE(value.take(7)) == null) return "Invalid UPC-E value."
         return null
     }
 
@@ -244,15 +250,21 @@ object BarcodeSymbology {
     private fun withCheckDigit(value: String, dataLength: Int): String =
         if (value.length == dataLength) value + checkDigit(value) else value
 
+    private fun ensureCheckDigit(value: String, dataLength: Int): String {
+        val data = value.take(dataLength)
+        return data + checkDigit(data)
+    }
+
     private fun hasValidCheckDigit(value: String): Boolean {
         if (value.length < 2 || value.any { !it.isDigit() }) return false
         return checkDigit(value.dropLast(1)) == value.last()
     }
 
-    private fun upcECheckDigit(sevenDigits: String): Char {
-        val expanded = expandUpcE(sevenDigits)
+    private fun ensureUpcE(value: String): String {
+        val seven = value.take(7)
+        val expanded = expandUpcE(seven)
             ?: throw IllegalArgumentException("Invalid UPC-E value.")
-        return checkDigit(expanded)
+        return seven + checkDigit(expanded)
     }
 
     /** ZXing expansion. 7 digits expand to 11; 8 digits expand to 12 including the check digit. */

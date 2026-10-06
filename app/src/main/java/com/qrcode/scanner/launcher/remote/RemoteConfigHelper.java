@@ -307,6 +307,25 @@ public final class RemoteConfigHelper {
         AdPlacement.setLanguageBannerId(languageScreen.optString("Language_Banner_Id", ""));
         AdPlacement.setLanguageNativeId(languageScreen.optString("Language_Native_Id", ""));
         AdPlacement.setLanguageInterstitialAdShow(languageScreen.optBoolean("Language_Interstitial_Ad_Show", false));
+        JSONObject otherScreen = screen.optJSONObject("OtherScreen");
+        if (otherScreen == null) {
+            otherScreen = new JSONObject();
+        }
+        AdPlacement.setOtherAdShow(otherScreen.optBoolean("Other_Ad_Show", false));
+        AdPlacement.setOtherAdType(otherScreen.optString("Other_Ad_Type", "native"));
+        AdPlacement.setOtherBannerId(otherScreen.optString("Other_Banner_Id", ""));
+        AdPlacement.setOtherNativeId(otherScreen.optString("Other_Native_Id", ""));
+        String otherInterstitialId = otherScreen.optString("Other_Interstitial_Id", "").trim();
+        if (otherInterstitialId.isEmpty()) {
+            otherInterstitialId = jsonObject.optString("Other_Interstitial_Id", "").trim();
+        }
+        if (otherInterstitialId.isEmpty()) {
+            JSONObject interAds = jsonObject.optJSONObject("inter_ads");
+            if (interAds != null) {
+                otherInterstitialId = interAds.optString("inter_ads_id", "").trim();
+            }
+        }
+        AdPlacement.setOtherInterstitialId(otherInterstitialId);
         JSONObject permissionDefaultScreen = screen.optJSONObject("PermissionDefaultScreen");
         if (permissionDefaultScreen == null) {
             permissionDefaultScreen = new JSONObject();

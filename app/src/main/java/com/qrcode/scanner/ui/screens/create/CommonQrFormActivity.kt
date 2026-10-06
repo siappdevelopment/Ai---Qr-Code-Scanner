@@ -1,9 +1,13 @@
 package com.qrcode.scanner.ui.screens.create
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -31,6 +35,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material.icons.outlined.Clear
 import androidx.compose.material.icons.outlined.ContentPaste
 import androidx.compose.material.icons.outlined.Share
@@ -265,7 +270,17 @@ fun CommonQrFormScreen(
                     },
                     onClear = { primary = "" }
                 )
-                if (labels.secondaryLabel != null) {
+                if (labels.secondaryLabel != null && category == QrCategoryType.CALENDAR) {
+                    FormDateField(
+                        label = labels.secondaryLabel,
+                        value = secondary,
+                        onValueChange = {
+                            secondary = it
+                            if (error != null) error = null
+                        },
+                        placeholder = labels.secondaryPlaceholder.orEmpty()
+                    )
+                } else if (labels.secondaryLabel != null) {
                     FormTextField(
                         label = labels.secondaryLabel,
                         value = secondary,
@@ -459,7 +474,8 @@ private data class FormLabels(
                 primaryLabel = "Event Title",
                 primaryPlaceholder = "Team standup",
                 secondaryLabel = "Start Date",
-                secondaryPlaceholder = "Optional"
+                secondaryPlaceholder = "Select date",
+                secondaryOptional = false
             )
             QrCategoryType.APP_LINK -> FormLabels(
                 primaryLabel = "App URL or Package",
@@ -480,9 +496,9 @@ private data class FormLabels(
             QrCategoryType.DATA_MATRIX -> barcodeForm("Data Matrix value", "Text or numbers")
             QrCategoryType.PDF_417 -> barcodeForm("PDF 417 value", "Text or numbers")
             QrCategoryType.AZTEC -> barcodeForm("Aztec value", "Text or numbers")
-            QrCategoryType.EAN_13 -> barcodeForm("EAN 13 digits", "12 digits, or 13 with check digit", numeric = true)
-            QrCategoryType.EAN_8 -> barcodeForm("EAN 8 digits", "7 digits, or 8 with check digit", numeric = true)
-            QrCategoryType.UPC_E -> barcodeForm("UPC E digits", "7 or 8 digits", numeric = true)
+            QrCategoryType.EAN_13 -> barcodeForm("EAN 13 digits", "12 or 13 digits", numeric = true)
+            QrCategoryType.EAN_8 -> barcodeForm("EAN 8 digits", "7 or 8 digits", numeric = true)
+            QrCategoryType.UPC_E -> barcodeForm("UPC E digits", "7 or 8 digits (starts with 0 or 1)", numeric = true)
             QrCategoryType.UPC_A -> barcodeForm("UPC A digits", "11 digits, or 12 with check digit", numeric = true)
             QrCategoryType.CODE_93 -> barcodeForm("Code 93 value", "ASCII text")
             QrCategoryType.CODE_39 -> barcodeForm("Code 39 value", "Text or numbers")
@@ -635,6 +651,88 @@ internal fun FormTextField(
             }
         }
     }
+}
+
+@Composable
+internal fun FormDateField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit,
+    placeholder: String
+) {
+    val context = LocalContext.current
+    val display = formatPickedDate(value)
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            text = label,
+            color = TextPrimary,
+            fontFamily = PlusJakartaSans,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 14.sp
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(NestedSurface)
+                .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
+                .clickable(
+                    indication = null,
+                    interactionSource = remember { MutableInteractionSource() },
+                    onClick = { showCalendarDatePicker(context, value, onValueChange) }
+                )
+                .padding(horizontal = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = display.ifBlank { placeholder },
+                color = if (display.isBlank()) TextTertiary else TextPrimary,
+                fontFamily = PlusJakartaSans,
+                fontSize = 14.sp,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                imageVector = Icons.Outlined.CalendarMonth,
+                contentDescription = "Pick date",
+                tint = CobaltPrimary,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+    }
+}
+
+private fun showCalendarDatePicker(
+    context: android.content.Context,
+    current: String,
+    onValueChange: (String) -> Unit
+) {
+    val calendar = Calendar.getInstance()
+    val stamp = QrPayloadBuilder.normalizeCalendarStamp(current)
+    if (stamp != null) {
+        calendar.set(Calendar.YEAR, stamp.substring(0, 4).toInt())
+        calendar.set(Calendar.MONTH, stamp.substring(4, 6).toInt() - 1)
+        calendar.set(Calendar.DAY_OF_MONTH, stamp.substring(6, 8).toInt())
+    }
+    DatePickerDialog(
+        context,
+        { _, year, month, day ->
+            onValueChange(String.format(Locale.US, "%04d%02d%02d", year, month + 1, day))
+        },
+        calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    ).show()
+}
+
+private fun formatPickedDate(raw: String): String {
+    val stamp = QrPayloadBuilder.normalizeCalendarStamp(raw) ?: return ""
+    val calendar = Calendar.getInstance().apply {
+        set(Calendar.YEAR, stamp.substring(0, 4).toInt())
+        set(Calendar.MONTH, stamp.substring(4, 6).toInt() - 1)
+        set(Calendar.DAY_OF_MONTH, stamp.substring(6, 8).toInt())
+    }
+    return SimpleDateFormat("dd MMM yyyy", Locale.getDefault()).format(calendar.time)
 }
 
 @Composable

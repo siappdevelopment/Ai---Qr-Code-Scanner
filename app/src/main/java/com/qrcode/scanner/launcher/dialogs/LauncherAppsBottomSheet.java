@@ -728,9 +728,20 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
             return;
         }
 
+        Context context = getContext();
+        List<LauncherAppsModel> previousOrder = new ArrayList<>(LauncherHomeActivity.arrayListApps);
+        if (context != null) {
+            synchronized (LauncherHomeActivity.arrayListAppsSearch) {
+                LauncherAppsHelper.sortApps(context, LauncherHomeActivity.arrayListAppsSearch);
+            }
+        }
         syncDisplayAppsFromSearch();
 
         attachAppsAdapterIfNeeded();
+        if (launcherAppsAdapter != null) {
+            launcherAppsAdapter.notifyOrderChanged(previousOrder);
+            launcherAppsAdapter.updateSizeVisibility();
+        }
         appsShown = true;
         rvApps.setAlpha(1f);
         rvApps.setVisibility(VISIBLE);

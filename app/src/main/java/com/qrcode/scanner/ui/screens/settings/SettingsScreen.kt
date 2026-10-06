@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.VolumeUp
+import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.DarkMode
 import androidx.compose.material.icons.outlined.DeleteSweep
 import androidx.compose.material.icons.outlined.Info
@@ -49,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.app.R
+import com.qrcode.scanner.launcher.activities.LauncherSettingsActivity
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.ui.navigation.ThemeNavigation
 import com.qrcode.scanner.data.settings.SettingsPreferences
@@ -129,6 +131,16 @@ fun SettingsScreen(
                     icon = Icons.Outlined.Language,
                     enabled = true,
                     onClick = onOpenLanguage
+                )
+                SettingsRowDivider()
+                SettingsNavRow(
+                    title = "Launcher Setting",
+                    subtitle = "Icon size, labels, and app order",
+                    icon = Icons.Outlined.Apps,
+                    enabled = true,
+                    onClick = {
+                        context.startActivity(Intent(context, LauncherSettingsActivity::class.java))
+                    }
                 )
             }
 

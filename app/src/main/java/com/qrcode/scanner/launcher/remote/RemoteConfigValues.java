@@ -158,10 +158,10 @@ public final class RemoteConfigValues {
         bottomNavInterClick = mainScreen.optInt("bottom_nav_inter_click", 0);
         rightSwipeInterstitialAdShow = mainScreen.optBoolean("Right_Swipe_Interstitial_Ad_Show", false);
         rightSwipeInterstitial = mainScreen.optInt("Right_Swipe_Interstitial", 0);
-        Log.d("TAG", "Right_Swipe_Ads_type : "   +mainScreen.optString("Right_Swipe_Interstitial"));
+//        Log.d("TAG", "Right_Swipe_Ads_type : "   +mainScreen.optString("Right_Swipe_Interstitial"));
         rightSwipeAdsType = optStringIgnoreCase(mainScreen, "Right_Swipe_Ads_type", "load");
 
-        Log.d("TAG", "Right_Swipe_Ads_type : "   +mainScreen.optString("Right_Swipe_Ads_type"));
+//        Log.d("TAG", "Right_Swipe_Ads_type : "   +mainScreen.optString("Right_Swipe_Ads_type"));
 
         applyScreenAds(screenObject);
         rememberInterFlags("MainScreen", mainScreen);

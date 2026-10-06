@@ -540,7 +540,12 @@ public final class AdPlacement {
     }
 
     public static String getOtherInterstitialId() {
-        return otherInterstitialId;
+        String id = otherInterstitialId == null ? "" : otherInterstitialId.trim();
+        if (!id.isEmpty()) {
+            return id;
+        }
+        // Fallback when Other_Interstitial_Id is missing from Remote Config.
+        return RemoteConfigValues.getInterAdsId().trim();
     }
 
     public static void setOtherInterstitialId(String value) {
@@ -969,10 +974,17 @@ public final class AdPlacement {
     }
 
     public static void loadAdaptiveBannerAd(Activity activity, String bannerId, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd) {
-        loadAdaptiveBannerAd(activity, bannerId, rlBannerAdView, slBannerShimmer, llBannerAd, false);
+        loadAdaptiveBannerAd(activity, bannerId, rlBannerAdView, slBannerShimmer, llBannerAd, false, false);
     }
 
     public static void loadAdaptiveBannerAd(Activity activity, String bannerId, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd, boolean googleOnly) {
+        loadAdaptiveBannerAd(activity, bannerId, rlBannerAdView, slBannerShimmer, llBannerAd, googleOnly, false);
+    }
+
+    /**
+     * @param largeInline true = inline adaptive (taller / big), false = anchored adaptive
+     */
+    public static void loadAdaptiveBannerAd(Activity activity, String bannerId, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd, boolean googleOnly, boolean largeInline) {
         if (activity != null) {
             initializeIfConfigured(activity);
         }
@@ -989,7 +1001,7 @@ public final class AdPlacement {
         }
         prepareBannerLoading(slBannerShimmer, llBannerAd);
         AdView adView = new AdView(activity);
-        adView.setAdSize(getAdaptiveAdSize(activity));
+        adView.setAdSize(getAdaptiveAdSize(activity, -1, largeInline));
         adView.setAdUnitId(unitId);
         llBannerAd.addView(adView);
         adView.setAdListener(new AdListener() {
@@ -1970,11 +1982,18 @@ public final class AdPlacement {
     }
 
     private static AdSize getAdaptiveAdSize(Activity activity) {
-        return getAdaptiveAdSize(activity, -1);
+        return getAdaptiveAdSize(activity, -1, false);
     }
 
     private static AdSize getAdaptiveAdSize(Activity activity, int widthDp) {
+        return getAdaptiveAdSize(activity, widthDp, false);
+    }
+
+    private static AdSize getAdaptiveAdSize(Activity activity, int widthDp, boolean largeInline) {
         int width = widthDp > 0 ? widthDp : bannerWidthDp(activity);
+        if (largeInline) {
+            return AdSize.getCurrentOrientationInlineAdaptiveBannerAdSize(activity, width);
+        }
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(activity, width);
     }
 

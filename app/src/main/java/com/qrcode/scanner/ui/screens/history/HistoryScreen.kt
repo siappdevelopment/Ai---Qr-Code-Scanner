@@ -578,8 +578,7 @@ private fun HistoryActivityCard(
             CardActionChip(
                 label = "Share",
                 icon = Icons.Outlined.Share,
-                onClick = onShare,
-                filled = ScanPayloadMapper.looksLikeUrl(entity.rawValue)
+                onClick = onShare
             )
             Spacer(modifier = Modifier.weight(1f))
             Box {
@@ -654,13 +653,12 @@ private fun HistoryActivityCard(
 private fun CardActionChip(
     label: String,
     icon: ImageVector,
-    onClick: () -> Unit,
-    filled: Boolean = false
+    onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .clip(RoundedCornerShape(10.dp))
-            .background(if (filled) CobaltPrimary else NestedSurface)
+            .background(NestedSurface)
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() },
@@ -673,12 +671,12 @@ private fun CardActionChip(
         Icon(
             imageVector = icon,
             contentDescription = null,
-            tint = if (filled) White else TextPrimary,
+            tint = TextPrimary,
             modifier = Modifier.size(16.dp)
         )
         Text(
             text = label,
-            color = if (filled) White else TextPrimary,
+            color = TextPrimary,
             fontFamily = PlusJakartaSans,
             fontWeight = FontWeight.Medium,
             fontSize = 13.sp

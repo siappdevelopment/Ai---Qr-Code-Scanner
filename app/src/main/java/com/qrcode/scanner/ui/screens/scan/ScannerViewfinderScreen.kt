@@ -2,12 +2,14 @@ package com.qrcode.scanner.ui.screens.scan
 
 import android.Manifest
 import android.app.Activity
-import androidx.activity.ComponentActivity
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
@@ -138,19 +140,60 @@ fun ScannerViewfinderScreen(
     // Setting removed. A saved ON value must not swallow scans with no result screen.
     val continuousBatchScan = false
 
-    var hasCameraPermission by remember {
-        mutableStateOf(
-            ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_GRANTED
-        )
+    fun refreshCameraPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
+            PackageManager.PERMISSION_GRANTED
     }
-    var permissionDenied by remember { mutableStateOf(false) }
+
+    var hasCameraPermission by remember { mutableStateOf(refreshCameraPermission()) }
+    var permissionDeniedOnce by remember { mutableStateOf(false) }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         hasCameraPermission = granted
-        permissionDenied = !granted
+        if (!granted) permissionDeniedOnce = true
+    }
+
+    val appSettingsLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        val granted = refreshCameraPermission()
+        hasCameraPermission = granted
+        if (!granted) {
+            permissionDeniedOnce = true
+            // Still denied after Settings — try the system dialog again when possible.
+            permissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+    }
+
+    fun openAppSettingsForCamera() {
+        val settingsIntent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts("package", context.packageName, null)
+        )
+        runCatching { appSettingsLauncher.launch(settingsIntent) }
+            .onFailure {
+                context.startActivity(settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+            }
+    }
+
+    fun isCameraPermanentlyDenied(): Boolean {
+        val activity = context.findActivity() ?: return false
+        return permissionDeniedOnce &&
+            !refreshCameraPermission() &&
+            !ActivityCompat.shouldShowRequestPermissionRationale(
+                activity,
+                Manifest.permission.CAMERA
+            )
+    }
+
+    fun requestCameraPermissionAgain() {
+        if (isCameraPermanentlyDenied()) {
+            openAppSettingsForCamera()
+        } else {
+            permissionLauncher.launch(Manifest.permission.CAMERA)
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -170,7 +213,7 @@ fun ScannerViewfinderScreen(
     val continuousItems by continuousSession.items.collectAsStateWithLifecycle()
     val latestContinuousBatchScan by rememberUpdatedState(continuousBatchScan)
     val latestOnFinishContinuousBatch by rememberUpdatedState(onFinishContinuousBatch)
-    val lifecycleOwner = (context as? ComponentActivity) ?: LocalLifecycleOwner.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
     fun finishContinuousBatchSession() {
         // Idempotent: double Done/Back must not open an empty batch or finish twice.
@@ -231,12 +274,7 @@ fun ScannerViewfinderScreen(
                 if (!latestContinuousBatchScan) {
                     detectionHandled.set(false)
                 }
-                val granted = ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.CAMERA
-                ) == PackageManager.PERMISSION_GRANTED
-                hasCameraPermission = granted
-                if (granted) permissionDenied = false
+                hasCameraPermission = refreshCameraPermission()
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -296,42 +334,12 @@ fun ScannerViewfinderScreen(
                     }
                 )
             }
-            permissionDenied -> {
+            else -> {
                 PermissionDeniedPanel(
-                    onRequestAgain = {
-                        val activity = context as? Activity
-                        val canShowDialog = activity == null ||
-                            ActivityCompat.shouldShowRequestPermissionRationale(
-                                activity,
-                                Manifest.permission.CAMERA
-                            )
-                        if (canShowDialog) {
-                            permissionLauncher.launch(Manifest.permission.CAMERA)
-                        } else {
-                            // Permanent deny — open app settings so the user can retry.
-                            context.startActivity(
-                                Intent(
-                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                    Uri.fromParts("package", context.packageName, null)
-                                )
-                            )
-                        }
-                    },
+                    needsSettings = isCameraPermanentlyDenied(),
+                    onRequestAgain = { requestCameraPermissionAgain() },
                     onBack = onBack
                 )
-            }
-            else -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Requesting camera permission…",
-                        color = TextSecondary,
-                        fontFamily = PlusJakartaSans,
-                        fontSize = 14.sp
-                    )
-                }
             }
         }
 
@@ -847,8 +855,18 @@ private fun HudIconButton(
     }
 }
 
+private fun Context.findActivity(): Activity? {
+    var current: Context = this
+    while (current is ContextWrapper) {
+        if (current is Activity) return current
+        current = current.baseContext
+    }
+    return null
+}
+
 @Composable
 private fun PermissionDeniedPanel(
+    needsSettings: Boolean,
     onRequestAgain: () -> Unit,
     onBack: () -> Unit
 ) {
@@ -870,7 +888,11 @@ private fun PermissionDeniedPanel(
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "Allow camera access to scan QR codes and barcodes.",
+            text = if (needsSettings) {
+                "Camera access is turned off. Open Settings, enable Camera, then return here to scan."
+            } else {
+                "Allow camera access to scan QR codes and barcodes."
+            },
             color = TextSecondary,
             fontFamily = PlusJakartaSans,
             fontSize = 14.sp,
@@ -890,7 +912,7 @@ private fun PermissionDeniedPanel(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Grant permission",
+                text = if (needsSettings) "Open Settings" else "Grant permission",
                 color = White,
                 fontFamily = PlusJakartaSans,
                 fontWeight = FontWeight.SemiBold,

@@ -166,12 +166,12 @@ object QrPayloadBuilder {
                 }
             }
             CALENDAR -> {
-                if (input.primary.trim().isEmpty()) return "Enter an event title"
-                val start = input.secondary.trim()
-                if (start.isNotEmpty() && normalizeCalendarStamp(start) == null) {
-                    return "Enter a valid start date"
+                when {
+                    input.primary.trim().isEmpty() -> "Enter an event title"
+                    input.secondary.trim().isEmpty() -> "Select a start date"
+                    normalizeCalendarStamp(input.secondary.trim()) == null -> "Enter a valid start date"
+                    else -> null
                 }
-                null
             }
             APP_LINK -> {
                 val v = input.primary.trim()
@@ -319,19 +319,19 @@ object QrPayloadBuilder {
             }
             CALENDAR -> {
                 val title = input.primary.trim()
-                val whenText = input.secondary.trim()
-                val stamp = if (whenText.isEmpty()) {
-                    DEFAULT_CALENDAR_STAMP
-                } else {
-                    normalizeCalendarStamp(whenText)
-                        ?: throw IllegalArgumentException("Enter a valid start date")
-                }
+                val stamp = normalizeCalendarStamp(input.secondary.trim())
+                    ?: throw IllegalArgumentException("Select a start date")
+                val dateOnly = stamp.endsWith("T000000")
                 val payload = buildString {
                     append("BEGIN:VCALENDAR\n")
                     append("VERSION:2.0\n")
                     append("BEGIN:VEVENT\n")
                     append("SUMMARY:").append(escapeIcal(title)).append('\n')
-                    append("DTSTART:").append(stamp).append('\n')
+                    if (dateOnly) {
+                        append("DTSTART;VALUE=DATE:").append(stamp.take(8)).append('\n')
+                    } else {
+                        append("DTSTART:").append(stamp).append('\n')
+                    }
                     append("END:VEVENT\n")
                     append("END:VCALENDAR")
                 }
@@ -459,8 +459,6 @@ object QrPayloadBuilder {
             null
         }
     }
-
-    const val DEFAULT_CALENDAR_STAMP = "20260101T090000"
 
     private const val QR_TOO_LONG = "This is too long to fit in a QR code. Shorten the text."
 

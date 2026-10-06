@@ -22,6 +22,7 @@ import com.qrcode.scanner.launcher.fragments.LauncherQrPageFragment;
 import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars;
 import com.qrcode.scanner.launcher.fragments.SubContainerFragment;
 import com.qrcode.scanner.launcher.helpers.LauncherAppsHelper;
+import com.qrcode.scanner.launcher.helpers.LauncherSettingsHelper;
 import com.qrcode.scanner.launcher.common.AdPlacement;
 import com.qrcode.scanner.launcher.common.AppUtils;
 import com.qrcode.scanner.launcher.common.InstallReferrerStartup;
@@ -89,10 +90,12 @@ public class LauncherHomeActivity extends AppCompatActivity {
 
     public static List<LauncherAppsModel> arrayListApps = Collections.synchronizedList(new ArrayList<>());
     public static List<LauncherAppsModel> arrayListAppsSearch = Collections.synchronizedList(new ArrayList<>());
+    private final LauncherSettingsHelper.ChangeListener drawerSettingsListener = this::onDrawerSettingsChanged;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LauncherSettingsHelper.registerChangeListener(drawerSettingsListener);
         hideLauncherFromRecents();
         pendingSavedInstanceState = savedInstanceState;
         if (shouldHandleAfterDefaultSetup()) {
@@ -193,9 +196,30 @@ public class LauncherHomeActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        LauncherSettingsHelper.unregisterChangeListener(drawerSettingsListener);
         SubContainerFragment.clearCachedNativeAd();
         appsExecutor.shutdownNow();
         super.onDestroy();
+    }
+
+    private void onDrawerSettingsChanged(int changeMask) {
+        if ((changeMask & LauncherSettingsHelper.CHANGE_SERIALIZE) == 0) {
+            return;
+        }
+        runOnUiThread(() -> {
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag(LauncherAppsBottomSheet.TAG);
+            boolean drawerVisible = fragment instanceof LauncherAppsBottomSheet
+                    && fragment.isAdded()
+                    && fragment.getView() != null;
+            if (drawerVisible) {
+                return;
+            }
+            synchronized (arrayListAppsSearch) {
+                LauncherAppsHelper.sortApps(this, arrayListAppsSearch);
+                arrayListApps.clear();
+                arrayListApps.addAll(arrayListAppsSearch);
+            }
+        });
     }
 
     public void setLauncherSwipeEnabled(boolean enabled) {

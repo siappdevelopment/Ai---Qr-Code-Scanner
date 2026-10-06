@@ -21,14 +21,12 @@ class BarcodeFormValidationTest {
     }
 
     @Test
-    fun ean13_acceptsMatching13AndRejectsMismatch() {
+    fun ean13_acceptsMatching13AndCorrectsMismatch() {
         assertNull(validate(QrCategoryType.EAN_13, "5901234123457"))
         assertEquals("5901234123457", build(QrCategoryType.EAN_13, "5901234123457"))
-        assertEquals(
-            "Check digit does not match.",
-            validate(QrCategoryType.EAN_13, "5901234123458")
-        )
-        assertRejected(QrCategoryType.EAN_13, "5901234123458", "Check digit does not match.")
+        // Wrong last digit is corrected from the first 12 digits so encode still works.
+        assertNull(validate(QrCategoryType.EAN_13, "5901234123458"))
+        assertEquals("5901234123457", build(QrCategoryType.EAN_13, "5901234123458"))
         assertEquals(
             "Enter 12 digits, or 13 digits including the check digit.",
             validate(QrCategoryType.EAN_13, "59012341234567")
@@ -37,13 +35,14 @@ class BarcodeFormValidationTest {
     }
 
     @Test
-    fun ean8_generatesAndValidatesCheckDigit() {
+    fun ean8_generatesAndCorrectsCheckDigit() {
         val data = "5512345"
         val full = data + BarcodeSymbology.checkDigit(data)
         assertEquals(full, build(QrCategoryType.EAN_8, data))
         assertEquals(full, build(QrCategoryType.EAN_8, full))
         val bad = full.dropLast(1) + ((full.last().digitToInt() + 1) % 10)
-        assertEquals("Check digit does not match.", validate(QrCategoryType.EAN_8, bad))
+        assertNull(validate(QrCategoryType.EAN_8, bad))
+        assertEquals(full, build(QrCategoryType.EAN_8, bad))
         encode(full, BarcodeFormat.EAN_8)
     }
 
@@ -64,7 +63,7 @@ class BarcodeFormValidationTest {
     }
 
     @Test
-    fun upcE_expandsValidPattern_andRejectsBadCheckOrNumberSystem() {
+    fun upcE_expandsValidPattern_andCorrectsCheckDigit() {
         val seven = "0123456"
         assertNull(validate(QrCategoryType.UPC_E, seven))
         val full = build(QrCategoryType.UPC_E, seven)
@@ -74,8 +73,9 @@ class BarcodeFormValidationTest {
         encode(full, BarcodeFormat.UPC_E)
 
         val bad = full.dropLast(1) + ((full.last().digitToInt() + 1) % 10)
-        assertEquals("Check digit does not match.", validate(QrCategoryType.UPC_E, bad))
-        assertRejected(QrCategoryType.UPC_E, bad, "Check digit does not match.")
+        assertNull(validate(QrCategoryType.UPC_E, bad))
+        assertEquals(full, build(QrCategoryType.UPC_E, bad))
+        encode(full, BarcodeFormat.UPC_E)
         assertEquals("Invalid UPC-E value.", validate(QrCategoryType.UPC_E, "2123456"))
         assertEquals(
             "Enter 7 digits, or 8 digits including the check digit.",

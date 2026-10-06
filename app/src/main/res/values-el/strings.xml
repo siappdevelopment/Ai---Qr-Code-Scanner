@@ -1,3 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_back">Πίσω</string>
+    <string name="action_cancel">Άκυρο</string>
+    <string name="action_clear">Εκκαθάριση</string>
+    <string name="action_copy">Αντιγραφή</string>
+    <string name="action_delete">Διαγραφή</string>
+    <string name="action_go_back">Επιστροφή</string>
+    <string name="action_paste">Επικόλληση</string>
+    <string name="action_share">Κοινοποίηση</string>
+    <string name="action_reset">Επαναφορά</string>
+    <string name="cd_clear">Εκκαθάριση</string>
+    <string name="cd_clear_search">Εκκαθάριση αναζήτησης</string>
+    <string name="cd_favorite">Αγαπημένο</string>
+    <string name="cd_more">Περισσότερα</string>
+    <string name="cd_add_to_favorites">Προσθήκη στα αγαπημένα</string>
+    <string name="toast_copied">Αντιγράφηκε</string>
+    <string name="toast_deleted">Διαγράφηκε</string>
+    <string name="toast_history_cleared">Το ιστορικό εκκαθαρίστηκε</string>
+    <string name="toast_clipboard_empty">Το πρόχειρο είναι κενό</string>
+    <string name="toast_unable_to_open_link">Δεν είναι δυνατό το άνοιγμα του συνδέσμου</string>
+    <string name="share_chooser_title">Κοινοποίηση</string>
+    <string name="form_label_optional_suffix">%1$s (προαιρετικό)</string>
 
+    <!-- Bottom navigation -->
+    <string name="nav_home">Αρχική</string>
+    <string name="nav_scan">Σάρωση</string>
+    <string name="nav_settings">Ρυθμίσεις</string>
+    <string name="cd_quick_scan">Γρήγορη σάρωση</string>
+
+    <!-- Home -->
+    <string name="home_cd_favorites">Αγαπημένα</string>
+    <string name="home_instant_scanner_title">Άμεσος σαρωτής</string>
+    <string name="home_instant_scanner_subtitle">Στρέψτε σε οποιονδήποτε κωδικό QR ή τυπικό barcode</string>
+    <string name="home_open_camera_scanner">Άνοιγμα σαρωτή κάμερας</string>
+    <string name="home_quick_tools_heading">ΓΡΗΓΟΡΑ ΕΡΓΑΛΕΙΑ</string>
+    <string name="home_tool_scan_barcode_title">Σάρωση barcode</string>
+    <string name="home_tool_scan_barcode_subtitle">Ετικέτες UPC &amp; EAN</string>
+    <string name="home_tool_scan_gallery_title">Σάρωση συλλογής</string>
+    <string name="home_tool_scan_gallery_subtitle">Από στιγμιότυπα οθόνης</string>
+    <string name="home_tool_create_qr_title">Δημιουργία QR</string>
+    <string name="home_tool_create_qr_subtitle">Σύνδεσμοι, Wi-Fi &amp; vCard</string>
+    <string name="home_tool_history_title">Ιστορικό</string>
+    <string name="home_tool_history_subtitle">Αποθηκευμένες σαρώσεις &amp; κωδικοί</string>
+    <string name="home_recent_scans_title">Πρόσφατες σαρώσεις</string>
+    <string name="home_view_all">Προβολή όλων</string>
+    <string name="home_no_recent_scans_title">Δεν υπάρχουν πρόσφατες σαρώσεις ακόμη</string>
+    <string name="home_no_recent_scans_body">Οι κωδικοί που σαρώνετε θα εμφανίζονται εδώ για γρήγορη πρόσβαση.</string>
+
+    <!-- History -->
+    <string name="history_title">Ιστορικό</string>
+    <string name="history_search_placeholder">Αναζήτηση κωδικών, URL, τίτλων…</string>
+    <string name="history_no_matches">Δεν βρέθηκαν αποτελέσματα για την αναζήτησή σας</string>
+    <string name="history_filter_all">Όλα (%1$d)</string>
+    <string name="history_filter_scanned">Σαρώθηκαν (%1$d)</string>
+    <string name="history_filter_created">Δημιουργήθηκαν (%1$d)</string>
+    <string name="history_section_today">Σήμερα</string>
+    <string name="history_section_yesterday">Χθες</string>
+    <string name="history_section_earlier">Παλαιότερα</string>
+    <string name="history_section_count_scans">%1$d σαρώσεις</string>
+    <string name="history_section_count_scan">%1$d σάρωση</string>
+    <string name="history_section_count_items">%1$d στοιχεία</string>
+    <string name="history_section_count_item">%1$d στοιχείο</string>
+    <string name="history_menu_add_favorite">Προσθήκη στα αγαπημένα</string>
+    <string name="history_menu_remove_favorite">Αφαίρεση από τα αγαπημένα</string>
+    <string name="history_empty_title">Δεν υπάρχει ακόμη ιστορικό σαρώσεων</string>
+    <string name="history_empty_launch_scanner">Εκκίνηση σαρωτή τώρα</string>
+    <string name="history_detail_title">Λεπτομέρειες ιστορικού</string>
+    <string name="history_not_found_title">Η σάρωση δεν βρέθηκε</string>
+    <string name="history_not_found_body">Αυτό το στοιχείο ιστορικού μπορεί να έχει διαγραφεί.</string>
+    <string name="history_delete_item_title">Διαγραφή αυτού του στοιχείου ιστορικού;</string>
+    <string name="history_delete_item_subtitle">Αυτή η ενέργεια δεν μπορεί να αναιρεθεί</string>
+    <string name="history_delete_item_body">Αυτό θα αφαιρέσει οριστικά αυτό το στοιχείο από το τοπικό ιστορικό της συσκευής σας.</string>
+    <string name="history_clear_all_title">Εκκαθάριση ιστορικού σάρωσης &amp; δημιουργίας;</string>
+    <string name="history_stored_items_count">%1$d αποθηκευμένα στοιχεία</string>
+    <string name="history_clear_all_body">Αυτό θα αφαιρέσει οριστικά κάθε στοιχείο ιστορικού από την τοπική σας συσκευή, συμπεριλαμβανομένων των στοιχείων που έχουν επισημανθεί με like και των αγαπημένων.</string>
+    <string name="history_clear_all_warning">Τα στοιχεία δεν μπορούν να αποκατασταθούν μετά την εκκαθάριση.</string>
+    <string name="history_clear_all_confirm">Εκκαθάριση όλου του ιστορικού</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">Αγαπημένα</string>
+    <string name="favorites_empty">Δεν υπάρχουν αγαπημένα ακόμη</string>
+
+    <!-- Scan / viewfinder -->
+    <string name="scan_hud_flash">ΦΛΑΣ</string>
+    <string name="scan_hud_gallery">ΣΥΛΛΟΓΗ</string>
+    <string name="scan_hud_flip">ΑΝΤΙΣΤΡΟΦΗ</string>
+    <string name="cd_toggle_flashlight">Εναλλαγή φακού</string>
+    <string name="cd_scan_image_from_gallery">Σάρωση εικόνας από τη συλλογή</string>
+    <string name="cd_flip_camera_lens">Εναλλαγή φακού κάμερας</string>
+    <string name="scan_zoom_level">%1$dx</string>
+    <string name="scan_camera_permission_title">Απαιτείται άδεια κάμερας</string>
+    <string name="scan_camera_permission_body">Επιτρέψτε την πρόσβαση στην κάμερα για σάρωση κωδικών QR και barcode.</string>
+    <string name="scan_camera_permission_body_settings">Η πρόσβαση στην κάμερα είναι απενεργοποιημένη. Ανοίξτε τις Ρυθμίσεις, ενεργοποιήστε την Κάμερα και επιστρέψτε εδώ για σάρωση.</string>
+    <string name="scan_grant_permission">Χορήγηση άδειας</string>
+    <string name="scan_open_settings">Άνοιγμα Ρυθμίσεων</string>
+
+    <!-- Gallery crop -->
+    <string name="gallery_crop_title">Περικοπή φωτογραφίας</string>
+    <string name="gallery_crop_select_photo">Επιλέξτε φωτογραφία για περικοπή</string>
+    <string name="gallery_crop_rotate_90">Περιστροφή 90°</string>
+    <string name="gallery_crop_flip">Αναστροφή</string>
+    <string name="gallery_crop_detecting">Ανίχνευση…</string>
+    <string name="gallery_crop_scan_selection">Σάρωση επιλογής</string>
+    <string name="gallery_crop_choose_another">Επιλογή άλλης φωτογραφίας</string>
+    <string name="gallery_crop_unable_open_image">Δεν είναι δυνατό το άνοιγμα αυτής της εικόνας</string>
+    <string name="gallery_crop_no_code_detected">Δεν ανιχνεύθηκε σαρώσιμος κωδικός</string>
+    <string name="gallery_crop_detection_failed">Η ανίχνευση απέτυχε</string>
+    <string name="gallery_crop_multiple_codes_title">Βρέθηκαν πολλοί κωδικοί</string>
+    <string name="gallery_crop_multiple_codes_prompt">Επιλέξτε ποιον κωδικό θα ανοίξετε:</string>
+    <string name="gallery_crop_code_list_item">%1$d. %2$s: %3$s</string>
+    <string name="cd_selected_photo">Επιλεγμένη φωτογραφία</string>
+    <string name="wifi_preview_enter_ssid">Εισαγάγετε SSID</string>
+
+    <!-- Detection error -->
+    <string name="detection_error_title">Η ανίχνευση απέτυχε</string>
+    <string name="detection_error_badge">Η ΑΝΙΧΝΕΥΣΗ ΑΠΕΤΥΧΕ</string>
+    <string name="detection_error_headline">Δεν ανιχνεύθηκε σαρώσιμος κωδικός</string>
+    <string name="detection_error_checklist_title">Λίστα ελέγχου βελτιστοποίησης</string>
+    <string name="detection_error_tip_steady">Κρατήστε σταθερά και τοποθετήστε τον κωδικό πλήρως μέσα στο πλαίσιο περικοπής</string>
+    <string name="detection_error_tip_lighting">Χρησιμοποιήστε ευκρινή, καλά φωτισμένη φωτογραφία χωρίς έντονο θάμπωμα</string>
+    <string name="detection_error_tip_rotate">Δοκιμάστε Περιστροφή ή Αναστροφή εάν ο κωδικός εμφανίζεται στο πλάι</string>
+    <string name="detection_error_tip_formats">Υποστηρίζονται: QR, Aztec, Data Matrix, EAN, UPC, Code 128/39, PDF417</string>
+    <string name="detection_error_retry">Σάρωση ξανά / Επανάληψη</string>
+    <string name="detection_error_pick_gallery">Επιλογή άλλης φωτογραφίας από τη συλλογή</string>
+
+    <!-- Batch results -->
+    <string name="batch_results_title">Αποτελέσματα δέσμης</string>
+    <string name="batch_results_one_code">1 κωδικός έγινε δεκτός</string>
+    <string name="batch_results_many_codes">%1$d κωδικοί έγιναν δεκτοί</string>
+
+    <!-- Scan result -->
+    <string name="scan_result_title">Αποτέλεσμα σάρωσης</string>
+    <string name="scan_result_payload_heading">ΠΕΡΙΕΧΟΜΕΝΟ ΩΦΕΛΙΜΟΥ ΦΟΡΤΙΟΥ</string>
+    <string name="scan_result_empty_payload">(κενό)</string>
+    <string name="scan_result_kind_website">Ιστότοπος / URL</string>
+    <string name="scan_result_kind_wifi">Δίκτυο Wi-Fi</string>
+    <string name="scan_result_kind_plain_text">Απλό κείμενο</string>
+    <string name="scan_result_kind_qr_code">Κωδικός QR</string>
+    <string name="scan_result_kind_barcode">Barcode</string>
+    <string name="scan_result_url_detected_banner">Ανιχνεύθηκε ωφέλιμο φορτίο ιστότοπου / URL</string>
+    <string name="scan_result_copy_link">Αντιγραφή συνδέσμου</string>
+    <string name="scan_result_open_in_browser">Άνοιγμα στο πρόγραμμα περιήγησης</string>
+    <string name="scan_result_toast_link_copied">Ο σύνδεσμος αντιγράφηκε στο πρόχειρο</string>
+    <string name="scan_result_toast_copied">Αντιγράφηκε στο πρόχειρο</string>
+    <string name="scan_result_toast_saved_favorite">Αποθηκεύτηκε στα αγαπημένα σας</string>
+    <string name="scan_result_toast_removed_favorite">Αφαιρέθηκε από τα αγαπημένα</string>
+    <string name="share_scanned_url_title">Σαρωμένο URL</string>
+    <string name="share_scan_result_title">Αποτέλεσμα σάρωσης</string>
+
+    <!-- Create hub -->
+    <string name="create_hub_title">Δημιουργία κωδικού QR</string>
+    <string name="create_hub_search_placeholder">Αναζήτηση μορφής QR…</string>
+    <string name="create_hub_no_formats_title">Δεν βρέθηκαν μορφές</string>
+    <string name="create_hub_no_formats_body">Δοκιμάστε να πληκτρολογήσετε άλλη λέξη-κλειδί ή επαναφέρετε το ενεργό φίλτρο</string>
+    <string name="create_hub_reset_search">Επαναφορά αναζήτησης</string>
+    <string name="create_hub_section_social">Κοινωνικά</string>
+    <string name="create_hub_section_barcode">Barcode</string>
+    <string name="create_filter_all">Όλες οι μορφές</string>
+    <string name="create_filter_web">Ιστός &amp; Κοινωνικά</string>
+    <string name="create_filter_comms">Επικοινωνίες</string>
+    <string name="create_filter_utilities">Βοηθήματα</string>
+    <string name="create_subtitle_barcode">Barcode</string>
+
+    <!-- Create hub category cards -->
+    <string name="create_cat_website_title">URL ιστότοπου</string>
+    <string name="create_cat_website_subtitle">Σύνδεσμοι, προφίλ κοινωνικών δικτύων, ιστοσελίδες</string>
+    <string name="create_cat_wifi_title">Δίκτυο Wi-Fi</string>
+    <string name="create_cat_wifi_subtitle">WPA/WPA2, SSID, αυτόματη σύνδεση</string>
+    <string name="create_cat_contact_title">Επαφή / vCard</string>
+    <string name="create_cat_contact_subtitle">Όνομα, τηλέφωνο, email, διεύθυνση</string>
+    <string name="create_cat_plain_text_title">Απλό κείμενο</string>
+    <string name="create_cat_plain_text_subtitle">Σημειώσεις, μηνύματα, ακατέργαστα δεδομένα</string>
+    <string name="create_cat_phone_title">Τηλεφωνική κλήση</string>
+    <string name="create_cat_phone_subtitle">Άμεση τηλεφωνική κλήση</string>
+    <string name="create_cat_email_title">Μήνυμα email</string>
+    <string name="create_cat_email_subtitle">Προσυμπληρωμένος παραλήπτης &amp; θέμα</string>
+    <string name="create_cat_sms_title">SMS / Μήνυμα</string>
+    <string name="create_cat_sms_subtitle">Άμεσο γραπτό μήνυμα</string>
+    <string name="create_cat_whatsapp_title">WhatsApp</string>
+    <string name="create_cat_whatsapp_subtitle">Άμεσος σύνδεσμος συνομιλίας WhatsApp</string>
+    <string name="create_cat_location_title">Τοποθεσία</string>
+    <string name="create_cat_location_subtitle">Συντεταγμένες / καρφίτσα Google Maps</string>
+    <string name="create_cat_calendar_title">Συμβάν ημερολογίου</string>
+    <string name="create_cat_calendar_subtitle">Τίτλος, ημερομηνία, ώρα, υπενθύμιση</string>
+    <string name="create_cat_app_link_title">Σύνδεσμος εφαρμογής</string>
+    <string name="create_cat_app_link_subtitle">Σύνδεσμοι Google Play &amp; App Store</string>
+    <string name="create_cat_facebook_title">Facebook</string>
+    <string name="create_cat_facebook_subtitle">Προφίλ ή σελίδα</string>
+    <string name="create_cat_youtube_title">YouTube</string>
+    <string name="create_cat_youtube_subtitle">Κανάλι ή βίντεο</string>
+    <string name="create_cat_twitter_title">Twitter</string>
+    <string name="create_cat_twitter_subtitle">Προφίλ</string>
+    <string name="create_cat_tiktok_title">TikTok</string>
+    <string name="create_cat_tiktok_subtitle">Προφίλ</string>
+    <string name="create_cat_instagram_title">Instagram</string>
+    <string name="create_cat_instagram_subtitle">Προφίλ</string>
+    <string name="create_cat_paypal_title">PayPal</string>
+    <string name="create_cat_paypal_subtitle">Σύνδεσμος PayPal.me</string>
+    <string name="create_cat_snapchat_title">Snapchat</string>
+    <string name="create_cat_snapchat_subtitle">Προσθήκη φίλου</string>
+    <string name="create_cat_linkedin_title">LinkedIn</string>
+    <string name="create_cat_linkedin_subtitle">Προφίλ</string>
+    <string name="create_cat_spotify_title">Spotify</string>
+    <string name="create_cat_spotify_subtitle">Προφίλ ή λίστα αναπαραγωγής</string>
+    <string name="create_cat_code_128_title">Code 128</string>
+    <string name="create_cat_data_matrix_title">Data Matrix</string>
+    <string name="create_cat_pdf_417_title">PDF 417</string>
+    <string name="create_cat_aztec_title">Aztec</string>
+    <string name="create_cat_ean_13_title">EAN 13</string>
+    <string name="create_cat_ean_8_title">EAN 8</string>
+    <string name="create_cat_upc_e_title">UPC E</string>
+    <string name="create_cat_upc_a_title">UPC A</string>
+    <string name="create_cat_code_93_title">Code 93</string>
+    <string name="create_cat_code_39_title">Code 39</string>
+    <string name="create_cat_codabar_title">Codabar</string>
+    <string name="create_cat_itf_title">ITF</string>
+    <string name="create_cat_barcode_title">Barcode / EAN</string>
+
+    <!-- Create forms — shared -->
+    <string name="create_form_generate_preview">Δημιουργία &amp; προεπισκόπηση</string>
+    <string name="create_form_generate_preview_qr">Δημιουργία &amp; προεπισκόπηση QR</string>
+    <string name="create_form_instant_share">Άμεση κοινοποίηση</string>
+    <string name="create_barcode_stub_title">Η δημιουργία barcode έρχεται αργότερα</string>
+    <string name="create_barcode_stub_body">Αυτό το στοιχείο του κόμβου είναι για barcode (EAN/UPC), όχι για κωδικούς QR. Οι κατηγορίες QR είναι διαθέσιμες από τη Δημιουργία.</string>
+    <string name="create_validation_field_limit">Αυτό το πεδίο περιορίζεται σε %1$d χαρακτήρες.</string>
+    <string name="create_validation_qr_too_long">Αυτό είναι πολύ μεγάλο για να χωρέσει σε κωδικό QR. Συντομεύστε το κείμενο.</string>
+    <string name="create_validation_barcode_unavailable">Η δημιουργία barcode / EAN δεν είναι ακόμη διαθέσιμη. Χρησιμοποιήστε μια κατηγορία QR αντ' αυτού.</string>
+    <string name="create_validation_enter_value">Εισαγάγετε τιμή για κωδικοποίηση</string>
+
+    <!-- Create forms — website -->
+    <string name="form_website_url_label">URL ιστότοπου (https://)</string>
+    <string name="form_website_url_placeholder">https://example.com/target-path</string>
+    <string name="form_display_title_note_label">Εμφανιζόμενος τίτλος / Σημείωση</string>
+    <string name="form_display_title_note_placeholder">π.χ., Παρουσίαση μάρκετινγκ Q3</string>
+    <string name="form_validation_enter_website_url">Εισαγάγετε URL ιστότοπου</string>
+    <string name="form_validation_enter_valid_url">Εισαγάγετε έγκυρο URL (https://…)</string>
+
+    <!-- Create forms — plain text -->
+    <string name="form_plain_text_label">Ακατέργαστο μήνυμα / Ωφέλιμο φορτίο</string>
+    <string name="form_plain_text_placeholder">Πληκτρολογήστε ή επικολλήστε απλό κείμενο…</string>
+    <string name="form_optional_label_placeholder">Προαιρετική ετικέτα</string>
+    <string name="form_validation_enter_text">Εισαγάγετε κείμενο για κωδικοποίηση</string>
+
+    <!-- Create forms — contact -->
+    <string name="form_contact_name_label">Πλήρες όνομα</string>
+    <string name="form_contact_name_placeholder">Εισαγάγετε όνομα επαφής</string>
+    <string name="form_contact_email_label">Email (προαιρετικό)</string>
+    <string name="form_contact_email_placeholder">name@email.com</string>
+    <string name="form_contact_job_title_label">Τίτλος εργασίας (προαιρετικό)</string>
+    <string name="form_contact_job_title_placeholder">π.χ., Διευθυντής προϊόντος</string>
+    <string name="form_contact_phone_label">Τηλέφωνο (προαιρετικό)</string>
+    <string name="form_contact_phone_placeholder">+1 555 0100</string>
+    <string name="form_validation_enter_contact_name">Εισαγάγετε όνομα επαφής</string>
+
+    <!-- Create forms — phone -->
+    <string name="form_phone_number_label">Αριθμός τηλεφώνου</string>
+    <string name="form_validation_enter_phone">Εισαγάγετε αριθμό τηλεφώνου</string>
+    <string name="form_validation_enter_valid_phone">Εισαγάγετε έγκυρο αριθμό τηλεφώνου</string>
+
+    <!-- Create forms — email -->
+    <string name="form_email_address_label">Διεύθυνση email</string>
+    <string name="form_email_address_placeholder">hello@example.com</string>
+    <string name="form_email_subject_label">Θέμα (προαιρετικό)</string>
+    <string name="form_email_subject_placeholder">Θέμα μηνύματος</string>
+    <string name="form_email_body_label">Σώμα</string>
+    <string name="form_email_body_placeholder">Σώμα email</string>
+    <string name="form_validation_enter_email">Εισαγάγετε διεύθυνση email</string>
+    <string name="form_validation_enter_valid_email">Εισαγάγετε έγκυρη διεύθυνση email</string>
+    <string name="form_validation_enter_email_body">Εισαγάγετε σώμα email</string>
+
+    <!-- Create forms — SMS -->
+    <string name="form_sms_message_label">Μήνυμα</string>
+    <string name="form_sms_message_placeholder">Κείμενο SMS</string>
+    <string name="form_validation_enter_message">Εισαγάγετε μήνυμα</string>
+
+    <!-- Create forms — WhatsApp -->
+    <string name="form_whatsapp_number_label">Αριθμός WhatsApp</string>
+    <string name="form_whatsapp_number_placeholder">15550100 (με κωδικό χώρας)</string>
+    <string name="form_whatsapp_message_label">Μήνυμα (προαιρετικό)</string>
+    <string name="form_whatsapp_message_placeholder">Προσυμπληρωμένο κείμενο συνομιλίας</string>
+    <string name="form_validation_enter_whatsapp_number">Εισαγάγετε αριθμό WhatsApp (με κωδικό χώρας)</string>
+    <string name="form_validation_enter_valid_whatsapp_number">Εισαγάγετε έγκυρο αριθμό WhatsApp με κωδικό χώρας</string>
+
+    <!-- Create forms — location -->
+    <string name="form_location_coords_label">Συντεταγμένες (lat,lng)</string>
+    <string name="form_location_coords_placeholder">37.7749,-122.4194</string>
+    <string name="form_location_place_label">Ετικέτα τοποθεσίας (προαιρετικό)</string>
+    <string name="form_location_place_placeholder">Γέφυρα Golden Gate</string>
+    <string name="form_validation_enter_coordinates">Εισαγάγετε συντεταγμένες ως lat,lng</string>
+    <string name="form_validation_enter_valid_coordinates">Εισαγάγετε έγκυρες συντεταγμένες (π.χ. 37.7749,-122.4194)</string>
+
+    <!-- Create forms — app link -->
+    <string name="form_app_link_label">URL εφαρμογής ή πακέτο</string>
+    <string name="form_app_link_placeholder">com.example.app ή https://play.google.com/…</string>
+    <string name="form_validation_enter_app_url">Εισαγάγετε URL εφαρμογής ή όνομα πακέτου</string>
+    <string name="form_validation_enter_store_or_package">Εισαγάγετε URL καταστήματος ή πακέτο όπως com.example.app</string>
+
+    <!-- Create forms — social -->
+    <string name="form_social_display_title_label">Εμφανιζόμενος τίτλος (προαιρετικό)</string>
+    <string name="form_validation_enter_username_or_link">Εισαγάγετε όνομα χρήστη ή πλήρη σύνδεσμο</string>
+    <string name="form_social_facebook_primary_label">Όνομα χρήστη ή σύνδεσμος Facebook</string>
+    <string name="form_social_facebook_primary_placeholder">όνομα χρήστη ή https://facebook.com/…</string>
+    <string name="form_social_youtube_primary_label">Όνομα χρήστη ή σύνδεσμος YouTube</string>
+    <string name="form_social_youtube_primary_placeholder">@channel ή https://youtube.com/…</string>
+    <string name="form_social_twitter_primary_label">Όνομα χρήστη ή σύνδεσμος Twitter</string>
+    <string name="form_social_twitter_primary_placeholder">όνομα χρήστη ή https://x.com/…</string>
+    <string name="form_social_tiktok_primary_label">Όνομα χρήστη ή σύνδεσμος TikTok</string>
+    <string name="form_social_tiktok_primary_placeholder">@username ή https://tiktok.com/…</string>
+    <string name="form_social_instagram_primary_label">Όνομα χρήστη ή σύνδεσμος Instagram</string>
+    <string name="form_social_instagram_primary_placeholder">όνομα χρήστη ή https://instagram.com/…</string>
+    <string name="form_social_paypal_primary_label">Όνομα χρήστη ή σύνδεσμος PayPal</string>
+    <string name="form_social_paypal_primary_placeholder">όνομα paypal.me ή https://paypal.me/…</string>
+    <string name="form_social_snapchat_primary_label">Όνομα χρήστη ή σύνδεσμος Snapchat</string>
+    <string name="form_social_snapchat_primary_placeholder">όνομα χρήστη ή https://snapchat.com/add/…</string>
+    <string name="form_social_linkedin_primary_label">Όνομα χρήστη ή σύνδεσμος LinkedIn</string>
+    <string name="form_social_linkedin_primary_placeholder">όνομα προφίλ ή https://linkedin.com/in/…</string>
+    <string name="form_social_spotify_primary_label">Όνομα χρήστη ή σύνδεσμος Spotify</string>
+    <string name="form_social_spotify_primary_placeholder">ID χρήστη ή https://open.spotify.com/…</string>
+
+    <!-- Create forms — barcode payloads -->
+    <string name="form_barcode_code_128_label">Τιμή Code 128</string>
+    <string name="form_barcode_code_128_placeholder">Κείμενο ή αριθμοί</string>
+    <string name="form_barcode_data_matrix_label">Τιμή Data Matrix</string>
+    <string name="form_barcode_pdf_417_label">Τιμή PDF 417</string>
+    <string name="form_barcode_aztec_label">Τιμή Aztec</string>
+    <string name="form_barcode_ean_13_label">Ψηφία EAN 13</string>
+    <string name="form_barcode_ean_13_placeholder">12 ή 13 ψηφία</string>
+    <string name="form_barcode_ean_8_label">Ψηφία EAN 8</string>
+    <string name="form_barcode_ean_8_placeholder">7 ή 8 ψηφία</string>
+    <string name="form_barcode_upc_e_label">Ψηφία UPC E</string>
+    <string name="form_barcode_upc_e_placeholder">7 ή 8 ψηφία (ξεκινά με 0 ή 1)</string>
+    <string name="form_barcode_upc_a_label">Ψηφία UPC A</string>
+    <string name="form_barcode_upc_a_placeholder">11 ψηφία, ή 12 με ψηφίο ελέγχου</string>
+    <string name="form_barcode_code_93_label">Τιμή Code 93</string>
+    <string name="form_barcode_code_93_placeholder">Κείμενο ASCII</string>
+    <string name="form_barcode_code_39_label">Τιμή Code 39</string>
+    <string name="form_barcode_codabar_label">Τιμή Codabar</string>
+    <string name="form_barcode_codabar_placeholder">Ψηφία, προαιρετικό start/stop</string>
+    <string name="form_barcode_itf_label">Ψηφία ITF</string>
+    <string name="form_barcode_itf_placeholder">Ζυγός αριθμός ψηφίων</string>
+    <string name="form_barcode_generic_placeholder">Κείμενο ή αριθμοί</string>
+    <string name="form_payload_label">Ωφέλιμο φορτίο</string>
+    <string name="form_payload_placeholder">Εισαγάγετε τιμή</string>
+
+    <!-- Barcode validation -->
+    <string name="barcode_validation_digits_only">Μόνο ψηφία.</string>
+    <string name="barcode_validation_check_digit_mismatch">Το ψηφίο ελέγχου δεν ταιριάζει.</string>
+    <string name="barcode_validation_ean_13_length">Εισαγάγετε 12 ψηφία, ή 13 ψηφία συμπεριλαμβανομένου του ψηφίου ελέγχου.</string>
+    <string name="barcode_validation_ean_8_length">Εισαγάγετε 7 ψηφία, ή 8 ψηφία συμπεριλαμβανομένου του ψηφίου ελέγχου.</string>
+    <string name="barcode_validation_upc_a_length">Εισαγάγετε 11 ψηφία, ή 12 ψηφία συμπεριλαμβανομένου του ψηφίου ελέγχου.</string>
+    <string name="barcode_validation_upc_e_length">Εισαγάγετε 7 ψηφία, ή 8 ψηφία συμπεριλαμβανομένου του ψηφίου ελέγχου.</string>
+    <string name="barcode_validation_upc_e_invalid">Μη έγκυρη τιμή UPC-E.</string>
+    <string name="barcode_validation_itf_even">Εισαγάγετε ζυγό αριθμό ψηφίων.</string>
+    <string name="barcode_validation_itf_min">Το ITF χρειάζεται τουλάχιστον 2 ψηφία.</string>
+    <string name="barcode_validation_itf_max">Το ITF δεν μπορεί να υπερβαίνει τα 80 ψηφία.</string>
+    <string name="barcode_validation_code_128_ascii">Το Code 128 υποστηρίζει μόνο χαρακτήρες έως ASCII 127.</string>
+    <string name="barcode_validation_code_93_ascii">Το Code 93 υποστηρίζει μόνο χαρακτήρες έως ASCII 127.</string>
+    <string name="barcode_validation_code_93_too_long">Αυτή η τιμή είναι πολύ μεγάλη για Code 93.</string>
+    <string name="barcode_validation_code_39_unsupported">Το Code 39 δεν μπορεί να κωδικοποιήσει αυτόν τον χαρακτήρα.</string>
+    <string name="barcode_validation_code_39_too_long">Αυτή η τιμή είναι πολύ μεγάλη για Code 39.</string>
+    <string name="barcode_validation_codabar_chars">Το Codabar επιτρέπει μόνο ψηφία και - \$ : / . +.</string>
+    <string name="barcode_validation_codabar_guards">Οι χαρακτήρες έναρξης και λήξης πρέπει να υπάρχουν και οι δύο.</string>
+    <string name="barcode_validation_enter_codabar">Εισαγάγετε τιμή Codabar.</string>
+    <string name="barcode_validation_enter_code_128">Εισαγάγετε τιμή Code 128.</string>
+    <string name="barcode_validation_enter_code_93">Εισαγάγετε τιμή Code 93.</string>
+    <string name="barcode_validation_enter_code_39">Εισαγάγετε τιμή Code 39.</string>
+    <string name="barcode_validation_enter_data_matrix">Εισαγάγετε τιμή Data Matrix.</string>
+    <string name="barcode_validation_enter_pdf417">Εισαγάγετε τιμή PDF417.</string>
+    <string name="barcode_validation_enter_aztec">Εισαγάγετε τιμή Aztec.</string>
+    <string name="barcode_validation_too_large_data_matrix">Αυτή η τιμή είναι πολύ μεγάλη για σύμβολο Data Matrix.</string>
+    <string name="barcode_validation_too_large_pdf417">Αυτή η τιμή είναι πολύ μεγάλη για σύμβολο PDF417.</string>
+    <string name="barcode_validation_too_large_aztec">Αυτή η τιμή είναι πολύ μεγάλη για σύμβολο Aztec.</string>
+    <string name="barcode_validation_cannot_encode">Αυτή η τιμή δεν μπορεί να κωδικοποιηθεί.</string>
+    <string name="barcode_counter_ean_13_short">%1$d/12</string>
+    <string name="barcode_counter_ean_13_long">%1$d/13</string>
+    <string name="barcode_counter_ean_8_short">%1$d/7</string>
+    <string name="barcode_counter_ean_8_long">%1$d/8</string>
+    <string name="barcode_counter_upc_e_short">%1$d/7</string>
+    <string name="barcode_counter_upc_e_long">%1$d/8</string>
+    <string name="barcode_counter_upc_a_short">%1$d/11</string>
+    <string name="barcode_counter_upc_a_long">%1$d/12</string>
+    <string name="barcode_counter_itf_digits">%1$d ψηφία</string>
+    <string name="barcode_counter_chars">%1$d χαρακτήρες</string>
+
+    <!-- Wi-Fi create form -->
+    <string name="wifi_form_title">Δίκτυο Wi-Fi</string>
+    <string name="wifi_network_name_heading">ΟΝΟΜΑ ΔΙΚΤΥΟΥ (SSID)</string>
+    <string name="wifi_ssid_placeholder">Εισαγάγετε SSID Wi-Fi</string>
+    <string name="wifi_security_type_heading">ΤΥΠΟΣ ΑΣΦΑΛΕΙΑΣ</string>
+    <string name="wifi_security_recommended">Συνιστάται: WPA/WPA2</string>
+    <string name="wifi_security_wpa">WPA/WPA2</string>
+    <string name="wifi_security_wpa3">WPA3</string>
+    <string name="wifi_security_wep">WEP</string>
+    <string name="wifi_security_open">Ανοιχτό</string>
+    <string name="wifi_password_heading">ΚΩΔΙΚΟΣ ΠΡΟΣΒΑΣΗΣ</string>
+    <string name="wifi_password_placeholder">Κωδικός πρόσβασης Wi-Fi</string>
+    <string name="cd_toggle_password">Εμφάνιση/απόκρυψη κωδικού</string>
+    <string name="wifi_hidden_network_title">Κρυφό δίκτυο</string>
+    <string name="wifi_hidden_network_subtitle">Το SSID δεν μεταδίδεται δημόσια</string>
+    <string name="wifi_guest_scan_hint">Οι επισκέπτες σαρώνουν αυτό το QR με την εφαρμογή κάμερας για σύνδεση χωρίς να πληκτρολογήσουν τον κωδικό πρόσβασης Wi-Fi.</string>
+    <string name="wifi_validation_enter_ssid">Εισαγάγετε όνομα δικτύου (SSID)</string>
+    <string name="wifi_validation_enter_password">Εισαγάγετε τον κωδικό πρόσβασης Wi-Fi</string>
+
+    <!-- QR preview -->
+    <string name="qr_preview_title">Προεπισκόπηση QR</string>
+    <string name="cd_share">Κοινοποίηση</string>
+    <string name="cd_generated_qr_code">Δημιουργημένος κωδικός QR</string>
+    <string name="qr_preview_generating">Δημιουργία…</string>
+    <string name="qr_preview_nothing_to_preview">Τίποτα για προεπισκόπηση</string>
+    <string name="qr_preview_unable_encode_barcode">Δεν είναι δυνατή η κωδικοποίηση του barcode</string>
+    <string name="qr_preview_customize_style">Προσαρμογή στυλ &amp; χρωμάτων</string>
+    <string name="qr_preview_save_image">Αποθήκευση εικόνας</string>
+    <string name="qr_preview_saving">Αποθήκευση…</string>
+    <string name="qr_preview_create">Δημιουργία</string>
+    <string name="qr_preview_creating">Δημιουργία…</string>
+    <string name="qr_preview_code_specifications">Προδιαγραφές κωδικού</string>
+    <string name="qr_preview_spec_export">Εξαγωγή</string>
+    <string name="qr_preview_spec_export_size">1024 × 1024</string>
+    <string name="qr_preview_spec_style">Στυλ</string>
+    <string name="qr_preview_toast_not_ready">Το QR δεν είναι έτοιμο</string>
+    <string name="qr_preview_toast_generated">Ο κωδικός QR δημιουργήθηκε</string>
+    <string name="qr_preview_toast_unable_save">Δεν είναι δυνατή η αποθήκευση</string>
+    <string name="export_png_saved">Το PNG αποθηκεύτηκε στη συλλογή (1024×1024)</string>
+    <string name="export_png_failed">Η εξαγωγή PNG απέτυχε</string>
+    <string name="export_unable_create_entry">Δεν είναι δυνατή η δημιουργία καταχώρισης MediaStore</string>
+    <string name="export_png_compress_failed">Η συμπίεση PNG απέτυχε</string>
+    <string name="export_unable_open_stream">Δεν είναι δυνατό το άνοιγμα της ροής εξόδου</string>
+    <string name="export_svg_ready">Το SVG είναι έτοιμο για κοινοποίηση</string>
+    <string name="export_svg_failed">Η εξαγωγή SVG απέτυχε</string>
+    <string name="export_share_opened">Άνοιξε το μενού κοινοποίησης</string>
+    <string name="export_share_failed">Η κοινοποίηση απέτυχε</string>
+    <string name="export_send_code_chooser">Αποστολή κωδικού</string>
+    <string name="export_vector_chooser">Εξαγωγή διανύσματος</string>
+
+    <!-- QR customize -->
+    <string name="qr_customize_title">Προσαρμογή QR</string>
+    <string name="qr_customize_nothing">Τίποτα για προσαρμογή</string>
+    <string name="cd_styled_qr_preview">Προεπισκόπηση στυλιζαρισμένου QR</string>
+    <string name="qr_customize_rendering">Απόδοση…</string>
+    <string name="qr_customize_section_body_pattern">Μοτίβο σώματος</string>
+    <string name="qr_customize_section_corner_eye">Στυλ γωνιακών ματιών</string>
+    <string name="qr_customize_section_color_palette">Παλέτα χρωμάτων</string>
+    <string name="qr_customize_section_center_icon">Κεντρικό εικονίδιο</string>
+    <string name="qr_customize_section_frame">Πρότυπο πλαισίου</string>
+    <string name="qr_customize_save_export">Αποθήκευση &amp; εξαγωγή προσαρμοσμένου QR</string>
+    <string name="qr_customize_toast_unable_load_logo">Δεν είναι δυνατή η φόρτωση του λογοτύπου</string>
+    <string name="qr_customize_toast_reset_done">Η επαναφορά ολοκληρώθηκε</string>
+    <string name="qr_pattern_classic">Κλασικό (τετράγωνο)</string>
+    <string name="qr_pattern_rounded">Στρογγυλεμένο</string>
+    <string name="qr_pattern_dots">Ακτινικές κουκκίδες</string>
+    <string name="qr_pattern_diamond">Πλέγμα διαμαντιού</string>
+    <string name="qr_eye_square">Τετράγωνο</string>
+    <string name="qr_eye_soft">Απαλή καμπύλη</string>
+    <string name="qr_eye_circle">Κυκλικό μάτι</string>
+    <string name="qr_icon_none">Κανένα</string>
+    <string name="qr_icon_wifi">Wi-Fi</string>
+    <string name="qr_icon_globe">Υδρόγειος</string>
+    <string name="qr_icon_custom">Προσαρμοσμένο</string>
+    <string name="qr_palette_electric_cobalt">Ηλεκτρικό κοβάλτιο</string>
+    <string name="qr_palette_deep_sapphire">Βαθύ ζαφείρι</string>
+    <string name="qr_palette_neon_cyan">Νέον κυανό</string>
+    <string name="qr_palette_monochrome_slate">Μονόχρωμο σχιστόλιθο</string>
+    <string name="qr_palette_crimson">Βυσσινί</string>
+    <string name="qr_palette_emerald">Σμαράγδι</string>
+    <string name="qr_palette_violet">Βιολετί</string>
+    <string name="qr_palette_amber">Κεχριμπάρι</string>
+    <string name="qr_frame_none_title">Κανένα</string>
+    <string name="qr_frame_none_subtitle">Καθαρή μήτρα χωρίς περίγραμμα</string>
+    <string name="qr_frame_pill_title">Χάπι \"Σάρωσέ με\"</string>
+    <string name="qr_frame_pill_subtitle">Σήμα με συνημμένο υποσέλιδο</string>
+    <string name="qr_frame_banner_title">Πάνω πανό</string>
+    <string name="qr_frame_banner_subtitle">Επάνω λωρίδα έμφασης κεφαλίδας</string>
+    <string name="qr_frame_cyber_title">Cyber σταυρόνημα</string>
+    <string name="qr_frame_cyber_subtitle">Γωνίες προβολής HUD κοβαλτίου</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ρυθμίσεις</string>
+    <string name="settings_preferences_title">Προτιμήσεις</string>
+    <string name="settings_engine_version">Μηχανή v2.4.0</string>
+    <string name="settings_preferences_subtitle">Οπτική μήτρα υψηλής ταχύτητας &amp; παράμετροι σύνθεσης</string>
+    <string name="settings_pipeline_online">ΟΠΤΙΚΟΣ ΑΓΩΓΟΣ CV ΣΕ ΣΥΝΔΕΣΗ</string>
+    <string name="settings_pro_footer">%1$s Pro · Επαληθεύτηκε η επιτάχυνση της συσκευής</string>
+    <string name="settings_section_appearance">Εμφάνιση</string>
+    <string name="settings_theme_title">Θέμα</string>
+    <string name="settings_theme_light">Φωτεινό</string>
+    <string name="settings_theme_dark">Σκούρο</string>
+    <string name="settings_language_title">Γλώσσα</string>
+    <string name="settings_launcher_title">Ρυθμίσεις εκκινητή</string>
+    <string name="settings_launcher_subtitle">Μέγεθος εικονιδίων, ετικέτες και σειρά εφαρμογών</string>
+    <string name="settings_section_scanner">Σαρωτής &amp; υλικό</string>
+    <string name="settings_vibrate_title">Δόνηση κατά την ανίχνευση</string>
+    <string name="settings_vibrate_subtitle">Απτικός παλμός όταν επιλυθεί η μήτρα</string>
+    <string name="settings_beep_title">Ήχος μπιπ</string>
+    <string name="settings_beep_subtitle">Επιβεβαίωση με ηχητικό τόνο</string>
+    <string name="settings_auto_open_urls_title">Αυτόματο άνοιγμα URL</string>
+    <string name="settings_auto_open_urls_subtitle">Ανοίγει συνδέσμους ιστότοπων στο πρόγραμμα περιήγησης μετά τη σάρωση</string>
+    <string name="settings_clear_history_title">Εκκαθάριση ιστορικού σάρωσης &amp; δημιουργίας</string>
+    <string name="settings_clear_history_subtitle">Αφαίρεση μη αγαπημένων στοιχείων · διατήρηση αγαπημένων</string>
+    <string name="settings_section_about">Σχετικά &amp; νομικά</string>
+    <string name="settings_about_title">Σχετικά</string>
+    <string name="settings_privacy_policy_title">Πολιτική απορρήτου</string>
+    <string name="settings_share_title">Κοινοποίηση</string>
+    <string name="settings_rate_title">Αξιολόγηση</string>
+    <string name="settings_dialog_theme_title">Θέμα</string>
+    <string name="settings_dialog_default_ecc_title">Προεπιλεγμένο επίπεδο διόρθωσης</string>
+    <string name="settings_dialog_default_format_title">Προεπιλεγμένη μορφή QR</string>
+    <string name="settings_ecc_low_subtitle">Χαμηλό (7% ECC)</string>
+    <string name="settings_ecc_medium_subtitle">Μεσαίο (15% ECC)</string>
+    <string name="settings_ecc_quartile_subtitle">Τεταρτημόριο (25% ECC)</string>
+    <string name="settings_ecc_high_subtitle">Υψηλό (30% ECC) · Βέλτιστος πλεονασμός</string>
+    <string name="settings_ecc_low_option">Χαμηλό / L / 7%</string>
+    <string name="settings_ecc_medium_option">Μεσαίο / M / 15%</string>
+    <string name="settings_ecc_quartile_option">Τεταρτημόριο / Q / 25%</string>
+    <string name="settings_ecc_high_option">Υψηλό / H / 30%</string>
+    <string name="settings_format_svg">Διανυσματικό SVG / Ευκρινές 1024px</string>
+    <string name="settings_format_png">PNG / 1024px</string>
+    <string name="settings_language_system">Συγχρονισμένο με σύστημα</string>
+    <string name="settings_language_system_subtitle">Ακολουθήστε τη γλώσσα της συσκευής</string>
+    <string name="settings_language_english_us">Αγγλικά (ΗΠΑ)</string>
+    <string name="settings_language_hindi">Χίντι</string>
+    <string name="settings_language_russian">Ρωσικά</string>
+    <string name="settings_language_italian">Ιταλικά</string>
+    <string name="settings_language_french">Γαλλικά</string>
+    <string name="settings_language_spanish">Ισπανικά</string>
+    <string name="settings_language_japanese">Ιαπωνικά</string>
+    <string name="settings_language_korean">Κορεατικά</string>
+    <string name="settings_language_german">Γερμανικά</string>
+    <string name="settings_language_chinese">Κινεζικά</string>
+    <string name="settings_language_thai">Ταϊλανδέζικα</string>
+    <string name="settings_language_greek">Ελληνικά</string>
+    <string name="settings_language_portuguese_pt">Πορτογαλικά (Πορτογαλία)</string>
+    <string name="settings_language_portuguese_br">Πορτογαλικά (Βραζιλία)</string>
+    <string name="settings_language_dutch">Ολλανδικά</string>
+    <string name="settings_language_filipino">Φιλιππινέζικα</string>
+    <string name="settings_language_turkish">Τουρκικά</string>
+    <string name="settings_language_indonesian">Ινδονησιακά</string>
+    <string name="settings_language_afrikaans">Αφρικάανς</string>
+    <string name="settings_language_english">Αγγλικά</string>
+
+    <!-- About -->
+    <string name="about_title">Σχετικά</string>
+    <string name="about_tagline">Άμεση νοημοσύνη QR &amp; barcode</string>
+    <string name="about_meta_version">Έκδοση</string>
+    <string name="about_meta_build">Έκδοση build</string>
+    <string name="about_meta_package">Πακέτο</string>
+
+    <!-- Reminder / Events / Launcher / Widgets / Language / Privacy / Permission / Default / Intro / Ads -->
+    <string name="reminder_notification_title">Υπενθύμιση</string>
+    <string name="reminder_notification_channel_desc">Προγραμματισμένες ειδοποιήσεις υπενθύμισης</string>
+    <string name="event_uninstall_title">Απεγκαταστάθηκε;</string>
+    <string name="event_uninstall_success">Ο καθαρισμός ολοκληρώθηκε</string>
+    <string name="event_uninstall_sub">Η εφαρμογή απεγκαταστάθηκε με επιτυχία</string>
+    <string name="event_uninstall_body">Τα προσωρινά αρχεία σάρωσης και τα δεδομένα διαγράφηκαν από τη συσκευή σας.</string>
+    <string name="event_uninstall_chip">Ασφαλές &amp; πλήρες</string>
+    <string name="event_charge_in_title">Σύνδεση τροφοδοσίας</string>
+    <string name="event_charge_in_success">%1$d%%</string>
+    <string name="event_charge_in_sub">Συνδεδεμένο</string>
+    <string name="event_charge_in_body">Η γρήγορη φόρτιση είναι ενεργή.</string>
+    <string name="event_charge_in_chip">ΓΡΗΓΟΡΗ ΦΟΡΤΙΣΗ ΕΝΕΡΓΗ</string>
+    <string name="event_charge_out_title">Αποσύνδεση φορτιστή</string>
+    <string name="event_charge_out_success">%1$d%% Βέλτιστο</string>
+    <string name="event_charge_out_sub">Αποσυνδεδεμένο</string>
+    <string name="event_charge_out_body">Το καλώδιο τροφοδοσίας αποσυνδέθηκε.</string>
+    <string name="event_charge_out_chip">Τροφοδοσία αποσυνδεδεμένη</string>
+    <string name="event_optimized_speed">Βελτιστοποιημένη ταχύτητα</string>
+    <string name="event_fast">ΓΡΗΓΟΡΟ</string>
+    <string name="event_optimized_sub">Όλα λειτουργούν ομαλά.</string>
+    <string name="event_done">Έτοιμο</string>
+    <string name="launcher_settings">Ρυθμίσεις εκκινητή</string>
+    <string name="serialize">Ταξινόμηση</string>
+    <string name="by_name_asc_a_to_z">Κατά όνομα ASC (A έως Z)</string>
+    <string name="by_name_desc_z_to_a">Κατά όνομα DESC (Z έως A)</string>
+    <string name="by_installed_date">Κατά ημερομηνία εγκατάστασης</string>
+    <string name="preview">Προεπισκόπηση</string>
+    <string name="label_visibility">Ορατότητα ετικέτας</string>
+    <string name="hide_app_name">Απόκρυψη ονόματος εφαρμογής</string>
+    <string name="app_icon_size">Μέγεθος εικονιδίου εφαρμογής</string>
+    <string name="app_label_size">Μέγεθος ετικέτας εφαρμογής</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Widget εφαρμογών</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Επιλέξτε ένα widget για γρήγορη πρόσβαση στα εργαλεία QR απευθείας από την αρχική οθόνη.</string>
+    <string name="quick_access">Γρήγορη πρόσβαση</string>
+    <string name="app_icon_1x1">Εικονίδιο εφαρμογής 1 x 1</string>
+    <string name="qr_scanner_generator">Σαρωτής &amp; δημιουργός QR</string>
+    <string name="create_1_x_1">Δημιουργία 1 x 1</string>
+    <string name="style_a">Στυλ A</string>
+    <string name="style_b">Στυλ B</string>
+    <string name="style_c">Στυλ C</string>
+    <string name="scan_qr">Σάρωση QR</string>
+    <string name="cl_end_scan_subtitle">Ανοίξτε την κάμερα και σαρώστε έναν κωδικό QR</string>
+    <string name="cl_end_scan_action">Σάρωση</string>
+    <string name="cl_end_history">Ιστορικό</string>
+    <string name="cl_end_history_subtitle">Δείτε το ιστορικό σαρώσεων QR</string>
+    <string name="cl_end_widgets_subtitle">Προσθέστε εργαλεία QR στην αρχική οθόνη</string>
+    <string name="create_qr">Δημιουργία QR</string>
+    <string name="widget_pin_not_supported">Η καρφίτσωση widget δεν υποστηρίζεται σε αυτή τη συσκευή</string>
+    <string name="widget_pin_failed">Δεν είναι δυνατή η προσθήκη widget. Δοκιμάστε ξανά.</string>
+    <string name="choose_your_language">Επιλέξτε τη γλώσσα σας</string>
+    <string name="collection_title">Μια σύντομη σημείωση για το απόρρητό σας</string>
+    <string name="collection_intro_1">Χρησιμοποιούμε περιορισμένες πληροφορίες συσκευής και εφαρμογής για να διατηρούμε το QR Scanner γρήγορο, ασφαλές και αξιόπιστο, να παρέχουμε λειτουργίες σάρωσης και δημιουργίας κωδικών QR, να εμφανίζουμε διαφημίσεις που βοηθούν να παραμένει η εφαρμογή δωρεάν και να βελτιώνουμε τη συνολική εμπειρία σας.</string>
+    <string name="collection_intro_2">Το σαρωμένο περιεχόμενο, τα προσωπικά αρχεία, οι φωτογραφίες, τα βίντεο και άλλα ιδιωτικά δεδομένα σας δεν συλλέγονται για αναλυτικά στοιχεία ή διαφημίσεις και παραμένουν υπό τον έλεγχό σας.</string>
+    <string name="collection_what_we_use">Τι χρησιμοποιούμε και γιατί:</string>
+    <string name="collection_bullet_1">⦿ Πρόσβαση στην κάμερα - για ακριβή σάρωση κωδικών QR και barcode και άμεσα αποτελέσματα.</string>
+    <string name="collection_bullet_2">⦿ Πληροφορίες χρήσης εφαρμογής - όπως οι λειτουργίες σάρωσης και δημιουργίας QR που χρησιμοποιείτε και οι οθόνες που ανοίγετε - για τη βελτίωση της απόδοσης, της σταθερότητας και της εμπειρίας χρήστη.</string>
+    <string name="collection_bullet_3">⦿ Αναγνωριστικά συσκευής και εφαρμογής - για την αποθήκευση των προτιμήσεών σας, τη βελτίωση της σταθερότητας, την πρόληψη σφαλμάτων και την υποστήριξη βασικών λειτουργιών της εφαρμογής.</string>
+    <string name="collection_bullet_4">⦿ Αναγνωριστικά διαφημίσεων - για την εμφάνιση και μέτρηση διαφημίσεων που βοηθούν να παραμένει η εφαρμογή δωρεάν.</string>
+    <string name="collection_footer">Πατώντας «Συμφωνώ &amp; συνέχεια», αναγνωρίζετε την Πολιτική Απορρήτου μας. Χρησιμοποιούμε μόνο τις πληροφορίες που είναι απαραίτητες για την παροχή σάρωσης και δημιουργίας κωδικών QR, την ασφάλεια της εφαρμογής και άλλες βασικές λειτουργίες, τη βελτίωση της εφαρμογής και την υποστήριξη διαφημίσεων. Το σαρωμένο περιεχόμενο και τα ιδιωτικά δεδομένα σας παραμένουν υπό τον έλεγχό σας.</string>
+    <string name="collection_agree_checkbox">Συμφωνώ με αυτή τη συλλογή δεδομένων</string>
+    <string name="collection_agree_continue">Συμφωνώ &amp; συνέχεια</string>
+    <string name="collection_agree_toast">Παρακαλούμε συμφωνήστε με τη συλλογή δεδομένων για να συνεχίσετε.</string>
+    <string name="privacy_policy">Πολιτική απορρήτου</string>
+    <string name="this_action_may_contain_ads">Αυτή η ενέργεια μπορεί να περιέχει διαφημίσεις</string>
+    <string name="marketing_converter1">gclid</string>
+    <string name="utm_source_apps_facebook_com">utm_source=apps.facebook.com</string>
+    <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
+    <string name="utm_source_marketing">utm_source=marketing</string>
+    <string name="permission_title">Απαιτείται πρόσβαση στην κάμερα</string>
+    <string name="permission_description">Το QR Code &amp; Scanner χρειάζεται πρόσβαση στην κάμερα για να σαρώνει άμεσα κωδικούς QR, διαπιστευτήρια Wi-Fi και barcode σε πραγματικό χρόνο.</string>
+    <string name="permission_local_title">Άμεση τοπική σάρωση</string>
+    <string name="permission_local_desc">Οι σαρώσεις επεξεργάζονται πλήρως στη συσκευή με μηδενική καθυστέρηση διακομιστή.</string>
+    <string name="permission_privacy_title">100% διατήρηση απορρήτου</string>
+    <string name="permission_privacy_desc">Κανένα καρέ βίντεο ή ακατέργαστη λήψη δεν ανεβαίνει ή καταγράφεται ποτέ.</string>
+    <string name="permission_gallery_title">Εναλλακτική συλλογής</string>
+    <string name="permission_gallery_desc">Εισαγάγετε φωτογραφίες απευθείας από τη βιβλιοθήκη σας οποιαδήποτε στιγμή χωρίς δικαιώματα κάμερας.</string>
+    <string name="allow_permission">Να επιτραπεί η άδεια</string>
+    <string name="default_title">Κάντε το QR Code &amp; Scanner προεπιλεγμένο εκκινητή αρχικής οθόνης</string>
+    <string name="default_description">Άμεση πρόσβαση στον σαρωτή QR με ένα μόνο σύρσιμο προς τα δεξιά από την αρχική οθόνη, προσαρμοσμένα χειριστήρια widget και οργανωμένα συρτάρια εφαρμογών.</string>
+    <string name="default_swipe_title">Σύρετε δεξιά για σάρωση</string>
+    <string name="default_swipe_desc">Εκκινήστε το σκόπευτρο άμεσα από οπουδήποτε στην αρχική οθόνη με μηδενική καθυστέρηση.</string>
+    <string name="default_widgets_title">Έξυπνα γρήγορα widget</string>
+    <string name="default_widgets_desc">Καρφιτσώστε συντομεύσεις δημιουργού QR, οθόνες προχείρου και πληροφορίες μπαταρίας απευθείας στην αρχική.</string>
+    <string name="default_drawer_title">Προσαρμοσμένο συρτάρι εφαρμογών &amp; φάκελοι</string>
+    <string name="default_drawer_desc">Οργανώστε εφαρμογές, αποκρύψτε ετικέτες, προσαρμόστε στήλες πλέγματος και εναλλάξτε μεταξύ φωτεινών και σκούρων θεμάτων.</string>
+    <string name="set_as_default">Ορισμός ως προεπιλογή</string>
+    <string name="intro_title_1">Σαρώστε κωδικούς QR άμεσα</string>
+    <string name="intro_desc_1">Σαρώστε γρήγορα κωδικούς QR με την κάμερά σας και αποκτήστε πρόσβαση σε πληροφορίες σε δευτερόλεπτα</string>
+    <string name="intro_title_2">Σαρώστε barcode με ευκολία</string>
+    <string name="intro_desc_2">Σαρώστε γρήγορα barcode προϊόντων και λάβετε ακριβή αποτελέσματα σε δευτερόλεπτα</string>
+    <string name="intro_title_3">Δημιουργήστε κωδικούς QR με τον τρόπο σας</string>
+    <string name="intro_desc_3">Δημιουργήστε και προσαρμόστε επαγγελματικούς κωδικούς QR για όλες τις ψηφιακές σας ανάγκες.</string>
+    <string name="next">Επόμενο</string>
+    <string name="loading_ads_title">Φόρτωση διαφημίσεων</string>
+    <string name="loading_ads_desc">Παρακαλώ περιμένετε, οι διαφημίσεις θα εμφανιστούν...</string>
 </resources>

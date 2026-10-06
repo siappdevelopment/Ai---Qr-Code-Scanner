@@ -1,3 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_back">ย้อนกลับ</string>
+    <string name="action_cancel">ยกเลิก</string>
+    <string name="action_clear">ล้าง</string>
+    <string name="action_copy">คัดลอก</string>
+    <string name="action_delete">ลบ</string>
+    <string name="action_go_back">กลับ</string>
+    <string name="action_paste">วาง</string>
+    <string name="action_share">แชร์</string>
+    <string name="action_reset">รีเซ็ต</string>
+    <string name="cd_clear">ล้าง</string>
+    <string name="cd_clear_search">ล้างการค้นหา</string>
+    <string name="cd_favorite">รายการโปรด</string>
+    <string name="cd_more">เพิ่มเติม</string>
+    <string name="cd_add_to_favorites">เพิ่มในรายการโปรด</string>
+    <string name="toast_copied">คัดลอกแล้ว</string>
+    <string name="toast_deleted">ลบแล้ว</string>
+    <string name="toast_history_cleared">ล้างประวัติแล้ว</string>
+    <string name="toast_clipboard_empty">คลิปบอร์ดว่างเปล่า</string>
+    <string name="toast_unable_to_open_link">ไม่สามารถเปิดลิงก์ได้</string>
+    <string name="share_chooser_title">แชร์</string>
+    <string name="form_label_optional_suffix">%1$s (ไม่บังคับ)</string>
 
+    <!-- Bottom navigation -->
+    <string name="nav_home">หน้าแรก</string>
+    <string name="nav_scan">สแกน</string>
+    <string name="nav_settings">การตั้งค่า</string>
+    <string name="cd_quick_scan">สแกนด่วน</string>
+
+    <!-- Home -->
+    <string name="home_cd_favorites">รายการโปรด</string>
+    <string name="home_instant_scanner_title">สแกนเนอร์ทันที</string>
+    <string name="home_instant_scanner_subtitle">เล็งไปที่คิวอาร์โค้ดหรือบาร์โค้ดมาตรฐานใดก็ได้</string>
+    <string name="home_open_camera_scanner">เปิดสแกนเนอร์กล้อง</string>
+    <string name="home_quick_tools_heading">เครื่องมือด่วน</string>
+    <string name="home_tool_scan_barcode_title">สแกนบาร์โค้ด</string>
+    <string name="home_tool_scan_barcode_subtitle">แท็ก UPC &amp; EAN</string>
+    <string name="home_tool_scan_gallery_title">สแกนจากแกลเลอรี</string>
+    <string name="home_tool_scan_gallery_subtitle">จากภาพหน้าจอ</string>
+    <string name="home_tool_create_qr_title">สร้างคิวอาร์</string>
+    <string name="home_tool_create_qr_subtitle">ลิงก์, Wi-Fi &amp; vCard</string>
+    <string name="home_tool_history_title">ประวัติ</string>
+    <string name="home_tool_history_subtitle">การสแกนและโค้ดที่บันทึกไว้</string>
+    <string name="home_recent_scans_title">การสแกนล่าสุด</string>
+    <string name="home_view_all">ดูทั้งหมด</string>
+    <string name="home_no_recent_scans_title">ยังไม่มีการสแกนล่าสุด</string>
+    <string name="home_no_recent_scans_body">โค้ดที่คุณสแกนจะปรากฏที่นี่เพื่อการเข้าถึงที่รวดเร็ว</string>
+
+    <!-- History -->
+    <string name="history_title">ประวัติ</string>
+    <string name="history_search_placeholder">ค้นหาโค้ด, URL, ชื่อเรื่อง…</string>
+    <string name="history_no_matches">ไม่พบรายการที่ตรงกับการค้นหาของคุณ</string>
+    <string name="history_filter_all">ทั้งหมด (%1$d)</string>
+    <string name="history_filter_scanned">สแกนแล้ว (%1$d)</string>
+    <string name="history_filter_created">สร้างแล้ว (%1$d)</string>
+    <string name="history_section_today">วันนี้</string>
+    <string name="history_section_yesterday">เมื่อวาน</string>
+    <string name="history_section_earlier">ก่อนหน้านี้</string>
+    <string name="history_section_count_scans">%1$d ครั้งที่สแกน</string>
+    <string name="history_section_count_scan">%1$d ครั้งที่สแกน</string>
+    <string name="history_section_count_items">%1$d รายการ</string>
+    <string name="history_section_count_item">%1$d รายการ</string>
+    <string name="history_menu_add_favorite">เพิ่มในรายการโปรด</string>
+    <string name="history_menu_remove_favorite">ลบออกจากรายการโปรด</string>
+    <string name="history_empty_title">ยังไม่มีประวัติการสแกน</string>
+    <string name="history_empty_launch_scanner">เปิดสแกนเนอร์ตอนนี้</string>
+    <string name="history_detail_title">รายละเอียดประวัติ</string>
+    <string name="history_not_found_title">ไม่พบการสแกน</string>
+    <string name="history_not_found_body">รายการประวัตินี้อาจถูกลบไปแล้ว</string>
+    <string name="history_delete_item_title">ลบรายการประวัตินี้หรือไม่?</string>
+    <string name="history_delete_item_subtitle">การกระทำนี้ไม่สามารถย้อนกลับได้</string>
+    <string name="history_delete_item_body">การดำเนินการนี้จะลบรายการนี้ออกจากประวัติอุปกรณ์ภายในของคุณอย่างถาวร</string>
+    <string name="history_clear_all_title">ล้างประวัติการสแกน &amp; สร้างหรือไม่?</string>
+    <string name="history_stored_items_count">%1$d รายการที่จัดเก็บไว้</string>
+    <string name="history_clear_all_body">การดำเนินการนี้จะลบรายการประวัติทั้งหมดออกจากอุปกรณ์ภายในของคุณอย่างถาวร รวมถึงรายการที่ถูกใจและรายการโปรด</string>
+    <string name="history_clear_all_warning">ไม่สามารถกู้คืนรายการได้เมื่อล้างแล้ว</string>
+    <string name="history_clear_all_confirm">ล้างประวัติทั้งหมด</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">รายการโปรด</string>
+    <string name="favorites_empty">ยังไม่มีรายการโปรด</string>
+
+    <!-- Scan / viewfinder -->
+    <string name="scan_hud_flash">แฟลช</string>
+    <string name="scan_hud_gallery">แกลเลอรี</string>
+    <string name="scan_hud_flip">สลับ</string>
+    <string name="cd_toggle_flashlight">เปิด/ปิดไฟฉาย</string>
+    <string name="cd_scan_image_from_gallery">สแกนภาพจากแกลเลอรี</string>
+    <string name="cd_flip_camera_lens">สลับเลนส์กล้อง</string>
+    <string name="scan_zoom_level">%1$dx</string>
+    <string name="scan_camera_permission_title">ต้องได้รับอนุญาตให้ใช้กล้อง</string>
+    <string name="scan_camera_permission_body">อนุญาตให้เข้าถึงกล้องเพื่อสแกนคิวอาร์โค้ดและบาร์โค้ด</string>
+    <string name="scan_camera_permission_body_settings">การเข้าถึงกล้องถูกปิดอยู่ เปิดการตั้งค่า เปิดใช้งานกล้อง แล้วกลับมาที่นี่เพื่อสแกน</string>
+    <string name="scan_grant_permission">ให้สิทธิ์</string>
+    <string name="scan_open_settings">เปิดการตั้งค่า</string>
+
+    <!-- Gallery crop -->
+    <string name="gallery_crop_title">ครอปภาพ</string>
+    <string name="gallery_crop_select_photo">เลือกภาพที่จะครอป</string>
+    <string name="gallery_crop_rotate_90">หมุน 90°</string>
+    <string name="gallery_crop_flip">พลิก</string>
+    <string name="gallery_crop_detecting">กำลังตรวจจับ…</string>
+    <string name="gallery_crop_scan_selection">สแกนส่วนที่เลือก</string>
+    <string name="gallery_crop_choose_another">เลือกภาพอื่น</string>
+    <string name="gallery_crop_unable_open_image">ไม่สามารถเปิดภาพนี้ได้</string>
+    <string name="gallery_crop_no_code_detected">ตรวจไม่พบโค้ดที่สแกนได้</string>
+    <string name="gallery_crop_detection_failed">การตรวจจับล้มเหลว</string>
+    <string name="gallery_crop_multiple_codes_title">พบโค้ดหลายรายการ</string>
+    <string name="gallery_crop_multiple_codes_prompt">เลือกโค้ดที่จะเปิด:</string>
+    <string name="gallery_crop_code_list_item">%1$d. %2$s: %3$s</string>
+    <string name="cd_selected_photo">ภาพที่เลือก</string>
+    <string name="wifi_preview_enter_ssid">ป้อน SSID</string>
+
+    <!-- Detection error -->
+    <string name="detection_error_title">การตรวจจับล้มเหลว</string>
+    <string name="detection_error_badge">การตรวจจับล้มเหลว</string>
+    <string name="detection_error_headline">ตรวจไม่พบโค้ดที่สแกนได้</string>
+    <string name="detection_error_checklist_title">รายการตรวจสอบการปรับแต่ง</string>
+    <string name="detection_error_tip_steady">ถือให้นิ่งและวางโค้ดให้อยู่ภายในกรอบครอปทั้งหมด</string>
+    <string name="detection_error_tip_lighting">ใช้ภาพที่คมชัด แสงสว่างเพียงพอ และไม่เบลอมาก</string>
+    <string name="detection_error_tip_rotate">ลองหมุนหรือพลิกหากโค้ดปรากฏในแนวตะแคง</string>
+    <string name="detection_error_tip_formats">รองรับ: QR, Aztec, Data Matrix, EAN, UPC, Code 128/39, PDF417</string>
+    <string name="detection_error_retry">สแกนอีกครั้ง / ลองใหม่</string>
+    <string name="detection_error_pick_gallery">เลือกภาพอื่นจากแกลเลอรี</string>
+
+    <!-- Batch results -->
+    <string name="batch_results_title">ผลลัพธ์แบบกลุ่ม</string>
+    <string name="batch_results_one_code">ยอมรับ 1 โค้ด</string>
+    <string name="batch_results_many_codes">ยอมรับ %1$d โค้ด</string>
+
+    <!-- Scan result -->
+    <string name="scan_result_title">ผลการสแกน</string>
+    <string name="scan_result_payload_heading">เนื้อหาเพย์โหลด</string>
+    <string name="scan_result_empty_payload">(ว่าง)</string>
+    <string name="scan_result_kind_website">เว็บไซต์ / URL</string>
+    <string name="scan_result_kind_wifi">เครือข่าย Wi-Fi</string>
+    <string name="scan_result_kind_plain_text">ข้อความล้วน</string>
+    <string name="scan_result_kind_qr_code">คิวอาร์โค้ด</string>
+    <string name="scan_result_kind_barcode">บาร์โค้ด</string>
+    <string name="scan_result_url_detected_banner">ตรวจพบเพย์โหลดเว็บไซต์ / URL</string>
+    <string name="scan_result_copy_link">คัดลอกลิงก์</string>
+    <string name="scan_result_open_in_browser">เปิดในเบราว์เซอร์</string>
+    <string name="scan_result_toast_link_copied">คัดลอกลิงก์ไปยังคลิปบอร์ดแล้ว</string>
+    <string name="scan_result_toast_copied">คัดลอกไปยังคลิปบอร์ดแล้ว</string>
+    <string name="scan_result_toast_saved_favorite">บันทึกในรายการโปรดแล้ว</string>
+    <string name="scan_result_toast_removed_favorite">ลบออกจากรายการโปรดแล้ว</string>
+    <string name="share_scanned_url_title">URL ที่สแกน</string>
+    <string name="share_scan_result_title">ผลการสแกน</string>
+
+    <!-- Create hub -->
+    <string name="create_hub_title">สร้างคิวอาร์โค้ด</string>
+    <string name="create_hub_search_placeholder">ค้นหารูปแบบคิวอาร์…</string>
+    <string name="create_hub_no_formats_title">ไม่พบรูปแบบ</string>
+    <string name="create_hub_no_formats_body">ลองพิมพ์คำค้นอื่นหรือรีเซ็ตตัวกรองที่ใช้งานอยู่</string>
+    <string name="create_hub_reset_search">รีเซ็ตการค้นหา</string>
+    <string name="create_hub_section_social">โซเชียล</string>
+    <string name="create_hub_section_barcode">บาร์โค้ด</string>
+    <string name="create_filter_all">ทุกรูปแบบ</string>
+    <string name="create_filter_web">เว็บ &amp; โซเชียล</string>
+    <string name="create_filter_comms">การสื่อสาร</string>
+    <string name="create_filter_utilities">ยูทิลิตี้</string>
+    <string name="create_subtitle_barcode">บาร์โค้ด</string>
+
+    <!-- Create hub category cards -->
+    <string name="create_cat_website_title">URL เว็บไซต์</string>
+    <string name="create_cat_website_subtitle">ลิงก์, โปรไฟล์โซเชียล, หน้าเว็บ</string>
+    <string name="create_cat_wifi_title">เครือข่าย Wi-Fi</string>
+    <string name="create_cat_wifi_subtitle">WPA/WPA2, SSID, เชื่อมต่ออัตโนมัติ</string>
+    <string name="create_cat_contact_title">ผู้ติดต่อ / vCard</string>
+    <string name="create_cat_contact_subtitle">ชื่อ, โทรศัพท์, อีเมล, ที่อยู่</string>
+    <string name="create_cat_plain_text_title">ข้อความล้วน</string>
+    <string name="create_cat_plain_text_subtitle">บันทึก, ข้อความ, ข้อมูลดิบ</string>
+    <string name="create_cat_phone_title">โทรออก</string>
+    <string name="create_cat_phone_subtitle">โทรออกโดยตรง</string>
+    <string name="create_cat_email_title">ข้อความอีเมล</string>
+    <string name="create_cat_email_subtitle">ผู้รับและหัวข้อที่กรอกไว้ล่วงหน้า</string>
+    <string name="create_cat_sms_title">SMS / ข้อความ</string>
+    <string name="create_cat_sms_subtitle">ส่งข้อความโดยตรง</string>
+    <string name="create_cat_whatsapp_title">WhatsApp</string>
+    <string name="create_cat_whatsapp_subtitle">ลิงก์แชท WhatsApp โดยตรง</string>
+    <string name="create_cat_location_title">ตำแหน่ง</string>
+    <string name="create_cat_location_subtitle">พิกัด / หมุด Google Maps</string>
+    <string name="create_cat_calendar_title">กิจกรรมปฏิทิน</string>
+    <string name="create_cat_calendar_subtitle">ชื่อเรื่อง, วันที่, เวลา, การแจ้งเตือน</string>
+    <string name="create_cat_app_link_title">ลิงก์แอป</string>
+    <string name="create_cat_app_link_subtitle">ลิงก์ Google Play &amp; App Store</string>
+    <string name="create_cat_facebook_title">Facebook</string>
+    <string name="create_cat_facebook_subtitle">โปรไฟล์หรือเพจ</string>
+    <string name="create_cat_youtube_title">YouTube</string>
+    <string name="create_cat_youtube_subtitle">ช่องหรือวิดีโอ</string>
+    <string name="create_cat_twitter_title">Twitter</string>
+    <string name="create_cat_twitter_subtitle">โปรไฟล์</string>
+    <string name="create_cat_tiktok_title">TikTok</string>
+    <string name="create_cat_tiktok_subtitle">โปรไฟล์</string>
+    <string name="create_cat_instagram_title">Instagram</string>
+    <string name="create_cat_instagram_subtitle">โปรไฟล์</string>
+    <string name="create_cat_paypal_title">PayPal</string>
+    <string name="create_cat_paypal_subtitle">ลิงก์ PayPal.me</string>
+    <string name="create_cat_snapchat_title">Snapchat</string>
+    <string name="create_cat_snapchat_subtitle">เพิ่มเพื่อน</string>
+    <string name="create_cat_linkedin_title">LinkedIn</string>
+    <string name="create_cat_linkedin_subtitle">โปรไฟล์</string>
+    <string name="create_cat_spotify_title">Spotify</string>
+    <string name="create_cat_spotify_subtitle">โปรไฟล์หรือเพลย์ลิสต์</string>
+    <string name="create_cat_code_128_title">Code 128</string>
+    <string name="create_cat_data_matrix_title">Data Matrix</string>
+    <string name="create_cat_pdf_417_title">PDF 417</string>
+    <string name="create_cat_aztec_title">Aztec</string>
+    <string name="create_cat_ean_13_title">EAN 13</string>
+    <string name="create_cat_ean_8_title">EAN 8</string>
+    <string name="create_cat_upc_e_title">UPC E</string>
+    <string name="create_cat_upc_a_title">UPC A</string>
+    <string name="create_cat_code_93_title">Code 93</string>
+    <string name="create_cat_code_39_title">Code 39</string>
+    <string name="create_cat_codabar_title">Codabar</string>
+    <string name="create_cat_itf_title">ITF</string>
+    <string name="create_cat_barcode_title">บาร์โค้ด / EAN</string>
+
+    <!-- Create forms — shared -->
+    <string name="create_form_generate_preview">สร้าง &amp; ดูตัวอย่าง</string>
+    <string name="create_form_generate_preview_qr">สร้าง &amp; ดูตัวอย่างคิวอาร์</string>
+    <string name="create_form_instant_share">แชร์ทันที</string>
+    <string name="create_barcode_stub_title">การสร้างบาร์โค้ดจะมาในภายหลัง</string>
+    <string name="create_barcode_stub_body">รายการฮับนี้สำหรับบาร์โค้ด (EAN/UPC) ไม่ใช่คิวอาร์โค้ด หมวดหมู่คิวอาร์สามารถใช้ได้จากเมนูสร้าง</string>
+    <string name="create_validation_field_limit">ช่องนี้จำกัด %1$d ตัวอักษร</string>
+    <string name="create_validation_qr_too_long">ข้อความยาวเกินไปที่จะใส่ในคิวอาร์โค้ด กรุณาย่อข้อความ</string>
+    <string name="create_validation_barcode_unavailable">การสร้างบาร์โค้ด / EAN ยังไม่พร้อมใช้งาน กรุณาใช้หมวดหมู่คิวอาร์แทน</string>
+    <string name="create_validation_enter_value">ป้อนค่าที่ต้องการเข้ารหัส</string>
+
+    <!-- Create forms — website -->
+    <string name="form_website_url_label">URL เว็บไซต์ (https://)</string>
+    <string name="form_website_url_placeholder">https://example.com/target-path</string>
+    <string name="form_display_title_note_label">ชื่อเรื่อง / บันทึกที่แสดง</string>
+    <string name="form_display_title_note_placeholder">เช่น เอกสารการตลาด Q3 เปิดตัว</string>
+    <string name="form_validation_enter_website_url">ป้อน URL เว็บไซต์</string>
+    <string name="form_validation_enter_valid_url">ป้อน URL ที่ถูกต้อง (https://…)</string>
+
+    <!-- Create forms — plain text -->
+    <string name="form_plain_text_label">ข้อความดิบ / เพย์โหลด</string>
+    <string name="form_plain_text_placeholder">พิมพ์หรือวางข้อความล้วน…</string>
+    <string name="form_optional_label_placeholder">ป้ายกำกับ (ไม่บังคับ)</string>
+    <string name="form_validation_enter_text">ป้อนข้อความที่จะเข้ารหัส</string>
+
+    <!-- Create forms — contact -->
+    <string name="form_contact_name_label">ชื่อเต็ม</string>
+    <string name="form_contact_name_placeholder">ป้อนชื่อผู้ติดต่อ</string>
+    <string name="form_contact_email_label">อีเมล (ไม่บังคับ)</string>
+    <string name="form_contact_email_placeholder">name@email.com</string>
+    <string name="form_contact_job_title_label">ตำแหน่งงาน (ไม่บังคับ)</string>
+    <string name="form_contact_job_title_placeholder">เช่น ผู้จัดการผลิตภัณฑ์</string>
+    <string name="form_contact_phone_label">โทรศัพท์ (ไม่บังคับ)</string>
+    <string name="form_contact_phone_placeholder">+1 555 0100</string>
+    <string name="form_validation_enter_contact_name">ป้อนชื่อผู้ติดต่อ</string>
+
+    <!-- Create forms — phone -->
+    <string name="form_phone_number_label">หมายเลขโทรศัพท์</string>
+    <string name="form_validation_enter_phone">ป้อนหมายเลขโทรศัพท์</string>
+    <string name="form_validation_enter_valid_phone">ป้อนหมายเลขโทรศัพท์ที่ถูกต้อง</string>
+
+    <!-- Create forms — email -->
+    <string name="form_email_address_label">ที่อยู่อีเมล</string>
+    <string name="form_email_address_placeholder">hello@example.com</string>
+    <string name="form_email_subject_label">หัวข้อ (ไม่บังคับ)</string>
+    <string name="form_email_subject_placeholder">หัวข้อข้อความ</string>
+    <string name="form_email_body_label">เนื้อหา</string>
+    <string name="form_email_body_placeholder">เนื้อหาอีเมล</string>
+    <string name="form_validation_enter_email">ป้อนที่อยู่อีเมล</string>
+    <string name="form_validation_enter_valid_email">ป้อนที่อยู่อีเมลที่ถูกต้อง</string>
+    <string name="form_validation_enter_email_body">ป้อนเนื้อหาอีเมล</string>
+
+    <!-- Create forms — SMS -->
+    <string name="form_sms_message_label">ข้อความ</string>
+    <string name="form_sms_message_placeholder">ข้อความ SMS</string>
+    <string name="form_validation_enter_message">ป้อนข้อความ</string>
+
+    <!-- Create forms — WhatsApp -->
+    <string name="form_whatsapp_number_label">หมายเลข WhatsApp</string>
+    <string name="form_whatsapp_number_placeholder">15550100 (พร้อมรหัสประเทศ)</string>
+    <string name="form_whatsapp_message_label">ข้อความ (ไม่บังคับ)</string>
+    <string name="form_whatsapp_message_placeholder">ข้อความแชทที่กรอกไว้ล่วงหน้า</string>
+    <string name="form_validation_enter_whatsapp_number">ป้อนหมายเลข WhatsApp (พร้อมรหัสประเทศ)</string>
+    <string name="form_validation_enter_valid_whatsapp_number">ป้อนหมายเลข WhatsApp ที่ถูกต้องพร้อมรหัสประเทศ</string>
+
+    <!-- Create forms — location -->
+    <string name="form_location_coords_label">พิกัด (lat,lng)</string>
+    <string name="form_location_coords_placeholder">37.7749,-122.4194</string>
+    <string name="form_location_place_label">ป้ายชื่อสถานที่ (ไม่บังคับ)</string>
+    <string name="form_location_place_placeholder">สะพานโกลเดนเกต</string>
+    <string name="form_validation_enter_coordinates">ป้อนพิกัดในรูปแบบ lat,lng</string>
+    <string name="form_validation_enter_valid_coordinates">ป้อนพิกัดที่ถูกต้อง (เช่น 37.7749,-122.4194)</string>
+
+    <!-- Create forms — app link -->
+    <string name="form_app_link_label">URL แอปหรือแพ็กเกจ</string>
+    <string name="form_app_link_placeholder">com.example.app หรือ https://play.google.com/…</string>
+    <string name="form_validation_enter_app_url">ป้อน URL แอปหรือชื่อแพ็กเกจ</string>
+    <string name="form_validation_enter_store_or_package">ป้อน URL สโตร์หรือแพ็กเกจเช่น com.example.app</string>
+
+    <!-- Create forms — social -->
+    <string name="form_social_display_title_label">ชื่อเรื่องที่แสดง (ไม่บังคับ)</string>
+    <string name="form_validation_enter_username_or_link">ป้อนชื่อผู้ใช้หรือลิงก์เต็ม</string>
+    <string name="form_social_facebook_primary_label">ชื่อผู้ใช้หรือลิงก์ Facebook</string>
+    <string name="form_social_facebook_primary_placeholder">ชื่อผู้ใช้ หรือ https://facebook.com/…</string>
+    <string name="form_social_youtube_primary_label">ชื่อผู้ใช้หรือลิงก์ YouTube</string>
+    <string name="form_social_youtube_primary_placeholder">@channel หรือ https://youtube.com/…</string>
+    <string name="form_social_twitter_primary_label">ชื่อผู้ใช้หรือลิงก์ Twitter</string>
+    <string name="form_social_twitter_primary_placeholder">ชื่อผู้ใช้ หรือ https://x.com/…</string>
+    <string name="form_social_tiktok_primary_label">ชื่อผู้ใช้หรือลิงก์ TikTok</string>
+    <string name="form_social_tiktok_primary_placeholder">@username หรือ https://tiktok.com/…</string>
+    <string name="form_social_instagram_primary_label">ชื่อผู้ใช้หรือลิงก์ Instagram</string>
+    <string name="form_social_instagram_primary_placeholder">ชื่อผู้ใช้ หรือ https://instagram.com/…</string>
+    <string name="form_social_paypal_primary_label">ชื่อผู้ใช้หรือลิงก์ PayPal</string>
+    <string name="form_social_paypal_primary_placeholder">ชื่อ paypal.me หรือ https://paypal.me/…</string>
+    <string name="form_social_snapchat_primary_label">ชื่อผู้ใช้หรือลิงก์ Snapchat</string>
+    <string name="form_social_snapchat_primary_placeholder">ชื่อผู้ใช้ หรือ https://snapchat.com/add/…</string>
+    <string name="form_social_linkedin_primary_label">ชื่อผู้ใช้หรือลิงก์ LinkedIn</string>
+    <string name="form_social_linkedin_primary_placeholder">ชื่อโปรไฟล์ หรือ https://linkedin.com/in/…</string>
+    <string name="form_social_spotify_primary_label">ชื่อผู้ใช้หรือลิงก์ Spotify</string>
+    <string name="form_social_spotify_primary_placeholder">ID ผู้ใช้ หรือ https://open.spotify.com/…</string>
+
+    <!-- Create forms — barcode payloads -->
+    <string name="form_barcode_code_128_label">ค่า Code 128</string>
+    <string name="form_barcode_code_128_placeholder">ข้อความหรือตัวเลข</string>
+    <string name="form_barcode_data_matrix_label">ค่า Data Matrix</string>
+    <string name="form_barcode_pdf_417_label">ค่า PDF 417</string>
+    <string name="form_barcode_aztec_label">ค่า Aztec</string>
+    <string name="form_barcode_ean_13_label">ตัวเลข EAN 13</string>
+    <string name="form_barcode_ean_13_placeholder">12 หรือ 13 หลัก</string>
+    <string name="form_barcode_ean_8_label">ตัวเลข EAN 8</string>
+    <string name="form_barcode_ean_8_placeholder">7 หรือ 8 หลัก</string>
+    <string name="form_barcode_upc_e_label">ตัวเลข UPC E</string>
+    <string name="form_barcode_upc_e_placeholder">7 หรือ 8 หลัก (เริ่มด้วย 0 หรือ 1)</string>
+    <string name="form_barcode_upc_a_label">ตัวเลข UPC A</string>
+    <string name="form_barcode_upc_a_placeholder">11 หลัก หรือ 12 หลักพร้อมหลักตรวจสอบ</string>
+    <string name="form_barcode_code_93_label">ค่า Code 93</string>
+    <string name="form_barcode_code_93_placeholder">ข้อความ ASCII</string>
+    <string name="form_barcode_code_39_label">ค่า Code 39</string>
+    <string name="form_barcode_codabar_label">ค่า Codabar</string>
+    <string name="form_barcode_codabar_placeholder">ตัวเลข, ตัวเริ่ม/หยุด (ไม่บังคับ)</string>
+    <string name="form_barcode_itf_label">ตัวเลข ITF</string>
+    <string name="form_barcode_itf_placeholder">จำนวนหลักเป็นเลขคู่</string>
+    <string name="form_barcode_generic_placeholder">ข้อความหรือตัวเลข</string>
+    <string name="form_payload_label">เพย์โหลด</string>
+    <string name="form_payload_placeholder">ป้อนค่า</string>
+
+    <!-- Barcode validation -->
+    <string name="barcode_validation_digits_only">ตัวเลขเท่านั้น</string>
+    <string name="barcode_validation_check_digit_mismatch">หลักตรวจสอบไม่ตรงกัน</string>
+    <string name="barcode_validation_ean_13_length">ป้อน 12 หลัก หรือ 13 หลักรวมหลักตรวจสอบ</string>
+    <string name="barcode_validation_ean_8_length">ป้อน 7 หลัก หรือ 8 หลักรวมหลักตรวจสอบ</string>
+    <string name="barcode_validation_upc_a_length">ป้อน 11 หลัก หรือ 12 หลักรวมหลักตรวจสอบ</string>
+    <string name="barcode_validation_upc_e_length">ป้อน 7 หลัก หรือ 8 หลักรวมหลักตรวจสอบ</string>
+    <string name="barcode_validation_upc_e_invalid">ค่า UPC-E ไม่ถูกต้อง</string>
+    <string name="barcode_validation_itf_even">ป้อนจำนวนหลักเป็นเลขคู่</string>
+    <string name="barcode_validation_itf_min">ITF ต้องมีอย่างน้อย 2 หลัก</string>
+    <string name="barcode_validation_itf_max">ITF ต้องไม่ยาวเกิน 80 หลัก</string>
+    <string name="barcode_validation_code_128_ascii">Code 128 รองรับเฉพาะอักขระถึง ASCII 127</string>
+    <string name="barcode_validation_code_93_ascii">Code 93 รองรับเฉพาะอักขระถึง ASCII 127</string>
+    <string name="barcode_validation_code_93_too_long">ค่านี้ยาวเกินไปสำหรับ Code 93</string>
+    <string name="barcode_validation_code_39_unsupported">Code 39 ไม่สามารถเข้ารหัสอักขระนี้ได้</string>
+    <string name="barcode_validation_code_39_too_long">ค่านี้ยาวเกินไปสำหรับ Code 39</string>
+    <string name="barcode_validation_codabar_chars">Codabar อนุญาตเฉพาะตัวเลขและ - \$ : / . +</string>
+    <string name="barcode_validation_codabar_guards">ต้องมีอักขระเริ่มต้นและสิ้นสุดทั้งคู่</string>
+    <string name="barcode_validation_enter_codabar">ป้อนค่า Codabar</string>
+    <string name="barcode_validation_enter_code_128">ป้อนค่า Code 128</string>
+    <string name="barcode_validation_enter_code_93">ป้อนค่า Code 93</string>
+    <string name="barcode_validation_enter_code_39">ป้อนค่า Code 39</string>
+    <string name="barcode_validation_enter_data_matrix">ป้อนค่า Data Matrix</string>
+    <string name="barcode_validation_enter_pdf417">ป้อนค่า PDF417</string>
+    <string name="barcode_validation_enter_aztec">ป้อนค่า Aztec</string>
+    <string name="barcode_validation_too_large_data_matrix">ค่านี้ใหญ่เกินไปสำหรับสัญลักษณ์ Data Matrix</string>
+    <string name="barcode_validation_too_large_pdf417">ค่านี้ใหญ่เกินไปสำหรับสัญลักษณ์ PDF417</string>
+    <string name="barcode_validation_too_large_aztec">ค่านี้ใหญ่เกินไปสำหรับสัญลักษณ์ Aztec</string>
+    <string name="barcode_validation_cannot_encode">ไม่สามารถเข้ารหัสค่านี้ได้</string>
+    <string name="barcode_counter_ean_13_short">%1$d/12</string>
+    <string name="barcode_counter_ean_13_long">%1$d/13</string>
+    <string name="barcode_counter_ean_8_short">%1$d/7</string>
+    <string name="barcode_counter_ean_8_long">%1$d/8</string>
+    <string name="barcode_counter_upc_e_short">%1$d/7</string>
+    <string name="barcode_counter_upc_e_long">%1$d/8</string>
+    <string name="barcode_counter_upc_a_short">%1$d/11</string>
+    <string name="barcode_counter_upc_a_long">%1$d/12</string>
+    <string name="barcode_counter_itf_digits">%1$d หลัก</string>
+    <string name="barcode_counter_chars">%1$d ตัวอักษร</string>
+
+    <!-- Wi-Fi create form -->
+    <string name="wifi_form_title">เครือข่าย Wi-Fi</string>
+    <string name="wifi_network_name_heading">ชื่อเครือข่าย (SSID)</string>
+    <string name="wifi_ssid_placeholder">ป้อน SSID Wi-Fi</string>
+    <string name="wifi_security_type_heading">ประเภทความปลอดภัย</string>
+    <string name="wifi_security_recommended">แนะนำ: WPA/WPA2</string>
+    <string name="wifi_security_wpa">WPA/WPA2</string>
+    <string name="wifi_security_wpa3">WPA3</string>
+    <string name="wifi_security_wep">WEP</string>
+    <string name="wifi_security_open">เปิด</string>
+    <string name="wifi_password_heading">รหัสผ่าน</string>
+    <string name="wifi_password_placeholder">รหัสผ่าน Wi-Fi</string>
+    <string name="cd_toggle_password">แสดง/ซ่อนรหัสผ่าน</string>
+    <string name="wifi_hidden_network_title">เครือข่ายที่ซ่อนอยู่</string>
+    <string name="wifi_hidden_network_subtitle">SSID ไม่ได้ออกอากาศต่อสาธารณะ</string>
+    <string name="wifi_guest_scan_hint">แขกสแกนคิวอาร์นี้ด้วยแอปกล้องเพื่อเชื่อมต่อโดยไม่ต้องพิมพ์รหัสผ่าน Wi-Fi</string>
+    <string name="wifi_validation_enter_ssid">ป้อนชื่อเครือข่าย (SSID)</string>
+    <string name="wifi_validation_enter_password">ป้อนรหัสผ่าน Wi-Fi</string>
+
+    <!-- QR preview -->
+    <string name="qr_preview_title">ตัวอย่างคิวอาร์</string>
+    <string name="cd_share">แชร์</string>
+    <string name="cd_generated_qr_code">คิวอาร์โค้ดที่สร้างแล้ว</string>
+    <string name="qr_preview_generating">กำลังสร้าง…</string>
+    <string name="qr_preview_nothing_to_preview">ไม่มีอะไรให้ดูตัวอย่าง</string>
+    <string name="qr_preview_unable_encode_barcode">ไม่สามารถเข้ารหัสบาร์โค้ดได้</string>
+    <string name="qr_preview_customize_style">ปรับแต่งสไตล์ &amp; สี</string>
+    <string name="qr_preview_save_image">บันทึกภาพ</string>
+    <string name="qr_preview_saving">กำลังบันทึก…</string>
+    <string name="qr_preview_create">สร้าง</string>
+    <string name="qr_preview_creating">กำลังสร้าง…</string>
+    <string name="qr_preview_code_specifications">ข้อกำหนดโค้ด</string>
+    <string name="qr_preview_spec_export">ส่งออก</string>
+    <string name="qr_preview_spec_export_size">1024 × 1024</string>
+    <string name="qr_preview_spec_style">สไตล์</string>
+    <string name="qr_preview_toast_not_ready">คิวอาร์ยังไม่พร้อม</string>
+    <string name="qr_preview_toast_generated">สร้างคิวอาร์โค้ดแล้ว</string>
+    <string name="qr_preview_toast_unable_save">ไม่สามารถบันทึกได้</string>
+    <string name="export_png_saved">บันทึก PNG ลงแกลเลอรีแล้ว (1024×1024)</string>
+    <string name="export_png_failed">การส่งออก PNG ล้มเหลว</string>
+    <string name="export_unable_create_entry">ไม่สามารถสร้างรายการ MediaStore ได้</string>
+    <string name="export_png_compress_failed">การบีบอัด PNG ล้มเหลว</string>
+    <string name="export_unable_open_stream">ไม่สามารถเปิดสตรีมเอาต์พุตได้</string>
+    <string name="export_svg_ready">SVG พร้อมแชร์</string>
+    <string name="export_svg_failed">การส่งออก SVG ล้มเหลว</string>
+    <string name="export_share_opened">เปิดแผงแชร์แล้ว</string>
+    <string name="export_share_failed">การแชร์ล้มเหลว</string>
+    <string name="export_send_code_chooser">ส่งโค้ด</string>
+    <string name="export_vector_chooser">ส่งออกเวกเตอร์</string>
+
+    <!-- QR customize -->
+    <string name="qr_customize_title">ปรับแต่งคิวอาร์</string>
+    <string name="qr_customize_nothing">ไม่มีอะไรให้ปรับแต่ง</string>
+    <string name="cd_styled_qr_preview">ตัวอย่างคิวอาร์ที่มีสไตล์</string>
+    <string name="qr_customize_rendering">กำลังเรนเดอร์…</string>
+    <string name="qr_customize_section_body_pattern">ลวดลายหลัก</string>
+    <string name="qr_customize_section_corner_eye">สไตล์มุมตา</string>
+    <string name="qr_customize_section_color_palette">ชุดสี</string>
+    <string name="qr_customize_section_center_icon">ไอคอนกลาง</string>
+    <string name="qr_customize_section_frame">เทมเพลตกรอบ</string>
+    <string name="qr_customize_save_export">บันทึก &amp; ส่งออกคิวอาร์ที่ปรับแต่ง</string>
+    <string name="qr_customize_toast_unable_load_logo">ไม่สามารถโหลดโลโก้ได้</string>
+    <string name="qr_customize_toast_reset_done">รีเซ็ตเสร็จสิ้น</string>
+    <string name="qr_pattern_classic">คลาสสิก (สี่เหลี่ยม)</string>
+    <string name="qr_pattern_rounded">มุมโค้ง</string>
+    <string name="qr_pattern_dots">จุดรัศมี</string>
+    <string name="qr_pattern_diamond">ตาข่ายเพชร</string>
+    <string name="qr_eye_square">สี่เหลี่ยม</string>
+    <string name="qr_eye_soft">โค้งนุ่มนวล</string>
+    <string name="qr_eye_circle">ตาวงกลม</string>
+    <string name="qr_icon_none">ไม่มี</string>
+    <string name="qr_icon_wifi">Wi-Fi</string>
+    <string name="qr_icon_globe">ลูกโลก</string>
+    <string name="qr_icon_custom">กำหนดเอง</string>
+    <string name="qr_palette_electric_cobalt">ไฟฟ้าโคบอลต์</string>
+    <string name="qr_palette_deep_sapphire">แซฟไฟร์เข้ม</string>
+    <string name="qr_palette_neon_cyan">นีออนไซแอน</string>
+    <string name="qr_palette_monochrome_slate">สเลทโมโนโครม</string>
+    <string name="qr_palette_crimson">แดงเข้ม</string>
+    <string name="qr_palette_emerald">มรกต</string>
+    <string name="qr_palette_violet">ม่วงไวโอเล็ต</string>
+    <string name="qr_palette_amber">อำพัน</string>
+    <string name="qr_frame_none_title">ไม่มี</string>
+    <string name="qr_frame_none_subtitle">เมทริกซ์ไร้ขอบที่สะอาดตา</string>
+    <string name="qr_frame_pill_title">แคปซูล \"สแกนฉัน\"</string>
+    <string name="qr_frame_pill_subtitle">ป้ายที่แนบกับส่วนท้าย</string>
+    <string name="qr_frame_banner_title">แบนเนอร์ด้านบน</string>
+    <string name="qr_frame_banner_subtitle">แถบหัวเรื่องเน้นด้านบน</string>
+    <string name="qr_frame_cyber_title">ไซเบอร์เรติเคิล</string>
+    <string name="qr_frame_cyber_subtitle">มุมมอง HUD สีโคบอลต์</string>
+
+    <!-- Settings -->
+    <string name="settings_title">การตั้งค่า</string>
+    <string name="settings_preferences_title">ค่ากำหนด</string>
+    <string name="settings_engine_version">เอนจิน v2.4.0</string>
+    <string name="settings_preferences_subtitle">เมทริกซ์ออปติคัลความเร็วสูง &amp; พารามิเตอร์การสังเคราะห์</string>
+    <string name="settings_pipeline_online">ไปป์ไลน์ CV ออปติคัลออนไลน์</string>
+    <string name="settings_pro_footer">%1$s Pro · การเร่งอุปกรณ์ตรวจสอบแล้ว</string>
+    <string name="settings_section_appearance">รูปลักษณ์</string>
+    <string name="settings_theme_title">ธีม</string>
+    <string name="settings_theme_light">สว่าง</string>
+    <string name="settings_theme_dark">มืด</string>
+    <string name="settings_language_title">ภาษา</string>
+    <string name="settings_launcher_title">การตั้งค่าตัวเรียกใช้</string>
+    <string name="settings_launcher_subtitle">ขนาดไอคอน, ป้ายชื่อ และลำดับแอป</string>
+    <string name="settings_section_scanner">สแกนเนอร์ &amp; ฮาร์ดแวร์</string>
+    <string name="settings_vibrate_title">สั่นเมื่อตรวจจับ</string>
+    <string name="settings_vibrate_subtitle">การสั่นสะเทือนเมื่อเมทริกซ์ถูกแก้</string>
+    <string name="settings_beep_title">เสียงบี๊บ</string>
+    <string name="settings_beep_subtitle">ยืนยันด้วยเสียงโทน</string>
+    <string name="settings_auto_open_urls_title">เปิด URL อัตโนมัติ</string>
+    <string name="settings_auto_open_urls_subtitle">เปิดลิงก์เว็บไซต์ในเบราว์เซอร์หลังการสแกน</string>
+    <string name="settings_clear_history_title">ล้างประวัติการสแกน &amp; สร้าง</string>
+    <string name="settings_clear_history_subtitle">ลบรายการที่ไม่ใช่โปรด · เก็บรายการโปรดไว้</string>
+    <string name="settings_section_about">เกี่ยวกับ &amp; ข้อกฎหมาย</string>
+    <string name="settings_about_title">เกี่ยวกับ</string>
+    <string name="settings_privacy_policy_title">นโยบายความเป็นส่วนตัว</string>
+    <string name="settings_share_title">แชร์</string>
+    <string name="settings_rate_title">ให้คะแนน</string>
+    <string name="settings_dialog_theme_title">ธีม</string>
+    <string name="settings_dialog_default_ecc_title">ระดับการแก้ไขเริ่มต้น</string>
+    <string name="settings_dialog_default_format_title">รูปแบบคิวอาร์เริ่มต้น</string>
+    <string name="settings_ecc_low_subtitle">ต่ำ (7% ECC)</string>
+    <string name="settings_ecc_medium_subtitle">กลาง (15% ECC)</string>
+    <string name="settings_ecc_quartile_subtitle">ควอร์ไทล์ (25% ECC)</string>
+    <string name="settings_ecc_high_subtitle">สูง (30% ECC) · ความซ้ำซ้อนที่เหมาะสมที่สุด</string>
+    <string name="settings_ecc_low_option">ต่ำ / L / 7%</string>
+    <string name="settings_ecc_medium_option">กลาง / M / 15%</string>
+    <string name="settings_ecc_quartile_option">ควอร์ไทล์ / Q / 25%</string>
+    <string name="settings_ecc_high_option">สูง / H / 30%</string>
+    <string name="settings_format_svg">เวกเตอร์ SVG / คมชัด 1024px</string>
+    <string name="settings_format_png">PNG / 1024px</string>
+    <string name="settings_language_system">ซิงค์กับระบบ</string>
+    <string name="settings_language_system_subtitle">ตามภาษาของอุปกรณ์</string>
+    <string name="settings_language_english_us">อังกฤษ (สหรัฐอเมริกา)</string>
+    <string name="settings_language_hindi">ฮินดี</string>
+    <string name="settings_language_russian">รัสเซีย</string>
+    <string name="settings_language_italian">อิตาลี</string>
+    <string name="settings_language_french">ฝรั่งเศส</string>
+    <string name="settings_language_spanish">สเปน</string>
+    <string name="settings_language_japanese">ญี่ปุ่น</string>
+    <string name="settings_language_korean">เกาหลี</string>
+    <string name="settings_language_german">เยอรมัน</string>
+    <string name="settings_language_chinese">จีน</string>
+    <string name="settings_language_thai">ไทย</string>
+    <string name="settings_language_greek">กรีก</string>
+    <string name="settings_language_portuguese_pt">โปรตุเกส (โปรตุเกส)</string>
+    <string name="settings_language_portuguese_br">โปรตุเกส (บราซิล)</string>
+    <string name="settings_language_dutch">ดัตช์</string>
+    <string name="settings_language_filipino">ฟิลิปปินส์</string>
+    <string name="settings_language_turkish">ตุรกี</string>
+    <string name="settings_language_indonesian">อินโดนีเซีย</string>
+    <string name="settings_language_afrikaans">แอฟริกานส์</string>
+    <string name="settings_language_english">อังกฤษ</string>
+
+    <!-- About -->
+    <string name="about_title">เกี่ยวกับ</string>
+    <string name="about_tagline">ปัญญาประดิษฐ์คิวอาร์ &amp; บาร์โค้ดทันที</string>
+    <string name="about_meta_version">เวอร์ชัน</string>
+    <string name="about_meta_build">บิลด์</string>
+    <string name="about_meta_package">แพ็กเกจ</string>
+
+    <!-- Reminder / Events / Launcher / Widgets / Language / Privacy / Permission / Default / Intro / Ads -->
+    <string name="reminder_notification_title">การแจ้งเตือน</string>
+    <string name="reminder_notification_channel_desc">การแจ้งเตือนตามกำหนดเวลา</string>
+    <string name="event_uninstall_title">ถอนการติดตั้งแล้ว?</string>
+    <string name="event_uninstall_success">การล้างเสร็จสิ้น</string>
+    <string name="event_uninstall_sub">ถอนการติดตั้งแอปสำเร็จแล้ว</string>
+    <string name="event_uninstall_body">ไฟล์สแกนที่แคชไว้และข้อมูลชั่วคราวถูกล้างออกจากอุปกรณ์ของคุณแล้ว</string>
+    <string name="event_uninstall_chip">ปลอดภัย &amp; ครบถ้วน</string>
+    <string name="event_charge_in_title">เสียบปลั๊กไฟแล้ว</string>
+    <string name="event_charge_in_success">%1$d%%</string>
+    <string name="event_charge_in_sub">เชื่อมต่อแล้ว</string>
+    <string name="event_charge_in_body">การชาร์จเร็วทำงานอยู่</string>
+    <string name="event_charge_in_chip">การชาร์จเร็วทำงานอยู่</string>
+    <string name="event_charge_out_title">ถอดที่ชาร์จแล้ว</string>
+    <string name="event_charge_out_success">%1$d%% เหมาะสมที่สุด</string>
+    <string name="event_charge_out_sub">ตัดการเชื่อมต่อแล้ว</string>
+    <string name="event_charge_out_body">สายไฟถูกตัดการเชื่อมต่อ</string>
+    <string name="event_charge_out_chip">ตัดการเชื่อมต่อไฟแล้ว</string>
+    <string name="event_optimized_speed">ความเร็วที่ปรับให้เหมาะสม</string>
+    <string name="event_fast">เร็ว</string>
+    <string name="event_optimized_sub">ทุกอย่างทำงานราบรื่น</string>
+    <string name="event_done">เสร็จสิ้น</string>
+    <string name="launcher_settings">การตั้งค่าตัวเรียกใช้</string>
+    <string name="serialize">จัดเรียง</string>
+    <string name="by_name_asc_a_to_z">ตามชื่อจากน้อยไปมาก (A ถึง Z)</string>
+    <string name="by_name_desc_z_to_a">ตามชื่อจากมากไปน้อย (Z ถึง A)</string>
+    <string name="by_installed_date">ตามวันที่ติดตั้ง</string>
+    <string name="preview">ดูตัวอย่าง</string>
+    <string name="label_visibility">การมองเห็นป้ายชื่อ</string>
+    <string name="hide_app_name">ซ่อนชื่อแอป</string>
+    <string name="app_icon_size">ขนาดไอคอนแอป</string>
+    <string name="app_label_size">ขนาดป้ายชื่อแอป</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">วิดเจ็ตแอป</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">เลือกวิดเจ็ตเพื่อเข้าถึงเครื่องมือคิวอาร์ของคุณอย่างรวดเร็วจากหน้าจอหลัก</string>
+    <string name="quick_access">การเข้าถึงด่วน</string>
+    <string name="app_icon_1x1">ไอคอนแอป 1 x 1</string>
+    <string name="qr_scanner_generator">สแกนเนอร์ &amp; ตัวสร้างคิวอาร์</string>
+    <string name="create_1_x_1">สร้าง 1 x 1</string>
+    <string name="style_a">สไตล์ A</string>
+    <string name="style_b">สไตล์ B</string>
+    <string name="style_c">สไตล์ C</string>
+    <string name="scan_qr">สแกนคิวอาร์</string>
+    <string name="cl_end_scan_subtitle">เปิดกล้องและสแกนคิวอาร์โค้ด</string>
+    <string name="cl_end_scan_action">สแกน</string>
+    <string name="cl_end_history">ประวัติ</string>
+    <string name="cl_end_history_subtitle">ดูประวัติคิวอาร์ที่สแกนแล้ว</string>
+    <string name="cl_end_widgets_subtitle">เพิ่มเครื่องมือคิวอาร์ในหน้าจอหลัก</string>
+    <string name="create_qr">สร้างคิวอาร์</string>
+    <string name="widget_pin_not_supported">อุปกรณ์นี้ไม่รองรับการปักหมุดวิดเจ็ต</string>
+    <string name="widget_pin_failed">ไม่สามารถเพิ่มวิดเจ็ตได้ กรุณาลองอีกครั้ง</string>
+    <string name="choose_your_language">เลือกภาษาของคุณ</string>
+    <string name="collection_title">หมายเหตุสั้น ๆ เกี่ยวกับความเป็นส่วนตัวของคุณ</string>
+    <string name="collection_intro_1">เราใช้ข้อมูลอุปกรณ์และแอปที่จำกัดเพื่อให้ QR Scanner เร็ว ปลอดภัย และเชื่อถือได้ ให้บริการสแกนและสร้างคิวอาร์โค้ด แสดงโฆษณาที่ช่วยให้แอปฟรี และปรับปรุงประสบการณ์โดยรวมของคุณ</string>
+    <string name="collection_intro_2">เนื้อหาที่คุณสแกน ไฟล์ส่วนตัว รูปภาพ วิดีโอ และข้อมูลส่วนตัวอื่น ๆ จะไม่ถูกเก็บรวบรวมเพื่อการวิเคราะห์หรือโฆษณา และยังคงอยู่ภายใต้การควบคุมของคุณ</string>
+    <string name="collection_what_we_use">สิ่งที่เราใช้และเหตุผล:</string>
+    <string name="collection_bullet_1">⦿ การเข้าถึงกล้อง - เพื่อสแกนคิวอาร์โค้ดและบาร์โค้ดอย่างแม่นยำและให้ผลลัพธ์ทันที</string>
+    <string name="collection_bullet_2">⦿ ข้อมูลการใช้งานแอป - เช่น ฟีเจอร์การสแกนและสร้างคิวอาร์ที่คุณใช้ และหน้าจอที่คุณเปิด - เพื่อปรับปรุงประสิทธิภาพ เสถียรภาพ และประสบการณ์ผู้ใช้</string>
+    <string name="collection_bullet_3">⦿ ตัวระบุอุปกรณ์และแอป - เพื่อบันทึกค่ากำหนดของคุณ ปรับปรุงเสถียรภาพ ป้องกันข้อผิดพลาด และสนับสนุนฟังก์ชันที่จำเป็น</string>
+    <string name="collection_bullet_4">⦿ ตัวระบุโฆษณา - เพื่อแสดงและวัดผลโฆษณาที่ช่วยให้แอปฟรี</string>
+    <string name="collection_footer">การแตะ \"ยอมรับ &amp; ดำเนินการต่อ\" ถือว่าคุณรับทราบนโยบายความเป็นส่วนตัวของเรา เราใช้เฉพาะข้อมูลที่จำเป็นในการให้บริการสแกนคิวอาร์โค้ด การสร้างคิวอาร์โค้ด ความปลอดภัยของแอป และฟีเจอร์ที่จำเป็นอื่น ๆ ปรับปรุงแอป และสนับสนุนโฆษณา เนื้อหาที่คุณสแกนและข้อมูลส่วนตัวยังคงอยู่ภายใต้การควบคุมของคุณ</string>
+    <string name="collection_agree_checkbox">ฉันยอมรับการเก็บรวบรวมข้อมูลนี้</string>
+    <string name="collection_agree_continue">ยอมรับ &amp; ดำเนินการต่อ</string>
+    <string name="collection_agree_toast">กรุณายอมรับการเก็บรวบรวมข้อมูลเพื่อดำเนินการต่อ</string>
+    <string name="privacy_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="this_action_may_contain_ads">การกระทำนี้อาจมีโฆษณา</string>
+    <string name="marketing_converter1">gclid</string>
+    <string name="utm_source_apps_facebook_com">utm_source=apps.facebook.com</string>
+    <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
+    <string name="utm_source_marketing">utm_source=marketing</string>
+    <string name="permission_title">ต้องมีการเข้าถึงกล้อง</string>
+    <string name="permission_description">QR Code &amp; Scanner ต้องการการเข้าถึงกล้องเพื่อสแกนคิวอาร์โค้ด ข้อมูลรับรอง Wi-Fi และบาร์โค้ดได้ทันทีแบบเรียลไทม์</string>
+    <string name="permission_local_title">การสแกนในเครื่องทันที</string>
+    <string name="permission_local_desc">การสแกนถูกประมวลผลบนอุปกรณ์ทั้งหมดโดยไม่มีความหน่วงจากเซิร์ฟเวอร์</string>
+    <string name="permission_privacy_title">รักษาความเป็นส่วนตัว 100%</string>
+    <string name="permission_privacy_desc">เฟรมวิดีโอหรือภาพดิบจะไม่ถูกอัปโหลดหรือบันทึกไว้เลย</string>
+    <string name="permission_gallery_title">ทางเลือกแกลเลอรี</string>
+    <string name="permission_gallery_desc">นำเข้ารูปภาพจากไลบรารีของคุณได้โดยตรงทุกเมื่อโดยไม่ต้องมีสิทธิ์กล้อง</string>
+    <string name="allow_permission">อนุญาตสิทธิ์</string>
+    <string name="default_title">ตั้งค่า QR Code &amp; Scanner เป็นตัวเรียกใช้หน้าจอหลักเริ่มต้น</string>
+    <string name="default_description">เข้าถึงสแกนเนอร์คิวอาร์ได้ทันทีด้วยการปัดขวาครั้งเดียวจากหน้าจอหลัก การควบคุมวิดเจ็ตแบบกำหนดเอง และลิ้นชักแอปที่จัดระเบียบ</string>
+    <string name="default_swipe_title">ปัดขวาเพื่อสแกน</string>
+    <string name="default_swipe_desc">เปิดช่องมองภาพทันทีจากทุกที่บนหน้าจอหลักโดยไม่มีความหน่วง</string>
+    <string name="default_widgets_title">วิดเจ็ตด่วนอัจฉริยะ</string>
+    <string name="default_widgets_desc">ปักหมุดทางลัดตัวสร้างคิวอาร์ ตัวตรวจสอบคลิปบอร์ด และข้อมูลแบตเตอรี่ไว้บนหน้าจอหลักได้เลย</string>
+    <string name="default_drawer_title">ลิ้นชักแอป &amp; โฟลเดอร์ที่กำหนดเอง</string>
+    <string name="default_drawer_desc">จัดระเบียบแอป ซ่อนป้ายชื่อ ปรับแต่งคอลัมน์กริด และสลับระหว่างธีมสว่างและมืด</string>
+    <string name="set_as_default">ตั้งเป็นค่าเริ่มต้น</string>
+    <string name="intro_title_1">สแกนคิวอาร์โค้ดทันที</string>
+    <string name="intro_desc_1">สแกนคิวอาร์โค้ดอย่างรวดเร็วด้วยกล้องของคุณและเข้าถึงข้อมูลได้ในไม่กี่วินาที</string>
+    <string name="intro_title_2">สแกนบาร์โค้ดได้อย่างง่ายดาย</string>
+    <string name="intro_desc_2">สแกนบาร์โค้ดสินค้าอย่างรวดเร็วและรับผลลัพธ์ที่แม่นยำภายในไม่กี่วินาที</string>
+    <string name="intro_title_3">สร้างคิวอาร์โค้ดในแบบของคุณ</string>
+    <string name="intro_desc_3">สร้างและปรับแต่งคิวอาร์โค้ดระดับมืออาชีพสำหรับทุกความต้องการดิจิทัลของคุณ</string>
+    <string name="next">ถัดไป</string>
+    <string name="loading_ads_title">กำลังโหลดโฆษณา</string>
+    <string name="loading_ads_desc">กรุณารอสักครู่ โฆษณาจะปรากฏขึ้น...</string>
 </resources>

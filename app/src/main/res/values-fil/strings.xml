@@ -1,3 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_back">Bumalik</string>
+    <string name="action_cancel">Kanselahin</string>
+    <string name="action_clear">I-clear</string>
+    <string name="action_copy">Kopyahin</string>
+    <string name="action_delete">Burahin</string>
+    <string name="action_go_back">Bumalik</string>
+    <string name="action_paste">I-paste</string>
+    <string name="action_share">Ibahagi</string>
+    <string name="action_reset">I-reset</string>
+    <string name="cd_clear">I-clear</string>
+    <string name="cd_clear_search">I-clear ang paghahanap</string>
+    <string name="cd_favorite">Paborito</string>
+    <string name="cd_more">Higit pa</string>
+    <string name="cd_add_to_favorites">Idagdag sa mga paborito</string>
+    <string name="toast_copied">Nakopya</string>
+    <string name="toast_deleted">Nabura</string>
+    <string name="toast_history_cleared">Na-clear ang kasaysayan</string>
+    <string name="toast_clipboard_empty">Walang laman ang clipboard</string>
+    <string name="toast_unable_to_open_link">Hindi mabuksan ang link</string>
+    <string name="share_chooser_title">Ibahagi</string>
+    <string name="form_label_optional_suffix">%1$s (opsyonal)</string>
 
+    <!-- Bottom navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_scan">I-scan</string>
+    <string name="nav_settings">Mga Setting</string>
+    <string name="cd_quick_scan">Mabilisang Scan</string>
+
+    <!-- Home -->
+    <string name="home_cd_favorites">Mga Paborito</string>
+    <string name="home_instant_scanner_title">Agarang Scanner</string>
+    <string name="home_instant_scanner_subtitle">Itutok sa anumang QR code o karaniwang barcode</string>
+    <string name="home_open_camera_scanner">Buksan ang Camera Scanner</string>
+    <string name="home_quick_tools_heading">MABILISANG GAMIT</string>
+    <string name="home_tool_scan_barcode_title">I-scan ang Barcode</string>
+    <string name="home_tool_scan_barcode_subtitle">UPC at EAN na tag</string>
+    <string name="home_tool_scan_gallery_title">I-scan ang Gallery</string>
+    <string name="home_tool_scan_gallery_subtitle">Mula sa mga screenshot</string>
+    <string name="home_tool_create_qr_title">Gumawa ng QR</string>
+    <string name="home_tool_create_qr_subtitle">Mga link, Wi-Fi at vCard</string>
+    <string name="home_tool_history_title">Kasaysayan</string>
+    <string name="home_tool_history_subtitle">Mga naka-save na scan at code</string>
+    <string name="home_recent_scans_title">Mga Kamakailang Scan</string>
+    <string name="home_view_all">Tingnan lahat</string>
+    <string name="home_no_recent_scans_title">Wala pang kamakailang scan</string>
+    <string name="home_no_recent_scans_body">Lalabas dito ang mga code na ini-scan mo para sa mabilis na pag-access.</string>
+
+    <!-- History -->
+    <string name="history_title">Kasaysayan</string>
+    <string name="history_search_placeholder">Maghanap ng mga code, URL, pamagat…</string>
+    <string name="history_no_matches">Walang tugma sa iyong paghahanap</string>
+    <string name="history_filter_all">Lahat (%1$d)</string>
+    <string name="history_filter_scanned">Na-scan (%1$d)</string>
+    <string name="history_filter_created">Nagawa (%1$d)</string>
+    <string name="history_section_today">Ngayon</string>
+    <string name="history_section_yesterday">Kahapon</string>
+    <string name="history_section_earlier">Mas maaga</string>
+    <string name="history_section_count_scans">%1$d scan</string>
+    <string name="history_section_count_scan">%1$d scan</string>
+    <string name="history_section_count_items">%1$d item</string>
+    <string name="history_section_count_item">%1$d item</string>
+    <string name="history_menu_add_favorite">Idagdag sa paborito</string>
+    <string name="history_menu_remove_favorite">Alisin sa paborito</string>
+    <string name="history_empty_title">Wala Pang Kasaysayan ng Scan</string>
+    <string name="history_empty_launch_scanner">Buksan ang Scanner Ngayon</string>
+    <string name="history_detail_title">Detalye ng Kasaysayan</string>
+    <string name="history_not_found_title">Hindi natagpuan ang scan</string>
+    <string name="history_not_found_body">Maaaring nabura na ang item na ito sa kasaysayan.</string>
+    <string name="history_delete_item_title">Burahin ang item na ito sa kasaysayan?</string>
+    <string name="history_delete_item_subtitle">Hindi na maibabalik ang aksyong ito</string>
+    <string name="history_delete_item_body">Permanenteng aalisin nito ang item na ito mula sa lokal na kasaysayan ng iyong device.</string>
+    <string name="history_clear_all_title">I-clear ang Kasaysayan ng Scan at Paggawa?</string>
+    <string name="history_stored_items_count">%1$d naka-save na item</string>
+    <string name="history_clear_all_body">Permanenteng aalisin nito ang bawat item sa kasaysayan mula sa iyong lokal na device, kasama ang mga na-like at paboritong item.</string>
+    <string name="history_clear_all_warning">Hindi na maibabalik ang mga item kapag na-purge na.</string>
+    <string name="history_clear_all_confirm">I-clear ang Lahat ng Kasaysayan</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">Mga Paborito</string>
+    <string name="favorites_empty">Wala pang paborito</string>
+
+    <!-- Scan / viewfinder -->
+    <string name="scan_hud_flash">FLASH</string>
+    <string name="scan_hud_gallery">GALLERY</string>
+    <string name="scan_hud_flip">IBALIKTAD</string>
+    <string name="cd_toggle_flashlight">I-toggle ang flashlight</string>
+    <string name="cd_scan_image_from_gallery">I-scan ang larawan mula sa gallery</string>
+    <string name="cd_flip_camera_lens">I-flip ang camera lens</string>
+    <string name="scan_zoom_level">%1$dx</string>
+    <string name="scan_camera_permission_title">Kailangan ang pahintulot sa camera</string>
+    <string name="scan_camera_permission_body">Payagan ang access sa camera upang mag-scan ng QR code at barcode.</string>
+    <string name="scan_camera_permission_body_settings">Naka-off ang access sa camera. Buksan ang Mga Setting, i-enable ang Camera, pagkatapos ay bumalik dito upang mag-scan.</string>
+    <string name="scan_grant_permission">Bigyan ng pahintulot</string>
+    <string name="scan_open_settings">Buksan ang Mga Setting</string>
+
+    <!-- Gallery crop -->
+    <string name="gallery_crop_title">I-crop ang Larawan</string>
+    <string name="gallery_crop_select_photo">Pumili ng larawan na i-crop</string>
+    <string name="gallery_crop_rotate_90">I-rotate ng 90°</string>
+    <string name="gallery_crop_flip">Ibaliktad</string>
+    <string name="gallery_crop_detecting">Tinatukoy…</string>
+    <string name="gallery_crop_scan_selection">I-scan ang Pinili</string>
+    <string name="gallery_crop_choose_another">Pumili ng ibang larawan</string>
+    <string name="gallery_crop_unable_open_image">Hindi mabuksan ang larawang ito</string>
+    <string name="gallery_crop_no_code_detected">Walang natukoy na scan-able na code</string>
+    <string name="gallery_crop_detection_failed">Nabigo ang pagtukoy</string>
+    <string name="gallery_crop_multiple_codes_title">Maraming code ang natagpuan</string>
+    <string name="gallery_crop_multiple_codes_prompt">Piliin kung aling code ang bubuksan:</string>
+    <string name="gallery_crop_code_list_item">%1$d. %2$s: %3$s</string>
+    <string name="cd_selected_photo">Napiling larawan</string>
+    <string name="wifi_preview_enter_ssid">Ilagay ang SSID</string>
+
+    <!-- Detection error -->
+    <string name="detection_error_title">Nabigo ang Pagtukoy</string>
+    <string name="detection_error_badge">NABIGO ANG PAGTUKOY</string>
+    <string name="detection_error_headline">Walang Natukoy na Scan-able na Code</string>
+    <string name="detection_error_checklist_title">Checklist ng Pag-optimize</string>
+    <string name="detection_error_tip_steady">Hawakan nang matatag at panatilihing ganap na nasa loob ng crop frame ang code</string>
+    <string name="detection_error_tip_lighting">Gumamit ng matalim at maliwanag na larawan na walang matinding blur</string>
+    <string name="detection_error_tip_rotate">Subukan ang Rotate o Flip kung patayo ang code</string>
+    <string name="detection_error_tip_formats">Sinusuportahan: QR, Aztec, Data Matrix, EAN, UPC, Code 128/39, PDF417</string>
+    <string name="detection_error_retry">Mag-scan Muli / Subukan Muli</string>
+    <string name="detection_error_pick_gallery">Pumili ng Ibang Larawan mula sa Gallery</string>
+
+    <!-- Batch results -->
+    <string name="batch_results_title">Resulta ng Batch</string>
+    <string name="batch_results_one_code">1 code ang tinanggap</string>
+    <string name="batch_results_many_codes">%1$d code ang tinanggap</string>
+
+    <!-- Scan result -->
+    <string name="scan_result_title">Resulta ng Scan</string>
+    <string name="scan_result_payload_heading">NILALAMAN NG PAYLOAD</string>
+    <string name="scan_result_empty_payload">(walang laman)</string>
+    <string name="scan_result_kind_website">Website / URL</string>
+    <string name="scan_result_kind_wifi">Wi-Fi Network</string>
+    <string name="scan_result_kind_plain_text">Plain Text</string>
+    <string name="scan_result_kind_qr_code">QR Code</string>
+    <string name="scan_result_kind_barcode">Barcode</string>
+    <string name="scan_result_url_detected_banner">Natukoy ang website / URL payload</string>
+    <string name="scan_result_copy_link">Kopyahin ang Link</string>
+    <string name="scan_result_open_in_browser">Buksan sa Browser</string>
+    <string name="scan_result_toast_link_copied">Nakopya ang link sa clipboard</string>
+    <string name="scan_result_toast_copied">Nakopya sa clipboard</string>
+    <string name="scan_result_toast_saved_favorite">Nai-save sa iyong mga paborito</string>
+    <string name="scan_result_toast_removed_favorite">Inalis sa mga paborito</string>
+    <string name="share_scanned_url_title">Na-scan na URL</string>
+    <string name="share_scan_result_title">Resulta ng Scan</string>
+
+    <!-- Create hub -->
+    <string name="create_hub_title">Gumawa ng QR Code</string>
+    <string name="create_hub_search_placeholder">Maghanap ng QR format…</string>
+    <string name="create_hub_no_formats_title">Walang nahanap na format</string>
+    <string name="create_hub_no_formats_body">Subukang mag-type ng ibang keyword o i-reset ang aktibong filter</string>
+    <string name="create_hub_reset_search">I-reset ang Paghahanap</string>
+    <string name="create_hub_section_social">Social</string>
+    <string name="create_hub_section_barcode">Barcode</string>
+    <string name="create_filter_all">Lahat ng Format</string>
+    <string name="create_filter_web">Web at Social</string>
+    <string name="create_filter_comms">Komunikasyon</string>
+    <string name="create_filter_utilities">Mga Utility</string>
+    <string name="create_subtitle_barcode">Barcode</string>
+
+    <!-- Create hub category cards -->
+    <string name="create_cat_website_title">Website URL</string>
+    <string name="create_cat_website_subtitle">Mga link, social profile, web page</string>
+    <string name="create_cat_wifi_title">Wi-Fi Network</string>
+    <string name="create_cat_wifi_subtitle">WPA/WPA2, SSID, auto-connect</string>
+    <string name="create_cat_contact_title">Contact / vCard</string>
+    <string name="create_cat_contact_subtitle">Pangalan, telepono, email, address</string>
+    <string name="create_cat_plain_text_title">Plain Text</string>
+    <string name="create_cat_plain_text_subtitle">Mga note, mensahe, raw data</string>
+    <string name="create_cat_phone_title">Tawag sa Telepono</string>
+    <string name="create_cat_phone_subtitle">Direktang pag-dial ng telepono</string>
+    <string name="create_cat_email_title">Email Message</string>
+    <string name="create_cat_email_subtitle">Pre-filled na tatanggap at paksa</string>
+    <string name="create_cat_sms_title">SMS / Mensahe</string>
+    <string name="create_cat_sms_subtitle">Direktang text message</string>
+    <string name="create_cat_whatsapp_title">WhatsApp</string>
+    <string name="create_cat_whatsapp_subtitle">Direktang WhatsApp chat link</string>
+    <string name="create_cat_location_title">Lokasyon</string>
+    <string name="create_cat_location_subtitle">Google Maps coordinates / pin</string>
+    <string name="create_cat_calendar_title">Calendar Event</string>
+    <string name="create_cat_calendar_subtitle">Pamagat, petsa, oras, paalala</string>
+    <string name="create_cat_app_link_title">App Link</string>
+    <string name="create_cat_app_link_subtitle">Google Play at App Store links</string>
+    <string name="create_cat_facebook_title">Facebook</string>
+    <string name="create_cat_facebook_subtitle">Profile o page</string>
+    <string name="create_cat_youtube_title">YouTube</string>
+    <string name="create_cat_youtube_subtitle">Channel o video</string>
+    <string name="create_cat_twitter_title">Twitter</string>
+    <string name="create_cat_twitter_subtitle">Profile</string>
+    <string name="create_cat_tiktok_title">TikTok</string>
+    <string name="create_cat_tiktok_subtitle">Profile</string>
+    <string name="create_cat_instagram_title">Instagram</string>
+    <string name="create_cat_instagram_subtitle">Profile</string>
+    <string name="create_cat_paypal_title">PayPal</string>
+    <string name="create_cat_paypal_subtitle">PayPal.me link</string>
+    <string name="create_cat_snapchat_title">Snapchat</string>
+    <string name="create_cat_snapchat_subtitle">Magdagdag ng kaibigan</string>
+    <string name="create_cat_linkedin_title">LinkedIn</string>
+    <string name="create_cat_linkedin_subtitle">Profile</string>
+    <string name="create_cat_spotify_title">Spotify</string>
+    <string name="create_cat_spotify_subtitle">Profile o playlist</string>
+    <string name="create_cat_code_128_title">Code 128</string>
+    <string name="create_cat_data_matrix_title">Data Matrix</string>
+    <string name="create_cat_pdf_417_title">PDF 417</string>
+    <string name="create_cat_aztec_title">Aztec</string>
+    <string name="create_cat_ean_13_title">EAN 13</string>
+    <string name="create_cat_ean_8_title">EAN 8</string>
+    <string name="create_cat_upc_e_title">UPC E</string>
+    <string name="create_cat_upc_a_title">UPC A</string>
+    <string name="create_cat_code_93_title">Code 93</string>
+    <string name="create_cat_code_39_title">Code 39</string>
+    <string name="create_cat_codabar_title">Codabar</string>
+    <string name="create_cat_itf_title">ITF</string>
+    <string name="create_cat_barcode_title">Barcode / EAN</string>
+
+    <!-- Create forms — shared -->
+    <string name="create_form_generate_preview">Gumawa at I-preview</string>
+    <string name="create_form_generate_preview_qr">Gumawa at I-preview ang QR</string>
+    <string name="create_form_instant_share">Agarang Ibahagi</string>
+    <string name="create_barcode_stub_title">Darating sa ibang pagkakataon ang paggawa ng barcode</string>
+    <string name="create_barcode_stub_body">Ang item na ito sa hub ay para sa mga barcode (EAN/UPC), hindi QR code. Ang mga QR category ay available mula sa Gumawa.</string>
+    <string name="create_validation_field_limit">Ang field na ito ay limitado sa %1$d character.</string>
+    <string name="create_validation_qr_too_long">Masyadong mahaba ito upang magkasya sa isang QR code. Paikliin ang teksto.</string>
+    <string name="create_validation_barcode_unavailable">Hindi pa available ang paggawa ng barcode / EAN. Gumamit na lang ng QR category.</string>
+    <string name="create_validation_enter_value">Maglagay ng value na ie-encode</string>
+
+    <!-- Create forms — website -->
+    <string name="form_website_url_label">Website URL (https://)</string>
+    <string name="form_website_url_placeholder">https://example.com/target-path</string>
+    <string name="form_display_title_note_label">Display Title / Note</string>
+    <string name="form_display_title_note_placeholder">hal., Marketing Deck Q3 Launch</string>
+    <string name="form_validation_enter_website_url">Maglagay ng website URL</string>
+    <string name="form_validation_enter_valid_url">Maglagay ng valid na URL (https://…)</string>
+
+    <!-- Create forms — plain text -->
+    <string name="form_plain_text_label">Raw Message / Payload</string>
+    <string name="form_plain_text_placeholder">I-type o i-paste ang plain text…</string>
+    <string name="form_optional_label_placeholder">Opsyonal na label</string>
+    <string name="form_validation_enter_text">Maglagay ng teksto na ie-encode</string>
+
+    <!-- Create forms — contact -->
+    <string name="form_contact_name_label">Buong Pangalan</string>
+    <string name="form_contact_name_placeholder">Ilagay ang pangalan ng contact</string>
+    <string name="form_contact_email_label">Email (opsyonal)</string>
+    <string name="form_contact_email_placeholder">name@email.com</string>
+    <string name="form_contact_job_title_label">Trabaho / Posisyon (opsyonal)</string>
+    <string name="form_contact_job_title_placeholder">hal., Product Manager</string>
+    <string name="form_contact_phone_label">Telepono (opsyonal)</string>
+    <string name="form_contact_phone_placeholder">+1 555 0100</string>
+    <string name="form_validation_enter_contact_name">Maglagay ng pangalan ng contact</string>
+
+    <!-- Create forms — phone -->
+    <string name="form_phone_number_label">Numero ng Telepono</string>
+    <string name="form_validation_enter_phone">Maglagay ng numero ng telepono</string>
+    <string name="form_validation_enter_valid_phone">Maglagay ng valid na numero ng telepono</string>
+
+    <!-- Create forms — email -->
+    <string name="form_email_address_label">Email Address</string>
+    <string name="form_email_address_placeholder">hello@example.com</string>
+    <string name="form_email_subject_label">Paksa (opsyonal)</string>
+    <string name="form_email_subject_placeholder">Paksa ng mensahe</string>
+    <string name="form_email_body_label">Katawan</string>
+    <string name="form_email_body_placeholder">Katawan ng email</string>
+    <string name="form_validation_enter_email">Maglagay ng email address</string>
+    <string name="form_validation_enter_valid_email">Maglagay ng valid na email address</string>
+    <string name="form_validation_enter_email_body">Maglagay ng katawan ng email</string>
+
+    <!-- Create forms — SMS -->
+    <string name="form_sms_message_label">Mensahe</string>
+    <string name="form_sms_message_placeholder">SMS text</string>
+    <string name="form_validation_enter_message">Maglagay ng mensahe</string>
+
+    <!-- Create forms — WhatsApp -->
+    <string name="form_whatsapp_number_label">WhatsApp Number</string>
+    <string name="form_whatsapp_number_placeholder">15550100 (may country code)</string>
+    <string name="form_whatsapp_message_label">Mensahe (opsyonal)</string>
+    <string name="form_whatsapp_message_placeholder">Pre-filled na chat text</string>
+    <string name="form_validation_enter_whatsapp_number">Maglagay ng WhatsApp number (may country code)</string>
+    <string name="form_validation_enter_valid_whatsapp_number">Maglagay ng valid na WhatsApp number na may country code</string>
+
+    <!-- Create forms — location -->
+    <string name="form_location_coords_label">Coordinates (lat,lng)</string>
+    <string name="form_location_coords_placeholder">37.7749,-122.4194</string>
+    <string name="form_location_place_label">Label ng lugar (opsyonal)</string>
+    <string name="form_location_place_placeholder">Golden Gate Bridge</string>
+    <string name="form_validation_enter_coordinates">Maglagay ng coordinates bilang lat,lng</string>
+    <string name="form_validation_enter_valid_coordinates">Maglagay ng valid na coordinates (hal. 37.7749,-122.4194)</string>
+
+    <!-- Create forms — app link -->
+    <string name="form_app_link_label">App URL o Package</string>
+    <string name="form_app_link_placeholder">com.example.app o https://play.google.com/…</string>
+    <string name="form_validation_enter_app_url">Maglagay ng app URL o pangalan ng package</string>
+    <string name="form_validation_enter_store_or_package">Maglagay ng store URL o package tulad ng com.example.app</string>
+
+    <!-- Create forms — social -->
+    <string name="form_social_display_title_label">Display title (opsyonal)</string>
+    <string name="form_validation_enter_username_or_link">Maglagay ng username o kumpletong link</string>
+    <string name="form_social_facebook_primary_label">Facebook username o link</string>
+    <string name="form_social_facebook_primary_placeholder">username o https://facebook.com/…</string>
+    <string name="form_social_youtube_primary_label">YouTube username o link</string>
+    <string name="form_social_youtube_primary_placeholder">@channel o https://youtube.com/…</string>
+    <string name="form_social_twitter_primary_label">Twitter username o link</string>
+    <string name="form_social_twitter_primary_placeholder">username o https://x.com/…</string>
+    <string name="form_social_tiktok_primary_label">TikTok username o link</string>
+    <string name="form_social_tiktok_primary_placeholder">@username o https://tiktok.com/…</string>
+    <string name="form_social_instagram_primary_label">Instagram username o link</string>
+    <string name="form_social_instagram_primary_placeholder">username o https://instagram.com/…</string>
+    <string name="form_social_paypal_primary_label">PayPal username o link</string>
+    <string name="form_social_paypal_primary_placeholder">paypal.me name o https://paypal.me/…</string>
+    <string name="form_social_snapchat_primary_label">Snapchat username o link</string>
+    <string name="form_social_snapchat_primary_placeholder">username o https://snapchat.com/add/…</string>
+    <string name="form_social_linkedin_primary_label">LinkedIn username o link</string>
+    <string name="form_social_linkedin_primary_placeholder">profile name o https://linkedin.com/in/…</string>
+    <string name="form_social_spotify_primary_label">Spotify username o link</string>
+    <string name="form_social_spotify_primary_placeholder">user id o https://open.spotify.com/…</string>
+
+    <!-- Create forms — barcode payloads -->
+    <string name="form_barcode_code_128_label">Code 128 value</string>
+    <string name="form_barcode_code_128_placeholder">Teksto o numero</string>
+    <string name="form_barcode_data_matrix_label">Data Matrix value</string>
+    <string name="form_barcode_pdf_417_label">PDF 417 value</string>
+    <string name="form_barcode_aztec_label">Aztec value</string>
+    <string name="form_barcode_ean_13_label">EAN 13 digits</string>
+    <string name="form_barcode_ean_13_placeholder">12 o 13 digit</string>
+    <string name="form_barcode_ean_8_label">EAN 8 digits</string>
+    <string name="form_barcode_ean_8_placeholder">7 o 8 digit</string>
+    <string name="form_barcode_upc_e_label">UPC E digits</string>
+    <string name="form_barcode_upc_e_placeholder">7 o 8 digit (nagsisimula sa 0 o 1)</string>
+    <string name="form_barcode_upc_a_label">UPC A digits</string>
+    <string name="form_barcode_upc_a_placeholder">11 digit, o 12 na may check digit</string>
+    <string name="form_barcode_code_93_label">Code 93 value</string>
+    <string name="form_barcode_code_93_placeholder">ASCII text</string>
+    <string name="form_barcode_code_39_label">Code 39 value</string>
+    <string name="form_barcode_codabar_label">Codabar value</string>
+    <string name="form_barcode_codabar_placeholder">Mga digit, opsyonal na start/stop</string>
+    <string name="form_barcode_itf_label">ITF digits</string>
+    <string name="form_barcode_itf_placeholder">Pantay na bilang ng digit</string>
+    <string name="form_barcode_generic_placeholder">Teksto o numero</string>
+    <string name="form_payload_label">Payload</string>
+    <string name="form_payload_placeholder">Maglagay ng value</string>
+
+    <!-- Barcode validation -->
+    <string name="barcode_validation_digits_only">Mga digit lamang.</string>
+    <string name="barcode_validation_check_digit_mismatch">Hindi tumutugma ang check digit.</string>
+    <string name="barcode_validation_ean_13_length">Maglagay ng 12 digit, o 13 digit kasama ang check digit.</string>
+    <string name="barcode_validation_ean_8_length">Maglagay ng 7 digit, o 8 digit kasama ang check digit.</string>
+    <string name="barcode_validation_upc_a_length">Maglagay ng 11 digit, o 12 digit kasama ang check digit.</string>
+    <string name="barcode_validation_upc_e_length">Maglagay ng 7 digit, o 8 digit kasama ang check digit.</string>
+    <string name="barcode_validation_upc_e_invalid">Di-wastong UPC-E value.</string>
+    <string name="barcode_validation_itf_even">Maglagay ng pantay na bilang ng digit.</string>
+    <string name="barcode_validation_itf_min">Kailangan ng ITF ng hindi bababa sa 2 digit.</string>
+    <string name="barcode_validation_itf_max">Hindi maaaring lumampas ang ITF sa 80 digit.</string>
+    <string name="barcode_validation_code_128_ascii">Sinusuportahan lamang ng Code 128 ang mga character hanggang ASCII 127.</string>
+    <string name="barcode_validation_code_93_ascii">Sinusuportahan lamang ng Code 93 ang mga character hanggang ASCII 127.</string>
+    <string name="barcode_validation_code_93_too_long">Masyadong mahaba ang value na ito para sa Code 93.</string>
+    <string name="barcode_validation_code_39_unsupported">Hindi ma-encode ng Code 39 ang character na ito.</string>
+    <string name="barcode_validation_code_39_too_long">Masyadong mahaba ang value na ito para sa Code 39.</string>
+    <string name="barcode_validation_codabar_chars">Pinapayagan lamang ng Codabar ang mga digit at - \$ : / . +.</string>
+    <string name="barcode_validation_codabar_guards">Dapat naroroon ang start at stop character.</string>
+    <string name="barcode_validation_enter_codabar">Maglagay ng Codabar value.</string>
+    <string name="barcode_validation_enter_code_128">Maglagay ng Code 128 value.</string>
+    <string name="barcode_validation_enter_code_93">Maglagay ng Code 93 value.</string>
+    <string name="barcode_validation_enter_code_39">Maglagay ng Code 39 value.</string>
+    <string name="barcode_validation_enter_data_matrix">Maglagay ng Data Matrix value.</string>
+    <string name="barcode_validation_enter_pdf417">Maglagay ng PDF417 value.</string>
+    <string name="barcode_validation_enter_aztec">Maglagay ng Aztec value.</string>
+    <string name="barcode_validation_too_large_data_matrix">Masyadong malaki ang value na ito para sa isang Data Matrix symbol.</string>
+    <string name="barcode_validation_too_large_pdf417">Masyadong malaki ang value na ito para sa isang PDF417 symbol.</string>
+    <string name="barcode_validation_too_large_aztec">Masyadong malaki ang value na ito para sa isang Aztec symbol.</string>
+    <string name="barcode_validation_cannot_encode">Hindi ma-encode ang value na ito.</string>
+    <string name="barcode_counter_ean_13_short">%1$d/12</string>
+    <string name="barcode_counter_ean_13_long">%1$d/13</string>
+    <string name="barcode_counter_ean_8_short">%1$d/7</string>
+    <string name="barcode_counter_ean_8_long">%1$d/8</string>
+    <string name="barcode_counter_upc_e_short">%1$d/7</string>
+    <string name="barcode_counter_upc_e_long">%1$d/8</string>
+    <string name="barcode_counter_upc_a_short">%1$d/11</string>
+    <string name="barcode_counter_upc_a_long">%1$d/12</string>
+    <string name="barcode_counter_itf_digits">%1$d digit</string>
+    <string name="barcode_counter_chars">%1$d character</string>
+
+    <!-- Wi-Fi create form -->
+    <string name="wifi_form_title">Wi-Fi Network</string>
+    <string name="wifi_network_name_heading">PANGALAN NG NETWORK (SSID)</string>
+    <string name="wifi_ssid_placeholder">Ilagay ang Wi-Fi SSID</string>
+    <string name="wifi_security_type_heading">URI NG SEGURIDAD</string>
+    <string name="wifi_security_recommended">Inirerekomenda: WPA/WPA2</string>
+    <string name="wifi_security_wpa">WPA/WPA2</string>
+    <string name="wifi_security_wpa3">WPA3</string>
+    <string name="wifi_security_wep">WEP</string>
+    <string name="wifi_security_open">Bukas</string>
+    <string name="wifi_password_heading">PASSWORD</string>
+    <string name="wifi_password_placeholder">Wi-Fi Password</string>
+    <string name="cd_toggle_password">I-toggle ang password</string>
+    <string name="wifi_hidden_network_title">Nakatagong Network</string>
+    <string name="wifi_hidden_network_subtitle">Hindi pampublikong ini-broadcast ang SSID</string>
+    <string name="wifi_guest_scan_hint">I-scan ng mga bisita ang QR na ito gamit ang kanilang camera app upang kumonekta nang hindi nagta-type ng Wi-Fi password.</string>
+    <string name="wifi_validation_enter_ssid">Maglagay ng pangalan ng network (SSID)</string>
+    <string name="wifi_validation_enter_password">Maglagay ng Wi-Fi password</string>
+
+    <!-- QR preview -->
+    <string name="qr_preview_title">QR Preview</string>
+    <string name="cd_share">Ibahagi</string>
+    <string name="cd_generated_qr_code">Nabuo na QR code</string>
+    <string name="qr_preview_generating">Bumubuo…</string>
+    <string name="qr_preview_nothing_to_preview">Walang ma-preview</string>
+    <string name="qr_preview_unable_encode_barcode">Hindi ma-encode ang barcode</string>
+    <string name="qr_preview_customize_style">I-customize ang Estilo at Kulay</string>
+    <string name="qr_preview_save_image">I-save ang Larawan</string>
+    <string name="qr_preview_saving">Nagse-save…</string>
+    <string name="qr_preview_create">Gumawa</string>
+    <string name="qr_preview_creating">Gumagawa…</string>
+    <string name="qr_preview_code_specifications">Mga Espesipikasyon ng Code</string>
+    <string name="qr_preview_spec_export">I-export</string>
+    <string name="qr_preview_spec_export_size">1024 × 1024</string>
+    <string name="qr_preview_spec_style">Estilo</string>
+    <string name="qr_preview_toast_not_ready">Hindi pa ready ang QR</string>
+    <string name="qr_preview_toast_generated">Nabuo na ang QR code</string>
+    <string name="qr_preview_toast_unable_save">Hindi ma-save</string>
+    <string name="export_png_saved">Nai-save ang PNG sa Gallery (1024×1024)</string>
+    <string name="export_png_failed">Nabigo ang pag-export ng PNG</string>
+    <string name="export_unable_create_entry">Hindi makagawa ng MediaStore entry</string>
+    <string name="export_png_compress_failed">Nabigo ang pag-compress ng PNG</string>
+    <string name="export_unable_open_stream">Hindi mabuksan ang output stream</string>
+    <string name="export_svg_ready">Ready na ang SVG na ibahagi</string>
+    <string name="export_svg_failed">Nabigo ang pag-export ng SVG</string>
+    <string name="export_share_opened">Nabuksan ang share sheet</string>
+    <string name="export_share_failed">Nabigo ang pagbabahagi</string>
+    <string name="export_send_code_chooser">Ipadala ang Code</string>
+    <string name="export_vector_chooser">I-export ang Vector</string>
+
+    <!-- QR customize -->
+    <string name="qr_customize_title">I-customize ang QR</string>
+    <string name="qr_customize_nothing">Walang ma-customize</string>
+    <string name="cd_styled_qr_preview">Preview ng naka-istilong QR</string>
+    <string name="qr_customize_rendering">Nagre-render…</string>
+    <string name="qr_customize_section_body_pattern">Pattern ng Katawan</string>
+    <string name="qr_customize_section_corner_eye">Estilo ng Corner Eye</string>
+    <string name="qr_customize_section_color_palette">Palette ng Kulay</string>
+    <string name="qr_customize_section_center_icon">Icon sa Gitna</string>
+    <string name="qr_customize_section_frame">Template ng Frame</string>
+    <string name="qr_customize_save_export">I-save at I-export ang Custom na QR</string>
+    <string name="qr_customize_toast_unable_load_logo">Hindi ma-load ang logo</string>
+    <string name="qr_customize_toast_reset_done">Tapos na ang reset</string>
+    <string name="qr_pattern_classic">Classic (Parisukat)</string>
+    <string name="qr_pattern_rounded">Bilog-bilog</string>
+    <string name="qr_pattern_dots">Radial Dots</string>
+    <string name="qr_pattern_diamond">Diamond Mesh</string>
+    <string name="qr_eye_square">Parisukat</string>
+    <string name="qr_eye_soft">Malambot na Kurba</string>
+    <string name="qr_eye_circle">Bilog na Mata</string>
+    <string name="qr_icon_none">Wala</string>
+    <string name="qr_icon_wifi">Wi-Fi</string>
+    <string name="qr_icon_globe">Globo</string>
+    <string name="qr_icon_custom">Custom</string>
+    <string name="qr_palette_electric_cobalt">Electric Cobalt</string>
+    <string name="qr_palette_deep_sapphire">Deep Sapphire</string>
+    <string name="qr_palette_neon_cyan">Neon Cyan</string>
+    <string name="qr_palette_monochrome_slate">Monochrome Slate</string>
+    <string name="qr_palette_crimson">Crimson</string>
+    <string name="qr_palette_emerald">Emerald</string>
+    <string name="qr_palette_violet">Violet</string>
+    <string name="qr_palette_amber">Amber</string>
+    <string name="qr_frame_none_title">Wala</string>
+    <string name="qr_frame_none_subtitle">Malinis na borderless matrix</string>
+    <string name="qr_frame_pill_title">\"I-scan Mo Ako\" Pill</string>
+    <string name="qr_frame_pill_subtitle">Badge na may nakakabit na footer</string>
+    <string name="qr_frame_banner_title">Banner sa Itaas</string>
+    <string name="qr_frame_banner_subtitle">Top accent header band</string>
+    <string name="qr_frame_cyber_title">Cyber Reticle</string>
+    <string name="qr_frame_cyber_subtitle">Cobalt HUD view corners</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Mga Setting</string>
+    <string name="settings_preferences_title">Mga Kagustuhan</string>
+    <string name="settings_engine_version">Engine v2.4.0</string>
+    <string name="settings_preferences_subtitle">High-speed optical matrix at synthesis parameters</string>
+    <string name="settings_pipeline_online">OPTICAL CV PIPELINE ONLINE</string>
+    <string name="settings_pro_footer">%1$s Pro · Na-verify ang Device Acceleration</string>
+    <string name="settings_section_appearance">Itsura</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_theme_light">Maliwanag</string>
+    <string name="settings_theme_dark">Madilim</string>
+    <string name="settings_language_title">Wika</string>
+    <string name="settings_launcher_title">Setting ng Launcher</string>
+    <string name="settings_launcher_subtitle">Laki ng icon, label, at ayos ng app</string>
+    <string name="settings_section_scanner">Scanner at Hardware</string>
+    <string name="settings_vibrate_title">Vibrate Kapag Natukoy</string>
+    <string name="settings_vibrate_subtitle">Haptic pulse kapag nalutas ang matrix</string>
+    <string name="settings_beep_title">Tunog ng Beep</string>
+    <string name="settings_beep_subtitle">Kumpirmasyon sa audio tone</string>
+    <string name="settings_auto_open_urls_title">Awtomatikong Buksan ang URL</string>
+    <string name="settings_auto_open_urls_subtitle">Binubuksan ang mga link ng website sa browser pagkatapos ng scan</string>
+    <string name="settings_clear_history_title">I-clear ang Kasaysayan ng Scan at Paggawa</string>
+    <string name="settings_clear_history_subtitle">Alisin ang hindi paboritong item · itago ang paborito</string>
+    <string name="settings_section_about">Tungkol at Legal</string>
+    <string name="settings_about_title">Tungkol</string>
+    <string name="settings_privacy_policy_title">Patakaran sa Privacy</string>
+    <string name="settings_share_title">Ibahagi</string>
+    <string name="settings_rate_title">I-rate</string>
+    <string name="settings_dialog_theme_title">Tema</string>
+    <string name="settings_dialog_default_ecc_title">Default na Antas ng Correction</string>
+    <string name="settings_dialog_default_format_title">Default na Format ng QR</string>
+    <string name="settings_ecc_low_subtitle">Mababa (7% ECC)</string>
+    <string name="settings_ecc_medium_subtitle">Katamtaman (15% ECC)</string>
+    <string name="settings_ecc_quartile_subtitle">Quartile (25% ECC)</string>
+    <string name="settings_ecc_high_subtitle">Mataas (30% ECC) · Pinakamainam na redundancy</string>
+    <string name="settings_ecc_low_option">Mababa / L / 7%</string>
+    <string name="settings_ecc_medium_option">Katamtaman / M / 15%</string>
+    <string name="settings_ecc_quartile_option">Quartile / Q / 25%</string>
+    <string name="settings_ecc_high_option">Mataas / H / 30%</string>
+    <string name="settings_format_svg">Vector SVG / Matalas na 1024px</string>
+    <string name="settings_format_png">PNG / 1024px</string>
+    <string name="settings_language_system">Naka-sync sa System</string>
+    <string name="settings_language_system_subtitle">Sundin ang wika ng device</string>
+    <string name="settings_language_english_us">English (US)</string>
+    <string name="settings_language_hindi">Hindi</string>
+    <string name="settings_language_russian">Russian</string>
+    <string name="settings_language_italian">Italian</string>
+    <string name="settings_language_french">French</string>
+    <string name="settings_language_spanish">Spanish</string>
+    <string name="settings_language_japanese">Japanese</string>
+    <string name="settings_language_korean">Korean</string>
+    <string name="settings_language_german">German</string>
+    <string name="settings_language_chinese">Chinese</string>
+    <string name="settings_language_thai">Thai</string>
+    <string name="settings_language_greek">Greek</string>
+    <string name="settings_language_portuguese_pt">Portuguese (Portugal)</string>
+    <string name="settings_language_portuguese_br">Portuguese (Brazil)</string>
+    <string name="settings_language_dutch">Dutch</string>
+    <string name="settings_language_filipino">Filipino</string>
+    <string name="settings_language_turkish">Turkish</string>
+    <string name="settings_language_indonesian">Indonesian</string>
+    <string name="settings_language_afrikaans">Afrikaans</string>
+    <string name="settings_language_english">English</string>
+
+    <!-- About -->
+    <string name="about_title">Tungkol</string>
+    <string name="about_tagline">Agarang QR at Barcode Intelligence</string>
+    <string name="about_meta_version">Bersyon</string>
+    <string name="about_meta_build">Build</string>
+    <string name="about_meta_package">Package</string>
+
+    <!-- Reminder / Events / Launcher / Widgets / Language / Privacy / Permission / Default / Intro / Ads -->
+    <string name="reminder_notification_title">Paalala</string>
+    <string name="reminder_notification_channel_desc">Naka-schedule na alerto ng paalala</string>
+    <string name="event_uninstall_title">Na-uninstall?</string>
+    <string name="event_uninstall_success">Tapos na ang cleanup</string>
+    <string name="event_uninstall_sub">Matagumpay na na-uninstall ang app</string>
+    <string name="event_uninstall_body">Na-clear na ang mga naka-cache na scan file at temporary data mula sa iyong device.</string>
+    <string name="event_uninstall_chip">Ligtas at Kumpleto</string>
+    <string name="event_charge_in_title">Nakasaksak ang Power</string>
+    <string name="event_charge_in_success">%1$d%%</string>
+    <string name="event_charge_in_sub">Nakakonekta</string>
+    <string name="event_charge_in_body">Aktibo ang fast charging.</string>
+    <string name="event_charge_in_chip">AKTIBO ANG FAST CHARGING</string>
+    <string name="event_charge_out_title">Natanggal ang Charger</string>
+    <string name="event_charge_out_success">%1$d%% Pinakamainam</string>
+    <string name="event_charge_out_sub">Nadiskonekta</string>
+    <string name="event_charge_out_body">Nadiskonekta ang power cable.</string>
+    <string name="event_charge_out_chip">Nadiskonekta ang Power</string>
+    <string name="event_optimized_speed">Na-optimize na bilis</string>
+    <string name="event_fast">MABILIS</string>
+    <string name="event_optimized_sub">Maayos ang takbo ng lahat.</string>
+    <string name="event_done">Tapos</string>
+    <string name="launcher_settings">Mga Setting ng Launcher</string>
+    <string name="serialize">Ayusin</string>
+    <string name="by_name_asc_a_to_z">Ayon sa Pangalan ASC (A hanggang Z)</string>
+    <string name="by_name_desc_z_to_a">Ayon sa Pangalan DESC (Z hanggang A)</string>
+    <string name="by_installed_date">Ayon sa Petsa ng Pag-install</string>
+    <string name="preview">Preview</string>
+    <string name="label_visibility">Visibility ng Label</string>
+    <string name="hide_app_name">Itago ang pangalan ng app</string>
+    <string name="app_icon_size">Laki ng App Icon</string>
+    <string name="app_label_size">Laki ng App Label</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Mga App Widget</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Pumili ng widget upang mabilis na ma-access ang iyong mga QR tool mula mismo sa iyong home screen.</string>
+    <string name="quick_access">Mabilisang Access</string>
+    <string name="app_icon_1x1">App Icon 1 x 1</string>
+    <string name="qr_scanner_generator">QR Scanner at Generator</string>
+    <string name="create_1_x_1">Gumawa ng 1 x 1</string>
+    <string name="style_a">Estilo A</string>
+    <string name="style_b">Estilo B</string>
+    <string name="style_c">Estilo C</string>
+    <string name="scan_qr">I-scan ang QR</string>
+    <string name="cl_end_scan_subtitle">Buksan ang camera at mag-scan ng QR code</string>
+    <string name="cl_end_scan_action">I-scan</string>
+    <string name="cl_end_history">Kasaysayan</string>
+    <string name="cl_end_history_subtitle">Tingnan ang iyong na-scan na QR history</string>
+    <string name="cl_end_widgets_subtitle">Magdagdag ng QR tools sa iyong home screen</string>
+    <string name="create_qr">Gumawa ng QR</string>
+    <string name="widget_pin_not_supported">Hindi sinusuportahan ang widget pinning sa device na ito</string>
+    <string name="widget_pin_failed">Hindi maidagdag ang widget. Pakisubukan muli.</string>
+    <string name="choose_your_language">Piliin ang Iyong Wika</string>
+    <string name="collection_title">Isang Mabilis na Paalala Tungkol sa Iyong Privacy</string>
+    <string name="collection_intro_1">Gumagamit kami ng limitadong impormasyon ng device at app upang mapanatiling mabilis, ligtas, at maaasahan ang QR Scanner, magbigay ng mga feature sa pag-scan at paggawa ng QR code, magpakita ng mga ad na tumutulong mapanatiling libre ang app, at mapabuti ang iyong pangkalahatang karanasan.</string>
+    <string name="collection_intro_2">Ang iyong na-scan na nilalaman, personal na file, larawan, video, at iba pang pribadong data ay hindi kinokolekta para sa analytics o advertising at nananatili sa ilalim ng iyong kontrol.</string>
+    <string name="collection_what_we_use">Ano ang ginagamit namin at bakit:</string>
+    <string name="collection_bullet_1">⦿ Access sa camera - upang tumpak na ma-scan ang mga QR code at barcode at makapagbigay ng agarang resulta.</string>
+    <string name="collection_bullet_2">⦿ Impormasyon sa paggamit ng app - tulad ng mga feature sa pag-scan at paggawa ng QR na ginagamit mo at mga screen na binubuksan mo - upang mapabuti ang performance, stability, at karanasan ng user.</string>
+    <string name="collection_bullet_3">⦿ Device at app identifier - upang i-save ang iyong mga kagustuhan, mapabuti ang stability, maiwasan ang mga error, at suportahan ang mahahalagang feature ng app.</string>
+    <string name="collection_bullet_4">⦿ Advertising identifier - upang magpakita at sumukat ng mga ad na tumutulong mapanatiling libre ang app.</string>
+    <string name="collection_footer">Sa pag-tap sa Sumang-ayon at Magpatuloy, kinikilala mo ang aming Patakaran sa Privacy. Ginagamit lamang namin ang impormasyong kailangan upang magbigay ng pag-scan at paggawa ng QR code, seguridad ng app, at iba pang mahahalagang feature, mapabuti ang app, at suportahan ang advertising. Ang iyong na-scan na nilalaman at pribadong data ay nananatili sa ilalim ng iyong kontrol.</string>
+    <string name="collection_agree_checkbox">Sumasang-ayon ako sa koleksyon ng data na ito</string>
+    <string name="collection_agree_continue">Sumang-ayon at Magpatuloy</string>
+    <string name="collection_agree_toast">Pakisang-ayunan ang koleksyon ng data upang magpatuloy.</string>
+    <string name="privacy_policy">Patakaran sa Privacy</string>
+    <string name="this_action_may_contain_ads">Maaaring naglalaman ng Ads ang aksyong ito</string>
+    <string name="marketing_converter1">gclid</string>
+    <string name="utm_source_apps_facebook_com">utm_source=apps.facebook.com</string>
+    <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
+    <string name="utm_source_marketing">utm_source=marketing</string>
+    <string name="permission_title">Kailangan ang Access sa Camera</string>
+    <string name="permission_description">Kailangan ng QR Code at Scanner ang access sa camera upang agad na mag-scan ng QR code, Wi-Fi credentials, at barcode sa real time.</string>
+    <string name="permission_local_title">Agarang Lokal na Pag-scan</string>
+    <string name="permission_local_desc">Ang mga scan ay pinoproseso nang buo sa device na may zero server latency.</string>
+    <string name="permission_privacy_title">100% Protektado ang Privacy</string>
+    <string name="permission_privacy_desc">Walang video frame o raw capture ang ina-upload o naka-catalog.</string>
+    <string name="permission_gallery_title">Alternatibo sa Gallery</string>
+    <string name="permission_gallery_desc">Mag-import ng mga larawan mula mismo sa iyong library anumang oras nang walang camera privileges.</string>
+    <string name="allow_permission">Payagan ang Pahintulot</string>
+    <string name="default_title">Gawing Default Home Launcher ang QR Code at Scanner</string>
+    <string name="default_description">Agarang access sa QR scanner sa isang swipe pakanan mula sa iyong home screen, custom na widget controls, at organisadong app drawer.</string>
+    <string name="default_swipe_title">I-swipe Pakanan upang Mag-scan</string>
+    <string name="default_swipe_desc">Agad na buksan ang viewfinder mula sa kahit saan sa iyong home screen na may zero latency.</string>
+    <string name="default_widgets_title">Matalinong Mabilisang Widget</string>
+    <string name="default_widgets_desc">I-pin ang mga shortcut ng QR generator, clipboard monitor, at battery intelligence sa home mismo.</string>
+    <string name="default_drawer_title">Custom na App Drawer at Folder</string>
+    <string name="default_drawer_desc">Ayusin ang mga app, itago ang mga label, i-customize ang grid columns, at magpalipat-lipat sa pagitan ng light at dark theme.</string>
+    <string name="set_as_default">Itakda bilang Default</string>
+    <string name="intro_title_1">Agad na Mag-scan ng QR Code</string>
+    <string name="intro_desc_1">Mabilis na mag-scan ng QR code gamit ang iyong camera at ma-access ang impormasyon sa ilang segundo</string>
+    <string name="intro_title_2">Mag-scan ng Barcode nang Madali</string>
+    <string name="intro_desc_2">Mabilis na mag-scan ng barcode ng produkto at makakuha ng tumpak na resulta sa ilang segundo</string>
+    <string name="intro_title_3">Gumawa ng QR Code sa Iyong Paraan</string>
+    <string name="intro_desc_3">Bumuo at i-customize ang propesyonal na QR code para sa lahat ng iyong digital na pangangailangan.</string>
+    <string name="next">Susunod</string>
+    <string name="loading_ads_title">Naglo-load ng Ads</string>
+    <string name="loading_ads_desc">Mangyaring maghintay, lalabas na ang mga ad...</string>
 </resources>

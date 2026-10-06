@@ -1,3 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_back">返回</string>
+    <string name="action_cancel">取消</string>
+    <string name="action_clear">清除</string>
+    <string name="action_copy">复制</string>
+    <string name="action_delete">删除</string>
+    <string name="action_go_back">返回上一页</string>
+    <string name="action_paste">粘贴</string>
+    <string name="action_share">分享</string>
+    <string name="action_reset">重置</string>
+    <string name="cd_clear">清除</string>
+    <string name="cd_clear_search">清除搜索</string>
+    <string name="cd_favorite">收藏</string>
+    <string name="cd_more">更多</string>
+    <string name="cd_add_to_favorites">添加到收藏</string>
+    <string name="toast_copied">已复制</string>
+    <string name="toast_deleted">已删除</string>
+    <string name="toast_history_cleared">历史记录已清除</string>
+    <string name="toast_clipboard_empty">剪贴板为空</string>
+    <string name="toast_unable_to_open_link">无法打开链接</string>
+    <string name="share_chooser_title">分享</string>
+    <string name="form_label_optional_suffix">%1$s（可选）</string>
 
+    <!-- Bottom navigation -->
+    <string name="nav_home">首页</string>
+    <string name="nav_scan">扫描</string>
+    <string name="nav_settings">设置</string>
+    <string name="cd_quick_scan">快速扫描</string>
+
+    <!-- Home -->
+    <string name="home_cd_favorites">收藏</string>
+    <string name="home_instant_scanner_title">即时扫描器</string>
+    <string name="home_instant_scanner_subtitle">对准任意二维码或标准条形码</string>
+    <string name="home_open_camera_scanner">打开相机扫描器</string>
+    <string name="home_quick_tools_heading">快捷工具</string>
+    <string name="home_tool_scan_barcode_title">扫描条形码</string>
+    <string name="home_tool_scan_barcode_subtitle">UPC 和 EAN 标签</string>
+    <string name="home_tool_scan_gallery_title">扫描相册</string>
+    <string name="home_tool_scan_gallery_subtitle">来自截图</string>
+    <string name="home_tool_create_qr_title">创建二维码</string>
+    <string name="home_tool_create_qr_subtitle">链接、Wi-Fi 和 vCard</string>
+    <string name="home_tool_history_title">历史记录</string>
+    <string name="home_tool_history_subtitle">已保存的扫描和代码</string>
+    <string name="home_recent_scans_title">最近扫描</string>
+    <string name="home_view_all">查看全部</string>
+    <string name="home_no_recent_scans_title">暂无最近扫描</string>
+    <string name="home_no_recent_scans_body">您扫描的代码将显示在这里，方便快速访问。</string>
+
+    <!-- History -->
+    <string name="history_title">历史记录</string>
+    <string name="history_search_placeholder">搜索代码、URL、标题…</string>
+    <string name="history_no_matches">未找到与您搜索匹配的内容</string>
+    <string name="history_filter_all">全部 (%1$d)</string>
+    <string name="history_filter_scanned">已扫描 (%1$d)</string>
+    <string name="history_filter_created">已创建 (%1$d)</string>
+    <string name="history_section_today">今天</string>
+    <string name="history_section_yesterday">昨天</string>
+    <string name="history_section_earlier">更早</string>
+    <string name="history_section_count_scans">%1$d 次扫描</string>
+    <string name="history_section_count_scan">%1$d 次扫描</string>
+    <string name="history_section_count_items">%1$d 个项目</string>
+    <string name="history_section_count_item">%1$d 个项目</string>
+    <string name="history_menu_add_favorite">添加到收藏</string>
+    <string name="history_menu_remove_favorite">从收藏中移除</string>
+    <string name="history_empty_title">暂无扫描历史</string>
+    <string name="history_empty_launch_scanner">立即启动扫描器</string>
+    <string name="history_detail_title">历史详情</string>
+    <string name="history_not_found_title">未找到扫描记录</string>
+    <string name="history_not_found_body">此历史记录项可能已被删除。</string>
+    <string name="history_delete_item_title">删除此历史记录项？</string>
+    <string name="history_delete_item_subtitle">此操作无法撤销</string>
+    <string name="history_delete_item_body">这将从您的本地设备历史记录中永久移除此项。</string>
+    <string name="history_clear_all_title">清除扫描和创建历史？</string>
+    <string name="history_stored_items_count">%1$d 个已存储项</string>
+    <string name="history_clear_all_body">这将从您的本地设备永久移除所有历史记录项，包括点赞和收藏的项目。</string>
+    <string name="history_clear_all_warning">一旦清除，项目将无法恢复。</string>
+    <string name="history_clear_all_confirm">清除全部历史</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">收藏</string>
+    <string name="favorites_empty">暂无收藏</string>
+
+    <!-- Scan / viewfinder -->
+    <string name="scan_hud_flash">闪光灯</string>
+    <string name="scan_hud_gallery">相册</string>
+    <string name="scan_hud_flip">切换</string>
+    <string name="cd_toggle_flashlight">切换手电筒</string>
+    <string name="cd_scan_image_from_gallery">从相册扫描图像</string>
+    <string name="cd_flip_camera_lens">切换摄像头</string>
+    <string name="scan_zoom_level">%1$dx</string>
+    <string name="scan_camera_permission_title">需要相机权限</string>
+    <string name="scan_camera_permission_body">允许访问相机以扫描二维码和条形码。</string>
+    <string name="scan_camera_permission_body_settings">相机访问已关闭。打开设置，启用相机，然后返回此处扫描。</string>
+    <string name="scan_grant_permission">授予权限</string>
+    <string name="scan_open_settings">打开设置</string>
+
+    <!-- Gallery crop -->
+    <string name="gallery_crop_title">裁剪照片</string>
+    <string name="gallery_crop_select_photo">选择要裁剪的照片</string>
+    <string name="gallery_crop_rotate_90">旋转 90°</string>
+    <string name="gallery_crop_flip">翻转</string>
+    <string name="gallery_crop_detecting">检测中…</string>
+    <string name="gallery_crop_scan_selection">扫描选区</string>
+    <string name="gallery_crop_choose_another">选择其他照片</string>
+    <string name="gallery_crop_unable_open_image">无法打开此图像</string>
+    <string name="gallery_crop_no_code_detected">未检测到可扫描的代码</string>
+    <string name="gallery_crop_detection_failed">检测失败</string>
+    <string name="gallery_crop_multiple_codes_title">找到多个代码</string>
+    <string name="gallery_crop_multiple_codes_prompt">选择要打开的代码：</string>
+    <string name="gallery_crop_code_list_item">%1$d. %2$s: %3$s</string>
+    <string name="cd_selected_photo">已选照片</string>
+    <string name="wifi_preview_enter_ssid">输入 SSID</string>
+
+    <!-- Detection error -->
+    <string name="detection_error_title">检测失败</string>
+    <string name="detection_error_badge">检测失败</string>
+    <string name="detection_error_headline">未检测到可扫描的代码</string>
+    <string name="detection_error_checklist_title">优化检查清单</string>
+    <string name="detection_error_tip_steady">保持稳定，将代码完全置于裁剪框内</string>
+    <string name="detection_error_tip_lighting">使用清晰、光线充足且无明显模糊的照片</string>
+    <string name="detection_error_tip_rotate">如果代码侧向显示，请尝试旋转或翻转</string>
+    <string name="detection_error_tip_formats">支持：QR、Aztec、Data Matrix、EAN、UPC、Code 128/39、PDF417</string>
+    <string name="detection_error_retry">重新扫描 / 重试</string>
+    <string name="detection_error_pick_gallery">从相册选择其他照片</string>
+
+    <!-- Batch results -->
+    <string name="batch_results_title">批量结果</string>
+    <string name="batch_results_one_code">已接受 1 个代码</string>
+    <string name="batch_results_many_codes">已接受 %1$d 个代码</string>
+
+    <!-- Scan result -->
+    <string name="scan_result_title">扫描结果</string>
+    <string name="scan_result_payload_heading">负载内容</string>
+    <string name="scan_result_empty_payload">（空）</string>
+    <string name="scan_result_kind_website">网站 / URL</string>
+    <string name="scan_result_kind_wifi">Wi-Fi 网络</string>
+    <string name="scan_result_kind_plain_text">纯文本</string>
+    <string name="scan_result_kind_qr_code">二维码</string>
+    <string name="scan_result_kind_barcode">条形码</string>
+    <string name="scan_result_url_detected_banner">检测到网站 / URL 负载</string>
+    <string name="scan_result_copy_link">复制链接</string>
+    <string name="scan_result_open_in_browser">在浏览器中打开</string>
+    <string name="scan_result_toast_link_copied">链接已复制到剪贴板</string>
+    <string name="scan_result_toast_copied">已复制到剪贴板</string>
+    <string name="scan_result_toast_saved_favorite">已保存到收藏</string>
+    <string name="scan_result_toast_removed_favorite">已从收藏中移除</string>
+    <string name="share_scanned_url_title">已扫描的 URL</string>
+    <string name="share_scan_result_title">扫描结果</string>
+
+    <!-- Create hub -->
+    <string name="create_hub_title">创建二维码</string>
+    <string name="create_hub_search_placeholder">搜索二维码格式…</string>
+    <string name="create_hub_no_formats_title">未找到格式</string>
+    <string name="create_hub_no_formats_body">尝试输入其他关键词或重置当前筛选器</string>
+    <string name="create_hub_reset_search">重置搜索</string>
+    <string name="create_hub_section_social">社交</string>
+    <string name="create_hub_section_barcode">条形码</string>
+    <string name="create_filter_all">所有格式</string>
+    <string name="create_filter_web">网页和社交</string>
+    <string name="create_filter_comms">通信</string>
+    <string name="create_filter_utilities">实用工具</string>
+    <string name="create_subtitle_barcode">条形码</string>
+
+    <!-- Create hub category cards -->
+    <string name="create_cat_website_title">网站 URL</string>
+    <string name="create_cat_website_subtitle">链接、社交资料、网页</string>
+    <string name="create_cat_wifi_title">Wi-Fi 网络</string>
+    <string name="create_cat_wifi_subtitle">WPA/WPA2、SSID、自动连接</string>
+    <string name="create_cat_contact_title">联系人 / vCard</string>
+    <string name="create_cat_contact_subtitle">姓名、电话、电子邮件、地址</string>
+    <string name="create_cat_plain_text_title">纯文本</string>
+    <string name="create_cat_plain_text_subtitle">笔记、消息、原始数据</string>
+    <string name="create_cat_phone_title">电话呼叫</string>
+    <string name="create_cat_phone_subtitle">直接电话拨号</string>
+    <string name="create_cat_email_title">电子邮件</string>
+    <string name="create_cat_email_subtitle">预填收件人和主题</string>
+    <string name="create_cat_sms_title">短信 / 消息</string>
+    <string name="create_cat_sms_subtitle">直接发送短信</string>
+    <string name="create_cat_whatsapp_title">WhatsApp</string>
+    <string name="create_cat_whatsapp_subtitle">直接 WhatsApp 聊天链接</string>
+    <string name="create_cat_location_title">位置</string>
+    <string name="create_cat_location_subtitle">Google 地图坐标 / 图钉</string>
+    <string name="create_cat_calendar_title">日历事件</string>
+    <string name="create_cat_calendar_subtitle">标题、日期、时间、提醒</string>
+    <string name="create_cat_app_link_title">应用链接</string>
+    <string name="create_cat_app_link_subtitle">Google Play 和 App Store 链接</string>
+    <string name="create_cat_facebook_title">Facebook</string>
+    <string name="create_cat_facebook_subtitle">个人资料或页面</string>
+    <string name="create_cat_youtube_title">YouTube</string>
+    <string name="create_cat_youtube_subtitle">频道或视频</string>
+    <string name="create_cat_twitter_title">Twitter</string>
+    <string name="create_cat_twitter_subtitle">个人资料</string>
+    <string name="create_cat_tiktok_title">TikTok</string>
+    <string name="create_cat_tiktok_subtitle">个人资料</string>
+    <string name="create_cat_instagram_title">Instagram</string>
+    <string name="create_cat_instagram_subtitle">个人资料</string>
+    <string name="create_cat_paypal_title">PayPal</string>
+    <string name="create_cat_paypal_subtitle">PayPal.me 链接</string>
+    <string name="create_cat_snapchat_title">Snapchat</string>
+    <string name="create_cat_snapchat_subtitle">添加好友</string>
+    <string name="create_cat_linkedin_title">LinkedIn</string>
+    <string name="create_cat_linkedin_subtitle">个人资料</string>
+    <string name="create_cat_spotify_title">Spotify</string>
+    <string name="create_cat_spotify_subtitle">个人资料或播放列表</string>
+    <string name="create_cat_code_128_title">Code 128</string>
+    <string name="create_cat_data_matrix_title">Data Matrix</string>
+    <string name="create_cat_pdf_417_title">PDF 417</string>
+    <string name="create_cat_aztec_title">Aztec</string>
+    <string name="create_cat_ean_13_title">EAN 13</string>
+    <string name="create_cat_ean_8_title">EAN 8</string>
+    <string name="create_cat_upc_e_title">UPC E</string>
+    <string name="create_cat_upc_a_title">UPC A</string>
+    <string name="create_cat_code_93_title">Code 93</string>
+    <string name="create_cat_code_39_title">Code 39</string>
+    <string name="create_cat_codabar_title">Codabar</string>
+    <string name="create_cat_itf_title">ITF</string>
+    <string name="create_cat_barcode_title">条形码 / EAN</string>
+
+    <!-- Create forms — shared -->
+    <string name="create_form_generate_preview">生成并预览</string>
+    <string name="create_form_generate_preview_qr">生成并预览二维码</string>
+    <string name="create_form_instant_share">即时分享</string>
+    <string name="create_barcode_stub_title">条形码创建即将推出</string>
+    <string name="create_barcode_stub_body">此中心项用于条形码（EAN/UPC），而非二维码。二维码类别可从“创建”中获取。</string>
+    <string name="create_validation_field_limit">此字段限制为 %1$d 个字符。</string>
+    <string name="create_validation_qr_too_long">内容过长，无法放入二维码。请缩短文本。</string>
+    <string name="create_validation_barcode_unavailable">条形码 / EAN 生成尚不可用。请改用二维码类别。</string>
+    <string name="create_validation_enter_value">输入要编码的值</string>
+
+    <!-- Create forms — website -->
+    <string name="form_website_url_label">网站 URL (https://)</string>
+    <string name="form_website_url_placeholder">https://example.com/target-path</string>
+    <string name="form_display_title_note_label">显示标题 / 备注</string>
+    <string name="form_display_title_note_placeholder">例如：营销演示 Q3 发布</string>
+    <string name="form_validation_enter_website_url">输入网站 URL</string>
+    <string name="form_validation_enter_valid_url">输入有效的 URL (https://…)</string>
+
+    <!-- Create forms — plain text -->
+    <string name="form_plain_text_label">原始消息 / 负载</string>
+    <string name="form_plain_text_placeholder">输入或粘贴纯文本…</string>
+    <string name="form_optional_label_placeholder">可选标签</string>
+    <string name="form_validation_enter_text">输入要编码的文本</string>
+
+    <!-- Create forms — contact -->
+    <string name="form_contact_name_label">全名</string>
+    <string name="form_contact_name_placeholder">输入联系人姓名</string>
+    <string name="form_contact_email_label">电子邮件（可选）</string>
+    <string name="form_contact_email_placeholder">name@email.com</string>
+    <string name="form_contact_job_title_label">职位（可选）</string>
+    <string name="form_contact_job_title_placeholder">例如：产品经理</string>
+    <string name="form_contact_phone_label">电话（可选）</string>
+    <string name="form_contact_phone_placeholder">+1 555 0100</string>
+    <string name="form_validation_enter_contact_name">输入联系人姓名</string>
+
+    <!-- Create forms — phone -->
+    <string name="form_phone_number_label">电话号码</string>
+    <string name="form_validation_enter_phone">输入电话号码</string>
+    <string name="form_validation_enter_valid_phone">输入有效的电话号码</string>
+
+    <!-- Create forms — email -->
+    <string name="form_email_address_label">电子邮件地址</string>
+    <string name="form_email_address_placeholder">hello@example.com</string>
+    <string name="form_email_subject_label">主题（可选）</string>
+    <string name="form_email_subject_placeholder">消息主题</string>
+    <string name="form_email_body_label">正文</string>
+    <string name="form_email_body_placeholder">邮件正文</string>
+    <string name="form_validation_enter_email">输入电子邮件地址</string>
+    <string name="form_validation_enter_valid_email">输入有效的电子邮件地址</string>
+    <string name="form_validation_enter_email_body">输入邮件正文</string>
+
+    <!-- Create forms — SMS -->
+    <string name="form_sms_message_label">消息</string>
+    <string name="form_sms_message_placeholder">短信内容</string>
+    <string name="form_validation_enter_message">输入消息</string>
+
+    <!-- Create forms — WhatsApp -->
+    <string name="form_whatsapp_number_label">WhatsApp 号码</string>
+    <string name="form_whatsapp_number_placeholder">15550100（含国家代码）</string>
+    <string name="form_whatsapp_message_label">消息（可选）</string>
+    <string name="form_whatsapp_message_placeholder">预填聊天文本</string>
+    <string name="form_validation_enter_whatsapp_number">输入 WhatsApp 号码（含国家代码）</string>
+    <string name="form_validation_enter_valid_whatsapp_number">输入含国家代码的有效 WhatsApp 号码</string>
+
+    <!-- Create forms — location -->
+    <string name="form_location_coords_label">坐标 (lat,lng)</string>
+    <string name="form_location_coords_placeholder">37.7749,-122.4194</string>
+    <string name="form_location_place_label">地点标签（可选）</string>
+    <string name="form_location_place_placeholder">金门大桥</string>
+    <string name="form_validation_enter_coordinates">按 lat,lng 格式输入坐标</string>
+    <string name="form_validation_enter_valid_coordinates">输入有效坐标（例如 37.7749,-122.4194）</string>
+
+    <!-- Create forms — app link -->
+    <string name="form_app_link_label">应用 URL 或包名</string>
+    <string name="form_app_link_placeholder">com.example.app 或 https://play.google.com/…</string>
+    <string name="form_validation_enter_app_url">输入应用 URL 或包名</string>
+    <string name="form_validation_enter_store_or_package">输入商店 URL 或类似 com.example.app 的包名</string>
+
+    <!-- Create forms — social -->
+    <string name="form_social_display_title_label">显示标题（可选）</string>
+    <string name="form_validation_enter_username_or_link">输入用户名或完整链接</string>
+    <string name="form_social_facebook_primary_label">Facebook 用户名或链接</string>
+    <string name="form_social_facebook_primary_placeholder">用户名或 https://facebook.com/…</string>
+    <string name="form_social_youtube_primary_label">YouTube 用户名或链接</string>
+    <string name="form_social_youtube_primary_placeholder">@channel 或 https://youtube.com/…</string>
+    <string name="form_social_twitter_primary_label">Twitter 用户名或链接</string>
+    <string name="form_social_twitter_primary_placeholder">用户名或 https://x.com/…</string>
+    <string name="form_social_tiktok_primary_label">TikTok 用户名或链接</string>
+    <string name="form_social_tiktok_primary_placeholder">@username 或 https://tiktok.com/…</string>
+    <string name="form_social_instagram_primary_label">Instagram 用户名或链接</string>
+    <string name="form_social_instagram_primary_placeholder">用户名或 https://instagram.com/…</string>
+    <string name="form_social_paypal_primary_label">PayPal 用户名或链接</string>
+    <string name="form_social_paypal_primary_placeholder">paypal.me 名称或 https://paypal.me/…</string>
+    <string name="form_social_snapchat_primary_label">Snapchat 用户名或链接</string>
+    <string name="form_social_snapchat_primary_placeholder">用户名或 https://snapchat.com/add/…</string>
+    <string name="form_social_linkedin_primary_label">LinkedIn 用户名或链接</string>
+    <string name="form_social_linkedin_primary_placeholder">资料名称或 https://linkedin.com/in/…</string>
+    <string name="form_social_spotify_primary_label">Spotify 用户名或链接</string>
+    <string name="form_social_spotify_primary_placeholder">用户 ID 或 https://open.spotify.com/…</string>
+
+    <!-- Create forms — barcode payloads -->
+    <string name="form_barcode_code_128_label">Code 128 值</string>
+    <string name="form_barcode_code_128_placeholder">文本或数字</string>
+    <string name="form_barcode_data_matrix_label">Data Matrix 值</string>
+    <string name="form_barcode_pdf_417_label">PDF 417 值</string>
+    <string name="form_barcode_aztec_label">Aztec 值</string>
+    <string name="form_barcode_ean_13_label">EAN 13 数字</string>
+    <string name="form_barcode_ean_13_placeholder">12 或 13 位数字</string>
+    <string name="form_barcode_ean_8_label">EAN 8 数字</string>
+    <string name="form_barcode_ean_8_placeholder">7 或 8 位数字</string>
+    <string name="form_barcode_upc_e_label">UPC E 数字</string>
+    <string name="form_barcode_upc_e_placeholder">7 或 8 位数字（以 0 或 1 开头）</string>
+    <string name="form_barcode_upc_a_label">UPC A 数字</string>
+    <string name="form_barcode_upc_a_placeholder">11 位数字，或含校验位的 12 位</string>
+    <string name="form_barcode_code_93_label">Code 93 值</string>
+    <string name="form_barcode_code_93_placeholder">ASCII 文本</string>
+    <string name="form_barcode_code_39_label">Code 39 值</string>
+    <string name="form_barcode_codabar_label">Codabar 值</string>
+    <string name="form_barcode_codabar_placeholder">数字，可选起始/停止符</string>
+    <string name="form_barcode_itf_label">ITF 数字</string>
+    <string name="form_barcode_itf_placeholder">偶数位数字</string>
+    <string name="form_barcode_generic_placeholder">文本或数字</string>
+    <string name="form_payload_label">负载</string>
+    <string name="form_payload_placeholder">输入值</string>
+
+    <!-- Barcode validation -->
+    <string name="barcode_validation_digits_only">仅限数字。</string>
+    <string name="barcode_validation_check_digit_mismatch">校验位不匹配。</string>
+    <string name="barcode_validation_ean_13_length">请输入 12 位数字，或包含校验位的 13 位数字。</string>
+    <string name="barcode_validation_ean_8_length">请输入 7 位数字，或包含校验位的 8 位数字。</string>
+    <string name="barcode_validation_upc_a_length">请输入 11 位数字，或包含校验位的 12 位数字。</string>
+    <string name="barcode_validation_upc_e_length">请输入 7 位数字，或包含校验位的 8 位数字。</string>
+    <string name="barcode_validation_upc_e_invalid">无效的 UPC-E 值。</string>
+    <string name="barcode_validation_itf_even">请输入偶数位数字。</string>
+    <string name="barcode_validation_itf_min">ITF 至少需要 2 位数字。</string>
+    <string name="barcode_validation_itf_max">ITF 不能超过 80 位数字。</string>
+    <string name="barcode_validation_code_128_ascii">Code 128 仅支持 ASCII 127 以内的字符。</string>
+    <string name="barcode_validation_code_93_ascii">Code 93 仅支持 ASCII 127 以内的字符。</string>
+    <string name="barcode_validation_code_93_too_long">此值对 Code 93 来说过长。</string>
+    <string name="barcode_validation_code_39_unsupported">Code 39 无法编码此字符。</string>
+    <string name="barcode_validation_code_39_too_long">此值对 Code 39 来说过长。</string>
+    <string name="barcode_validation_codabar_chars">Codabar 仅允许数字和 - \$ : / . +。</string>
+    <string name="barcode_validation_codabar_guards">起始和停止字符必须同时存在。</string>
+    <string name="barcode_validation_enter_codabar">输入 Codabar 值。</string>
+    <string name="barcode_validation_enter_code_128">输入 Code 128 值。</string>
+    <string name="barcode_validation_enter_code_93">输入 Code 93 值。</string>
+    <string name="barcode_validation_enter_code_39">输入 Code 39 值。</string>
+    <string name="barcode_validation_enter_data_matrix">输入 Data Matrix 值。</string>
+    <string name="barcode_validation_enter_pdf417">输入 PDF417 值。</string>
+    <string name="barcode_validation_enter_aztec">输入 Aztec 值。</string>
+    <string name="barcode_validation_too_large_data_matrix">此值对于 Data Matrix 符号来说过大。</string>
+    <string name="barcode_validation_too_large_pdf417">此值对于 PDF417 符号来说过大。</string>
+    <string name="barcode_validation_too_large_aztec">此值对于 Aztec 符号来说过大。</string>
+    <string name="barcode_validation_cannot_encode">此值无法编码。</string>
+    <string name="barcode_counter_ean_13_short">%1$d/12</string>
+    <string name="barcode_counter_ean_13_long">%1$d/13</string>
+    <string name="barcode_counter_ean_8_short">%1$d/7</string>
+    <string name="barcode_counter_ean_8_long">%1$d/8</string>
+    <string name="barcode_counter_upc_e_short">%1$d/7</string>
+    <string name="barcode_counter_upc_e_long">%1$d/8</string>
+    <string name="barcode_counter_upc_a_short">%1$d/11</string>
+    <string name="barcode_counter_upc_a_long">%1$d/12</string>
+    <string name="barcode_counter_itf_digits">%1$d 位数字</string>
+    <string name="barcode_counter_chars">%1$d 个字符</string>
+
+    <!-- Wi-Fi create form -->
+    <string name="wifi_form_title">Wi-Fi 网络</string>
+    <string name="wifi_network_name_heading">网络名称 (SSID)</string>
+    <string name="wifi_ssid_placeholder">输入 Wi-Fi SSID</string>
+    <string name="wifi_security_type_heading">安全类型</string>
+    <string name="wifi_security_recommended">推荐：WPA/WPA2</string>
+    <string name="wifi_security_wpa">WPA/WPA2</string>
+    <string name="wifi_security_wpa3">WPA3</string>
+    <string name="wifi_security_wep">WEP</string>
+    <string name="wifi_security_open">开放</string>
+    <string name="wifi_password_heading">密码</string>
+    <string name="wifi_password_placeholder">Wi-Fi 密码</string>
+    <string name="cd_toggle_password">显示/隐藏密码</string>
+    <string name="wifi_hidden_network_title">隐藏网络</string>
+    <string name="wifi_hidden_network_subtitle">SSID 未公开广播</string>
+    <string name="wifi_guest_scan_hint">访客使用相机应用扫描此二维码即可连接，无需输入 Wi-Fi 密码。</string>
+    <string name="wifi_validation_enter_ssid">输入网络名称 (SSID)</string>
+    <string name="wifi_validation_enter_password">输入 Wi-Fi 密码</string>
+
+    <!-- QR preview -->
+    <string name="qr_preview_title">二维码预览</string>
+    <string name="cd_share">分享</string>
+    <string name="cd_generated_qr_code">已生成的二维码</string>
+    <string name="qr_preview_generating">生成中…</string>
+    <string name="qr_preview_nothing_to_preview">无可预览内容</string>
+    <string name="qr_preview_unable_encode_barcode">无法编码条形码</string>
+    <string name="qr_preview_customize_style">自定义样式和颜色</string>
+    <string name="qr_preview_save_image">保存图像</string>
+    <string name="qr_preview_saving">保存中…</string>
+    <string name="qr_preview_create">创建</string>
+    <string name="qr_preview_creating">创建中…</string>
+    <string name="qr_preview_code_specifications">代码规格</string>
+    <string name="qr_preview_spec_export">导出</string>
+    <string name="qr_preview_spec_export_size">1024 × 1024</string>
+    <string name="qr_preview_spec_style">样式</string>
+    <string name="qr_preview_toast_not_ready">二维码未就绪</string>
+    <string name="qr_preview_toast_generated">二维码已生成</string>
+    <string name="qr_preview_toast_unable_save">无法保存</string>
+    <string name="export_png_saved">PNG 已保存到相册（1024×1024）</string>
+    <string name="export_png_failed">PNG 导出失败</string>
+    <string name="export_unable_create_entry">无法创建 MediaStore 条目</string>
+    <string name="export_png_compress_failed">PNG 压缩失败</string>
+    <string name="export_unable_open_stream">无法打开输出流</string>
+    <string name="export_svg_ready">SVG 已准备好分享</string>
+    <string name="export_svg_failed">SVG 导出失败</string>
+    <string name="export_share_opened">分享面板已打开</string>
+    <string name="export_share_failed">分享失败</string>
+    <string name="export_send_code_chooser">发送代码</string>
+    <string name="export_vector_chooser">导出矢量图</string>
+
+    <!-- QR customize -->
+    <string name="qr_customize_title">自定义二维码</string>
+    <string name="qr_customize_nothing">无可自定义内容</string>
+    <string name="cd_styled_qr_preview">样式化二维码预览</string>
+    <string name="qr_customize_rendering">渲染中…</string>
+    <string name="qr_customize_section_body_pattern">主体图案</string>
+    <string name="qr_customize_section_corner_eye">定位角样式</string>
+    <string name="qr_customize_section_color_palette">调色板</string>
+    <string name="qr_customize_section_center_icon">中心图标</string>
+    <string name="qr_customize_section_frame">边框模板</string>
+    <string name="qr_customize_save_export">保存并导出自定义二维码</string>
+    <string name="qr_customize_toast_unable_load_logo">无法加载徽标</string>
+    <string name="qr_customize_toast_reset_done">重置完成</string>
+    <string name="qr_pattern_classic">经典（方形）</string>
+    <string name="qr_pattern_rounded">圆角</string>
+    <string name="qr_pattern_dots">放射圆点</string>
+    <string name="qr_pattern_diamond">菱形网格</string>
+    <string name="qr_eye_square">方形</string>
+    <string name="qr_eye_soft">柔和曲线</string>
+    <string name="qr_eye_circle">圆形定位</string>
+    <string name="qr_icon_none">无</string>
+    <string name="qr_icon_wifi">Wi-Fi</string>
+    <string name="qr_icon_globe">地球</string>
+    <string name="qr_icon_custom">自定义</string>
+    <string name="qr_palette_electric_cobalt">电光钴蓝</string>
+    <string name="qr_palette_deep_sapphire">深蓝宝石</string>
+    <string name="qr_palette_neon_cyan">霓虹青</string>
+    <string name="qr_palette_monochrome_slate">单色石板</string>
+    <string name="qr_palette_crimson">深红</string>
+    <string name="qr_palette_emerald">祖母绿</string>
+    <string name="qr_palette_violet">紫罗兰</string>
+    <string name="qr_palette_amber">琥珀</string>
+    <string name="qr_frame_none_title">无</string>
+    <string name="qr_frame_none_subtitle">干净的無边框矩阵</string>
+    <string name="qr_frame_pill_title">“扫描我”药丸</string>
+    <string name="qr_frame_pill_subtitle">附带徽章页脚</string>
+    <string name="qr_frame_banner_title">顶部横幅</string>
+    <string name="qr_frame_banner_subtitle">顶部强调标题带</string>
+    <string name="qr_frame_cyber_title">赛博准星</string>
+    <string name="qr_frame_cyber_subtitle">钴蓝 HUD 视角色</string>
+
+    <!-- Settings -->
+    <string name="settings_title">设置</string>
+    <string name="settings_preferences_title">偏好设置</string>
+    <string name="settings_engine_version">引擎 v2.4.0</string>
+    <string name="settings_preferences_subtitle">高速光学矩阵和合成参数</string>
+    <string name="settings_pipeline_online">光学 CV 流水线在线</string>
+    <string name="settings_pro_footer">%1$s Pro · 设备加速已验证</string>
+    <string name="settings_section_appearance">外观</string>
+    <string name="settings_theme_title">主题</string>
+    <string name="settings_theme_light">浅色</string>
+    <string name="settings_theme_dark">深色</string>
+    <string name="settings_language_title">语言</string>
+    <string name="settings_launcher_title">启动器设置</string>
+    <string name="settings_launcher_subtitle">图标大小、标签和应用顺序</string>
+    <string name="settings_section_scanner">扫描仪和硬件</string>
+    <string name="settings_vibrate_title">检测时振动</string>
+    <string name="settings_vibrate_subtitle">矩阵解析时的触觉脉冲</string>
+    <string name="settings_beep_title">提示音</string>
+    <string name="settings_beep_subtitle">音频提示确认</string>
+    <string name="settings_auto_open_urls_title">自动打开 URL</string>
+    <string name="settings_auto_open_urls_subtitle">扫描后在浏览器中打开网站链接</string>
+    <string name="settings_clear_history_title">清除扫描和创建历史</string>
+    <string name="settings_clear_history_subtitle">移除非收藏项 · 保留收藏</string>
+    <string name="settings_section_about">关于和法律信息</string>
+    <string name="settings_about_title">关于</string>
+    <string name="settings_privacy_policy_title">隐私政策</string>
+    <string name="settings_share_title">分享</string>
+    <string name="settings_rate_title">评价</string>
+    <string name="settings_dialog_theme_title">主题</string>
+    <string name="settings_dialog_default_ecc_title">默认纠错级别</string>
+    <string name="settings_dialog_default_format_title">默认二维码格式</string>
+    <string name="settings_ecc_low_subtitle">低 (7% ECC)</string>
+    <string name="settings_ecc_medium_subtitle">中 (15% ECC)</string>
+    <string name="settings_ecc_quartile_subtitle">四分位 (25% ECC)</string>
+    <string name="settings_ecc_high_subtitle">高 (30% ECC) · 最佳冗余</string>
+    <string name="settings_ecc_low_option">低 / L / 7%</string>
+    <string name="settings_ecc_medium_option">中 / M / 15%</string>
+    <string name="settings_ecc_quartile_option">四分位 / Q / 25%</string>
+    <string name="settings_ecc_high_option">高 / H / 30%</string>
+    <string name="settings_format_svg">矢量 SVG / 清晰 1024px</string>
+    <string name="settings_format_png">PNG / 1024px</string>
+    <string name="settings_language_system">跟随系统</string>
+    <string name="settings_language_system_subtitle">跟随设备语言</string>
+    <string name="settings_language_english_us">英语（美国）</string>
+    <string name="settings_language_hindi">印地语</string>
+    <string name="settings_language_russian">俄语</string>
+    <string name="settings_language_italian">意大利语</string>
+    <string name="settings_language_french">法语</string>
+    <string name="settings_language_spanish">西班牙语</string>
+    <string name="settings_language_japanese">日语</string>
+    <string name="settings_language_korean">韩语</string>
+    <string name="settings_language_german">德语</string>
+    <string name="settings_language_chinese">中文</string>
+    <string name="settings_language_thai">泰语</string>
+    <string name="settings_language_greek">希腊语</string>
+    <string name="settings_language_portuguese_pt">葡萄牙语（葡萄牙）</string>
+    <string name="settings_language_portuguese_br">葡萄牙语（巴西）</string>
+    <string name="settings_language_dutch">荷兰语</string>
+    <string name="settings_language_filipino">菲律宾语</string>
+    <string name="settings_language_turkish">土耳其语</string>
+    <string name="settings_language_indonesian">印度尼西亚语</string>
+    <string name="settings_language_afrikaans">南非荷兰语</string>
+    <string name="settings_language_english">英语</string>
+
+    <!-- About -->
+    <string name="about_title">关于</string>
+    <string name="about_tagline">即时二维码和条形码智能</string>
+    <string name="about_meta_version">版本</string>
+    <string name="about_meta_build">构建</string>
+    <string name="about_meta_package">包名</string>
+
+    <!-- Reminder / Events / Launcher / Widgets / Language / Privacy / Permission / Default / Intro / Ads -->
+    <string name="reminder_notification_title">提醒</string>
+    <string name="reminder_notification_channel_desc">定时提醒通知</string>
+    <string name="event_uninstall_title">已卸载？</string>
+    <string name="event_uninstall_success">清理完成</string>
+    <string name="event_uninstall_sub">应用已成功卸载</string>
+    <string name="event_uninstall_body">缓存的扫描文件和临时数据已从您的设备中清除。</string>
+    <string name="event_uninstall_chip">安全且完整</string>
+    <string name="event_charge_in_title">电源已接入</string>
+    <string name="event_charge_in_success">%1$d%%</string>
+    <string name="event_charge_in_sub">已连接</string>
+    <string name="event_charge_in_body">快速充电已激活。</string>
+    <string name="event_charge_in_chip">快速充电已激活</string>
+    <string name="event_charge_out_title">充电器已拔出</string>
+    <string name="event_charge_out_success">%1$d%% 最佳</string>
+    <string name="event_charge_out_sub">已断开</string>
+    <string name="event_charge_out_body">电源线已断开。</string>
+    <string name="event_charge_out_chip">电源已断开</string>
+    <string name="event_optimized_speed">优化速度</string>
+    <string name="event_fast">快速</string>
+    <string name="event_optimized_sub">保持流畅运行。</string>
+    <string name="event_done">完成</string>
+    <string name="launcher_settings">启动器设置</string>
+    <string name="serialize">排序</string>
+    <string name="by_name_asc_a_to_z">按名称升序（A 到 Z）</string>
+    <string name="by_name_desc_z_to_a">按名称降序（Z 到 A）</string>
+    <string name="by_installed_date">按安装日期</string>
+    <string name="preview">预览</string>
+    <string name="label_visibility">标签可见性</string>
+    <string name="hide_app_name">隐藏应用名称</string>
+    <string name="app_icon_size">应用图标大小</string>
+    <string name="app_label_size">应用标签大小</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">应用小部件</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">选择一个小部件，直接从主屏幕快速访问您的二维码工具。</string>
+    <string name="quick_access">快速访问</string>
+    <string name="app_icon_1x1">应用图标 1 x 1</string>
+    <string name="qr_scanner_generator">二维码扫描器和生成器</string>
+    <string name="create_1_x_1">创建 1 x 1</string>
+    <string name="style_a">样式 A</string>
+    <string name="style_b">样式 B</string>
+    <string name="style_c">样式 C</string>
+    <string name="scan_qr">扫描二维码</string>
+    <string name="cl_end_scan_subtitle">打开相机并扫描二维码</string>
+    <string name="cl_end_scan_action">扫描</string>
+    <string name="cl_end_history">历史记录</string>
+    <string name="cl_end_history_subtitle">查看您扫描的二维码历史</string>
+    <string name="cl_end_widgets_subtitle">将二维码工具添加到主屏幕</string>
+    <string name="create_qr">创建二维码</string>
+    <string name="widget_pin_not_supported">此设备不支持固定小部件</string>
+    <string name="widget_pin_failed">无法添加小部件。请重试。</string>
+    <string name="choose_your_language">选择您的语言</string>
+    <string name="collection_title">关于您的隐私的简要说明</string>
+    <string name="collection_intro_1">我们使用有限的设备和应用信息来保持 QR 扫描器快速、安全、可靠，提供二维码扫描和生成功能，展示有助于保持应用免费的广告，并改善您的整体体验。</string>
+    <string name="collection_intro_2">您扫描的内容、个人文件、照片、视频和其他私人数据不会用于分析或广告收集，并且始终在您的控制之下。</string>
+    <string name="collection_what_we_use">我们使用什么以及为什么：</string>
+    <string name="collection_bullet_1">⦿ 相机访问 - 准确扫描二维码和条形码并提供即时结果。</string>
+    <string name="collection_bullet_2">⦿ 应用使用信息 - 例如您使用的扫描和二维码生成功能以及您打开的屏幕 - 以改善应用性能、稳定性和用户体验。</string>
+    <string name="collection_bullet_3">⦿ 设备和应用标识符 - 保存您的偏好设置、提高应用稳定性、防止错误并支持基本应用功能。</string>
+    <string name="collection_bullet_4">⦿ 广告标识符 - 展示和衡量有助于保持应用免费的广告。</string>
+    <string name="collection_footer">点击“同意并继续”即表示您认可我们的隐私政策。我们仅使用必要的信息来提供二维码扫描、二维码生成、应用安全和其他基本功能，改善应用并支持广告。您扫描的内容和私人数据始终在您的控制之下。</string>
+    <string name="collection_agree_checkbox">我同意此数据收集</string>
+    <string name="collection_agree_continue">同意并继续</string>
+    <string name="collection_agree_toast">请同意数据收集以继续。</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="this_action_may_contain_ads">此操作可能包含广告</string>
+    <string name="marketing_converter1">gclid</string>
+    <string name="utm_source_apps_facebook_com">utm_source=apps.facebook.com</string>
+    <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
+    <string name="utm_source_marketing">utm_source=marketing</string>
+    <string name="permission_title">需要相机访问权限</string>
+    <string name="permission_description">QR 代码和扫描器需要相机访问权限，以实时即时扫描二维码、Wi-Fi 凭据和条形码。</string>
+    <string name="permission_local_title">即时本地扫描</string>
+    <string name="permission_local_desc">扫描完全在设备上处理，零服务器延迟。</string>
+    <string name="permission_privacy_title">100% 隐私保护</string>
+    <string name="permission_privacy_desc">视频帧或原始捕获永远不会被上传或记录。</string>
+    <string name="permission_gallery_title">相册替代方案</string>
+    <string name="permission_gallery_desc">随时直接从您的图库导入照片，无需相机权限。</string>
+    <string name="allow_permission">允许权限</string>
+    <string name="default_title">将 QR 代码和扫描器设为默认主屏幕启动器</string>
+    <string name="default_description">从主屏幕向右轻扫即可即时访问二维码扫描器，自定义小部件控制和井井有条的应用抽屉。</string>
+    <string name="default_swipe_title">向右滑动以扫描</string>
+    <string name="default_swipe_desc">从主屏幕任意位置零延迟即时启动取景器。</string>
+    <string name="default_widgets_title">智能快捷小部件</string>
+    <string name="default_widgets_desc">将二维码生成器快捷方式、剪贴板监控和电池智能直接固定到主屏幕。</string>
+    <string name="default_drawer_title">自定义应用抽屉和文件夹</string>
+    <string name="default_drawer_desc">整理应用、隐藏标签、自定义网格列，并在浅色和深色主题之间切换。</string>
+    <string name="set_as_default">设为默认</string>
+    <string name="intro_title_1">即时扫描二维码</string>
+    <string name="intro_desc_1">使用相机快速扫描二维码，几秒钟内即可访问信息</string>
+    <string name="intro_title_2">轻松扫描条形码</string>
+    <string name="intro_desc_2">快速扫描产品条形码，几秒钟内获得准确结果</string>
+    <string name="intro_title_3">按您的方式创建二维码</string>
+    <string name="intro_desc_3">为您的所有数字需求生成和自定义专业二维码。</string>
+    <string name="next">下一步</string>
+    <string name="loading_ads_title">正在加载广告</string>
+    <string name="loading_ads_desc">请稍候，广告即将出现...</string>
 </resources>

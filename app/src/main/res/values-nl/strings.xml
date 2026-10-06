@@ -1,3 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_back">Terug</string>
+    <string name="action_cancel">Annuleren</string>
+    <string name="action_clear">Wissen</string>
+    <string name="action_copy">Kopiëren</string>
+    <string name="action_delete">Verwijderen</string>
+    <string name="action_go_back">Teruggaan</string>
+    <string name="action_paste">Plakken</string>
+    <string name="action_share">Delen</string>
+    <string name="action_reset">Resetten</string>
+    <string name="cd_clear">Wissen</string>
+    <string name="cd_clear_search">Zoekopdracht wissen</string>
+    <string name="cd_favorite">Favoriet</string>
+    <string name="cd_more">Meer</string>
+    <string name="cd_add_to_favorites">Toevoegen aan favorieten</string>
+    <string name="toast_copied">Gekopieerd</string>
+    <string name="toast_deleted">Verwijderd</string>
+    <string name="toast_history_cleared">Geschiedenis gewist</string>
+    <string name="toast_clipboard_empty">Klembord is leeg</string>
+    <string name="toast_unable_to_open_link">Kan link niet openen</string>
+    <string name="share_chooser_title">Delen</string>
+    <string name="form_label_optional_suffix">%1$s (optioneel)</string>
 
+    <!-- Bottom navigation -->
+    <string name="nav_home">Start</string>
+    <string name="nav_scan">Scannen</string>
+    <string name="nav_settings">Instellingen</string>
+    <string name="cd_quick_scan">Snel scannen</string>
+
+    <!-- Home -->
+    <string name="home_cd_favorites">Favorieten</string>
+    <string name="home_instant_scanner_title">Directe scanner</string>
+    <string name="home_instant_scanner_subtitle">Richt op een QR-code of standaard streepjescode</string>
+    <string name="home_open_camera_scanner">Camera-scanner openen</string>
+    <string name="home_quick_tools_heading">SNELLE HULPMIDDELEN</string>
+    <string name="home_tool_scan_barcode_title">Streepjescode scannen</string>
+    <string name="home_tool_scan_barcode_subtitle">UPC- en EAN-labels</string>
+    <string name="home_tool_scan_gallery_title">Galerij scannen</string>
+    <string name="home_tool_scan_gallery_subtitle">Van screenshots</string>
+    <string name="home_tool_create_qr_title">QR maken</string>
+    <string name="home_tool_create_qr_subtitle">Links, Wi-Fi en vCard</string>
+    <string name="home_tool_history_title">Geschiedenis</string>
+    <string name="home_tool_history_subtitle">Opgeslagen scans en codes</string>
+    <string name="home_recent_scans_title">Recente scans</string>
+    <string name="home_view_all">Alles bekijken</string>
+    <string name="home_no_recent_scans_title">Nog geen recente scans</string>
+    <string name="home_no_recent_scans_body">Codes die je scant verschijnen hier voor snelle toegang.</string>
+
+    <!-- History -->
+    <string name="history_title">Geschiedenis</string>
+    <string name="history_search_placeholder">Zoek codes, URL\'s, titels…</string>
+    <string name="history_no_matches">Geen resultaten voor je zoekopdracht</string>
+    <string name="history_filter_all">Alle (%1$d)</string>
+    <string name="history_filter_scanned">Gescand (%1$d)</string>
+    <string name="history_filter_created">Gemaakt (%1$d)</string>
+    <string name="history_section_today">Vandaag</string>
+    <string name="history_section_yesterday">Gisteren</string>
+    <string name="history_section_earlier">Eerder</string>
+    <string name="history_section_count_scans">%1$d scans</string>
+    <string name="history_section_count_scan">%1$d scan</string>
+    <string name="history_section_count_items">%1$d items</string>
+    <string name="history_section_count_item">%1$d item</string>
+    <string name="history_menu_add_favorite">Toevoegen aan favorieten</string>
+    <string name="history_menu_remove_favorite">Verwijderen uit favorieten</string>
+    <string name="history_empty_title">Nog geen scangeschiedenis</string>
+    <string name="history_empty_launch_scanner">Scanner nu starten</string>
+    <string name="history_detail_title">Details geschiedenis</string>
+    <string name="history_not_found_title">Scan niet gevonden</string>
+    <string name="history_not_found_body">Dit geschiedenisitem is mogelijk verwijderd.</string>
+    <string name="history_delete_item_title">Dit geschiedenisitem verwijderen?</string>
+    <string name="history_delete_item_subtitle">Deze actie kan niet ongedaan worden gemaakt</string>
+    <string name="history_delete_item_body">Hiermee wordt dit item permanent verwijderd uit de lokale geschiedenis van je apparaat.</string>
+    <string name="history_clear_all_title">Scan- en maakgeschiedenis wissen?</string>
+    <string name="history_stored_items_count">%1$d opgeslagen items</string>
+    <string name="history_clear_all_body">Hiermee worden alle geschiedenisitems permanent van je lokale apparaat verwijderd, inclusief items met een like en favorieten.</string>
+    <string name="history_clear_all_warning">Items kunnen niet worden hersteld zodra ze zijn gewist.</string>
+    <string name="history_clear_all_confirm">Alle geschiedenis wissen</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">Favorieten</string>
+    <string name="favorites_empty">Nog geen favorieten</string>
+
+    <!-- Scan / viewfinder -->
+    <string name="scan_hud_flash">FLITS</string>
+    <string name="scan_hud_gallery">GALERIJ</string>
+    <string name="scan_hud_flip">OMDRAAIEN</string>
+    <string name="cd_toggle_flashlight">Zaklamp aan/uit</string>
+    <string name="cd_scan_image_from_gallery">Afbeelding uit galerij scannen</string>
+    <string name="cd_flip_camera_lens">Cameranlens wisselen</string>
+    <string name="scan_zoom_level">%1$dx</string>
+    <string name="scan_camera_permission_title">Cameratoestemming vereist</string>
+    <string name="scan_camera_permission_body">Geef toegang tot de camera om QR-codes en streepjescodes te scannen.</string>
+    <string name="scan_camera_permission_body_settings">Cameratoegang is uitgeschakeld. Open Instellingen, schakel Camera in en kom hier terug om te scannen.</string>
+    <string name="scan_grant_permission">Toestemming geven</string>
+    <string name="scan_open_settings">Instellingen openen</string>
+
+    <!-- Gallery crop -->
+    <string name="gallery_crop_title">Foto bijsnijden</string>
+    <string name="gallery_crop_select_photo">Selecteer een foto om bij te snijden</string>
+    <string name="gallery_crop_rotate_90">90° draaien</string>
+    <string name="gallery_crop_flip">Omkeren</string>
+    <string name="gallery_crop_detecting">Detecteren…</string>
+    <string name="gallery_crop_scan_selection">Selectie scannen</string>
+    <string name="gallery_crop_choose_another">Andere foto kiezen</string>
+    <string name="gallery_crop_unable_open_image">Kan deze afbeelding niet openen</string>
+    <string name="gallery_crop_no_code_detected">Geen scanbare code gedetecteerd</string>
+    <string name="gallery_crop_detection_failed">Detectie mislukt</string>
+    <string name="gallery_crop_multiple_codes_title">Meerdere codes gevonden</string>
+    <string name="gallery_crop_multiple_codes_prompt">Selecteer welke code je wilt openen:</string>
+    <string name="gallery_crop_code_list_item">%1$d. %2$s: %3$s</string>
+    <string name="cd_selected_photo">Geselecteerde foto</string>
+    <string name="wifi_preview_enter_ssid">SSID invoeren</string>
+
+    <!-- Detection error -->
+    <string name="detection_error_title">Detectie mislukt</string>
+    <string name="detection_error_badge">DETECTIE MISLUKT</string>
+    <string name="detection_error_headline">Geen scanbare code gedetecteerd</string>
+    <string name="detection_error_checklist_title">Optimalisatiechecklist</string>
+    <string name="detection_error_tip_steady">Houd stil en plaats de code volledig binnen het bijsnijdkader</string>
+    <string name="detection_error_tip_lighting">Gebruik een scherpe, goed verlichte foto zonder erge onscherpte</string>
+    <string name="detection_error_tip_rotate">Probeer Draaien of Omkeren als de code zijwaarts verschijnt</string>
+    <string name="detection_error_tip_formats">Ondersteund: QR, Aztec, Data Matrix, EAN, UPC, Code 128/39, PDF417</string>
+    <string name="detection_error_retry">Opnieuw scannen / Herhalen</string>
+    <string name="detection_error_pick_gallery">Andere foto uit galerij selecteren</string>
+
+    <!-- Batch results -->
+    <string name="batch_results_title">Batchresultaten</string>
+    <string name="batch_results_one_code">1 code geaccepteerd</string>
+    <string name="batch_results_many_codes">%1$d codes geaccepteerd</string>
+
+    <!-- Scan result -->
+    <string name="scan_result_title">Scanresultaat</string>
+    <string name="scan_result_payload_heading">PAYLOAD-INHOUD</string>
+    <string name="scan_result_empty_payload">(leeg)</string>
+    <string name="scan_result_kind_website">Website / URL</string>
+    <string name="scan_result_kind_wifi">Wi-Fi-netwerk</string>
+    <string name="scan_result_kind_plain_text">Platte tekst</string>
+    <string name="scan_result_kind_qr_code">QR-code</string>
+    <string name="scan_result_kind_barcode">Streepjescode</string>
+    <string name="scan_result_url_detected_banner">Website-/URL-payload gedetecteerd</string>
+    <string name="scan_result_copy_link">Link kopiëren</string>
+    <string name="scan_result_open_in_browser">Openen in browser</string>
+    <string name="scan_result_toast_link_copied">Link gekopieerd naar klembord</string>
+    <string name="scan_result_toast_copied">Gekopieerd naar klembord</string>
+    <string name="scan_result_toast_saved_favorite">Opgeslagen in je favorieten</string>
+    <string name="scan_result_toast_removed_favorite">Verwijderd uit favorieten</string>
+    <string name="share_scanned_url_title">Gescande URL</string>
+    <string name="share_scan_result_title">Scanresultaat</string>
+
+    <!-- Create hub -->
+    <string name="create_hub_title">QR-code maken</string>
+    <string name="create_hub_search_placeholder">QR-formaat zoeken…</string>
+    <string name="create_hub_no_formats_title">Geen formaten gevonden</string>
+    <string name="create_hub_no_formats_body">Probeer een ander trefwoord of reset het actieve filter</string>
+    <string name="create_hub_reset_search">Zoekopdracht resetten</string>
+    <string name="create_hub_section_social">Sociaal</string>
+    <string name="create_hub_section_barcode">Streepjescode</string>
+    <string name="create_filter_all">Alle formaten</string>
+    <string name="create_filter_web">Web en sociaal</string>
+    <string name="create_filter_comms">Communicatie</string>
+    <string name="create_filter_utilities">Hulpprogramma\'s</string>
+    <string name="create_subtitle_barcode">Streepjescode</string>
+
+    <!-- Create hub category cards -->
+    <string name="create_cat_website_title">Website-URL</string>
+    <string name="create_cat_website_subtitle">Links, sociale profielen, webpagina\'s</string>
+    <string name="create_cat_wifi_title">Wi-Fi-netwerk</string>
+    <string name="create_cat_wifi_subtitle">WPA/WPA2, SSID, automatisch verbinden</string>
+    <string name="create_cat_contact_title">Contact / vCard</string>
+    <string name="create_cat_contact_subtitle">Naam, telefoon, e-mail, adres</string>
+    <string name="create_cat_plain_text_title">Platte tekst</string>
+    <string name="create_cat_plain_text_subtitle">Notities, berichten, onbewerkte gegevens</string>
+    <string name="create_cat_phone_title">Telefoongesprek</string>
+    <string name="create_cat_phone_subtitle">Direct nummer kiezen</string>
+    <string name="create_cat_email_title">E-mailbericht</string>
+    <string name="create_cat_email_subtitle">Vooraf ingevulde ontvanger en onderwerp</string>
+    <string name="create_cat_sms_title">SMS / Bericht</string>
+    <string name="create_cat_sms_subtitle">Direct tekstbericht</string>
+    <string name="create_cat_whatsapp_title">WhatsApp</string>
+    <string name="create_cat_whatsapp_subtitle">Directe WhatsApp-chatlink</string>
+    <string name="create_cat_location_title">Locatie</string>
+    <string name="create_cat_location_subtitle">Google Maps-coördinaten / speld</string>
+    <string name="create_cat_calendar_title">Agenda-evenement</string>
+    <string name="create_cat_calendar_subtitle">Titel, datum, tijd, herinnering</string>
+    <string name="create_cat_app_link_title">App-link</string>
+    <string name="create_cat_app_link_subtitle">Google Play- en App Store-links</string>
+    <string name="create_cat_facebook_title">Facebook</string>
+    <string name="create_cat_facebook_subtitle">Profiel of pagina</string>
+    <string name="create_cat_youtube_title">YouTube</string>
+    <string name="create_cat_youtube_subtitle">Kanaal of video</string>
+    <string name="create_cat_twitter_title">Twitter</string>
+    <string name="create_cat_twitter_subtitle">Profiel</string>
+    <string name="create_cat_tiktok_title">TikTok</string>
+    <string name="create_cat_tiktok_subtitle">Profiel</string>
+    <string name="create_cat_instagram_title">Instagram</string>
+    <string name="create_cat_instagram_subtitle">Profiel</string>
+    <string name="create_cat_paypal_title">PayPal</string>
+    <string name="create_cat_paypal_subtitle">PayPal.me-link</string>
+    <string name="create_cat_snapchat_title">Snapchat</string>
+    <string name="create_cat_snapchat_subtitle">Vriend toevoegen</string>
+    <string name="create_cat_linkedin_title">LinkedIn</string>
+    <string name="create_cat_linkedin_subtitle">Profiel</string>
+    <string name="create_cat_spotify_title">Spotify</string>
+    <string name="create_cat_spotify_subtitle">Profiel of afspeellijst</string>
+    <string name="create_cat_code_128_title">Code 128</string>
+    <string name="create_cat_data_matrix_title">Data Matrix</string>
+    <string name="create_cat_pdf_417_title">PDF 417</string>
+    <string name="create_cat_aztec_title">Aztec</string>
+    <string name="create_cat_ean_13_title">EAN 13</string>
+    <string name="create_cat_ean_8_title">EAN 8</string>
+    <string name="create_cat_upc_e_title">UPC E</string>
+    <string name="create_cat_upc_a_title">UPC A</string>
+    <string name="create_cat_code_93_title">Code 93</string>
+    <string name="create_cat_code_39_title">Code 39</string>
+    <string name="create_cat_codabar_title">Codabar</string>
+    <string name="create_cat_itf_title">ITF</string>
+    <string name="create_cat_barcode_title">Streepjescode / EAN</string>
+
+    <!-- Create forms — shared -->
+    <string name="create_form_generate_preview">Genereren en voorbeeld</string>
+    <string name="create_form_generate_preview_qr">QR genereren en voorbeeld</string>
+    <string name="create_form_instant_share">Direct delen</string>
+    <string name="create_barcode_stub_title">Streepjescode maken komt later</string>
+    <string name="create_barcode_stub_body">Dit hub-item is voor streepjescodes (EAN/UPC), niet voor QR-codes. QR-categorieën zijn beschikbaar via Maken.</string>
+    <string name="create_validation_field_limit">Dit veld is beperkt tot %1$d tekens.</string>
+    <string name="create_validation_qr_too_long">Dit is te lang om in een QR-code te passen. Verkort de tekst.</string>
+    <string name="create_validation_barcode_unavailable">Streepjescode-/EAN-generatie is nog niet beschikbaar. Gebruik in plaats daarvan een QR-categorie.</string>
+    <string name="create_validation_enter_value">Voer een waarde in om te coderen</string>
+
+    <!-- Create forms — website -->
+    <string name="form_website_url_label">Website-URL (https://)</string>
+    <string name="form_website_url_placeholder">https://example.com/target-path</string>
+    <string name="form_display_title_note_label">Weergavetitel / Notitie</string>
+    <string name="form_display_title_note_placeholder">bijv. Marketingpresentatie Q3</string>
+    <string name="form_validation_enter_website_url">Voer een website-URL in</string>
+    <string name="form_validation_enter_valid_url">Voer een geldige URL in (https://…)</string>
+
+    <!-- Create forms — plain text -->
+    <string name="form_plain_text_label">Onbewerkt bericht / Payload</string>
+    <string name="form_plain_text_placeholder">Typ of plak platte tekst…</string>
+    <string name="form_optional_label_placeholder">Optioneel label</string>
+    <string name="form_validation_enter_text">Voer tekst in om te coderen</string>
+
+    <!-- Create forms — contact -->
+    <string name="form_contact_name_label">Volledige naam</string>
+    <string name="form_contact_name_placeholder">Voer contactnaam in</string>
+    <string name="form_contact_email_label">E-mail (optioneel)</string>
+    <string name="form_contact_email_placeholder">name@email.com</string>
+    <string name="form_contact_job_title_label">Functietitel (optioneel)</string>
+    <string name="form_contact_job_title_placeholder">bijv. Productmanager</string>
+    <string name="form_contact_phone_label">Telefoon (optioneel)</string>
+    <string name="form_contact_phone_placeholder">+1 555 0100</string>
+    <string name="form_validation_enter_contact_name">Voer een contactnaam in</string>
+
+    <!-- Create forms — phone -->
+    <string name="form_phone_number_label">Telefoonnummer</string>
+    <string name="form_validation_enter_phone">Voer een telefoonnummer in</string>
+    <string name="form_validation_enter_valid_phone">Voer een geldig telefoonnummer in</string>
+
+    <!-- Create forms — email -->
+    <string name="form_email_address_label">E-mailadres</string>
+    <string name="form_email_address_placeholder">hello@example.com</string>
+    <string name="form_email_subject_label">Onderwerp (optioneel)</string>
+    <string name="form_email_subject_placeholder">Onderwerp van bericht</string>
+    <string name="form_email_body_label">Inhoud</string>
+    <string name="form_email_body_placeholder">E-mailinhoud</string>
+    <string name="form_validation_enter_email">Voer een e-mailadres in</string>
+    <string name="form_validation_enter_valid_email">Voer een geldig e-mailadres in</string>
+    <string name="form_validation_enter_email_body">Voer een e-mailinhoud in</string>
+
+    <!-- Create forms — SMS -->
+    <string name="form_sms_message_label">Bericht</string>
+    <string name="form_sms_message_placeholder">SMS-tekst</string>
+    <string name="form_validation_enter_message">Voer een bericht in</string>
+
+    <!-- Create forms — WhatsApp -->
+    <string name="form_whatsapp_number_label">WhatsApp-nummer</string>
+    <string name="form_whatsapp_number_placeholder">15550100 (met landcode)</string>
+    <string name="form_whatsapp_message_label">Bericht (optioneel)</string>
+    <string name="form_whatsapp_message_placeholder">Vooraf ingevulde chattekst</string>
+    <string name="form_validation_enter_whatsapp_number">Voer een WhatsApp-nummer in (met landcode)</string>
+    <string name="form_validation_enter_valid_whatsapp_number">Voer een geldig WhatsApp-nummer met landcode in</string>
+
+    <!-- Create forms — location -->
+    <string name="form_location_coords_label">Coördinaten (lat,lng)</string>
+    <string name="form_location_coords_placeholder">37.7749,-122.4194</string>
+    <string name="form_location_place_label">Locatielabel (optioneel)</string>
+    <string name="form_location_place_placeholder">Golden Gate Bridge</string>
+    <string name="form_validation_enter_coordinates">Voer coördinaten in als lat,lng</string>
+    <string name="form_validation_enter_valid_coordinates">Voer geldige coördinaten in (bijv. 37.7749,-122.4194)</string>
+
+    <!-- Create forms — app link -->
+    <string name="form_app_link_label">App-URL of pakket</string>
+    <string name="form_app_link_placeholder">com.example.app of https://play.google.com/…</string>
+    <string name="form_validation_enter_app_url">Voer een app-URL of pakketnaam in</string>
+    <string name="form_validation_enter_store_or_package">Voer een store-URL of pakket zoals com.example.app in</string>
+
+    <!-- Create forms — social -->
+    <string name="form_social_display_title_label">Weergavetitel (optioneel)</string>
+    <string name="form_validation_enter_username_or_link">Voer een gebruikersnaam of volledige link in</string>
+    <string name="form_social_facebook_primary_label">Facebook-gebruikersnaam of -link</string>
+    <string name="form_social_facebook_primary_placeholder">gebruikersnaam of https://facebook.com/…</string>
+    <string name="form_social_youtube_primary_label">YouTube-gebruikersnaam of -link</string>
+    <string name="form_social_youtube_primary_placeholder">@channel of https://youtube.com/…</string>
+    <string name="form_social_twitter_primary_label">Twitter-gebruikersnaam of -link</string>
+    <string name="form_social_twitter_primary_placeholder">gebruikersnaam of https://x.com/…</string>
+    <string name="form_social_tiktok_primary_label">TikTok-gebruikersnaam of -link</string>
+    <string name="form_social_tiktok_primary_placeholder">@username of https://tiktok.com/…</string>
+    <string name="form_social_instagram_primary_label">Instagram-gebruikersnaam of -link</string>
+    <string name="form_social_instagram_primary_placeholder">gebruikersnaam of https://instagram.com/…</string>
+    <string name="form_social_paypal_primary_label">PayPal-gebruikersnaam of -link</string>
+    <string name="form_social_paypal_primary_placeholder">paypal.me-naam of https://paypal.me/…</string>
+    <string name="form_social_snapchat_primary_label">Snapchat-gebruikersnaam of -link</string>
+    <string name="form_social_snapchat_primary_placeholder">gebruikersnaam of https://snapchat.com/add/…</string>
+    <string name="form_social_linkedin_primary_label">LinkedIn-gebruikersnaam of -link</string>
+    <string name="form_social_linkedin_primary_placeholder">profielnaam of https://linkedin.com/in/…</string>
+    <string name="form_social_spotify_primary_label">Spotify-gebruikersnaam of -link</string>
+    <string name="form_social_spotify_primary_placeholder">gebruikers-ID of https://open.spotify.com/…</string>
+
+    <!-- Create forms — barcode payloads -->
+    <string name="form_barcode_code_128_label">Code 128-waarde</string>
+    <string name="form_barcode_code_128_placeholder">Tekst of cijfers</string>
+    <string name="form_barcode_data_matrix_label">Data Matrix-waarde</string>
+    <string name="form_barcode_pdf_417_label">PDF 417-waarde</string>
+    <string name="form_barcode_aztec_label">Aztec-waarde</string>
+    <string name="form_barcode_ean_13_label">EAN 13-cijfers</string>
+    <string name="form_barcode_ean_13_placeholder">12 of 13 cijfers</string>
+    <string name="form_barcode_ean_8_label">EAN 8-cijfers</string>
+    <string name="form_barcode_ean_8_placeholder">7 of 8 cijfers</string>
+    <string name="form_barcode_upc_e_label">UPC E-cijfers</string>
+    <string name="form_barcode_upc_e_placeholder">7 of 8 cijfers (begint met 0 of 1)</string>
+    <string name="form_barcode_upc_a_label">UPC A-cijfers</string>
+    <string name="form_barcode_upc_a_placeholder">11 cijfers, of 12 met controlecijfer</string>
+    <string name="form_barcode_code_93_label">Code 93-waarde</string>
+    <string name="form_barcode_code_93_placeholder">ASCII-tekst</string>
+    <string name="form_barcode_code_39_label">Code 39-waarde</string>
+    <string name="form_barcode_codabar_label">Codabar-waarde</string>
+    <string name="form_barcode_codabar_placeholder">Cijfers, optionele start/stop</string>
+    <string name="form_barcode_itf_label">ITF-cijfers</string>
+    <string name="form_barcode_itf_placeholder">Even aantal cijfers</string>
+    <string name="form_barcode_generic_placeholder">Tekst of cijfers</string>
+    <string name="form_payload_label">Payload</string>
+    <string name="form_payload_placeholder">Voer waarde in</string>
+
+    <!-- Barcode validation -->
+    <string name="barcode_validation_digits_only">Alleen cijfers.</string>
+    <string name="barcode_validation_check_digit_mismatch">Controlecijfer komt niet overeen.</string>
+    <string name="barcode_validation_ean_13_length">Voer 12 cijfers in, of 13 cijfers inclusief het controlecijfer.</string>
+    <string name="barcode_validation_ean_8_length">Voer 7 cijfers in, of 8 cijfers inclusief het controlecijfer.</string>
+    <string name="barcode_validation_upc_a_length">Voer 11 cijfers in, of 12 cijfers inclusief het controlecijfer.</string>
+    <string name="barcode_validation_upc_e_length">Voer 7 cijfers in, of 8 cijfers inclusief het controlecijfer.</string>
+    <string name="barcode_validation_upc_e_invalid">Ongeldige UPC-E-waarde.</string>
+    <string name="barcode_validation_itf_even">Voer een even aantal cijfers in.</string>
+    <string name="barcode_validation_itf_min">ITF heeft minimaal 2 cijfers nodig.</string>
+    <string name="barcode_validation_itf_max">ITF mag niet langer zijn dan 80 cijfers.</string>
+    <string name="barcode_validation_code_128_ascii">Code 128 ondersteunt alleen tekens tot ASCII 127.</string>
+    <string name="barcode_validation_code_93_ascii">Code 93 ondersteunt alleen tekens tot ASCII 127.</string>
+    <string name="barcode_validation_code_93_too_long">Deze waarde is te lang voor Code 93.</string>
+    <string name="barcode_validation_code_39_unsupported">Code 39 kan dit teken niet coderen.</string>
+    <string name="barcode_validation_code_39_too_long">Deze waarde is te lang voor Code 39.</string>
+    <string name="barcode_validation_codabar_chars">Codabar staat alleen cijfers en - \$ : / . + toe.</string>
+    <string name="barcode_validation_codabar_guards">Start- en stoptekens moeten beide aanwezig zijn.</string>
+    <string name="barcode_validation_enter_codabar">Voer een Codabar-waarde in.</string>
+    <string name="barcode_validation_enter_code_128">Voer een Code 128-waarde in.</string>
+    <string name="barcode_validation_enter_code_93">Voer een Code 93-waarde in.</string>
+    <string name="barcode_validation_enter_code_39">Voer een Code 39-waarde in.</string>
+    <string name="barcode_validation_enter_data_matrix">Voer een Data Matrix-waarde in.</string>
+    <string name="barcode_validation_enter_pdf417">Voer een PDF417-waarde in.</string>
+    <string name="barcode_validation_enter_aztec">Voer een Aztec-waarde in.</string>
+    <string name="barcode_validation_too_large_data_matrix">Deze waarde is te groot voor een Data Matrix-symbool.</string>
+    <string name="barcode_validation_too_large_pdf417">Deze waarde is te groot voor een PDF417-symbool.</string>
+    <string name="barcode_validation_too_large_aztec">Deze waarde is te groot voor een Aztec-symbool.</string>
+    <string name="barcode_validation_cannot_encode">Deze waarde kan niet worden gecodeerd.</string>
+    <string name="barcode_counter_ean_13_short">%1$d/12</string>
+    <string name="barcode_counter_ean_13_long">%1$d/13</string>
+    <string name="barcode_counter_ean_8_short">%1$d/7</string>
+    <string name="barcode_counter_ean_8_long">%1$d/8</string>
+    <string name="barcode_counter_upc_e_short">%1$d/7</string>
+    <string name="barcode_counter_upc_e_long">%1$d/8</string>
+    <string name="barcode_counter_upc_a_short">%1$d/11</string>
+    <string name="barcode_counter_upc_a_long">%1$d/12</string>
+    <string name="barcode_counter_itf_digits">%1$d cijfers</string>
+    <string name="barcode_counter_chars">%1$d tekens</string>
+
+    <!-- Wi-Fi create form -->
+    <string name="wifi_form_title">Wi-Fi-netwerk</string>
+    <string name="wifi_network_name_heading">NETWERKNAAM (SSID)</string>
+    <string name="wifi_ssid_placeholder">Voer Wi-Fi SSID in</string>
+    <string name="wifi_security_type_heading">BEVEILIGINGSTYPE</string>
+    <string name="wifi_security_recommended">Aanbevolen: WPA/WPA2</string>
+    <string name="wifi_security_wpa">WPA/WPA2</string>
+    <string name="wifi_security_wpa3">WPA3</string>
+    <string name="wifi_security_wep">WEP</string>
+    <string name="wifi_security_open">Open</string>
+    <string name="wifi_password_heading">WACHTWOORD</string>
+    <string name="wifi_password_placeholder">Wi-Fi-wachtwoord</string>
+    <string name="cd_toggle_password">Wachtwoord tonen/verbergen</string>
+    <string name="wifi_hidden_network_title">Verborgen netwerk</string>
+    <string name="wifi_hidden_network_subtitle">SSID wordt niet openbaar uitgezonden</string>
+    <string name="wifi_guest_scan_hint">Gasten scannen deze QR met hun camera-app om verbinding te maken zonder het Wi-Fi-wachtwoord te typen.</string>
+    <string name="wifi_validation_enter_ssid">Voer een netwerknaam in (SSID)</string>
+    <string name="wifi_validation_enter_password">Voer het Wi-Fi-wachtwoord in</string>
+
+    <!-- QR preview -->
+    <string name="qr_preview_title">QR-voorbeeld</string>
+    <string name="cd_share">Delen</string>
+    <string name="cd_generated_qr_code">Gegenereerde QR-code</string>
+    <string name="qr_preview_generating">Genereren…</string>
+    <string name="qr_preview_nothing_to_preview">Niets om te bekijken</string>
+    <string name="qr_preview_unable_encode_barcode">Kan streepjescode niet coderen</string>
+    <string name="qr_preview_customize_style">Stijl en kleuren aanpassen</string>
+    <string name="qr_preview_save_image">Afbeelding opslaan</string>
+    <string name="qr_preview_saving">Opslaan…</string>
+    <string name="qr_preview_create">Maken</string>
+    <string name="qr_preview_creating">Maken…</string>
+    <string name="qr_preview_code_specifications">Codespecificaties</string>
+    <string name="qr_preview_spec_export">Exporteren</string>
+    <string name="qr_preview_spec_export_size">1024 × 1024</string>
+    <string name="qr_preview_spec_style">Stijl</string>
+    <string name="qr_preview_toast_not_ready">QR niet gereed</string>
+    <string name="qr_preview_toast_generated">QR-code gegenereerd</string>
+    <string name="qr_preview_toast_unable_save">Kan niet opslaan</string>
+    <string name="export_png_saved">PNG opgeslagen in galerij (1024×1024)</string>
+    <string name="export_png_failed">PNG-export mislukt</string>
+    <string name="export_unable_create_entry">Kan MediaStore-item niet aanmaken</string>
+    <string name="export_png_compress_failed">PNG-compressie mislukt</string>
+    <string name="export_unable_open_stream">Kan uitvoerstroom niet openen</string>
+    <string name="export_svg_ready">SVG klaar om te delen</string>
+    <string name="export_svg_failed">SVG-export mislukt</string>
+    <string name="export_share_opened">Deelvenster geopend</string>
+    <string name="export_share_failed">Delen mislukt</string>
+    <string name="export_send_code_chooser">Code verzenden</string>
+    <string name="export_vector_chooser">Vector exporteren</string>
+
+    <!-- QR customize -->
+    <string name="qr_customize_title">QR aanpassen</string>
+    <string name="qr_customize_nothing">Niets om aan te passen</string>
+    <string name="cd_styled_qr_preview">Voorbeeld van gestileerde QR</string>
+    <string name="qr_customize_rendering">Weergeven…</string>
+    <string name="qr_customize_section_body_pattern">Lichaamspatroon</string>
+    <string name="qr_customize_section_corner_eye">Stijl hoekogen</string>
+    <string name="qr_customize_section_color_palette">Kleurenpalet</string>
+    <string name="qr_customize_section_center_icon">Middenpictogram</string>
+    <string name="qr_customize_section_frame">Framesjabloon</string>
+    <string name="qr_customize_save_export">Aangepaste QR opslaan en exporteren</string>
+    <string name="qr_customize_toast_unable_load_logo">Kan logo niet laden</string>
+    <string name="qr_customize_toast_reset_done">Reset voltooid</string>
+    <string name="qr_pattern_classic">Klassiek (vierkant)</string>
+    <string name="qr_pattern_rounded">Afgerond</string>
+    <string name="qr_pattern_dots">Radiale stippen</string>
+    <string name="qr_pattern_diamond">Diamantgaas</string>
+    <string name="qr_eye_square">Vierkant</string>
+    <string name="qr_eye_soft">Zachte curve</string>
+    <string name="qr_eye_circle">Cirkelvormig oog</string>
+    <string name="qr_icon_none">Geen</string>
+    <string name="qr_icon_wifi">Wi-Fi</string>
+    <string name="qr_icon_globe">Wereldbol</string>
+    <string name="qr_icon_custom">Aangepast</string>
+    <string name="qr_palette_electric_cobalt">Elektrisch kobalt</string>
+    <string name="qr_palette_deep_sapphire">Diep saffier</string>
+    <string name="qr_palette_neon_cyan">Neoncyaan</string>
+    <string name="qr_palette_monochrome_slate">Monochrome leisteen</string>
+    <string name="qr_palette_crimson">Karmozijn</string>
+    <string name="qr_palette_emerald">Smaragd</string>
+    <string name="qr_palette_violet">Violet</string>
+    <string name="qr_palette_amber">Amber</string>
+    <string name="qr_frame_none_title">Geen</string>
+    <string name="qr_frame_none_subtitle">Schone randloze matrix</string>
+    <string name="qr_frame_pill_title">\"Scan mij\"-pil</string>
+    <string name="qr_frame_pill_subtitle">Badge met bijgevoegde voettekst</string>
+    <string name="qr_frame_banner_title">Banner bovenaan</string>
+    <string name="qr_frame_banner_subtitle">Bovenste accentkopband</string>
+    <string name="qr_frame_cyber_title">Cybervizier</string>
+    <string name="qr_frame_cyber_subtitle">Kobalt HUD-hoeken</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Instellingen</string>
+    <string name="settings_preferences_title">Voorkeuren</string>
+    <string name="settings_engine_version">Engine v2.4.0</string>
+    <string name="settings_preferences_subtitle">Snelle optische matrix en syntheseparameters</string>
+    <string name="settings_pipeline_online">OPTISCHE CV-PIPELINE ONLINE</string>
+    <string name="settings_pro_footer">%1$s Pro · Apparaatversnelling geverifieerd</string>
+    <string name="settings_section_appearance">Weergave</string>
+    <string name="settings_theme_title">Thema</string>
+    <string name="settings_theme_light">Licht</string>
+    <string name="settings_theme_dark">Donker</string>
+    <string name="settings_language_title">Taal</string>
+    <string name="settings_launcher_title">Launcher-instellingen</string>
+    <string name="settings_launcher_subtitle">Pictogramgrootte, labels en app-volgorde</string>
+    <string name="settings_section_scanner">Scanner en hardware</string>
+    <string name="settings_vibrate_title">Trillen bij detectie</string>
+    <string name="settings_vibrate_subtitle">Haptische puls wanneer de matrix wordt opgelost</string>
+    <string name="settings_beep_title">Pieptoon</string>
+    <string name="settings_beep_subtitle">Bevestiging met audiosignaal</string>
+    <string name="settings_auto_open_urls_title">URL\'s automatisch openen</string>
+    <string name="settings_auto_open_urls_subtitle">Opent websitelinks in de browser na een scan</string>
+    <string name="settings_clear_history_title">Scan- en maakgeschiedenis wissen</string>
+    <string name="settings_clear_history_subtitle">Niet-favorieten verwijderen · favorieten behouden</string>
+    <string name="settings_section_about">Over en juridisch</string>
+    <string name="settings_about_title">Over</string>
+    <string name="settings_privacy_policy_title">Privacybeleid</string>
+    <string name="settings_share_title">Delen</string>
+    <string name="settings_rate_title">Beoordelen</string>
+    <string name="settings_dialog_theme_title">Thema</string>
+    <string name="settings_dialog_default_ecc_title">Standaardcorrectieniveau</string>
+    <string name="settings_dialog_default_format_title">Standaard QR-formaat</string>
+    <string name="settings_ecc_low_subtitle">Laag (7% ECC)</string>
+    <string name="settings_ecc_medium_subtitle">Gemiddeld (15% ECC)</string>
+    <string name="settings_ecc_quartile_subtitle">Kwartiel (25% ECC)</string>
+    <string name="settings_ecc_high_subtitle">Hoog (30% ECC) · Optimale redundantie</string>
+    <string name="settings_ecc_low_option">Laag / L / 7%</string>
+    <string name="settings_ecc_medium_option">Gemiddeld / M / 15%</string>
+    <string name="settings_ecc_quartile_option">Kwartiel / Q / 25%</string>
+    <string name="settings_ecc_high_option">Hoog / H / 30%</string>
+    <string name="settings_format_svg">Vector-SVG / Scherp 1024px</string>
+    <string name="settings_format_png">PNG / 1024px</string>
+    <string name="settings_language_system">Gesynchroniseerd met systeem</string>
+    <string name="settings_language_system_subtitle">Apparaattaal volgen</string>
+    <string name="settings_language_english_us">Engels (VS)</string>
+    <string name="settings_language_hindi">Hindi</string>
+    <string name="settings_language_russian">Russisch</string>
+    <string name="settings_language_italian">Italiaans</string>
+    <string name="settings_language_french">Frans</string>
+    <string name="settings_language_spanish">Spaans</string>
+    <string name="settings_language_japanese">Japans</string>
+    <string name="settings_language_korean">Koreaans</string>
+    <string name="settings_language_german">Duits</string>
+    <string name="settings_language_chinese">Chinees</string>
+    <string name="settings_language_thai">Thais</string>
+    <string name="settings_language_greek">Grieks</string>
+    <string name="settings_language_portuguese_pt">Portugees (Portugal)</string>
+    <string name="settings_language_portuguese_br">Portugees (Brazilië)</string>
+    <string name="settings_language_dutch">Nederlands</string>
+    <string name="settings_language_filipino">Filipijns</string>
+    <string name="settings_language_turkish">Turks</string>
+    <string name="settings_language_indonesian">Indonesisch</string>
+    <string name="settings_language_afrikaans">Afrikaans</string>
+    <string name="settings_language_english">Engels</string>
+
+    <!-- About -->
+    <string name="about_title">Over</string>
+    <string name="about_tagline">Directe QR- en streepjescode-intelligentie</string>
+    <string name="about_meta_version">Versie</string>
+    <string name="about_meta_build">Build</string>
+    <string name="about_meta_package">Pakket</string>
+
+    <!-- Reminder / Events / Launcher / Widgets / Language / Privacy / Permission / Default / Intro / Ads -->
+    <string name="reminder_notification_title">Herinnering</string>
+    <string name="reminder_notification_channel_desc">Geplande herinneringsmeldingen</string>
+    <string name="event_uninstall_title">Verwijderd?</string>
+    <string name="event_uninstall_success">Opschonen voltooid</string>
+    <string name="event_uninstall_sub">App succesvol verwijderd</string>
+    <string name="event_uninstall_body">In cache opgeslagen scanbestanden en tijdelijke gegevens zijn van je apparaat gewist.</string>
+    <string name="event_uninstall_chip">Veilig en volledig</string>
+    <string name="event_charge_in_title">Stroom aangesloten</string>
+    <string name="event_charge_in_success">%1$d%%</string>
+    <string name="event_charge_in_sub">Verbonden</string>
+    <string name="event_charge_in_body">Snelladen is actief.</string>
+    <string name="event_charge_in_chip">SNELLADEN ACTIEF</string>
+    <string name="event_charge_out_title">Oplader losgekoppeld</string>
+    <string name="event_charge_out_success">%1$d%% Optimaal</string>
+    <string name="event_charge_out_sub">Losgekoppeld</string>
+    <string name="event_charge_out_body">Stroomkabel losgekoppeld.</string>
+    <string name="event_charge_out_chip">Stroom losgekoppeld</string>
+    <string name="event_optimized_speed">Geoptimaliseerde snelheid</string>
+    <string name="event_fast">SNEL</string>
+    <string name="event_optimized_sub">Alles werkt soepel.</string>
+    <string name="event_done">Klaar</string>
+    <string name="launcher_settings">Launcher-instellingen</string>
+    <string name="serialize">Sorteren</string>
+    <string name="by_name_asc_a_to_z">Op naam ASC (A tot Z)</string>
+    <string name="by_name_desc_z_to_a">Op naam DESC (Z tot A)</string>
+    <string name="by_installed_date">Op installatiedatum</string>
+    <string name="preview">Voorbeeld</string>
+    <string name="label_visibility">Labelzichtbaarheid</string>
+    <string name="hide_app_name">App-naam verbergen</string>
+    <string name="app_icon_size">App-pictogramgrootte</string>
+    <string name="app_label_size">App-labelgrootte</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">App-widgets</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Kies een widget om snel toegang te krijgen tot je QR-hulpmiddelen direct vanaf je startscherm.</string>
+    <string name="quick_access">Snelle toegang</string>
+    <string name="app_icon_1x1">App-pictogram 1 x 1</string>
+    <string name="qr_scanner_generator">QR-scanner en -generator</string>
+    <string name="create_1_x_1">1 x 1 maken</string>
+    <string name="style_a">Stijl A</string>
+    <string name="style_b">Stijl B</string>
+    <string name="style_c">Stijl C</string>
+    <string name="scan_qr">QR scannen</string>
+    <string name="cl_end_scan_subtitle">Open de camera en scan een QR-code</string>
+    <string name="cl_end_scan_action">Scannen</string>
+    <string name="cl_end_history">Geschiedenis</string>
+    <string name="cl_end_history_subtitle">Bekijk je gescande QR-geschiedenis</string>
+    <string name="cl_end_widgets_subtitle">QR-hulpmiddelen toevoegen aan je startscherm</string>
+    <string name="create_qr">QR maken</string>
+    <string name="widget_pin_not_supported">Widget vastmaken wordt niet ondersteund op dit apparaat</string>
+    <string name="widget_pin_failed">Kan widget niet toevoegen. Probeer het opnieuw.</string>
+    <string name="choose_your_language">Kies je taal</string>
+    <string name="collection_title">Een korte opmerking over je privacy</string>
+    <string name="collection_intro_1">We gebruiken beperkte apparaat- en app-informatie om QR Scanner snel, veilig en betrouwbaar te houden, QR-code-scan- en generatiefuncties te bieden, advertenties te tonen die de app gratis helpen houden en je algehele ervaring te verbeteren.</string>
+    <string name="collection_intro_2">Je gescande inhoud, persoonlijke bestanden, foto\'s, video\'s en andere privégegevens worden niet verzameld voor analyses of advertenties en blijven onder jouw controle.</string>
+    <string name="collection_what_we_use">Wat we gebruiken en waarom:</string>
+    <string name="collection_bullet_1">⦿ Cameratoegang - om QR-codes en streepjescodes nauwkeurig te scannen en directe resultaten te leveren.</string>
+    <string name="collection_bullet_2">⦿ App-gebruiksinformatie - zoals de scan- en QR-generatiefuncties die je gebruikt en de schermen die je opent - om app-prestaties, stabiliteit en gebruikerservaring te verbeteren.</string>
+    <string name="collection_bullet_3">⦿ Apparaat- en app-identificatoren - om je voorkeuren op te slaan, de stabiliteit te verbeteren, fouten te voorkomen en essentiële app-functies te ondersteunen.</string>
+    <string name="collection_bullet_4">⦿ Advertentie-identificatoren - om advertenties te tonen en te meten die de app gratis helpen houden.</string>
+    <string name="collection_footer">Door op Akkoord en doorgaan te tikken, erken je ons Privacybeleid. We gebruiken alleen de informatie die nodig is om QR-code-scannen en -genereren, app-beveiliging en andere essentiële functies te bieden, de app te verbeteren en advertenties te ondersteunen. Je gescande inhoud en privégegevens blijven onder jouw controle.</string>
+    <string name="collection_agree_checkbox">Ik ga akkoord met deze gegevensverzameling</string>
+    <string name="collection_agree_continue">Akkoord en doorgaan</string>
+    <string name="collection_agree_toast">Ga akkoord met gegevensverzameling om door te gaan.</string>
+    <string name="privacy_policy">Privacybeleid</string>
+    <string name="this_action_may_contain_ads">Deze actie kan advertenties bevatten</string>
+    <string name="marketing_converter1">gclid</string>
+    <string name="utm_source_apps_facebook_com">utm_source=apps.facebook.com</string>
+    <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
+    <string name="utm_source_marketing">utm_source=marketing</string>
+    <string name="permission_title">Cameratoegang vereist</string>
+    <string name="permission_description">QR Code en Scanner heeft cameratoegang nodig om direct QR-codes, Wi-Fi-inloggegevens en streepjescodes in realtime te scannen.</string>
+    <string name="permission_local_title">Direct lokaal scannen</string>
+    <string name="permission_local_desc">Scans worden volledig op het apparaat verwerkt met nul serverlatentie.</string>
+    <string name="permission_privacy_title">100% privacy behouden</string>
+    <string name="permission_privacy_desc">Er worden nooit videoframes of onbewerkte opnames geüpload of gecatalogiseerd.</string>
+    <string name="permission_gallery_title">Galerij-alternatief</string>
+    <string name="permission_gallery_desc">Importeer foto\'s op elk moment rechtstreeks uit je bibliotheek zonder camerarechten.</string>
+    <string name="allow_permission">Toestemming toestaan</string>
+    <string name="default_title">Maak QR Code en Scanner je standaard startlauncher</string>
+    <string name="default_description">Directe toegang tot de QR-scanner met één veeg naar rechts vanaf je startscherm, aangepaste widgetbediening en georganiseerde app-lades.</string>
+    <string name="default_swipe_title">Veeg naar rechts om te scannen</string>
+    <string name="default_swipe_desc">Start de zoeker onmiddellijk vanaf elke plek op je startscherm met nul latency.</string>
+    <string name="default_widgets_title">Slimme snelle widgets</string>
+    <string name="default_widgets_desc">Pin QR-generator-snelkoppelingen, klembordmonitors en batterij-intelligentie direct op je startscherm.</string>
+    <string name="default_drawer_title">Aangepaste app-lade en mappen</string>
+    <string name="default_drawer_desc">Organiseer apps, verberg labels, pas rasterkolommen aan en schakel tussen lichte en donkere thema\'s.</string>
+    <string name="set_as_default">Als standaard instellen</string>
+    <string name="intro_title_1">Scan QR-codes direct</string>
+    <string name="intro_desc_1">Scan QR-codes snel met je camera en krijg binnen enkele seconden toegang tot informatie</string>
+    <string name="intro_title_2">Scan streepjescodes met gemak</string>
+    <string name="intro_desc_2">Scan productstreepjescodes snel en krijg binnen enkele seconden nauwkeurige resultaten</string>
+    <string name="intro_title_3">Maak QR-codes op jouw manier</string>
+    <string name="intro_desc_3">Genereer en pas professionele QR-codes aan voor al je digitale behoeften.</string>
+    <string name="next">Volgende</string>
+    <string name="loading_ads_title">Advertenties laden</string>
+    <string name="loading_ads_desc">Even geduld, advertenties verschijnen zo...</string>
 </resources>

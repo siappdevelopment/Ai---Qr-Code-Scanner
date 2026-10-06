@@ -1,3 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="action_back">Geri</string>
+    <string name="action_cancel">İptal</string>
+    <string name="action_clear">Temizle</string>
+    <string name="action_copy">Kopyala</string>
+    <string name="action_delete">Sil</string>
+    <string name="action_go_back">Geri dön</string>
+    <string name="action_paste">Yapıştır</string>
+    <string name="action_share">Paylaş</string>
+    <string name="action_reset">Sıfırla</string>
+    <string name="cd_clear">Temizle</string>
+    <string name="cd_clear_search">Aramayı temizle</string>
+    <string name="cd_favorite">Favori</string>
+    <string name="cd_more">Daha fazla</string>
+    <string name="cd_add_to_favorites">Favorilere ekle</string>
+    <string name="toast_copied">Kopyalandı</string>
+    <string name="toast_deleted">Silindi</string>
+    <string name="toast_history_cleared">Geçmiş temizlendi</string>
+    <string name="toast_clipboard_empty">Pano boş</string>
+    <string name="toast_unable_to_open_link">Bağlantı açılamıyor</string>
+    <string name="share_chooser_title">Paylaş</string>
+    <string name="form_label_optional_suffix">%1$s (isteğe bağlı)</string>
 
+    <!-- Bottom navigation -->
+    <string name="nav_home">Ana Sayfa</string>
+    <string name="nav_scan">Tara</string>
+    <string name="nav_settings">Ayarlar</string>
+    <string name="cd_quick_scan">Hızlı Tarama</string>
+
+    <!-- Home -->
+    <string name="home_cd_favorites">Favoriler</string>
+    <string name="home_instant_scanner_title">Anında Tarayıcı</string>
+    <string name="home_instant_scanner_subtitle">Herhangi bir QR koda veya standart barkoda doğrultun</string>
+    <string name="home_open_camera_scanner">Kamera Tarayıcıyı Aç</string>
+    <string name="home_quick_tools_heading">HIZLI ARAÇLAR</string>
+    <string name="home_tool_scan_barcode_title">Barkod Tara</string>
+    <string name="home_tool_scan_barcode_subtitle">UPC ve EAN etiketleri</string>
+    <string name="home_tool_scan_gallery_title">Galeriyi Tara</string>
+    <string name="home_tool_scan_gallery_subtitle">Ekran görüntülerinden</string>
+    <string name="home_tool_create_qr_title">QR Oluştur</string>
+    <string name="home_tool_create_qr_subtitle">Bağlantılar, Wi-Fi ve vCard</string>
+    <string name="home_tool_history_title">Geçmiş</string>
+    <string name="home_tool_history_subtitle">Kaydedilen taramalar ve kodlar</string>
+    <string name="home_recent_scans_title">Son Taramalar</string>
+    <string name="home_view_all">Tümünü gör</string>
+    <string name="home_no_recent_scans_title">Henüz son tarama yok</string>
+    <string name="home_no_recent_scans_body">Taradığınız kodlar hızlı erişim için burada görünecek.</string>
+
+    <!-- History -->
+    <string name="history_title">Geçmiş</string>
+    <string name="history_search_placeholder">Kod, URL, başlık ara…</string>
+    <string name="history_no_matches">Aramanız için sonuç bulunamadı</string>
+    <string name="history_filter_all">Tümü (%1$d)</string>
+    <string name="history_filter_scanned">Tarananlar (%1$d)</string>
+    <string name="history_filter_created">Oluşturulanlar (%1$d)</string>
+    <string name="history_section_today">Bugün</string>
+    <string name="history_section_yesterday">Dün</string>
+    <string name="history_section_earlier">Daha önce</string>
+    <string name="history_section_count_scans">%1$d tarama</string>
+    <string name="history_section_count_scan">%1$d tarama</string>
+    <string name="history_section_count_items">%1$d öğe</string>
+    <string name="history_section_count_item">%1$d öğe</string>
+    <string name="history_menu_add_favorite">Favorilere ekle</string>
+    <string name="history_menu_remove_favorite">Favorilerden kaldır</string>
+    <string name="history_empty_title">Henüz Tarama Geçmişi Yok</string>
+    <string name="history_empty_launch_scanner">Tarayıcıyı Şimdi Başlat</string>
+    <string name="history_detail_title">Geçmiş Ayrıntısı</string>
+    <string name="history_not_found_title">Tarama bulunamadı</string>
+    <string name="history_not_found_body">Bu geçmiş öğesi silinmiş olabilir.</string>
+    <string name="history_delete_item_title">Bu geçmiş öğesi silinsin mi?</string>
+    <string name="history_delete_item_subtitle">Bu işlem geri alınamaz</string>
+    <string name="history_delete_item_body">Bu işlem, bu öğeyi cihazınızın yerel geçmişinden kalıcı olarak kaldıracak.</string>
+    <string name="history_clear_all_title">Tarama ve Oluşturma Geçmişi Temizlensin mi?</string>
+    <string name="history_stored_items_count">%1$d kayıtlı öğe</string>
+    <string name="history_clear_all_body">Bu işlem, beğenilen ve favorilere eklenen öğeler dahil olmak üzere tüm geçmiş öğelerini yerel cihazınızdan kalıcı olarak kaldıracak.</string>
+    <string name="history_clear_all_warning">Öğeler silindikten sonra geri yüklenemez.</string>
+    <string name="history_clear_all_confirm">Tüm Geçmişi Temizle</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">Favoriler</string>
+    <string name="favorites_empty">Henüz favori yok</string>
+
+    <!-- Scan / viewfinder -->
+    <string name="scan_hud_flash">FLAŞ</string>
+    <string name="scan_hud_gallery">GALERİ</string>
+    <string name="scan_hud_flip">ÇEVİR</string>
+    <string name="cd_toggle_flashlight">El fenerini aç/kapat</string>
+    <string name="cd_scan_image_from_gallery">Galeriden görsel tara</string>
+    <string name="cd_flip_camera_lens">Kamera merceğini çevir</string>
+    <string name="scan_zoom_level">%1$dx</string>
+    <string name="scan_camera_permission_title">Kamera izni gerekli</string>
+    <string name="scan_camera_permission_body">QR kodları ve barkodları taramak için kamera erişimine izin verin.</string>
+    <string name="scan_camera_permission_body_settings">Kamera erişimi kapalı. Ayarları açın, Kamerayı etkinleştirin, ardından taramak için buraya dönün.</string>
+    <string name="scan_grant_permission">İzin ver</string>
+    <string name="scan_open_settings">Ayarları Aç</string>
+
+    <!-- Gallery crop -->
+    <string name="gallery_crop_title">Fotoğrafı Kırp</string>
+    <string name="gallery_crop_select_photo">Kırpılacak bir fotoğraf seçin</string>
+    <string name="gallery_crop_rotate_90">90° Döndür</string>
+    <string name="gallery_crop_flip">Çevir</string>
+    <string name="gallery_crop_detecting">Algılanıyor…</string>
+    <string name="gallery_crop_scan_selection">Seçimi Tara</string>
+    <string name="gallery_crop_choose_another">Başka bir fotoğraf seç</string>
+    <string name="gallery_crop_unable_open_image">Bu görsel açılamıyor</string>
+    <string name="gallery_crop_no_code_detected">Taranabilir kod algılanmadı</string>
+    <string name="gallery_crop_detection_failed">Algılama başarısız</string>
+    <string name="gallery_crop_multiple_codes_title">Birden fazla kod bulundu</string>
+    <string name="gallery_crop_multiple_codes_prompt">Hangi kodun açılacağını seçin:</string>
+    <string name="gallery_crop_code_list_item">%1$d. %2$s: %3$s</string>
+    <string name="cd_selected_photo">Seçili fotoğraf</string>
+    <string name="wifi_preview_enter_ssid">SSID girin</string>
+
+    <!-- Detection error -->
+    <string name="detection_error_title">Algılama Başarısız</string>
+    <string name="detection_error_badge">ALGILAMA BAŞARISIZ</string>
+    <string name="detection_error_headline">Taranabilir Kod Algılanmadı</string>
+    <string name="detection_error_checklist_title">Optimizasyon Kontrol Listesi</string>
+    <string name="detection_error_tip_steady">Sabit tutun ve kodu kırpma çerçevesinin tamamen içine yerleştirin</string>
+    <string name="detection_error_tip_lighting">Keskin, iyi aydınlatılmış ve ağır bulanıklık olmayan bir fotoğraf kullanın</string>
+    <string name="detection_error_tip_rotate">Kod yan görünüyorsa Döndür veya Çevir'i deneyin</string>
+    <string name="detection_error_tip_formats">Desteklenen: QR, Aztec, Data Matrix, EAN, UPC, Code 128/39, PDF417</string>
+    <string name="detection_error_retry">Tekrar Tara / Yeniden Dene</string>
+    <string name="detection_error_pick_gallery">Galeriden Başka Bir Fotoğraf Seç</string>
+
+    <!-- Batch results -->
+    <string name="batch_results_title">Toplu Sonuçlar</string>
+    <string name="batch_results_one_code">1 kod kabul edildi</string>
+    <string name="batch_results_many_codes">%1$d kod kabul edildi</string>
+
+    <!-- Scan result -->
+    <string name="scan_result_title">Tarama Sonucu</string>
+    <string name="scan_result_payload_heading">YÜK İÇERİĞİ</string>
+    <string name="scan_result_empty_payload">(boş)</string>
+    <string name="scan_result_kind_website">Web Sitesi / URL</string>
+    <string name="scan_result_kind_wifi">Wi-Fi Ağı</string>
+    <string name="scan_result_kind_plain_text">Düz Metin</string>
+    <string name="scan_result_kind_qr_code">QR Kod</string>
+    <string name="scan_result_kind_barcode">Barkod</string>
+    <string name="scan_result_url_detected_banner">Web sitesi / URL yükü algılandı</string>
+    <string name="scan_result_copy_link">Bağlantıyı Kopyala</string>
+    <string name="scan_result_open_in_browser">Tarayıcıda Aç</string>
+    <string name="scan_result_toast_link_copied">Bağlantı panoya kopyalandı</string>
+    <string name="scan_result_toast_copied">Panoya kopyalandı</string>
+    <string name="scan_result_toast_saved_favorite">Favorilerinize kaydedildi</string>
+    <string name="scan_result_toast_removed_favorite">Favorilerden kaldırıldı</string>
+    <string name="share_scanned_url_title">Taranan URL</string>
+    <string name="share_scan_result_title">Tarama Sonucu</string>
+
+    <!-- Create hub -->
+    <string name="create_hub_title">QR Kod Oluştur</string>
+    <string name="create_hub_search_placeholder">QR formatı ara…</string>
+    <string name="create_hub_no_formats_title">Format bulunamadı</string>
+    <string name="create_hub_no_formats_body">Başka bir anahtar sözcük yazmayı deneyin veya etkin filtreyi sıfırlayın</string>
+    <string name="create_hub_reset_search">Aramayı Sıfırla</string>
+    <string name="create_hub_section_social">Sosyal</string>
+    <string name="create_hub_section_barcode">Barkod</string>
+    <string name="create_filter_all">Tüm Formatlar</string>
+    <string name="create_filter_web">Web ve Sosyal</string>
+    <string name="create_filter_comms">İletişim</string>
+    <string name="create_filter_utilities">Yardımcı Araçlar</string>
+    <string name="create_subtitle_barcode">Barkod</string>
+
+    <!-- Create hub category cards -->
+    <string name="create_cat_website_title">Web Sitesi URL\'si</string>
+    <string name="create_cat_website_subtitle">Bağlantılar, sosyal profiller, web sayfaları</string>
+    <string name="create_cat_wifi_title">Wi-Fi Ağı</string>
+    <string name="create_cat_wifi_subtitle">WPA/WPA2, SSID, otomatik bağlan</string>
+    <string name="create_cat_contact_title">Kişi / vCard</string>
+    <string name="create_cat_contact_subtitle">Ad, telefon, e-posta, adres</string>
+    <string name="create_cat_plain_text_title">Düz Metin</string>
+    <string name="create_cat_plain_text_subtitle">Notlar, mesajlar, ham veriler</string>
+    <string name="create_cat_phone_title">Telefon Araması</string>
+    <string name="create_cat_phone_subtitle">Doğrudan telefon arama</string>
+    <string name="create_cat_email_title">E-posta Mesajı</string>
+    <string name="create_cat_email_subtitle">Önceden doldurulmuş alıcı ve konu</string>
+    <string name="create_cat_sms_title">SMS / Mesaj</string>
+    <string name="create_cat_sms_subtitle">Doğrudan kısa mesaj</string>
+    <string name="create_cat_whatsapp_title">WhatsApp</string>
+    <string name="create_cat_whatsapp_subtitle">Doğrudan WhatsApp sohbet bağlantısı</string>
+    <string name="create_cat_location_title">Konum</string>
+    <string name="create_cat_location_subtitle">Google Haritalar koordinatları / iğnesi</string>
+    <string name="create_cat_calendar_title">Takvim Etkinliği</string>
+    <string name="create_cat_calendar_subtitle">Başlık, tarih, saat, hatırlatıcı</string>
+    <string name="create_cat_app_link_title">Uygulama Bağlantısı</string>
+    <string name="create_cat_app_link_subtitle">Google Play ve App Store bağlantıları</string>
+    <string name="create_cat_facebook_title">Facebook</string>
+    <string name="create_cat_facebook_subtitle">Profil veya sayfa</string>
+    <string name="create_cat_youtube_title">YouTube</string>
+    <string name="create_cat_youtube_subtitle">Kanal veya video</string>
+    <string name="create_cat_twitter_title">Twitter</string>
+    <string name="create_cat_twitter_subtitle">Profil</string>
+    <string name="create_cat_tiktok_title">TikTok</string>
+    <string name="create_cat_tiktok_subtitle">Profil</string>
+    <string name="create_cat_instagram_title">Instagram</string>
+    <string name="create_cat_instagram_subtitle">Profil</string>
+    <string name="create_cat_paypal_title">PayPal</string>
+    <string name="create_cat_paypal_subtitle">PayPal.me bağlantısı</string>
+    <string name="create_cat_snapchat_title">Snapchat</string>
+    <string name="create_cat_snapchat_subtitle">Arkadaş ekle</string>
+    <string name="create_cat_linkedin_title">LinkedIn</string>
+    <string name="create_cat_linkedin_subtitle">Profil</string>
+    <string name="create_cat_spotify_title">Spotify</string>
+    <string name="create_cat_spotify_subtitle">Profil veya çalma listesi</string>
+    <string name="create_cat_code_128_title">Code 128</string>
+    <string name="create_cat_data_matrix_title">Data Matrix</string>
+    <string name="create_cat_pdf_417_title">PDF 417</string>
+    <string name="create_cat_aztec_title">Aztec</string>
+    <string name="create_cat_ean_13_title">EAN 13</string>
+    <string name="create_cat_ean_8_title">EAN 8</string>
+    <string name="create_cat_upc_e_title">UPC E</string>
+    <string name="create_cat_upc_a_title">UPC A</string>
+    <string name="create_cat_code_93_title">Code 93</string>
+    <string name="create_cat_code_39_title">Code 39</string>
+    <string name="create_cat_codabar_title">Codabar</string>
+    <string name="create_cat_itf_title">ITF</string>
+    <string name="create_cat_barcode_title">Barkod / EAN</string>
+
+    <!-- Create forms — shared -->
+    <string name="create_form_generate_preview">Oluştur ve Önizle</string>
+    <string name="create_form_generate_preview_qr">QR Oluştur ve Önizle</string>
+    <string name="create_form_instant_share">Anında Paylaş</string>
+    <string name="create_barcode_stub_title">Barkod oluşturma daha sonra gelecek</string>
+    <string name="create_barcode_stub_body">Bu hub öğesi QR kodlar için değil, barkodlar (EAN/UPC) içindir. QR kategorileri Oluştur menüsünden kullanılabilir.</string>
+    <string name="create_validation_field_limit">Bu alan %1$d karakterle sınırlıdır.</string>
+    <string name="create_validation_qr_too_long">Bu, bir QR koda sığamayacak kadar uzun. Metni kısaltın.</string>
+    <string name="create_validation_barcode_unavailable">Barkod / EAN oluşturma henüz kullanılamıyor. Bunun yerine bir QR kategorisi kullanın.</string>
+    <string name="create_validation_enter_value">Kodlanacak bir değer girin</string>
+
+    <!-- Create forms — website -->
+    <string name="form_website_url_label">Web Sitesi URL\'si (https://)</string>
+    <string name="form_website_url_placeholder">https://example.com/target-path</string>
+    <string name="form_display_title_note_label">Görünen Başlık / Not</string>
+    <string name="form_display_title_note_placeholder">örn. Pazarlama Sunumu Q3 Lansmanı</string>
+    <string name="form_validation_enter_website_url">Bir web sitesi URL\'si girin</string>
+    <string name="form_validation_enter_valid_url">Geçerli bir URL girin (https://…)</string>
+
+    <!-- Create forms — plain text -->
+    <string name="form_plain_text_label">Ham Mesaj / Yük</string>
+    <string name="form_plain_text_placeholder">Düz metin yazın veya yapıştırın…</string>
+    <string name="form_optional_label_placeholder">İsteğe bağlı etiket</string>
+    <string name="form_validation_enter_text">Kodlanacak metni girin</string>
+
+    <!-- Create forms — contact -->
+    <string name="form_contact_name_label">Tam Ad</string>
+    <string name="form_contact_name_placeholder">Kişi adını girin</string>
+    <string name="form_contact_email_label">E-posta (isteğe bağlı)</string>
+    <string name="form_contact_email_placeholder">name@email.com</string>
+    <string name="form_contact_job_title_label">İş Unvanı (isteğe bağlı)</string>
+    <string name="form_contact_job_title_placeholder">örn. Ürün Yöneticisi</string>
+    <string name="form_contact_phone_label">Telefon (isteğe bağlı)</string>
+    <string name="form_contact_phone_placeholder">+1 555 0100</string>
+    <string name="form_validation_enter_contact_name">Bir kişi adı girin</string>
+
+    <!-- Create forms — phone -->
+    <string name="form_phone_number_label">Telefon Numarası</string>
+    <string name="form_validation_enter_phone">Bir telefon numarası girin</string>
+    <string name="form_validation_enter_valid_phone">Geçerli bir telefon numarası girin</string>
+
+    <!-- Create forms — email -->
+    <string name="form_email_address_label">E-posta Adresi</string>
+    <string name="form_email_address_placeholder">hello@example.com</string>
+    <string name="form_email_subject_label">Konu (isteğe bağlı)</string>
+    <string name="form_email_subject_placeholder">Mesaj konusu</string>
+    <string name="form_email_body_label">Gövde</string>
+    <string name="form_email_body_placeholder">E-posta gövdesi</string>
+    <string name="form_validation_enter_email">Bir e-posta adresi girin</string>
+    <string name="form_validation_enter_valid_email">Geçerli bir e-posta adresi girin</string>
+    <string name="form_validation_enter_email_body">Bir e-posta gövdesi girin</string>
+
+    <!-- Create forms — SMS -->
+    <string name="form_sms_message_label">Mesaj</string>
+    <string name="form_sms_message_placeholder">SMS metni</string>
+    <string name="form_validation_enter_message">Bir mesaj girin</string>
+
+    <!-- Create forms — WhatsApp -->
+    <string name="form_whatsapp_number_label">WhatsApp Numarası</string>
+    <string name="form_whatsapp_number_placeholder">15550100 (ülke koduyla)</string>
+    <string name="form_whatsapp_message_label">Mesaj (isteğe bağlı)</string>
+    <string name="form_whatsapp_message_placeholder">Önceden doldurulmuş sohbet metni</string>
+    <string name="form_validation_enter_whatsapp_number">Bir WhatsApp numarası girin (ülke koduyla)</string>
+    <string name="form_validation_enter_valid_whatsapp_number">Ülke kodlu geçerli bir WhatsApp numarası girin</string>
+
+    <!-- Create forms — location -->
+    <string name="form_location_coords_label">Koordinatlar (lat,lng)</string>
+    <string name="form_location_coords_placeholder">37.7749,-122.4194</string>
+    <string name="form_location_place_label">Yer etiketi (isteğe bağlı)</string>
+    <string name="form_location_place_placeholder">Golden Gate Köprüsü</string>
+    <string name="form_validation_enter_coordinates">Koordinatları lat,lng olarak girin</string>
+    <string name="form_validation_enter_valid_coordinates">Geçerli koordinatlar girin (örn. 37.7749,-122.4194)</string>
+
+    <!-- Create forms — app link -->
+    <string name="form_app_link_label">Uygulama URL\'si veya Paketi</string>
+    <string name="form_app_link_placeholder">com.example.app veya https://play.google.com/…</string>
+    <string name="form_validation_enter_app_url">Bir uygulama URL\'si veya paket adı girin</string>
+    <string name="form_validation_enter_store_or_package">Bir mağaza URL\'si veya com.example.app gibi bir paket girin</string>
+
+    <!-- Create forms — social -->
+    <string name="form_social_display_title_label">Görünen başlık (isteğe bağlı)</string>
+    <string name="form_validation_enter_username_or_link">Bir kullanıcı adı veya tam bağlantı girin</string>
+    <string name="form_social_facebook_primary_label">Facebook kullanıcı adı veya bağlantısı</string>
+    <string name="form_social_facebook_primary_placeholder">kullanıcı adı veya https://facebook.com/…</string>
+    <string name="form_social_youtube_primary_label">YouTube kullanıcı adı veya bağlantısı</string>
+    <string name="form_social_youtube_primary_placeholder">@channel veya https://youtube.com/…</string>
+    <string name="form_social_twitter_primary_label">Twitter kullanıcı adı veya bağlantısı</string>
+    <string name="form_social_twitter_primary_placeholder">kullanıcı adı veya https://x.com/…</string>
+    <string name="form_social_tiktok_primary_label">TikTok kullanıcı adı veya bağlantısı</string>
+    <string name="form_social_tiktok_primary_placeholder">@username veya https://tiktok.com/…</string>
+    <string name="form_social_instagram_primary_label">Instagram kullanıcı adı veya bağlantısı</string>
+    <string name="form_social_instagram_primary_placeholder">kullanıcı adı veya https://instagram.com/…</string>
+    <string name="form_social_paypal_primary_label">PayPal kullanıcı adı veya bağlantısı</string>
+    <string name="form_social_paypal_primary_placeholder">paypal.me adı veya https://paypal.me/…</string>
+    <string name="form_social_snapchat_primary_label">Snapchat kullanıcı adı veya bağlantısı</string>
+    <string name="form_social_snapchat_primary_placeholder">kullanıcı adı veya https://snapchat.com/add/…</string>
+    <string name="form_social_linkedin_primary_label">LinkedIn kullanıcı adı veya bağlantısı</string>
+    <string name="form_social_linkedin_primary_placeholder">profil adı veya https://linkedin.com/in/…</string>
+    <string name="form_social_spotify_primary_label">Spotify kullanıcı adı veya bağlantısı</string>
+    <string name="form_social_spotify_primary_placeholder">kullanıcı kimliği veya https://open.spotify.com/…</string>
+
+    <!-- Create forms — barcode payloads -->
+    <string name="form_barcode_code_128_label">Code 128 değeri</string>
+    <string name="form_barcode_code_128_placeholder">Metin veya sayılar</string>
+    <string name="form_barcode_data_matrix_label">Data Matrix değeri</string>
+    <string name="form_barcode_pdf_417_label">PDF 417 değeri</string>
+    <string name="form_barcode_aztec_label">Aztec değeri</string>
+    <string name="form_barcode_ean_13_label">EAN 13 rakamları</string>
+    <string name="form_barcode_ean_13_placeholder">12 veya 13 rakam</string>
+    <string name="form_barcode_ean_8_label">EAN 8 rakamları</string>
+    <string name="form_barcode_ean_8_placeholder">7 veya 8 rakam</string>
+    <string name="form_barcode_upc_e_label">UPC E rakamları</string>
+    <string name="form_barcode_upc_e_placeholder">7 veya 8 rakam (0 veya 1 ile başlar)</string>
+    <string name="form_barcode_upc_a_label">UPC A rakamları</string>
+    <string name="form_barcode_upc_a_placeholder">11 rakam veya kontrol rakamıyla 12</string>
+    <string name="form_barcode_code_93_label">Code 93 değeri</string>
+    <string name="form_barcode_code_93_placeholder">ASCII metni</string>
+    <string name="form_barcode_code_39_label">Code 39 değeri</string>
+    <string name="form_barcode_codabar_label">Codabar değeri</string>
+    <string name="form_barcode_codabar_placeholder">Rakamlar, isteğe bağlı başlangıç/bitiş</string>
+    <string name="form_barcode_itf_label">ITF rakamları</string>
+    <string name="form_barcode_itf_placeholder">Çift sayıda rakam</string>
+    <string name="form_barcode_generic_placeholder">Metin veya sayılar</string>
+    <string name="form_payload_label">Yük</string>
+    <string name="form_payload_placeholder">Değer girin</string>
+
+    <!-- Barcode validation -->
+    <string name="barcode_validation_digits_only">Yalnızca rakamlar.</string>
+    <string name="barcode_validation_check_digit_mismatch">Kontrol rakamı eşleşmiyor.</string>
+    <string name="barcode_validation_ean_13_length">12 rakam veya kontrol rakamı dahil 13 rakam girin.</string>
+    <string name="barcode_validation_ean_8_length">7 rakam veya kontrol rakamı dahil 8 rakam girin.</string>
+    <string name="barcode_validation_upc_a_length">11 rakam veya kontrol rakamı dahil 12 rakam girin.</string>
+    <string name="barcode_validation_upc_e_length">7 rakam veya kontrol rakamı dahil 8 rakam girin.</string>
+    <string name="barcode_validation_upc_e_invalid">Geçersiz UPC-E değeri.</string>
+    <string name="barcode_validation_itf_even">Çift sayıda rakam girin.</string>
+    <string name="barcode_validation_itf_min">ITF en az 2 rakam gerektirir.</string>
+    <string name="barcode_validation_itf_max">ITF 80 rakamdan uzun olamaz.</string>
+    <string name="barcode_validation_code_128_ascii">Code 128 yalnızca ASCII 127\'ye kadar karakterleri destekler.</string>
+    <string name="barcode_validation_code_93_ascii">Code 93 yalnızca ASCII 127\'ye kadar karakterleri destekler.</string>
+    <string name="barcode_validation_code_93_too_long">Bu değer Code 93 için çok uzun.</string>
+    <string name="barcode_validation_code_39_unsupported">Code 39 bu karakteri kodlayamaz.</string>
+    <string name="barcode_validation_code_39_too_long">Bu değer Code 39 için çok uzun.</string>
+    <string name="barcode_validation_codabar_chars">Codabar yalnızca rakamlara ve - \$ : / . + karakterlerine izin verir.</string>
+    <string name="barcode_validation_codabar_guards">Başlangıç ve bitiş karakterlerinin her ikisi de bulunmalıdır.</string>
+    <string name="barcode_validation_enter_codabar">Bir Codabar değeri girin.</string>
+    <string name="barcode_validation_enter_code_128">Bir Code 128 değeri girin.</string>
+    <string name="barcode_validation_enter_code_93">Bir Code 93 değeri girin.</string>
+    <string name="barcode_validation_enter_code_39">Bir Code 39 değeri girin.</string>
+    <string name="barcode_validation_enter_data_matrix">Bir Data Matrix değeri girin.</string>
+    <string name="barcode_validation_enter_pdf417">Bir PDF417 değeri girin.</string>
+    <string name="barcode_validation_enter_aztec">Bir Aztec değeri girin.</string>
+    <string name="barcode_validation_too_large_data_matrix">Bu değer bir Data Matrix sembolü için çok büyük.</string>
+    <string name="barcode_validation_too_large_pdf417">Bu değer bir PDF417 sembolü için çok büyük.</string>
+    <string name="barcode_validation_too_large_aztec">Bu değer bir Aztec sembolü için çok büyük.</string>
+    <string name="barcode_validation_cannot_encode">Bu değer kodlanamıyor.</string>
+    <string name="barcode_counter_ean_13_short">%1$d/12</string>
+    <string name="barcode_counter_ean_13_long">%1$d/13</string>
+    <string name="barcode_counter_ean_8_short">%1$d/7</string>
+    <string name="barcode_counter_ean_8_long">%1$d/8</string>
+    <string name="barcode_counter_upc_e_short">%1$d/7</string>
+    <string name="barcode_counter_upc_e_long">%1$d/8</string>
+    <string name="barcode_counter_upc_a_short">%1$d/11</string>
+    <string name="barcode_counter_upc_a_long">%1$d/12</string>
+    <string name="barcode_counter_itf_digits">%1$d rakam</string>
+    <string name="barcode_counter_chars">%1$d karakter</string>
+
+    <!-- Wi-Fi create form -->
+    <string name="wifi_form_title">Wi-Fi Ağı</string>
+    <string name="wifi_network_name_heading">AĞ ADI (SSID)</string>
+    <string name="wifi_ssid_placeholder">Wi-Fi SSID girin</string>
+    <string name="wifi_security_type_heading">GÜVENLİK TÜRÜ</string>
+    <string name="wifi_security_recommended">Önerilen: WPA/WPA2</string>
+    <string name="wifi_security_wpa">WPA/WPA2</string>
+    <string name="wifi_security_wpa3">WPA3</string>
+    <string name="wifi_security_wep">WEP</string>
+    <string name="wifi_security_open">Açık</string>
+    <string name="wifi_password_heading">ŞİFRE</string>
+    <string name="wifi_password_placeholder">Wi-Fi Şifresi</string>
+    <string name="cd_toggle_password">Şifreyi göster/gizle</string>
+    <string name="wifi_hidden_network_title">Gizli Ağ</string>
+    <string name="wifi_hidden_network_subtitle">SSID herkese açık olarak yayınlanmıyor</string>
+    <string name="wifi_guest_scan_hint">Misafirler Wi-Fi şifresini yazmadan bağlanmak için bu QR\'ı kamera uygulamalarıyla tarar.</string>
+    <string name="wifi_validation_enter_ssid">Bir ağ adı (SSID) girin</string>
+    <string name="wifi_validation_enter_password">Wi-Fi şifresini girin</string>
+
+    <!-- QR preview -->
+    <string name="qr_preview_title">QR Önizleme</string>
+    <string name="cd_share">Paylaş</string>
+    <string name="cd_generated_qr_code">Oluşturulan QR kod</string>
+    <string name="qr_preview_generating">Oluşturuluyor…</string>
+    <string name="qr_preview_nothing_to_preview">Önizlenecek bir şey yok</string>
+    <string name="qr_preview_unable_encode_barcode">Barkod kodlanamıyor</string>
+    <string name="qr_preview_customize_style">Stil ve Renkleri Özelleştir</string>
+    <string name="qr_preview_save_image">Görseli Kaydet</string>
+    <string name="qr_preview_saving">Kaydediliyor…</string>
+    <string name="qr_preview_create">Oluştur</string>
+    <string name="qr_preview_creating">Oluşturuluyor…</string>
+    <string name="qr_preview_code_specifications">Kod Özellikleri</string>
+    <string name="qr_preview_spec_export">Dışa Aktar</string>
+    <string name="qr_preview_spec_export_size">1024 × 1024</string>
+    <string name="qr_preview_spec_style">Stil</string>
+    <string name="qr_preview_toast_not_ready">QR hazır değil</string>
+    <string name="qr_preview_toast_generated">QR kod oluşturuldu</string>
+    <string name="qr_preview_toast_unable_save">Kaydedilemiyor</string>
+    <string name="export_png_saved">PNG Galeriye kaydedildi (1024×1024)</string>
+    <string name="export_png_failed">PNG dışa aktarma başarısız</string>
+    <string name="export_unable_create_entry">MediaStore girişi oluşturulamıyor</string>
+    <string name="export_png_compress_failed">PNG sıkıştırma başarısız</string>
+    <string name="export_unable_open_stream">Çıkış akışı açılamıyor</string>
+    <string name="export_svg_ready">SVG paylaşıma hazır</string>
+    <string name="export_svg_failed">SVG dışa aktarma başarısız</string>
+    <string name="export_share_opened">Paylaşım sayfası açıldı</string>
+    <string name="export_share_failed">Paylaşma başarısız</string>
+    <string name="export_send_code_chooser">Kod Gönder</string>
+    <string name="export_vector_chooser">Vektörü Dışa Aktar</string>
+
+    <!-- QR customize -->
+    <string name="qr_customize_title">QR\'ı Özelleştir</string>
+    <string name="qr_customize_nothing">Özelleştirilecek bir şey yok</string>
+    <string name="cd_styled_qr_preview">Stillendirilmiş QR önizlemesi</string>
+    <string name="qr_customize_rendering">İşleniyor…</string>
+    <string name="qr_customize_section_body_pattern">Gövde Deseni</string>
+    <string name="qr_customize_section_corner_eye">Köşe Gözü Stili</string>
+    <string name="qr_customize_section_color_palette">Renk Paleti</string>
+    <string name="qr_customize_section_center_icon">Merkez Simgesi</string>
+    <string name="qr_customize_section_frame">Çerçeve Şablonu</string>
+    <string name="qr_customize_save_export">Özelleştirilmiş QR\'ı Kaydet ve Dışa Aktar</string>
+    <string name="qr_customize_toast_unable_load_logo">Logo yüklenemiyor</string>
+    <string name="qr_customize_toast_reset_done">Sıfırlama tamamlandı</string>
+    <string name="qr_pattern_classic">Klasik (Kare)</string>
+    <string name="qr_pattern_rounded">Yuvarlatılmış</string>
+    <string name="qr_pattern_dots">Radyal Noktalar</string>
+    <string name="qr_pattern_diamond">Elmas Örgü</string>
+    <string name="qr_eye_square">Kare</string>
+    <string name="qr_eye_soft">Yumuşak Eğri</string>
+    <string name="qr_eye_circle">Daire Göz</string>
+    <string name="qr_icon_none">Yok</string>
+    <string name="qr_icon_wifi">Wi-Fi</string>
+    <string name="qr_icon_globe">Küre</string>
+    <string name="qr_icon_custom">Özel</string>
+    <string name="qr_palette_electric_cobalt">Elektrik Kobalt</string>
+    <string name="qr_palette_deep_sapphire">Derin Safir</string>
+    <string name="qr_palette_neon_cyan">Neon Camgöbeği</string>
+    <string name="qr_palette_monochrome_slate">Tek Renkli Kayrak</string>
+    <string name="qr_palette_crimson">Koyu Kırmızı</string>
+    <string name="qr_palette_emerald">Zümrüt</string>
+    <string name="qr_palette_violet">Menekşe</string>
+    <string name="qr_palette_amber">Kehribar</string>
+    <string name="qr_frame_none_title">Yok</string>
+    <string name="qr_frame_none_subtitle">Temiz çerçevesiz matris</string>
+    <string name="qr_frame_pill_title">\"Beni Tara\" Hapı</string>
+    <string name="qr_frame_pill_subtitle">Altbilgi ekli rozet</string>
+    <string name="qr_frame_banner_title">Üst Banner</string>
+    <string name="qr_frame_banner_subtitle">Üst vurgulu başlık bandı</string>
+    <string name="qr_frame_cyber_title">Siber Nişangah</string>
+    <string name="qr_frame_cyber_subtitle">Kobalt HUD görünüm köşeleri</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_preferences_title">Tercihler</string>
+    <string name="settings_engine_version">Motor v2.4.0</string>
+    <string name="settings_preferences_subtitle">Yüksek hızlı optik matris ve sentez parametreleri</string>
+    <string name="settings_pipeline_online">OPTİK CV İŞLEM HATTI ÇEVRİMİÇİ</string>
+    <string name="settings_pro_footer">%1$s Pro · Cihaz Hızlandırma Doğrulandı</string>
+    <string name="settings_section_appearance">Görünüm</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_theme_light">Açık</string>
+    <string name="settings_theme_dark">Koyu</string>
+    <string name="settings_language_title">Dil</string>
+    <string name="settings_launcher_title">Başlatıcı Ayarı</string>
+    <string name="settings_launcher_subtitle">Simge boyutu, etiketler ve uygulama sırası</string>
+    <string name="settings_section_scanner">Tarayıcı ve Donanım</string>
+    <string name="settings_vibrate_title">Algılamada Titret</string>
+    <string name="settings_vibrate_subtitle">Matris çözüldüğünde dokunsal darbe</string>
+    <string name="settings_beep_title">Bip Sesi</string>
+    <string name="settings_beep_subtitle">Ses tonu onayı</string>
+    <string name="settings_auto_open_urls_title">URL\'leri Otomatik Aç</string>
+    <string name="settings_auto_open_urls_subtitle">Taramadan sonra web sitesi bağlantılarını tarayıcıda açar</string>
+    <string name="settings_clear_history_title">Tarama ve Oluşturma Geçmişini Temizle</string>
+    <string name="settings_clear_history_subtitle">Favori olmayanları kaldır · favorileri koru</string>
+    <string name="settings_section_about">Hakkında ve Yasal</string>
+    <string name="settings_about_title">Hakkında</string>
+    <string name="settings_privacy_policy_title">Gizlilik Politikası</string>
+    <string name="settings_share_title">Paylaş</string>
+    <string name="settings_rate_title">Değerlendir</string>
+    <string name="settings_dialog_theme_title">Tema</string>
+    <string name="settings_dialog_default_ecc_title">Varsayılan Düzeltme Seviyesi</string>
+    <string name="settings_dialog_default_format_title">Varsayılan QR Formatı</string>
+    <string name="settings_ecc_low_subtitle">Düşük (%7 ECC)</string>
+    <string name="settings_ecc_medium_subtitle">Orta (%15 ECC)</string>
+    <string name="settings_ecc_quartile_subtitle">Çeyrek (%25 ECC)</string>
+    <string name="settings_ecc_high_subtitle">Yüksek (%30 ECC) · Optimum yedeklilik</string>
+    <string name="settings_ecc_low_option">Düşük / L / %7</string>
+    <string name="settings_ecc_medium_option">Orta / M / %15</string>
+    <string name="settings_ecc_quartile_option">Çeyrek / Q / %25</string>
+    <string name="settings_ecc_high_option">Yüksek / H / %30</string>
+    <string name="settings_format_svg">Vektör SVG / Keskin 1024px</string>
+    <string name="settings_format_png">PNG / 1024px</string>
+    <string name="settings_language_system">Sistemle Senkronize</string>
+    <string name="settings_language_system_subtitle">Cihaz dilini takip et</string>
+    <string name="settings_language_english_us">İngilizce (ABD)</string>
+    <string name="settings_language_hindi">Hintçe</string>
+    <string name="settings_language_russian">Rusça</string>
+    <string name="settings_language_italian">İtalyanca</string>
+    <string name="settings_language_french">Fransızca</string>
+    <string name="settings_language_spanish">İspanyolca</string>
+    <string name="settings_language_japanese">Japonca</string>
+    <string name="settings_language_korean">Korece</string>
+    <string name="settings_language_german">Almanca</string>
+    <string name="settings_language_chinese">Çince</string>
+    <string name="settings_language_thai">Tayca</string>
+    <string name="settings_language_greek">Yunanca</string>
+    <string name="settings_language_portuguese_pt">Portekizce (Portekiz)</string>
+    <string name="settings_language_portuguese_br">Portekizce (Brezilya)</string>
+    <string name="settings_language_dutch">Hollandaca</string>
+    <string name="settings_language_filipino">Filipince</string>
+    <string name="settings_language_turkish">Türkçe</string>
+    <string name="settings_language_indonesian">Endonezce</string>
+    <string name="settings_language_afrikaans">Afrikaanca</string>
+    <string name="settings_language_english">İngilizce</string>
+
+    <!-- About -->
+    <string name="about_title">Hakkında</string>
+    <string name="about_tagline">Anında QR ve Barkod Zekası</string>
+    <string name="about_meta_version">Sürüm</string>
+    <string name="about_meta_build">Yapı</string>
+    <string name="about_meta_package">Paket</string>
+
+    <!-- Reminder / Events / Launcher / Widgets / Language / Privacy / Permission / Default / Intro / Ads -->
+    <string name="reminder_notification_title">Hatırlatıcı</string>
+    <string name="reminder_notification_channel_desc">Planlanmış hatırlatıcı uyarıları</string>
+    <string name="event_uninstall_title">Kaldırıldı mı?</string>
+    <string name="event_uninstall_success">Temizlik tamamlandı</string>
+    <string name="event_uninstall_sub">Uygulama başarıyla kaldırıldı</string>
+    <string name="event_uninstall_body">Önbelleğe alınan tarama dosyaları ve geçici veriler cihazınızdan temizlendi.</string>
+    <string name="event_uninstall_chip">Güvenli ve Eksiksiz</string>
+    <string name="event_charge_in_title">Güç Takıldı</string>
+    <string name="event_charge_in_success">%1$d%%</string>
+    <string name="event_charge_in_sub">Bağlandı</string>
+    <string name="event_charge_in_body">Hızlı şarj etkin.</string>
+    <string name="event_charge_in_chip">HIZLI ŞARJ ETKİN</string>
+    <string name="event_charge_out_title">Şarj Cihazı Çıkarıldı</string>
+    <string name="event_charge_out_success">%1$d%% Optimum</string>
+    <string name="event_charge_out_sub">Bağlantı kesildi</string>
+    <string name="event_charge_out_body">Güç kablosu çıkarıldı.</string>
+    <string name="event_charge_out_chip">Güç Bağlantısı Kesildi</string>
+    <string name="event_optimized_speed">Optimize edilmiş hız</string>
+    <string name="event_fast">HIZLI</string>
+    <string name="event_optimized_sub">Her şey sorunsuz çalışıyor.</string>
+    <string name="event_done">Tamam</string>
+    <string name="launcher_settings">Başlatıcı Ayarları</string>
+    <string name="serialize">Sırala</string>
+    <string name="by_name_asc_a_to_z">Ada göre ARTAN (A\'dan Z\'ye)</string>
+    <string name="by_name_desc_z_to_a">Ada göre AZALAN (Z\'den A\'ya)</string>
+    <string name="by_installed_date">Yüklenme Tarihine Göre</string>
+    <string name="preview">Önizleme</string>
+    <string name="label_visibility">Etiket Görünürlüğü</string>
+    <string name="hide_app_name">Uygulama adını gizle</string>
+    <string name="app_icon_size">Uygulama Simge Boyutu</string>
+    <string name="app_label_size">Uygulama Etiket Boyutu</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Uygulama Widget\'ları</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">QR araçlarınıza doğrudan ana ekranınızdan hızlıca erişmek için bir widget seçin.</string>
+    <string name="quick_access">Hızlı Erişim</string>
+    <string name="app_icon_1x1">Uygulama Simgesi 1 x 1</string>
+    <string name="qr_scanner_generator">QR Tarayıcı ve Oluşturucu</string>
+    <string name="create_1_x_1">1 x 1 Oluştur</string>
+    <string name="style_a">Stil A</string>
+    <string name="style_b">Stil B</string>
+    <string name="style_c">Stil C</string>
+    <string name="scan_qr">QR Tara</string>
+    <string name="cl_end_scan_subtitle">Kamerayı açın ve bir QR kod tarayın</string>
+    <string name="cl_end_scan_action">Tara</string>
+    <string name="cl_end_history">Geçmiş</string>
+    <string name="cl_end_history_subtitle">Taranan QR geçmişinizi görüntüleyin</string>
+    <string name="cl_end_widgets_subtitle">QR araçlarını ana ekranınıza ekleyin</string>
+    <string name="create_qr">QR Oluştur</string>
+    <string name="widget_pin_not_supported">Bu cihazda widget sabitleme desteklenmiyor</string>
+    <string name="widget_pin_failed">Widget eklenemiyor. Lütfen tekrar deneyin.</string>
+    <string name="choose_your_language">Dilinizi Seçin</string>
+    <string name="collection_title">Gizliliğiniz Hakkında Kısa Bir Not</string>
+    <string name="collection_intro_1">QR Scanner\'ı hızlı, güvenli ve güvenilir tutmak, QR kod tarama ve oluşturma özellikleri sunmak, uygulamayı ücretsiz tutmaya yardımcı olan reklamlar göstermek ve genel deneyiminizi iyileştirmek için sınırlı cihaz ve uygulama bilgisi kullanıyoruz.</string>
+    <string name="collection_intro_2">Taranan içeriğiniz, kişisel dosyalarınız, fotoğraflarınız, videolarınız ve diğer özel verileriniz analiz veya reklam amacıyla toplanmaz ve kontrolünüz altında kalır.</string>
+    <string name="collection_what_we_use">Neyi ve neden kullanıyoruz:</string>
+    <string name="collection_bullet_1">⦿ Kamera erişimi - QR kodları ve barkodları doğru şekilde taramak ve anında sonuç sağlamak için.</string>
+    <string name="collection_bullet_2">⦿ Uygulama kullanım bilgileri - kullandığınız tarama ve QR oluşturma özellikleri ve açtığınız ekranlar gibi - uygulama performansını, kararlılığını ve kullanıcı deneyimini iyileştirmek için.</string>
+    <string name="collection_bullet_3">⦿ Cihaz ve uygulama tanımlayıcıları - tercihlerinizi kaydetmek, kararlılığı artırmak, hataları önlemek ve temel uygulama işlevlerini desteklemek için.</string>
+    <string name="collection_bullet_4">⦿ Reklam tanımlayıcıları - uygulamayı ücretsiz tutmaya yardımcı olan reklamları göstermek ve ölçmek için.</string>
+    <string name="collection_footer">Kabul Et ve Devam Et\'e dokunarak Gizlilik Politikamızı kabul etmiş olursunuz. Yalnızca QR kod tarama ve oluşturma, uygulama güvenliği ve diğer temel özellikleri sağlamak, uygulamayı iyileştirmek ve reklamcılığı desteklemek için gerekli bilgileri kullanıyoruz. Taranan içeriğiniz ve özel verileriniz kontrolünüz altında kalır.</string>
+    <string name="collection_agree_checkbox">Bu veri toplamayı kabul ediyorum</string>
+    <string name="collection_agree_continue">Kabul Et ve Devam Et</string>
+    <string name="collection_agree_toast">Devam etmek için lütfen veri toplamayı kabul edin.</string>
+    <string name="privacy_policy">Gizlilik Politikası</string>
+    <string name="this_action_may_contain_ads">Bu işlem reklam içerebilir</string>
+    <string name="marketing_converter1">gclid</string>
+    <string name="utm_source_apps_facebook_com">utm_source=apps.facebook.com</string>
+    <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
+    <string name="utm_source_marketing">utm_source=marketing</string>
+    <string name="permission_title">Kamera Erişimi Gerekli</string>
+    <string name="permission_description">QR Kod ve Tarayıcı\'nın QR kodları, Wi-Fi kimlik bilgilerini ve barkodları gerçek zamanlı olarak anında tarayabilmesi için kamera erişimine ihtiyacı vardır.</string>
+    <string name="permission_local_title">Anında Yerel Tarama</string>
+    <string name="permission_local_desc">Taramalar sıfır sunucu gecikmesiyle tamamen cihaz üzerinde işlenir.</string>
+    <string name="permission_privacy_title">%100 Gizlilik Korunur</string>
+    <string name="permission_privacy_desc">Hiçbir video karesi veya ham görüntü asla yüklenmez veya kataloglanmaz.</string>
+    <string name="permission_gallery_title">Galeri Alternatifi</string>
+    <string name="permission_gallery_desc">Kamera ayrıcalıkları olmadan fotoğrafları istediğiniz zaman doğrudan kitaplığınızdan içe aktarın.</string>
+    <string name="allow_permission">İzin Ver</string>
+    <string name="default_title">QR Kod ve Tarayıcı\'yı Varsayılan Ana Ekran Başlatıcınız Yapın</string>
+    <string name="default_description">Ana ekranınızdan tek bir sağa kaydırmayla anında QR tarayıcı erişimi, özel widget kontrolleri ve düzenli uygulama çekmeceleri.</string>
+    <string name="default_swipe_title">Taramak için Sağa Kaydırın</string>
+    <string name="default_swipe_desc">Ana ekranınızın herhangi bir yerinden sıfır gecikmeyle vizörü anında başlatın.</string>
+    <string name="default_widgets_title">Akıllı Hızlı Widget\'lar</string>
+    <string name="default_widgets_desc">QR oluşturucu kısayollarını, pano izleyicilerini ve pil zekasını doğrudan ana ekrana sabitleyin.</string>
+    <string name="default_drawer_title">Özel Uygulama Çekmecesi ve Klasörler</string>
+    <string name="default_drawer_desc">Uygulamaları düzenleyin, etiketleri gizleyin, ızgara sütunlarını özelleştirin ve açık ve koyu temalar arasında geçiş yapın.</string>
+    <string name="set_as_default">Varsayılan Olarak Ayarla</string>
+    <string name="intro_title_1">QR Kodları Anında Tarayın</string>
+    <string name="intro_desc_1">Kameranızla QR kodları hızlıca tarayın ve bilgilere saniyeler içinde erişin</string>
+    <string name="intro_title_2">Barkodları Kolayca Tarayın</string>
+    <string name="intro_desc_2">Ürün barkodlarını hızlıca tarayın ve saniyeler içinde doğru sonuçlar alın</string>
+    <string name="intro_title_3">QR Kodları Kendi Tarzınızda Oluşturun</string>
+    <string name="intro_desc_3">Tüm dijital ihtiyaçlarınız için profesyonel QR kodları oluşturun ve özelleştirin.</string>
+    <string name="next">İleri</string>
+    <string name="loading_ads_title">Reklamlar Yükleniyor</string>
+    <string name="loading_ads_desc">Lütfen bekleyin, reklamlar görünecek...</string>
 </resources>

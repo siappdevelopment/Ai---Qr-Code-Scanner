@@ -1,0 +1,645 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_back">Kembali</string>
+    <string name="action_cancel">Batal</string>
+    <string name="action_clear">Hapus</string>
+    <string name="action_copy">Salin</string>
+    <string name="action_delete">Hapus</string>
+    <string name="action_go_back">Kembali</string>
+    <string name="action_paste">Tempel</string>
+    <string name="action_share">Bagikan</string>
+    <string name="action_reset">Atur Ulang</string>
+    <string name="cd_clear">Hapus</string>
+    <string name="cd_clear_search">Hapus pencarian</string>
+    <string name="cd_favorite">Favorit</string>
+    <string name="cd_more">Lainnya</string>
+    <string name="cd_add_to_favorites">Tambahkan ke favorit</string>
+    <string name="toast_copied">Disalin</string>
+    <string name="toast_deleted">Dihapus</string>
+    <string name="toast_history_cleared">Riwayat dihapus</string>
+    <string name="toast_clipboard_empty">Papan klip kosong</string>
+    <string name="toast_unable_to_open_link">Tidak dapat membuka tautan</string>
+    <string name="share_chooser_title">Bagikan</string>
+    <string name="form_label_optional_suffix">%1$s (opsional)</string>
+
+    <!-- Bottom navigation -->
+    <string name="nav_home">Beranda</string>
+    <string name="nav_scan">Pindai</string>
+    <string name="nav_settings">Pengaturan</string>
+    <string name="cd_quick_scan">Pindai Cepat</string>
+
+    <!-- Home -->
+    <string name="home_cd_favorites">Favorit</string>
+    <string name="home_instant_scanner_title">Pemindai Instan</string>
+    <string name="home_instant_scanner_subtitle">Arahkan ke kode QR atau barcode standar apa pun</string>
+    <string name="home_open_camera_scanner">Buka Pemindai Kamera</string>
+    <string name="home_quick_tools_heading">ALAT CEPAT</string>
+    <string name="home_tool_scan_barcode_title">Pindai Barcode</string>
+    <string name="home_tool_scan_barcode_subtitle">Tag UPC &amp; EAN</string>
+    <string name="home_tool_scan_gallery_title">Pindai Galeri</string>
+    <string name="home_tool_scan_gallery_subtitle">Dari tangkapan layar</string>
+    <string name="home_tool_create_qr_title">Buat QR</string>
+    <string name="home_tool_create_qr_subtitle">Tautan, Wi-Fi &amp; vCard</string>
+    <string name="home_tool_history_title">Riwayat</string>
+    <string name="home_tool_history_subtitle">Pindaian &amp; kode tersimpan</string>
+    <string name="home_recent_scans_title">Pindaian Terbaru</string>
+    <string name="home_view_all">Lihat semua</string>
+    <string name="home_no_recent_scans_title">Belum ada pindaian terbaru</string>
+    <string name="home_no_recent_scans_body">Kode yang Anda pindai akan muncul di sini untuk akses cepat.</string>
+
+    <!-- History -->
+    <string name="history_title">Riwayat</string>
+    <string name="history_search_placeholder">Cari kode, URL, judul…</string>
+    <string name="history_no_matches">Tidak ada hasil untuk pencarian Anda</string>
+    <string name="history_filter_all">Semua (%1$d)</string>
+    <string name="history_filter_scanned">Dipindai (%1$d)</string>
+    <string name="history_filter_created">Dibuat (%1$d)</string>
+    <string name="history_section_today">Hari Ini</string>
+    <string name="history_section_yesterday">Kemarin</string>
+    <string name="history_section_earlier">Sebelumnya</string>
+    <string name="history_section_count_scans">%1$d pindaian</string>
+    <string name="history_section_count_scan">%1$d pindaian</string>
+    <string name="history_section_count_items">%1$d item</string>
+    <string name="history_section_count_item">%1$d item</string>
+    <string name="history_menu_add_favorite">Tambahkan favorit</string>
+    <string name="history_menu_remove_favorite">Hapus favorit</string>
+    <string name="history_empty_title">Belum Ada Riwayat Pindaian</string>
+    <string name="history_empty_launch_scanner">Buka Pemindai Sekarang</string>
+    <string name="history_detail_title">Detail Riwayat</string>
+    <string name="history_not_found_title">Pindaian tidak ditemukan</string>
+    <string name="history_not_found_body">Item riwayat ini mungkin sudah dihapus.</string>
+    <string name="history_delete_item_title">Hapus item riwayat ini?</string>
+    <string name="history_delete_item_subtitle">Tindakan ini tidak dapat dibatalkan</string>
+    <string name="history_delete_item_body">Ini akan menghapus item ini secara permanen dari riwayat perangkat lokal Anda.</string>
+    <string name="history_clear_all_title">Hapus Riwayat Pindai &amp; Buat?</string>
+    <string name="history_stored_items_count">%1$d item tersimpan</string>
+    <string name="history_clear_all_body">Ini akan menghapus setiap item riwayat dari perangkat lokal Anda secara permanen, termasuk item yang disukai dan difavoritkan.</string>
+    <string name="history_clear_all_warning">Item tidak dapat dipulihkan setelah dihapus.</string>
+    <string name="history_clear_all_confirm">Hapus Semua Riwayat</string>
+
+    <!-- Favorites -->
+    <string name="favorites_title">Favorit</string>
+    <string name="favorites_empty">Belum ada favorit</string>
+
+    <!-- Scan / viewfinder -->
+    <string name="scan_hud_flash">FLASH</string>
+    <string name="scan_hud_gallery">GALERI</string>
+    <string name="scan_hud_flip">BALIK</string>
+    <string name="cd_toggle_flashlight">Nyalakan/matikan senter</string>
+    <string name="cd_scan_image_from_gallery">Pindai gambar dari galeri</string>
+    <string name="cd_flip_camera_lens">Balik lensa kamera</string>
+    <string name="scan_zoom_level">%1$dx</string>
+    <string name="scan_camera_permission_title">Izin kamera diperlukan</string>
+    <string name="scan_camera_permission_body">Izinkan akses kamera untuk memindai kode QR dan barcode.</string>
+    <string name="scan_camera_permission_body_settings">Akses kamera dimatikan. Buka Pengaturan, aktifkan Kamera, lalu kembali ke sini untuk memindai.</string>
+    <string name="scan_grant_permission">Berikan izin</string>
+    <string name="scan_open_settings">Buka Pengaturan</string>
+
+    <!-- Gallery crop -->
+    <string name="gallery_crop_title">Pangkas Foto</string>
+    <string name="gallery_crop_select_photo">Pilih foto untuk dipangkas</string>
+    <string name="gallery_crop_rotate_90">Putar 90°</string>
+    <string name="gallery_crop_flip">Balik</string>
+    <string name="gallery_crop_detecting">Mendeteksi…</string>
+    <string name="gallery_crop_scan_selection">Pindai Pilihan</string>
+    <string name="gallery_crop_choose_another">Pilih foto lain</string>
+    <string name="gallery_crop_unable_open_image">Tidak dapat membuka gambar ini</string>
+    <string name="gallery_crop_no_code_detected">Tidak ada kode yang dapat dipindai terdeteksi</string>
+    <string name="gallery_crop_detection_failed">Deteksi gagal</string>
+    <string name="gallery_crop_multiple_codes_title">Beberapa kode ditemukan</string>
+    <string name="gallery_crop_multiple_codes_prompt">Pilih kode mana yang akan dibuka:</string>
+    <string name="gallery_crop_code_list_item">%1$d. %2$s: %3$s</string>
+    <string name="cd_selected_photo">Foto terpilih</string>
+    <string name="wifi_preview_enter_ssid">Masukkan SSID</string>
+
+    <!-- Detection error -->
+    <string name="detection_error_title">Deteksi Gagal</string>
+    <string name="detection_error_badge">DETEKSI GAGAL</string>
+    <string name="detection_error_headline">Tidak Ada Kode yang Dapat Dipindai Terdeteksi</string>
+    <string name="detection_error_checklist_title">Daftar Periksa Optimasi</string>
+    <string name="detection_error_tip_steady">Pegang dengan stabil dan letakkan kode sepenuhnya di dalam bingkai pangkas</string>
+    <string name="detection_error_tip_lighting">Gunakan foto yang tajam dan cukup terang tanpa blur berat</string>
+    <string name="detection_error_tip_rotate">Coba Putar atau Balik jika kode terlihat miring</string>
+    <string name="detection_error_tip_formats">Didukung: QR, Aztec, Data Matrix, EAN, UPC, Code 128/39, PDF417</string>
+    <string name="detection_error_retry">Pindai Lagi / Coba Lagi</string>
+    <string name="detection_error_pick_gallery">Pilih Foto Lain dari Galeri</string>
+
+    <!-- Batch results -->
+    <string name="batch_results_title">Hasil Batch</string>
+    <string name="batch_results_one_code">1 kode diterima</string>
+    <string name="batch_results_many_codes">%1$d kode diterima</string>
+
+    <!-- Scan result -->
+    <string name="scan_result_title">Hasil Pindaian</string>
+    <string name="scan_result_payload_heading">KONTEN PAYLOAD</string>
+    <string name="scan_result_empty_payload">(kosong)</string>
+    <string name="scan_result_kind_website">Situs Web / URL</string>
+    <string name="scan_result_kind_wifi">Jaringan Wi-Fi</string>
+    <string name="scan_result_kind_plain_text">Teks Biasa</string>
+    <string name="scan_result_kind_qr_code">Kode QR</string>
+    <string name="scan_result_kind_barcode">Barcode</string>
+    <string name="scan_result_url_detected_banner">Payload situs web / URL terdeteksi</string>
+    <string name="scan_result_copy_link">Salin Tautan</string>
+    <string name="scan_result_open_in_browser">Buka di Browser</string>
+    <string name="scan_result_toast_link_copied">Tautan disalin ke papan klip</string>
+    <string name="scan_result_toast_copied">Disalin ke papan klip</string>
+    <string name="scan_result_toast_saved_favorite">Disimpan ke favorit Anda</string>
+    <string name="scan_result_toast_removed_favorite">Dihapus dari favorit</string>
+    <string name="share_scanned_url_title">URL yang Dipindai</string>
+    <string name="share_scan_result_title">Hasil Pindaian</string>
+
+    <!-- Create hub -->
+    <string name="create_hub_title">Buat Kode QR</string>
+    <string name="create_hub_search_placeholder">Cari format QR…</string>
+    <string name="create_hub_no_formats_title">Tidak ada format ditemukan</string>
+    <string name="create_hub_no_formats_body">Coba ketik kata kunci lain atau atur ulang filter aktif</string>
+    <string name="create_hub_reset_search">Atur Ulang Pencarian</string>
+    <string name="create_hub_section_social">Sosial</string>
+    <string name="create_hub_section_barcode">Barcode</string>
+    <string name="create_filter_all">Semua Format</string>
+    <string name="create_filter_web">Web &amp; Sosial</string>
+    <string name="create_filter_comms">Komunikasi</string>
+    <string name="create_filter_utilities">Utilitas</string>
+    <string name="create_subtitle_barcode">Barcode</string>
+
+    <!-- Create hub category cards -->
+    <string name="create_cat_website_title">URL Situs Web</string>
+    <string name="create_cat_website_subtitle">Tautan, profil sosial, halaman web</string>
+    <string name="create_cat_wifi_title">Jaringan Wi-Fi</string>
+    <string name="create_cat_wifi_subtitle">WPA/WPA2, SSID, koneksi otomatis</string>
+    <string name="create_cat_contact_title">Kontak / vCard</string>
+    <string name="create_cat_contact_subtitle">Nama, telepon, email, alamat</string>
+    <string name="create_cat_plain_text_title">Teks Biasa</string>
+    <string name="create_cat_plain_text_subtitle">Catatan, pesan, data mentah</string>
+    <string name="create_cat_phone_title">Panggilan Telepon</string>
+    <string name="create_cat_phone_subtitle">Panggilan telepon langsung</string>
+    <string name="create_cat_email_title">Pesan Email</string>
+    <string name="create_cat_email_subtitle">Penerima &amp; subjek terisi otomatis</string>
+    <string name="create_cat_sms_title">SMS / Pesan</string>
+    <string name="create_cat_sms_subtitle">Pesan teks langsung</string>
+    <string name="create_cat_whatsapp_title">WhatsApp</string>
+    <string name="create_cat_whatsapp_subtitle">Tautan obrolan WhatsApp langsung</string>
+    <string name="create_cat_location_title">Lokasi</string>
+    <string name="create_cat_location_subtitle">Koordinat / pin Google Maps</string>
+    <string name="create_cat_calendar_title">Acara Kalender</string>
+    <string name="create_cat_calendar_subtitle">Judul, tanggal, waktu, pengingat</string>
+    <string name="create_cat_app_link_title">Tautan Aplikasi</string>
+    <string name="create_cat_app_link_subtitle">Tautan Google Play &amp; App Store</string>
+    <string name="create_cat_facebook_title">Facebook</string>
+    <string name="create_cat_facebook_subtitle">Profil atau halaman</string>
+    <string name="create_cat_youtube_title">YouTube</string>
+    <string name="create_cat_youtube_subtitle">Saluran atau video</string>
+    <string name="create_cat_twitter_title">Twitter</string>
+    <string name="create_cat_twitter_subtitle">Profil</string>
+    <string name="create_cat_tiktok_title">TikTok</string>
+    <string name="create_cat_tiktok_subtitle">Profil</string>
+    <string name="create_cat_instagram_title">Instagram</string>
+    <string name="create_cat_instagram_subtitle">Profil</string>
+    <string name="create_cat_paypal_title">PayPal</string>
+    <string name="create_cat_paypal_subtitle">Tautan PayPal.me</string>
+    <string name="create_cat_snapchat_title">Snapchat</string>
+    <string name="create_cat_snapchat_subtitle">Tambah teman</string>
+    <string name="create_cat_linkedin_title">LinkedIn</string>
+    <string name="create_cat_linkedin_subtitle">Profil</string>
+    <string name="create_cat_spotify_title">Spotify</string>
+    <string name="create_cat_spotify_subtitle">Profil atau daftar putar</string>
+    <string name="create_cat_code_128_title">Code 128</string>
+    <string name="create_cat_data_matrix_title">Data Matrix</string>
+    <string name="create_cat_pdf_417_title">PDF 417</string>
+    <string name="create_cat_aztec_title">Aztec</string>
+    <string name="create_cat_ean_13_title">EAN 13</string>
+    <string name="create_cat_ean_8_title">EAN 8</string>
+    <string name="create_cat_upc_e_title">UPC E</string>
+    <string name="create_cat_upc_a_title">UPC A</string>
+    <string name="create_cat_code_93_title">Code 93</string>
+    <string name="create_cat_code_39_title">Code 39</string>
+    <string name="create_cat_codabar_title">Codabar</string>
+    <string name="create_cat_itf_title">ITF</string>
+    <string name="create_cat_barcode_title">Barcode / EAN</string>
+
+    <!-- Create forms — shared -->
+    <string name="create_form_generate_preview">Buat &amp; Pratinjau</string>
+    <string name="create_form_generate_preview_qr">Buat &amp; Pratinjau QR</string>
+    <string name="create_form_instant_share">Bagikan Instan</string>
+    <string name="create_barcode_stub_title">Pembuatan barcode akan datang nanti</string>
+    <string name="create_barcode_stub_body">Item hub ini untuk barcode (EAN/UPC), bukan kode QR. Kategori QR tersedia dari Buat.</string>
+    <string name="create_validation_field_limit">Kolom ini dibatasi hingga %1$d karakter.</string>
+    <string name="create_validation_qr_too_long">Ini terlalu panjang untuk dimuat dalam kode QR. Persingkat teksnya.</string>
+    <string name="create_validation_barcode_unavailable">Pembuatan barcode / EAN belum tersedia. Gunakan kategori QR sebagai gantinya.</string>
+    <string name="create_validation_enter_value">Masukkan nilai untuk dikodekan</string>
+
+    <!-- Create forms — website -->
+    <string name="form_website_url_label">URL Situs Web (https://)</string>
+    <string name="form_website_url_placeholder">https://example.com/target-path</string>
+    <string name="form_display_title_note_label">Judul / Catatan yang Ditampilkan</string>
+    <string name="form_display_title_note_placeholder">mis., Presentasi Pemasaran Peluncuran Q3</string>
+    <string name="form_validation_enter_website_url">Masukkan URL situs web</string>
+    <string name="form_validation_enter_valid_url">Masukkan URL yang valid (https://…)</string>
+
+    <!-- Create forms — plain text -->
+    <string name="form_plain_text_label">Pesan Mentah / Payload</string>
+    <string name="form_plain_text_placeholder">Ketik atau tempel teks biasa…</string>
+    <string name="form_optional_label_placeholder">Label opsional</string>
+    <string name="form_validation_enter_text">Masukkan teks untuk dikodekan</string>
+
+    <!-- Create forms — contact -->
+    <string name="form_contact_name_label">Nama Lengkap</string>
+    <string name="form_contact_name_placeholder">Masukkan nama kontak</string>
+    <string name="form_contact_email_label">Email (opsional)</string>
+    <string name="form_contact_email_placeholder">name@email.com</string>
+    <string name="form_contact_job_title_label">Jabatan (opsional)</string>
+    <string name="form_contact_job_title_placeholder">mis., Manajer Produk</string>
+    <string name="form_contact_phone_label">Telepon (opsional)</string>
+    <string name="form_contact_phone_placeholder">+1 555 0100</string>
+    <string name="form_validation_enter_contact_name">Masukkan nama kontak</string>
+
+    <!-- Create forms — phone -->
+    <string name="form_phone_number_label">Nomor Telepon</string>
+    <string name="form_validation_enter_phone">Masukkan nomor telepon</string>
+    <string name="form_validation_enter_valid_phone">Masukkan nomor telepon yang valid</string>
+
+    <!-- Create forms — email -->
+    <string name="form_email_address_label">Alamat Email</string>
+    <string name="form_email_address_placeholder">hello@example.com</string>
+    <string name="form_email_subject_label">Subjek (opsional)</string>
+    <string name="form_email_subject_placeholder">Subjek pesan</string>
+    <string name="form_email_body_label">Isi</string>
+    <string name="form_email_body_placeholder">Isi email</string>
+    <string name="form_validation_enter_email">Masukkan alamat email</string>
+    <string name="form_validation_enter_valid_email">Masukkan alamat email yang valid</string>
+    <string name="form_validation_enter_email_body">Masukkan isi email</string>
+
+    <!-- Create forms — SMS -->
+    <string name="form_sms_message_label">Pesan</string>
+    <string name="form_sms_message_placeholder">Teks SMS</string>
+    <string name="form_validation_enter_message">Masukkan pesan</string>
+
+    <!-- Create forms — WhatsApp -->
+    <string name="form_whatsapp_number_label">Nomor WhatsApp</string>
+    <string name="form_whatsapp_number_placeholder">15550100 (dengan kode negara)</string>
+    <string name="form_whatsapp_message_label">Pesan (opsional)</string>
+    <string name="form_whatsapp_message_placeholder">Teks obrolan terisi otomatis</string>
+    <string name="form_validation_enter_whatsapp_number">Masukkan nomor WhatsApp (dengan kode negara)</string>
+    <string name="form_validation_enter_valid_whatsapp_number">Masukkan nomor WhatsApp yang valid dengan kode negara</string>
+
+    <!-- Create forms — location -->
+    <string name="form_location_coords_label">Koordinat (lat,lng)</string>
+    <string name="form_location_coords_placeholder">37.7749,-122.4194</string>
+    <string name="form_location_place_label">Label tempat (opsional)</string>
+    <string name="form_location_place_placeholder">Jembatan Golden Gate</string>
+    <string name="form_validation_enter_coordinates">Masukkan koordinat sebagai lat,lng</string>
+    <string name="form_validation_enter_valid_coordinates">Masukkan koordinat yang valid (mis. 37.7749,-122.4194)</string>
+
+    <!-- Create forms — app link -->
+    <string name="form_app_link_label">URL Aplikasi atau Paket</string>
+    <string name="form_app_link_placeholder">com.example.app atau https://play.google.com/…</string>
+    <string name="form_validation_enter_app_url">Masukkan URL aplikasi atau nama paket</string>
+    <string name="form_validation_enter_store_or_package">Masukkan URL toko atau paket seperti com.example.app</string>
+
+    <!-- Create forms — social -->
+    <string name="form_social_display_title_label">Judul yang ditampilkan (opsional)</string>
+    <string name="form_validation_enter_username_or_link">Masukkan nama pengguna atau tautan lengkap</string>
+    <string name="form_social_facebook_primary_label">Nama pengguna atau tautan Facebook</string>
+    <string name="form_social_facebook_primary_placeholder">nama pengguna atau https://facebook.com/…</string>
+    <string name="form_social_youtube_primary_label">Nama pengguna atau tautan YouTube</string>
+    <string name="form_social_youtube_primary_placeholder">@channel atau https://youtube.com/…</string>
+    <string name="form_social_twitter_primary_label">Nama pengguna atau tautan Twitter</string>
+    <string name="form_social_twitter_primary_placeholder">nama pengguna atau https://x.com/…</string>
+    <string name="form_social_tiktok_primary_label">Nama pengguna atau tautan TikTok</string>
+    <string name="form_social_tiktok_primary_placeholder">@username atau https://tiktok.com/…</string>
+    <string name="form_social_instagram_primary_label">Nama pengguna atau tautan Instagram</string>
+    <string name="form_social_instagram_primary_placeholder">nama pengguna atau https://instagram.com/…</string>
+    <string name="form_social_paypal_primary_label">Nama pengguna atau tautan PayPal</string>
+    <string name="form_social_paypal_primary_placeholder">nama paypal.me atau https://paypal.me/…</string>
+    <string name="form_social_snapchat_primary_label">Nama pengguna atau tautan Snapchat</string>
+    <string name="form_social_snapchat_primary_placeholder">nama pengguna atau https://snapchat.com/add/…</string>
+    <string name="form_social_linkedin_primary_label">Nama pengguna atau tautan LinkedIn</string>
+    <string name="form_social_linkedin_primary_placeholder">nama profil atau https://linkedin.com/in/…</string>
+    <string name="form_social_spotify_primary_label">Nama pengguna atau tautan Spotify</string>
+    <string name="form_social_spotify_primary_placeholder">ID pengguna atau https://open.spotify.com/…</string>
+
+    <!-- Create forms — barcode payloads -->
+    <string name="form_barcode_code_128_label">Nilai Code 128</string>
+    <string name="form_barcode_code_128_placeholder">Teks atau angka</string>
+    <string name="form_barcode_data_matrix_label">Nilai Data Matrix</string>
+    <string name="form_barcode_pdf_417_label">Nilai PDF 417</string>
+    <string name="form_barcode_aztec_label">Nilai Aztec</string>
+    <string name="form_barcode_ean_13_label">Digit EAN 13</string>
+    <string name="form_barcode_ean_13_placeholder">12 atau 13 digit</string>
+    <string name="form_barcode_ean_8_label">Digit EAN 8</string>
+    <string name="form_barcode_ean_8_placeholder">7 atau 8 digit</string>
+    <string name="form_barcode_upc_e_label">Digit UPC E</string>
+    <string name="form_barcode_upc_e_placeholder">7 atau 8 digit (dimulai dengan 0 atau 1)</string>
+    <string name="form_barcode_upc_a_label">Digit UPC A</string>
+    <string name="form_barcode_upc_a_placeholder">11 digit, atau 12 dengan digit pemeriksa</string>
+    <string name="form_barcode_code_93_label">Nilai Code 93</string>
+    <string name="form_barcode_code_93_placeholder">Teks ASCII</string>
+    <string name="form_barcode_code_39_label">Nilai Code 39</string>
+    <string name="form_barcode_codabar_label">Nilai Codabar</string>
+    <string name="form_barcode_codabar_placeholder">Digit, awal/akhir opsional</string>
+    <string name="form_barcode_itf_label">Digit ITF</string>
+    <string name="form_barcode_itf_placeholder">Jumlah digit genap</string>
+    <string name="form_barcode_generic_placeholder">Teks atau angka</string>
+    <string name="form_payload_label">Payload</string>
+    <string name="form_payload_placeholder">Masukkan nilai</string>
+
+    <!-- Barcode validation -->
+    <string name="barcode_validation_digits_only">Hanya digit.</string>
+    <string name="barcode_validation_check_digit_mismatch">Digit pemeriksa tidak cocok.</string>
+    <string name="barcode_validation_ean_13_length">Masukkan 12 digit, atau 13 digit termasuk digit pemeriksa.</string>
+    <string name="barcode_validation_ean_8_length">Masukkan 7 digit, atau 8 digit termasuk digit pemeriksa.</string>
+    <string name="barcode_validation_upc_a_length">Masukkan 11 digit, atau 12 digit termasuk digit pemeriksa.</string>
+    <string name="barcode_validation_upc_e_length">Masukkan 7 digit, atau 8 digit termasuk digit pemeriksa.</string>
+    <string name="barcode_validation_upc_e_invalid">Nilai UPC-E tidak valid.</string>
+    <string name="barcode_validation_itf_even">Masukkan jumlah digit genap.</string>
+    <string name="barcode_validation_itf_min">ITF memerlukan setidaknya 2 digit.</string>
+    <string name="barcode_validation_itf_max">ITF tidak boleh lebih dari 80 digit.</string>
+    <string name="barcode_validation_code_128_ascii">Code 128 hanya mendukung karakter hingga ASCII 127.</string>
+    <string name="barcode_validation_code_93_ascii">Code 93 hanya mendukung karakter hingga ASCII 127.</string>
+    <string name="barcode_validation_code_93_too_long">Nilai ini terlalu panjang untuk Code 93.</string>
+    <string name="barcode_validation_code_39_unsupported">Code 39 tidak dapat mengodekan karakter ini.</string>
+    <string name="barcode_validation_code_39_too_long">Nilai ini terlalu panjang untuk Code 39.</string>
+    <string name="barcode_validation_codabar_chars">Codabar hanya mengizinkan digit dan - \$ : / . +.</string>
+    <string name="barcode_validation_codabar_guards">Karakter awal dan akhir harus keduanya ada.</string>
+    <string name="barcode_validation_enter_codabar">Masukkan nilai Codabar.</string>
+    <string name="barcode_validation_enter_code_128">Masukkan nilai Code 128.</string>
+    <string name="barcode_validation_enter_code_93">Masukkan nilai Code 93.</string>
+    <string name="barcode_validation_enter_code_39">Masukkan nilai Code 39.</string>
+    <string name="barcode_validation_enter_data_matrix">Masukkan nilai Data Matrix.</string>
+    <string name="barcode_validation_enter_pdf417">Masukkan nilai PDF417.</string>
+    <string name="barcode_validation_enter_aztec">Masukkan nilai Aztec.</string>
+    <string name="barcode_validation_too_large_data_matrix">Nilai ini terlalu besar untuk simbol Data Matrix.</string>
+    <string name="barcode_validation_too_large_pdf417">Nilai ini terlalu besar untuk simbol PDF417.</string>
+    <string name="barcode_validation_too_large_aztec">Nilai ini terlalu besar untuk simbol Aztec.</string>
+    <string name="barcode_validation_cannot_encode">Nilai ini tidak dapat dikodekan.</string>
+    <string name="barcode_counter_ean_13_short">%1$d/12</string>
+    <string name="barcode_counter_ean_13_long">%1$d/13</string>
+    <string name="barcode_counter_ean_8_short">%1$d/7</string>
+    <string name="barcode_counter_ean_8_long">%1$d/8</string>
+    <string name="barcode_counter_upc_e_short">%1$d/7</string>
+    <string name="barcode_counter_upc_e_long">%1$d/8</string>
+    <string name="barcode_counter_upc_a_short">%1$d/11</string>
+    <string name="barcode_counter_upc_a_long">%1$d/12</string>
+    <string name="barcode_counter_itf_digits">%1$d digit</string>
+    <string name="barcode_counter_chars">%1$d karakter</string>
+
+    <!-- Wi-Fi create form -->
+    <string name="wifi_form_title">Jaringan Wi-Fi</string>
+    <string name="wifi_network_name_heading">NAMA JARINGAN (SSID)</string>
+    <string name="wifi_ssid_placeholder">Masukkan SSID Wi-Fi</string>
+    <string name="wifi_security_type_heading">JENIS KEAMANAN</string>
+    <string name="wifi_security_recommended">Direkomendasikan: WPA/WPA2</string>
+    <string name="wifi_security_wpa">WPA/WPA2</string>
+    <string name="wifi_security_wpa3">WPA3</string>
+    <string name="wifi_security_wep">WEP</string>
+    <string name="wifi_security_open">Terbuka</string>
+    <string name="wifi_password_heading">KATA SANDI</string>
+    <string name="wifi_password_placeholder">Kata Sandi Wi-Fi</string>
+    <string name="cd_toggle_password">Tampilkan/sembunyikan kata sandi</string>
+    <string name="wifi_hidden_network_title">Jaringan Tersembunyi</string>
+    <string name="wifi_hidden_network_subtitle">SSID tidak disiarkan secara publik</string>
+    <string name="wifi_guest_scan_hint">Tamu memindai QR ini dengan aplikasi kamera mereka untuk terhubung tanpa mengetik kata sandi Wi-Fi.</string>
+    <string name="wifi_validation_enter_ssid">Masukkan nama jaringan (SSID)</string>
+    <string name="wifi_validation_enter_password">Masukkan kata sandi Wi-Fi</string>
+
+    <!-- QR preview -->
+    <string name="qr_preview_title">Pratinjau QR</string>
+    <string name="cd_share">Bagikan</string>
+    <string name="cd_generated_qr_code">Kode QR yang dihasilkan</string>
+    <string name="qr_preview_generating">Menghasilkan…</string>
+    <string name="qr_preview_nothing_to_preview">Tidak ada yang dapat dipratinjau</string>
+    <string name="qr_preview_unable_encode_barcode">Tidak dapat mengodekan barcode</string>
+    <string name="qr_preview_customize_style">Sesuaikan Gaya &amp; Warna</string>
+    <string name="qr_preview_save_image">Simpan Gambar</string>
+    <string name="qr_preview_saving">Menyimpan…</string>
+    <string name="qr_preview_create">Buat</string>
+    <string name="qr_preview_creating">Membuat…</string>
+    <string name="qr_preview_code_specifications">Spesifikasi Kode</string>
+    <string name="qr_preview_spec_export">Ekspor</string>
+    <string name="qr_preview_spec_export_size">1024 × 1024</string>
+    <string name="qr_preview_spec_style">Gaya</string>
+    <string name="qr_preview_toast_not_ready">QR belum siap</string>
+    <string name="qr_preview_toast_generated">Kode QR telah dibuat</string>
+    <string name="qr_preview_toast_unable_save">Tidak dapat menyimpan</string>
+    <string name="export_png_saved">PNG disimpan ke Galeri (1024×1024)</string>
+    <string name="export_png_failed">Ekspor PNG gagal</string>
+    <string name="export_unable_create_entry">Tidak dapat membuat entri MediaStore</string>
+    <string name="export_png_compress_failed">Kompresi PNG gagal</string>
+    <string name="export_unable_open_stream">Tidak dapat membuka aliran keluaran</string>
+    <string name="export_svg_ready">SVG siap dibagikan</string>
+    <string name="export_svg_failed">Ekspor SVG gagal</string>
+    <string name="export_share_opened">Lembar berbagi dibuka</string>
+    <string name="export_share_failed">Berbagi gagal</string>
+    <string name="export_send_code_chooser">Kirim Kode</string>
+    <string name="export_vector_chooser">Ekspor Vektor</string>
+
+    <!-- QR customize -->
+    <string name="qr_customize_title">Sesuaikan QR</string>
+    <string name="qr_customize_nothing">Tidak ada yang dapat disesuaikan</string>
+    <string name="cd_styled_qr_preview">Pratinjau QR bergaya</string>
+    <string name="qr_customize_rendering">Merender…</string>
+    <string name="qr_customize_section_body_pattern">Pola Badan</string>
+    <string name="qr_customize_section_corner_eye">Gaya Mata Sudut</string>
+    <string name="qr_customize_section_color_palette">Palet Warna</string>
+    <string name="qr_customize_section_center_icon">Ikon Tengah</string>
+    <string name="qr_customize_section_frame">Template Bingkai</string>
+    <string name="qr_customize_save_export">Simpan &amp; Ekspor QR Khusus</string>
+    <string name="qr_customize_toast_unable_load_logo">Tidak dapat memuat logo</string>
+    <string name="qr_customize_toast_reset_done">Atur ulang selesai</string>
+    <string name="qr_pattern_classic">Klasik (Kotak)</string>
+    <string name="qr_pattern_rounded">Membulat</string>
+    <string name="qr_pattern_dots">Titik Radial</string>
+    <string name="qr_pattern_diamond">Jaring Berlian</string>
+    <string name="qr_eye_square">Kotak</string>
+    <string name="qr_eye_soft">Kurva Lembut</string>
+    <string name="qr_eye_circle">Mata Lingkaran</string>
+    <string name="qr_icon_none">Tidak Ada</string>
+    <string name="qr_icon_wifi">Wi-Fi</string>
+    <string name="qr_icon_globe">Bola Dunia</string>
+    <string name="qr_icon_custom">Khusus</string>
+    <string name="qr_palette_electric_cobalt">Kobalt Elektrik</string>
+    <string name="qr_palette_deep_sapphire">Safir Dalam</string>
+    <string name="qr_palette_neon_cyan">Cyan Neon</string>
+    <string name="qr_palette_monochrome_slate">Monokrom Slate</string>
+    <string name="qr_palette_crimson">Merah Tua</string>
+    <string name="qr_palette_emerald">Zamrud</string>
+    <string name="qr_palette_violet">Violet</string>
+    <string name="qr_palette_amber">Amber</string>
+    <string name="qr_frame_none_title">Tidak Ada</string>
+    <string name="qr_frame_none_subtitle">Matriks bersih tanpa bingkai</string>
+    <string name="qr_frame_pill_title">Pil \"Pindai Saya\"</string>
+    <string name="qr_frame_pill_subtitle">Lencana dengan footer terlampir</string>
+    <string name="qr_frame_banner_title">Banner Atas</string>
+    <string name="qr_frame_banner_subtitle">Pita header aksen atas</string>
+    <string name="qr_frame_cyber_title">Retikel Cyber</string>
+    <string name="qr_frame_cyber_subtitle">Sudut tampilan HUD kobalt</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Pengaturan</string>
+    <string name="settings_preferences_title">Preferensi</string>
+    <string name="settings_engine_version">Mesin v2.4.0</string>
+    <string name="settings_preferences_subtitle">Matriks optik berkecepatan tinggi &amp; parameter sintesis</string>
+    <string name="settings_pipeline_online">PIPELINE CV OPTIK ONLINE</string>
+    <string name="settings_pro_footer">%1$s Pro · Akselerasi Perangkat Terverifikasi</string>
+    <string name="settings_section_appearance">Tampilan</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="settings_theme_light">Terang</string>
+    <string name="settings_theme_dark">Gelap</string>
+    <string name="settings_language_title">Bahasa</string>
+    <string name="settings_launcher_title">Pengaturan Peluncur</string>
+    <string name="settings_launcher_subtitle">Ukuran ikon, label, dan urutan aplikasi</string>
+    <string name="settings_section_scanner">Pemindai &amp; Perangkat Keras</string>
+    <string name="settings_vibrate_title">Getar Saat Terdeteksi</string>
+    <string name="settings_vibrate_subtitle">Pulsa haptik saat matriks terpecahkan</string>
+    <string name="settings_beep_title">Suara Bip</string>
+    <string name="settings_beep_subtitle">Konfirmasi nada audio</string>
+    <string name="settings_auto_open_urls_title">Buka URL Otomatis</string>
+    <string name="settings_auto_open_urls_subtitle">Membuka tautan situs web di browser setelah pemindaian</string>
+    <string name="settings_clear_history_title">Hapus Riwayat Pindai &amp; Buat</string>
+    <string name="settings_clear_history_subtitle">Hapus item non-favorit · favorit dipertahankan</string>
+    <string name="settings_section_about">Tentang &amp; Hukum</string>
+    <string name="settings_about_title">Tentang</string>
+    <string name="settings_privacy_policy_title">Kebijakan Privasi</string>
+    <string name="settings_share_title">Bagikan</string>
+    <string name="settings_rate_title">Beri Nilai</string>
+    <string name="settings_dialog_theme_title">Tema</string>
+    <string name="settings_dialog_default_ecc_title">Tingkat Koreksi Default</string>
+    <string name="settings_dialog_default_format_title">Format QR Default</string>
+    <string name="settings_ecc_low_subtitle">Rendah (7% ECC)</string>
+    <string name="settings_ecc_medium_subtitle">Sedang (15% ECC)</string>
+    <string name="settings_ecc_quartile_subtitle">Kuartil (25% ECC)</string>
+    <string name="settings_ecc_high_subtitle">Tinggi (30% ECC) · Redundansi optimal</string>
+    <string name="settings_ecc_low_option">Rendah / L / 7%</string>
+    <string name="settings_ecc_medium_option">Sedang / M / 15%</string>
+    <string name="settings_ecc_quartile_option">Kuartil / Q / 25%</string>
+    <string name="settings_ecc_high_option">Tinggi / H / 30%</string>
+    <string name="settings_format_svg">Vektor SVG / Tajam 1024px</string>
+    <string name="settings_format_png">PNG / 1024px</string>
+    <string name="settings_language_system">Tersinkron dengan Sistem</string>
+    <string name="settings_language_system_subtitle">Ikuti bahasa perangkat</string>
+    <string name="settings_language_english_us">Inggris (AS)</string>
+    <string name="settings_language_hindi">Hindi</string>
+    <string name="settings_language_russian">Rusia</string>
+    <string name="settings_language_italian">Italia</string>
+    <string name="settings_language_french">Prancis</string>
+    <string name="settings_language_spanish">Spanyol</string>
+    <string name="settings_language_japanese">Jepang</string>
+    <string name="settings_language_korean">Korea</string>
+    <string name="settings_language_german">Jerman</string>
+    <string name="settings_language_chinese">Tionghoa</string>
+    <string name="settings_language_thai">Thailand</string>
+    <string name="settings_language_greek">Yunani</string>
+    <string name="settings_language_portuguese_pt">Portugis (Portugal)</string>
+    <string name="settings_language_portuguese_br">Portugis (Brasil)</string>
+    <string name="settings_language_dutch">Belanda</string>
+    <string name="settings_language_filipino">Filipino</string>
+    <string name="settings_language_turkish">Turki</string>
+    <string name="settings_language_indonesian">Indonesia</string>
+    <string name="settings_language_afrikaans">Afrikaans</string>
+    <string name="settings_language_english">Inggris</string>
+
+    <!-- About -->
+    <string name="about_title">Tentang</string>
+    <string name="about_tagline">Kecerdasan QR &amp; Barcode Instan</string>
+    <string name="about_meta_version">Versi</string>
+    <string name="about_meta_build">Build</string>
+    <string name="about_meta_package">Paket</string>
+
+    <!-- Reminder / Events / Launcher / Widgets / Language / Privacy / Permission / Default / Intro / Ads -->
+    <string name="reminder_notification_title">Pengingat</string>
+    <string name="reminder_notification_channel_desc">Peringatan pengingat terjadwal</string>
+    <string name="event_uninstall_title">Dihapus?</string>
+    <string name="event_uninstall_success">Pembersihan selesai</string>
+    <string name="event_uninstall_sub">Aplikasi berhasil dihapus</string>
+    <string name="event_uninstall_body">File pindaian yang di-cache dan data sementara telah dibersihkan dari perangkat Anda.</string>
+    <string name="event_uninstall_chip">Aman &amp; Lengkap</string>
+    <string name="event_charge_in_title">Daya Terpasang</string>
+    <string name="event_charge_in_success">%1$d%%</string>
+    <string name="event_charge_in_sub">Terhubung</string>
+    <string name="event_charge_in_body">Pengisian cepat aktif.</string>
+    <string name="event_charge_in_chip">PENGISIAN CEPAT AKTIF</string>
+    <string name="event_charge_out_title">Pengisi Daya Dicabut</string>
+    <string name="event_charge_out_success">%1$d%% Optimal</string>
+    <string name="event_charge_out_sub">Terputus</string>
+    <string name="event_charge_out_body">Kabel daya dicabut.</string>
+    <string name="event_charge_out_chip">Daya Terputus</string>
+    <string name="event_optimized_speed">Kecepatan dioptimalkan</string>
+    <string name="event_fast">CEPAT</string>
+    <string name="event_optimized_sub">Semuanya berjalan lancar.</string>
+    <string name="event_done">Selesai</string>
+    <string name="launcher_settings">Pengaturan Peluncur</string>
+    <string name="serialize">Urutkan</string>
+    <string name="by_name_asc_a_to_z">Berdasarkan Nama ASC (A ke Z)</string>
+    <string name="by_name_desc_z_to_a">Berdasarkan Nama DESC (Z ke A)</string>
+    <string name="by_installed_date">Berdasarkan Tanggal Dipasang</string>
+    <string name="preview">Pratinjau</string>
+    <string name="label_visibility">Visibilitas Label</string>
+    <string name="hide_app_name">Sembunyikan nama aplikasi</string>
+    <string name="app_icon_size">Ukuran Ikon Aplikasi</string>
+    <string name="app_label_size">Ukuran Label Aplikasi</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Widget Aplikasi</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Pilih widget untuk mengakses alat QR Anda dengan cepat langsung dari layar beranda.</string>
+    <string name="quick_access">Akses Cepat</string>
+    <string name="app_icon_1x1">Ikon Aplikasi 1 x 1</string>
+    <string name="qr_scanner_generator">Pemindai &amp; Pembuat QR</string>
+    <string name="create_1_x_1">Buat 1 x 1</string>
+    <string name="style_a">Gaya A</string>
+    <string name="style_b">Gaya B</string>
+    <string name="style_c">Gaya C</string>
+    <string name="scan_qr">Pindai QR</string>
+    <string name="cl_end_scan_subtitle">Buka kamera dan pindai kode QR</string>
+    <string name="cl_end_scan_action">Pindai</string>
+    <string name="cl_end_history">Riwayat</string>
+    <string name="cl_end_history_subtitle">Lihat riwayat QR yang dipindai</string>
+    <string name="cl_end_widgets_subtitle">Tambahkan alat QR ke layar beranda</string>
+    <string name="create_qr">Buat QR</string>
+    <string name="widget_pin_not_supported">Penyematan widget tidak didukung di perangkat ini</string>
+    <string name="widget_pin_failed">Tidak dapat menambahkan widget. Silakan coba lagi.</string>
+    <string name="choose_your_language">Pilih Bahasa Anda</string>
+    <string name="collection_title">Catatan Singkat Tentang Privasi Anda</string>
+    <string name="collection_intro_1">Kami menggunakan informasi perangkat dan aplikasi yang terbatas untuk menjaga QR Scanner tetap cepat, aman, dan andal, menyediakan fitur pemindaian dan pembuatan kode QR, menampilkan iklan yang membantu menjaga aplikasi tetap gratis, dan meningkatkan pengalaman Anda secara keseluruhan.</string>
+    <string name="collection_intro_2">Konten yang Anda pindai, file pribadi, foto, video, dan data pribadi lainnya tidak dikumpulkan untuk analitik atau iklan dan tetap dalam kendali Anda.</string>
+    <string name="collection_what_we_use">Apa yang kami gunakan dan mengapa:</string>
+    <string name="collection_bullet_1">⦿ Akses kamera - untuk memindai kode QR dan barcode secara akurat dan memberikan hasil instan.</string>
+    <string name="collection_bullet_2">⦿ Informasi penggunaan aplikasi - seperti fitur pemindaian dan pembuatan QR yang Anda gunakan dan layar yang Anda buka - untuk meningkatkan performa, stabilitas, dan pengalaman pengguna aplikasi.</string>
+    <string name="collection_bullet_3">⦿ Pengenal perangkat dan aplikasi - untuk menyimpan preferensi Anda, meningkatkan stabilitas, mencegah kesalahan, dan mendukung fungsi aplikasi penting.</string>
+    <string name="collection_bullet_4">⦿ Pengenal iklan - untuk menampilkan dan mengukur iklan yang membantu menjaga aplikasi tetap gratis.</string>
+    <string name="collection_footer">Dengan mengetuk Setuju &amp; Lanjutkan, Anda mengakui Kebijakan Privasi kami. Kami hanya menggunakan informasi yang diperlukan untuk menyediakan pemindaian dan pembuatan kode QR, keamanan aplikasi, dan fitur penting lainnya, meningkatkan aplikasi, dan mendukung periklanan. Konten yang Anda pindai dan data pribadi tetap dalam kendali Anda.</string>
+    <string name="collection_agree_checkbox">Saya setuju dengan pengumpulan data ini</string>
+    <string name="collection_agree_continue">Setuju &amp; Lanjutkan</string>
+    <string name="collection_agree_toast">Harap setujui pengumpulan data untuk melanjutkan.</string>
+    <string name="privacy_policy">Kebijakan Privasi</string>
+    <string name="this_action_may_contain_ads">Tindakan ini mungkin berisi Iklan</string>
+    <string name="marketing_converter1">gclid</string>
+    <string name="utm_source_apps_facebook_com">utm_source=apps.facebook.com</string>
+    <string name="utm_source_apps_instagram_com">utm_source=apps.instagram.com</string>
+    <string name="utm_source_marketing">utm_source=marketing</string>
+    <string name="permission_title">Akses Kamera Diperlukan</string>
+    <string name="permission_description">QR Code &amp; Scanner memerlukan akses kamera untuk memindai kode QR, kredensial Wi-Fi, dan barcode secara instan dalam waktu nyata.</string>
+    <string name="permission_local_title">Pemindaian Lokal Instan</string>
+    <string name="permission_local_desc">Pindaian diproses sepenuhnya di perangkat dengan latensi server nol.</string>
+    <string name="permission_privacy_title">100% Privasi Terjaga</string>
+    <string name="permission_privacy_desc">Tidak ada bingkai video atau tangkapan mentah yang pernah diunggah atau dikatalogkan.</string>
+    <string name="permission_gallery_title">Alternatif Galeri</string>
+    <string name="permission_gallery_desc">Impor foto langsung dari pustaka Anda kapan saja tanpa hak istimewa kamera.</string>
+    <string name="allow_permission">Izinkan Izin</string>
+    <string name="default_title">Jadikan QR Code &amp; Scanner Peluncur Beranda Default Anda</string>
+    <string name="default_description">Akses pemindai QR instan dengan satu gesek ke kanan dari layar beranda Anda, kontrol widget khusus, dan laci aplikasi yang terorganisir.</string>
+    <string name="default_swipe_title">Gesek Kanan untuk Memindai</string>
+    <string name="default_swipe_desc">Luncurkan jendela bidik secara instan dari mana saja di layar beranda Anda dengan latensi nol.</string>
+    <string name="default_widgets_title">Widget Cepat Pintar</string>
+    <string name="default_widgets_desc">Sematkan pintasan pembuat QR, pemantau papan klip, dan kecerdasan baterai langsung di beranda.</string>
+    <string name="default_drawer_title">Laci Aplikasi &amp; Folder Khusus</string>
+    <string name="default_drawer_desc">Atur aplikasi, sembunyikan label, sesuaikan kolom kisi, dan beralih antara tema terang dan gelap.</string>
+    <string name="set_as_default">Jadikan Default</string>
+    <string name="intro_title_1">Pindai Kode QR Secara Instan</string>
+    <string name="intro_desc_1">Pindai kode QR dengan cepat menggunakan kamera Anda dan akses informasi dalam hitungan detik</string>
+    <string name="intro_title_2">Pindai Barcode dengan Mudah</string>
+    <string name="intro_desc_2">Pindai barcode produk dengan cepat dan dapatkan hasil akurat dalam hitungan detik</string>
+    <string name="intro_title_3">Buat Kode QR Sesuai Keinginan Anda</string>
+    <string name="intro_desc_3">Hasilkan dan sesuaikan kode QR profesional untuk semua kebutuhan digital Anda.</string>
+    <string name="next">Berikutnya</string>
+    <string name="loading_ads_title">Memuat Iklan</string>
+    <string name="loading_ads_desc">Mohon tunggu, Iklan akan muncul...</string>
+</resources>

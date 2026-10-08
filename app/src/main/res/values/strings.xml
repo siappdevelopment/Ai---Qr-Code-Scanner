@@ -497,6 +497,11 @@
     <string name="event_uninstall_sub">App uninstalled successfully</string>
     <string name="event_uninstall_body">Cached scan files and temporary data have been cleared from your device.</string>
     <string name="event_uninstall_chip">Safe &amp; Complete</string>
+    <string name="event_install_title">New App Installed</string>
+    <string name="event_install_success">Install done</string>
+    <string name="event_install_sub">App installed successfully</string>
+    <string name="event_install_body">The new app is ready and safe to use on your device.</string>
+    <string name="event_install_chip">Ready to Use</string>
     <string name="event_charge_in_title">Power Plugged In</string>
     <string name="event_charge_in_success">%1$d%%</string>
     <string name="event_charge_in_sub">Connected</string>

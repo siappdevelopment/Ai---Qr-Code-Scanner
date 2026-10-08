@@ -63,6 +63,7 @@ import com.qrcode.scanner.ui.theme.CardSurface
 import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.ScanPulsePalette
 import com.qrcode.scanner.ui.theme.ScanPulseThemeState
+import kotlinx.coroutines.flow.first
 
 private const val MAIN_GRAPH_ROUTE = "main_graph"
 
@@ -151,6 +152,8 @@ fun ScanPulseNavHost(
 
     LaunchedEffect(reopenSettings) {
         if (reopenSettings) {
+            // NavHost is composed inside the Scaffold after this effect starts; wait until its main graph is on the back stack.
+            navController.currentBackStackEntryFlow.first { it.destination.parent?.route == MAIN_GRAPH_ROUTE }
             openRootTab(AppDestination.Settings.route)
         }
     }

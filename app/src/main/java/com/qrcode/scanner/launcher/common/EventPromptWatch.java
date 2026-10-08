@@ -34,20 +34,21 @@ public final class EventPromptWatch {
                 EventPromptLauncher.open(context, EventPromptActivity.KIND_CHARGE_OUT);
                 return;
             }
-            if (!Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
+            boolean installed = Intent.ACTION_PACKAGE_ADDED.equals(action);
+            if (!installed && !Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
                 return;
             }
             if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false) || intent.getData() == null) {
-                Log.d("EventPrompt", "live uninstall skipped: replacing or missing package");
+                Log.d("EventPrompt", "live package event skipped: replacing or missing package");
                 return;
             }
             String packageName = intent.getData().getSchemeSpecificPart();
             if (packageName == null || packageName.equals(context.getPackageName())) {
-                Log.d("EventPrompt", "live uninstall skipped package=" + packageName);
+                Log.d("EventPrompt", "live package event skipped package=" + packageName);
                 return;
             }
-            Log.d("EventPrompt", "live uninstall package=" + packageName);
-            EventPromptLauncher.open(context, EventPromptActivity.KIND_UNINSTALL);
+            Log.d("EventPrompt", "live " + (installed ? "install" : "uninstall") + " package=" + packageName);
+            EventPromptLauncher.open(context, installed ? EventPromptActivity.KIND_INSTALL : EventPromptActivity.KIND_UNINSTALL);
         }
     };
 
@@ -63,6 +64,7 @@ public final class EventPromptWatch {
         power.addAction(Intent.ACTION_POWER_CONNECTED);
         power.addAction(Intent.ACTION_POWER_DISCONNECTED);
         IntentFilter packages = new IntentFilter();
+        packages.addAction(Intent.ACTION_PACKAGE_ADDED);
         packages.addAction(Intent.ACTION_PACKAGE_REMOVED);
         packages.addDataScheme("package");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

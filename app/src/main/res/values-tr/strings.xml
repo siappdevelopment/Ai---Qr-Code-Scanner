@@ -119,7 +119,7 @@
     <string name="detection_error_checklist_title">Optimizasyon Kontrol Listesi</string>
     <string name="detection_error_tip_steady">Sabit tutun ve kodu kırpma çerçevesinin tamamen içine yerleştirin</string>
     <string name="detection_error_tip_lighting">Keskin, iyi aydınlatılmış ve ağır bulanıklık olmayan bir fotoğraf kullanın</string>
-    <string name="detection_error_tip_rotate">Kod yan görünüyorsa Döndür veya Çevir'i deneyin</string>
+    <string name="detection_error_tip_rotate">Kod yan görünüyorsa Döndür veya Çevir\'i deneyin</string>
     <string name="detection_error_tip_formats">Desteklenen: QR, Aztec, Data Matrix, EAN, UPC, Code 128/39, PDF417</string>
     <string name="detection_error_retry">Tekrar Tara / Yeniden Dene</string>
     <string name="detection_error_pick_gallery">Galeriden Başka Bir Fotoğraf Seç</string>

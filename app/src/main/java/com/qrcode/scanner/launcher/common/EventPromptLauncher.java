@@ -7,7 +7,9 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.launcher.activities.ChargingScreenActivity;
 import com.qrcode.scanner.launcher.activities.EventPromptActivity;
+import com.qrcode.scanner.launcher.activities.InstallUninstallScreenActivity;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 /**
@@ -19,6 +21,7 @@ public final class EventPromptLauncher {
     private static final int NOTIFICATION_UNINSTALL = 9101;
     private static final int NOTIFICATION_CHARGE_IN = 9102;
     private static final int NOTIFICATION_CHARGE_OUT = 9103;
+    private static final int NOTIFICATION_INSTALL = 9104;
 
     private static long lastOpenAt;
     private static String lastKind = "";
@@ -33,14 +36,16 @@ public final class EventPromptLauncher {
             return;
         }
         RemoteConfigValues.ensureLoaded(context);
+        RemoteConfigValues.EventScreenConfig config = RemoteConfigValues.getEventScreenConfig(RemoteConfigValues.eventScreenKeyForKind(kind));
         Log.d("EventPrompt", "config uninstall=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_UNINSTALL)
+                + " install=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_INSTALL)
                 + " chargeIn=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_CHARGE_IN)
                 + " chargeOut=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_CHARGE_OUT)
-                + " bottomAds=" + RemoteConfigValues.getEventBottomAdsShow()
-                + " type=" + RemoteConfigValues.getEventBottomAdsType()
-                + " view=" + RemoteConfigValues.getEventBottomAdsView()
-                + " seconds=" + RemoteConfigValues.getEventScreenShowSeconds()
-                + " backAds=" + RemoteConfigValues.getEventBackAdsShow());
+                + " bottomAds=" + config.bottomAdShow
+                + " loadType=" + config.adLoadType
+                + " adType=" + config.bottomAdType
+                + " seconds=" + config.buttonShowSec
+                + " backAds=" + config.backAdShow);
         if (!RemoteConfigValues.isEventScreenEnabled(kind)) {
             Log.d("EventPrompt", "open skipped: " + kind + " flag is false");
             return;
@@ -58,7 +63,10 @@ public final class EventPromptLauncher {
         lastOpenAt = now;
         Log.d("EventPrompt", "opening " + kind);
         Context app = context.getApplicationContext();
-        Intent intent = new Intent(app, EventPromptActivity.class);
+        Class<?> screen = RemoteConfigValues.EVENT_SCREEN_CHARGING.equals(RemoteConfigValues.eventScreenKeyForKind(kind))
+                ? ChargingScreenActivity.class
+                : InstallUninstallScreenActivity.class;
+        Intent intent = new Intent(app, screen);
         intent.putExtra(EventPromptActivity.EXTRA_KIND, kind);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         Runnable show = () -> showEvent(app, intent, kind);
@@ -88,11 +96,15 @@ public final class EventPromptLauncher {
                     ? NOTIFICATION_CHARGE_IN
                     : EventPromptActivity.KIND_CHARGE_OUT.equals(kind)
                     ? NOTIFICATION_CHARGE_OUT
+                    : EventPromptActivity.KIND_INSTALL.equals(kind)
+                    ? NOTIFICATION_INSTALL
                     : NOTIFICATION_UNINSTALL;
             String title = EventPromptActivity.KIND_CHARGE_IN.equals(kind)
                     ? app.getString(R.string.event_charge_in_title)
                     : EventPromptActivity.KIND_CHARGE_OUT.equals(kind)
                     ? app.getString(R.string.event_charge_out_title)
+                    : EventPromptActivity.KIND_INSTALL.equals(kind)
+                    ? app.getString(R.string.event_install_sub)
                     : app.getString(R.string.event_uninstall_sub);
             CallEndFullNotificationHelper.notifyGenericFullscreen(
                     app,

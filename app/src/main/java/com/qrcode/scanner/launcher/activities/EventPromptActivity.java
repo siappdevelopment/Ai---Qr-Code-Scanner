@@ -24,7 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
@@ -38,8 +41,13 @@ import com.qrcode.scanner.launcher.common.AdPlacement;
 import com.qrcode.scanner.launcher.common.QuizAds;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
-public class EventPromptActivity extends AppCompatActivity {
+/**
+ * Shared hold timer, bottom ad, back ad and lifecycle for the event screens.
+ * {@link ChargingScreenActivity} and {@link InstallUninstallScreenActivity} supply the layout, config key and text.
+ */
+public abstract class EventPromptActivity extends AppCompatActivity {
     public static final String EXTRA_KIND = "event_kind";
+    public static final String KIND_INSTALL = "install";
     public static final String KIND_UNINSTALL = "uninstall";
     public static final String KIND_CHARGE_IN = "charge_in";
     public static final String KIND_CHARGE_OUT = "charge_out";
@@ -69,7 +77,7 @@ public class EventPromptActivity extends AppCompatActivity {
             setShowWhenLocked(true);
             setTurnScreenOn(true);
         }
-        setContentView(R.layout.activity_event_prompt);
+        setContentView(layoutRes());
         WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
         hideNavigationBar();
         bindKind(kindFrom(getIntent()));
@@ -106,15 +114,21 @@ public class EventPromptActivity extends AppCompatActivity {
         compat.setAppearanceLightStatusBars(true);
     }
 
-    private String kindFrom(@Nullable Intent intent) {
-        String kind = intent == null ? null : intent.getStringExtra(EXTRA_KIND);
-        if (KIND_CHARGE_IN.equals(kind) || KIND_CHARGE_OUT.equals(kind)) {
-            return kind;
-        }
-        return KIND_UNINSTALL;
-    }
+    @LayoutRes
+    protected abstract int layoutRes();
 
-    private void bindKind(String kind) {
+    /** {@link RemoteConfigValues#EVENT_SCREEN_CHARGING} or {@link RemoteConfigValues#EVENT_SCREEN_INSTALL_UNINSTALL}. */
+    protected abstract String screenKey();
+
+    protected abstract String kindFrom(@Nullable Intent intent);
+
+    protected abstract void bindKind(String kind);
+
+    protected void showContent(int header, int accent, int badgeBg, int badgeText,
+                               CharSequence titleText, CharSequence successText,
+                               @StringRes int subRes, @StringRes int bodyRes, @StringRes int chipRes,
+                               CharSequence badgeLabel,
+                               @DrawableRes int heroRes, @DrawableRes int statusRes, @DrawableRes int chipIconRes) {
         TextView title = findViewById(R.id.tvEventTitle);
         TextView success = findViewById(R.id.tvEventSuccess);
         TextView subtitle = findViewById(R.id.tvEventSubtitle);
@@ -125,46 +139,17 @@ public class EventPromptActivity extends AppCompatActivity {
         ImageView hero = findViewById(R.id.ivEventHero);
         ImageView statusIcon = findViewById(R.id.ivEventStatusIcon);
         ImageView chipIcon = findViewById(R.id.ivOptimizeIcon);
-        int level = batteryPercent();
-        if (KIND_CHARGE_IN.equals(kind)) {
-            applyScreenColors(0xFFE7F8EF, 0xFF16A34A, 0xFFDDF6E8, 0xFF166534);
-            title.setText(R.string.event_charge_in_title);
-            success.setText(getString(R.string.event_charge_in_success, level));
-            subtitle.setText(R.string.event_charge_in_sub);
-            body.setText(R.string.event_charge_in_body);
-            chipTitle.setText(R.string.event_charge_in_chip);
-            chipBadge.setText(level + "%");
-            chipSub.setText(R.string.event_charge_in_body);
-            hero.setImageResource(R.drawable.ic_event_hero_charge_in);
-            statusIcon.setImageResource(R.drawable.ic_event_check);
-            chipIcon.setImageResource(R.drawable.ic_event_bolt);
-            return;
-        }
-        if (KIND_CHARGE_OUT.equals(kind)) {
-            applyScreenColors(0xFFFFF4E8, 0xFFEA580C, 0xFFFFEDD5, 0xFF9A3412);
-            title.setText(R.string.event_charge_out_title);
-            success.setText(getString(R.string.event_charge_out_success, level));
-            subtitle.setText(R.string.event_charge_out_sub);
-            body.setText(R.string.event_charge_out_body);
-            chipTitle.setText(R.string.event_charge_out_chip);
-            chipBadge.setText(level + "%");
-            chipSub.setText(R.string.event_charge_out_body);
-            hero.setImageResource(R.drawable.ic_event_hero_charge_out);
-            statusIcon.setImageResource(R.drawable.ic_event_bolt);
-            chipIcon.setImageResource(R.drawable.ic_event_bolt);
-            return;
-        }
-        applyScreenColors(0xFFEAF1FB, 0xFF0063E5, 0xFFDBEAFE, 0xFF1D4ED8);
-        title.setText(R.string.event_uninstall_title);
-        success.setText(R.string.event_uninstall_success);
-        subtitle.setText(R.string.event_uninstall_sub);
-        body.setText(R.string.event_uninstall_body);
-        chipTitle.setText(R.string.event_uninstall_chip);
-        chipBadge.setText(R.string.event_fast);
-        chipSub.setText(R.string.event_uninstall_body);
-        hero.setImageResource(R.drawable.ic_event_hero_uninstall);
-        statusIcon.setImageResource(R.drawable.ic_event_check);
-        chipIcon.setImageResource(R.drawable.ic_event_check);
+        applyScreenColors(header, accent, badgeBg, badgeText);
+        title.setText(titleText);
+        success.setText(successText);
+        subtitle.setText(subRes);
+        body.setText(bodyRes);
+        chipTitle.setText(chipRes);
+        chipBadge.setText(badgeLabel);
+        chipSub.setText(bodyRes);
+        hero.setImageResource(heroRes);
+        statusIcon.setImageResource(statusRes);
+        chipIcon.setImageResource(chipIconRes);
     }
 
     private void applyScreenColors(int header, int accent, int badgeBg, int badgeText) {
@@ -188,7 +173,7 @@ public class EventPromptActivity extends AppCompatActivity {
         adHost.setPadding(0, 0, 0, 0);
     }
 
-    private int batteryPercent() {
+    protected int batteryPercent() {
         BatteryManager manager = (BatteryManager) getSystemService(BATTERY_SERVICE);
         if (manager == null) {
             return 0;
@@ -245,7 +230,8 @@ public class EventPromptActivity extends AppCompatActivity {
         btnEventDone.setVisibility(View.GONE);
         pbEventHold.setMax(1000);
         pbEventHold.setProgress(0);
-        long durationMs = RemoteConfigValues.getEventScreenShowSeconds() * 1000L;
+        int showSeconds = RemoteConfigValues.getEventScreenConfig(screenKey()).buttonShowSec;
+        long durationMs = (showSeconds < 1 ? 6 : showSeconds) * 1000L;
         holdAnimator = ValueAnimator.ofInt(0, 1000);
         holdAnimator.setDuration(durationMs);
         holdAnimator.setInterpolator(new LinearInterpolator());
@@ -283,28 +269,27 @@ public class EventPromptActivity extends AppCompatActivity {
         exiting = true;
         adRequest++;
         releaseAds();
-        if (RemoteConfigValues.getEventBackAdsShow()) {
-            AdPlacement.showJoinedLauncherBackAd(this, this::finish);
-            return;
-        }
-        finish();
+        AdPlacement.showEventBackAd(this, screenKey(), this::finish);
     }
 
     private void loadBottomAd() {
         RemoteConfigValues.ensureLoaded(this);
-        String type = RemoteConfigValues.getEventBottomAdsType().trim();
+        String screenKey = screenKey();
+        AdPlacement.preloadEventBackAd(this, screenKey);
+        RemoteConfigValues.EventScreenConfig config = RemoteConfigValues.getEventScreenConfig(screenKey);
+        String type = config.adLoadType == null ? "" : config.adLoadType.trim();
         boolean preload = "preload".equalsIgnoreCase(type);
         boolean load = "load".equalsIgnoreCase(type);
-        if (!RemoteConfigValues.getEventBottomAdsShow() || (!load && !preload)) {
+        if (!config.bottomAdShow || (!load && !preload)) {
             hideAdPlaceholders();
-            com.qrcode.scanner.launcher.common.EventBottomAds.clear();
+            com.qrcode.scanner.launcher.common.EventBottomAds.clear(screenKey);
             return;
         }
         final int request = ++adRequest;
         clearShownAd();
-        boolean useNative = com.qrcode.scanner.launcher.common.EventBottomAds.useNative();
+        boolean useNative = com.qrcode.scanner.launcher.common.EventBottomAds.useNative(screenKey);
         if (preload && showPreloadedAd(request, useNative)) {
-            com.qrcode.scanner.launcher.common.EventBottomAds.prepare(this);
+            com.qrcode.scanner.launcher.common.EventBottomAds.prepare(this, screenKey);
             return;
         }
         if (useNative) {
@@ -314,13 +299,13 @@ public class EventPromptActivity extends AppCompatActivity {
         }
         if (preload) {
             Log.d("EventPrompt", "preload cache miss, loading on screen");
-            com.qrcode.scanner.launcher.common.EventBottomAds.prepare(this);
+            com.qrcode.scanner.launcher.common.EventBottomAds.prepare(this, screenKey);
         }
     }
 
     private boolean showPreloadedAd(int request, boolean useNative) {
         if (useNative) {
-            NativeAd ready = com.qrcode.scanner.launcher.common.EventBottomAds.takeNative();
+            NativeAd ready = com.qrcode.scanner.launcher.common.EventBottomAds.takeNative(screenKey());
             if (ready == null) {
                 return false;
             }
@@ -332,7 +317,7 @@ public class EventPromptActivity extends AppCompatActivity {
             showReadyNative(ready);
             return true;
         }
-        AdView ready = com.qrcode.scanner.launcher.common.EventBottomAds.takeBanner();
+        AdView ready = com.qrcode.scanner.launcher.common.EventBottomAds.takeBanner(screenKey());
         if (ready == null) {
             return false;
         }
@@ -441,7 +426,7 @@ public class EventPromptActivity extends AppCompatActivity {
         shimmer.setVisibility(View.VISIBLE);
         shimmer.startShimmer();
         nativeSlot.setVisibility(View.GONE);
-        String nativeId = RemoteConfigValues.getEventNativeId().trim();
+        String nativeId = RemoteConfigValues.getEventScreenConfig(screenKey()).nativeId.trim();
         AdPlacement.loadNativeAd(this, nativeId, container, shimmer, nativeSlot, "large", nativeAd -> {
             if (request != adRequest || isFinishing()) {
                 if (nativeAd != null) {
@@ -506,7 +491,7 @@ public class EventPromptActivity extends AppCompatActivity {
         shimmer.setVisibility(View.VISIBLE);
         shimmer.startShimmer();
         bannerSlot.setVisibility(View.GONE);
-        String bannerId = RemoteConfigValues.getEventBannerId().trim();
+        String bannerId = RemoteConfigValues.getEventScreenConfig(screenKey()).bannerId.trim();
         container.post(() -> {
             if (request != adRequest || isFinishing()) {
                 return;

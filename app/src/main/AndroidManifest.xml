@@ -116,6 +116,7 @@
         </activity>
         <activity
             android:name="com.qrcode.scanner.launcher.activities.LanguageActivity"
+            android:configChanges="locale|layoutDirection"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
@@ -150,7 +151,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
-            android:name="com.qrcode.scanner.launcher.activities.EventPromptActivity"
+            android:name="com.qrcode.scanner.launcher.activities.ChargingScreenActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:showWhenLocked="true"
+            android:turnScreenOn="true"
+            android:theme="@style/Theme.EventPrompt" />
+        <activity
+            android:name="com.qrcode.scanner.launcher.activities.InstallUninstallScreenActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleTask"
@@ -278,6 +288,7 @@
             android:name="com.qrcode.scanner.launcher.receivers.EventPromptReceiver"
             android:exported="true">
             <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_ADDED" />
                 <action android:name="android.intent.action.PACKAGE_REMOVED" />
                 <data android:scheme="package" />
             </intent-filter>

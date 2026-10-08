@@ -29,6 +29,7 @@ public class QrScannerApplication extends Application {
         SettingsRepositoryKt.applyStoredAppNightMode(this);
         RemoteConfigValues.ensureLoaded(this);
         Log.d("EventPrompt", "startup config uninstall=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_UNINSTALL)
+                + " install=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_INSTALL)
                 + " chargeIn=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_CHARGE_IN)
                 + " chargeOut=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_CHARGE_OUT));
         EventPromptWatch.register(this);

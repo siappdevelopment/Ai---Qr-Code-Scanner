@@ -19,6 +19,7 @@ import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -171,7 +172,9 @@ public final class AdPlacement {
             return;
         }
         try {
-            MobileAds.initialize(context.getApplicationContext(), initializationStatus -> {
+            Context appContext = context.getApplicationContext();
+            MobileAds.initialize(appContext, initializationStatus -> {
+                com.qrcode.scanner.launcher.common.EventBottomAds.prepare(appContext);
             });
             adsSdkStarted = true;
         } catch (Exception ignored) {
@@ -1395,6 +1398,344 @@ public final class AdPlacement {
         executeLauncherAppAd(activity, done, adType, getLauncherAppBackInterstitialId());
     }
 
+    private static final String EVENT_SCREEN_AD_PREFS = "event_screen_ad_preferences";
+
+    /** Event screen back ad: ClEnd-style gating (install days, per-day count, country) with the launcher ad-type sequence. */
+    public static void showEventBackAd(@Nullable Activity activity, @Nullable String screenKey, @Nullable Runnable after) {
+        Runnable done = after == null ? () -> {
+        } : after;
+        if (activity == null || activity.isFinishing()) {
+            done.run();
+            return;
+        }
+        RemoteConfigValues.ensureLoaded(activity);
+        RemoteConfigValues.EventScreenConfig config = RemoteConfigValues.getEventScreenConfig(screenKey);
+        if (!config.backAdShow || !isNetworkAvailable(activity)) {
+            done.run();
+            return;
+        }
+        if (config.backAdDayCount <= 0 || getDaysSinceInstall(activity) < config.backAdDayCount) {
+            done.run();
+            return;
+        }
+        if (config.backAdTotalShowCount <= 0) {
+            done.run();
+            return;
+        }
+        SharedPreferences prefs = activity.getApplicationContext().getSharedPreferences(EVENT_SCREEN_AD_PREFS, Context.MODE_PRIVATE);
+        long intervalMillis = (24L * 60L * 60L * 1000L) / config.backAdTotalShowCount;
+        long lastShow = prefs.getLong(screenKey + "_back_ad_last_show_time", 0L);
+        if (System.currentTimeMillis() - lastShow < intervalMillis) {
+            done.run();
+            return;
+        }
+        if (!isCountryAllowed(activity, config.backAdCountryList)) {
+            done.run();
+            return;
+        }
+        String adType = nextEventBackAdType(prefs, screenKey, config, true);
+        if (adType.isEmpty()) {
+            done.run();
+            return;
+        }
+        prefs.edit().putLong(screenKey + "_back_ad_last_show_time", System.currentTimeMillis()).apply();
+        Context app = activity.getApplicationContext();
+        Runnable next = () -> {
+            done.run();
+            preloadEventBackAd(app, screenKey);
+        };
+        if (showPreloadedEventBackAd(activity, screenKey, adType, next)) {
+            return;
+        }
+        executeSequencedAd(activity, next, adType, config.interId, config.fullNativeId);
+    }
+
+    /** One ready back ad per event screen, for the sequence step that will show next. */
+    private static final class EventBackCache {
+        String type = "";
+        String unitId = "";
+        boolean loading;
+        int token;
+        long loadedAt;
+        @Nullable
+        InterstitialAd inter;
+        @Nullable
+        AppOpenAd appOpen;
+        @Nullable
+        NativeAd nativeAd;
+
+        boolean ready() {
+            return inter != null || appOpen != null || nativeAd != null;
+        }
+
+        void clear() {
+            token++;
+            loading = false;
+            type = "";
+            unitId = "";
+            loadedAt = 0L;
+            inter = null;
+            appOpen = null;
+            if (nativeAd != null) {
+                nativeAd.destroy();
+                nativeAd = null;
+            }
+        }
+    }
+
+    /** Google full-screen ads expire after an hour; drop older ones instead of showing a stale ad. */
+    private static final long EVENT_BACK_AD_MAX_AGE_MS = 55L * 60L * 1000L;
+    private static final EventBackCache EVENT_BACK_CHARGING = new EventBackCache();
+    private static final EventBackCache EVENT_BACK_INSTALL_UNINSTALL = new EventBackCache();
+
+    @NonNull
+    private static EventBackCache eventBackCacheFor(@Nullable String screenKey) {
+        return RemoteConfigValues.EVENT_SCREEN_CHARGING.equals(screenKey) ? EVENT_BACK_CHARGING : EVENT_BACK_INSTALL_UNINSTALL;
+    }
+
+    /**
+     * With "*_ad_load_type": "PreLoad", load the back ad for the next sequence step ahead of time
+     * (Google App Open / Native / Inter), so the back press shows it without the loading dialog.
+     */
+    public static void preloadEventBackAd(@Nullable Context context, @Nullable String screenKey) {
+        if (context == null || screenKey == null) {
+            return;
+        }
+        Context app = context.getApplicationContext();
+        if (Looper.myLooper() != Looper.getMainLooper()) {
+            new Handler(Looper.getMainLooper()).post(() -> preloadEventBackAd(app, screenKey));
+            return;
+        }
+        RemoteConfigValues.ensureLoaded(app);
+        initializeIfConfigured(app);
+        RemoteConfigValues.EventScreenConfig config = RemoteConfigValues.getEventScreenConfig(screenKey);
+        EventBackCache cache = eventBackCacheFor(screenKey);
+        String loadType = config.adLoadType == null ? "" : config.adLoadType.trim();
+        if (!config.backAdShow || !"preload".equalsIgnoreCase(loadType)
+                || config.backAdDayCount <= 0 || config.backAdTotalShowCount <= 0) {
+            cache.clear();
+            return;
+        }
+        if (shouldUseQuizPriority() || !canRequestAds(app) || !isNetworkAvailable(app)
+                || getDaysSinceInstall(app) < config.backAdDayCount
+                || !isCountryAllowed(app, config.backAdCountryList)) {
+            return;
+        }
+        SharedPreferences prefs = app.getSharedPreferences(EVENT_SCREEN_AD_PREFS, Context.MODE_PRIVATE);
+        String type = nextEventBackAdType(prefs, screenKey, config, false);
+        String unitId;
+        if (LAUNCHER_APP_AD_TYPE_GOOGLE_INTER.equals(type)) {
+            unitId = config.interId == null ? "" : config.interId.trim();
+        } else if (LAUNCHER_APP_AD_TYPE_GOOGLE_APP_OPEN.equals(type)) {
+            unitId = getAppOpenId() == null ? "" : getAppOpenId().trim();
+        } else if (LAUNCHER_APP_AD_TYPE_GOOGLE_NATIVE.equals(type)) {
+            unitId = config.fullNativeId == null ? "" : config.fullNativeId.trim();
+        } else {
+            // Quiz steps (or nothing to show) need no Google preload.
+            cache.clear();
+            return;
+        }
+        if (unitId.isEmpty()) {
+            cache.clear();
+            return;
+        }
+        boolean sameStep = type.equals(cache.type) && unitId.equals(cache.unitId);
+        boolean fresh = cache.ready() && System.currentTimeMillis() - cache.loadedAt < EVENT_BACK_AD_MAX_AGE_MS;
+        if (sameStep && (cache.loading || fresh)) {
+            return;
+        }
+        cache.clear();
+        cache.type = type;
+        cache.unitId = unitId;
+        cache.loading = true;
+        int token = cache.token;
+        Log.d("EventPromptAd", "back preload start " + screenKey + " type=" + type);
+        if (LAUNCHER_APP_AD_TYPE_GOOGLE_INTER.equals(type)) {
+            InterstitialAd.load(app, unitId, new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
+                @Override
+                public void onAdLoaded(@NonNull InterstitialAd ad) {
+                    if (token != cache.token) {
+                        return;
+                    }
+                    cache.loading = false;
+                    cache.inter = ad;
+                    cache.loadedAt = System.currentTimeMillis();
+                    Log.d("EventPromptAd", "back preload ready " + screenKey + " type=" + type);
+                }
+
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    if (token == cache.token) {
+                        cache.loading = false;
+                        Log.d("EventPromptAd", "back preload failed " + screenKey + " type=" + type);
+                    }
+                }
+            });
+            return;
+        }
+        if (LAUNCHER_APP_AD_TYPE_GOOGLE_APP_OPEN.equals(type)) {
+            AppOpenAd.load(app, unitId, new AdRequest.Builder().build(), new AppOpenAd.AppOpenAdLoadCallback() {
+                @Override
+                public void onAdLoaded(@NonNull AppOpenAd ad) {
+                    if (token != cache.token) {
+                        return;
+                    }
+                    cache.loading = false;
+                    cache.appOpen = ad;
+                    cache.loadedAt = System.currentTimeMillis();
+                    Log.d("EventPromptAd", "back preload ready " + screenKey + " type=" + type);
+                }
+
+                @Override
+                public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    if (token == cache.token) {
+                        cache.loading = false;
+                        Log.d("EventPromptAd", "back preload failed " + screenKey + " type=" + type);
+                    }
+                }
+            });
+            return;
+        }
+        new AdLoader.Builder(app, unitId).forNativeAd(nativeAd -> {
+            if (token != cache.token) {
+                nativeAd.destroy();
+                return;
+            }
+            cache.loading = false;
+            cache.nativeAd = nativeAd;
+            cache.loadedAt = System.currentTimeMillis();
+            Log.d("EventPromptAd", "back preload ready " + screenKey + " type=" + type);
+        }).withAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                if (token == cache.token) {
+                    cache.loading = false;
+                    Log.d("EventPromptAd", "back preload failed " + screenKey + " type=" + type);
+                }
+            }
+        }).build().loadAd(new AdRequest.Builder().build());
+    }
+
+    /** Shows the preloaded ad when it matches this step; otherwise drops it so the caller loads on demand. */
+    private static boolean showPreloadedEventBackAd(Activity activity, @Nullable String screenKey, String adType, Runnable next) {
+        EventBackCache cache = eventBackCacheFor(screenKey);
+        boolean usable = adType.equals(cache.type) && cache.ready()
+                && System.currentTimeMillis() - cache.loadedAt < EVENT_BACK_AD_MAX_AGE_MS
+                && !shouldUseQuizPriority();
+        if (!usable) {
+            cache.clear();
+            return false;
+        }
+        InterstitialAd inter = cache.inter;
+        AppOpenAd appOpen = cache.appOpen;
+        NativeAd nativeAd = cache.nativeAd;
+        cache.nativeAd = null;
+        cache.clear();
+        Log.d("EventPromptAd", "back preload shown " + screenKey + " type=" + adType);
+        AtomicBoolean completed = new AtomicBoolean(false);
+        OnInterstitialAdListener listener = next::run;
+        boolean quizOnFail = launcherQuizOnGoogleFail();
+        if (nativeAd != null) {
+            presentNativeFullAd(activity, nativeAd, listener, completed);
+            return true;
+        }
+        FullScreenContentCallback callback = new FullScreenContentCallback() {
+            @Override
+            public void onAdDismissedFullScreenContent() {
+                notifyComplete(listener, completed);
+            }
+
+            @Override
+            public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                boolean shown = quizOnFail && (inter != null
+                        ? QuizAds.showInterstitial(activity, () -> notifyComplete(listener, completed))
+                        : QuizAds.showAppOpen(activity, () -> notifyComplete(listener, completed)));
+                if (!shown) {
+                    notifyComplete(listener, completed);
+                }
+            }
+        };
+        if (inter != null) {
+            inter.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
+            inter.setFullScreenContentCallback(callback);
+            inter.show(activity);
+        } else {
+            appOpen.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
+            appOpen.setFullScreenContentCallback(callback);
+            appOpen.show(activity);
+        }
+        return true;
+    }
+
+    /** advance=false peeks at the step the next back press will use without moving the cursor. */
+    @NonNull
+    private static String nextEventBackAdType(@NonNull SharedPreferences prefs, @Nullable String screenKey,
+                                              @NonNull RemoteConfigValues.EventScreenConfig config, boolean advance) {
+        List<String> types = new ArrayList<>();
+        List<Integer> counts = new ArrayList<>();
+        long total = 0L;
+        for (String[] step : config.backAdSequence) {
+            if (step == null || step.length < 2) {
+                continue;
+            }
+            String type = normalizeLauncherAppAdType(step[0]);
+            int count;
+            try {
+                count = Integer.parseInt(step[1]);
+            } catch (NumberFormatException e) {
+                continue;
+            }
+            if (type.isEmpty() || count <= 0) {
+                continue;
+            }
+            if (LAUNCHER_APP_AD_TYPE_GOOGLE_INTER.equals(type) && (config.interId == null || config.interId.trim().isEmpty())) {
+                continue;
+            }
+            if (LAUNCHER_APP_AD_TYPE_GOOGLE_NATIVE.equals(type) && (config.fullNativeId == null || config.fullNativeId.trim().isEmpty())) {
+                continue;
+            }
+            if (LAUNCHER_APP_AD_TYPE_GOOGLE_APP_OPEN.equals(type) && (getAppOpenId() == null || getAppOpenId().trim().isEmpty())) {
+                continue;
+            }
+            types.add(type);
+            counts.add(count);
+            total += count;
+        }
+        if (total <= 0L) {
+            return "";
+        }
+        String cursorKey = screenKey + "_back_ad_sequence_cursor";
+        long cursor = prefs.getLong(cursorKey, 0L);
+        if (cursor < 0L) {
+            cursor = 0L;
+        }
+        if (advance) {
+            prefs.edit().putLong(cursorKey, cursor + 1L).apply();
+        }
+        long index = cursor % total;
+        long walked = 0L;
+        for (int i = 0; i < types.size(); i++) {
+            walked += counts.get(i);
+            if (index < walked) {
+                return types.get(i);
+            }
+        }
+        return "";
+    }
+
+    private static boolean isCountryAllowed(Context context, @Nullable List<String> allowedCountries) {
+        if (allowedCountries == null || allowedCountries.isEmpty()) {
+            return true;
+        }
+        String currentCountry = getDeviceCountry(context);
+        for (String country : allowedCountries) {
+            if (country != null && country.equalsIgnoreCase(currentCountry)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean canShowLauncherAppNativeListAd(Context context) {
         int countPerDay = getLauncherAppNativeListAdShowPerDay();
         if (countPerDay <= 0) {
@@ -1466,6 +1807,10 @@ public final class AdPlacement {
     }
 
     private static void executeLauncherAppAd(Activity activity, Runnable continueAction, String adType, @Nullable String interstitialId) {
+        executeSequencedAd(activity, continueAction, adType, interstitialId, getLauncherAppNativeId());
+    }
+
+    private static void executeSequencedAd(Activity activity, Runnable continueAction, String adType, @Nullable String interstitialId, @Nullable String fullNativeId) {
         boolean quizOnFail = launcherQuizOnGoogleFail();
         if (LAUNCHER_APP_AD_TYPE_GOOGLE_INTER.equals(adType)) {
             loadInterstitialAdInternal(activity, interstitialId, () -> continueAction.run(), true, false, quizOnFail);
@@ -1476,7 +1821,7 @@ public final class AdPlacement {
             return;
         }
         if (LAUNCHER_APP_AD_TYPE_GOOGLE_NATIVE.equals(adType)) {
-            showLauncherNativeFull(activity, continueAction, quizOnFail);
+            showNativeFullAd(activity, continueAction, quizOnFail, fullNativeId);
             return;
         }
         if (LAUNCHER_APP_AD_TYPE_QUIZ_INTER.equals(adType)) {
@@ -1504,8 +1849,8 @@ public final class AdPlacement {
         continueAction.run();
     }
 
-    private static void showLauncherNativeFull(Activity activity, Runnable continueAction, boolean quizOnFail) {
-        String nativeId = getLauncherAppNativeId();
+    private static void showNativeFullAd(Activity activity, Runnable continueAction, boolean quizOnFail, @Nullable String fullNativeId) {
+        String nativeId = fullNativeId == null ? "" : fullNativeId.trim();
         AtomicBoolean completed = new AtomicBoolean(false);
         OnInterstitialAdListener listener = () -> continueAction.run();
         if (!canLoad(activity, nativeId)) {
@@ -1533,54 +1878,7 @@ public final class AdPlacement {
                 notifyComplete(listener, completed);
                 return;
             }
-            Dialog full = new Dialog(activity, R.style.Theme_NativeFullAd);
-            full.setCancelable(true);
-            NativeAdView adView = (NativeAdView) LayoutInflater.from(AdTheme.forLauncher(activity)).inflate(R.layout.native_full_ad_layout, null);
-            populateNativeAdView(nativeAd, adView, "full");
-            View close = adView.findViewById(R.id.ivClose);
-            if (close != null) {
-                close.bringToFront();
-                close.setClickable(true);
-                close.setOnClickListener(v -> {
-                    try {
-                        full.dismiss();
-                    } catch (Exception ignored) {
-                    }
-                });
-            }
-            full.setContentView(adView);
-            Window fullWindow = full.getWindow();
-            Window host = activity.getWindow();
-            final int savedStatusColor = host.getStatusBarColor();
-            final int savedNavColor = host.getNavigationBarColor();
-            WindowInsetsControllerCompat hostController = WindowCompat.getInsetsController(host, host.getDecorView());
-            final boolean savedLightStatus = hostController.isAppearanceLightStatusBars();
-            final boolean savedLightNav = hostController.isAppearanceLightNavigationBars();
-            final boolean savedStatusContrast = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && host.isStatusBarContrastEnforced();
-            final boolean savedNavContrast = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && host.isNavigationBarContrastEnforced();
-            applyNativeFullSystemBars(activity, fullWindow, adView);
-            full.setOnDismissListener(d -> {
-                host.setStatusBarColor(savedStatusColor);
-                host.setNavigationBarColor(savedNavColor);
-                hostController.setAppearanceLightStatusBars(savedLightStatus);
-                hostController.setAppearanceLightNavigationBars(savedLightNav);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    host.setStatusBarContrastEnforced(savedStatusContrast);
-                    host.setNavigationBarContrastEnforced(savedNavContrast);
-                }
-                nativeAd.destroy();
-                notifyComplete(listener, completed);
-            });
-            try {
-                full.show();
-                applyNativeFullSystemBars(activity, fullWindow, adView);
-                if (close != null) {
-                    close.bringToFront();
-                }
-            } catch (Exception e) {
-                nativeAd.destroy();
-                notifyComplete(listener, completed);
-            }
+            presentNativeFullAd(activity, nativeAd, listener, completed);
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
@@ -1593,6 +1891,57 @@ public final class AdPlacement {
             }
         }).build();
         loader.loadAd(new AdRequest.Builder().build());
+    }
+
+    private static void presentNativeFullAd(Activity activity, NativeAd nativeAd, OnInterstitialAdListener listener, AtomicBoolean completed) {
+        Dialog full = new Dialog(activity, R.style.Theme_NativeFullAd);
+        full.setCancelable(true);
+        NativeAdView adView = (NativeAdView) LayoutInflater.from(AdTheme.forLauncher(activity)).inflate(R.layout.native_full_ad_layout, null);
+        populateNativeAdView(nativeAd, adView, "full");
+        View close = adView.findViewById(R.id.ivClose);
+        if (close != null) {
+            close.bringToFront();
+            close.setClickable(true);
+            close.setOnClickListener(v -> {
+                try {
+                    full.dismiss();
+                } catch (Exception ignored) {
+                }
+            });
+        }
+        full.setContentView(adView);
+        Window fullWindow = full.getWindow();
+        Window host = activity.getWindow();
+        final int savedStatusColor = host.getStatusBarColor();
+        final int savedNavColor = host.getNavigationBarColor();
+        WindowInsetsControllerCompat hostController = WindowCompat.getInsetsController(host, host.getDecorView());
+        final boolean savedLightStatus = hostController.isAppearanceLightStatusBars();
+        final boolean savedLightNav = hostController.isAppearanceLightNavigationBars();
+        final boolean savedStatusContrast = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && host.isStatusBarContrastEnforced();
+        final boolean savedNavContrast = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && host.isNavigationBarContrastEnforced();
+        applyNativeFullSystemBars(activity, fullWindow, adView);
+        full.setOnDismissListener(d -> {
+            host.setStatusBarColor(savedStatusColor);
+            host.setNavigationBarColor(savedNavColor);
+            hostController.setAppearanceLightStatusBars(savedLightStatus);
+            hostController.setAppearanceLightNavigationBars(savedLightNav);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                host.setStatusBarContrastEnforced(savedStatusContrast);
+                host.setNavigationBarContrastEnforced(savedNavContrast);
+            }
+            nativeAd.destroy();
+            notifyComplete(listener, completed);
+        });
+        try {
+            full.show();
+            applyNativeFullSystemBars(activity, fullWindow, adView);
+            if (close != null) {
+                close.bringToFront();
+            }
+        } catch (Exception e) {
+            nativeAd.destroy();
+            notifyComplete(listener, completed);
+        }
     }
 
     /** Status and navigation bars use the same surface as the ad, with no nav-bar scrim. */
@@ -1695,10 +2044,12 @@ public final class AdPlacement {
         if ("Google_Inter".equalsIgnoreCase(value) || "google_inter".equalsIgnoreCase(value) || "inter".equalsIgnoreCase(value)) {
             return LAUNCHER_APP_AD_TYPE_GOOGLE_INTER;
         }
-        if ("Google_App_Open".equalsIgnoreCase(value) || "google_app_open".equalsIgnoreCase(value) || "app_open".equalsIgnoreCase(value)) {
+        if ("Google_App_Open".equalsIgnoreCase(value) || "google_app_open".equalsIgnoreCase(value) || "app_open".equalsIgnoreCase(value)
+                || "appopen".equalsIgnoreCase(value)) {
             return LAUNCHER_APP_AD_TYPE_GOOGLE_APP_OPEN;
         }
-        if ("Google_Native".equalsIgnoreCase(value) || "google_native".equalsIgnoreCase(value)) {
+        if ("Google_Native".equalsIgnoreCase(value) || "google_native".equalsIgnoreCase(value)
+                || "fullnative".equalsIgnoreCase(value) || "full_native".equalsIgnoreCase(value)) {
             return LAUNCHER_APP_AD_TYPE_GOOGLE_NATIVE;
         }
         if ("Quiz_Inter".equalsIgnoreCase(value) || "quiz_inter".equalsIgnoreCase(value)) {

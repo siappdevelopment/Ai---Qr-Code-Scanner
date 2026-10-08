@@ -14,20 +14,22 @@ public class EventPromptReceiver extends BroadcastReceiver {
         Log.d("EventPrompt", "package receiver action=" + (intent == null ? "null" : intent.getAction())
                 + " data=" + (intent == null ? "null" : intent.getData())
                 + " replacing=" + (intent != null && intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)));
-        if (context == null || intent == null || !Intent.ACTION_PACKAGE_REMOVED.equals(intent.getAction())) {
-            Log.d("EventPrompt", "uninstall skipped: not PACKAGE_REMOVED");
+        boolean installed = intent != null && Intent.ACTION_PACKAGE_ADDED.equals(intent.getAction());
+        if (context == null || intent == null
+                || (!installed && !Intent.ACTION_PACKAGE_REMOVED.equals(intent.getAction()))) {
+            Log.d("EventPrompt", "package event skipped: not PACKAGE_ADDED/REMOVED");
             return;
         }
         if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false) || intent.getData() == null) {
-            Log.d("EventPrompt", "uninstall skipped: replacing or missing package");
+            Log.d("EventPrompt", "package event skipped: replacing or missing package");
             return;
         }
         String packageName = intent.getData().getSchemeSpecificPart();
         if (packageName == null || packageName.equals(context.getPackageName())) {
-            Log.d("EventPrompt", "uninstall skipped: package=" + packageName);
+            Log.d("EventPrompt", "package event skipped: package=" + packageName);
             return;
         }
-        Log.d("EventPrompt", "uninstall broadcast received package=" + packageName);
-        EventPromptLauncher.open(context, EventPromptActivity.KIND_UNINSTALL);
+        Log.d("EventPrompt", (installed ? "install" : "uninstall") + " broadcast received package=" + packageName);
+        EventPromptLauncher.open(context, installed ? EventPromptActivity.KIND_INSTALL : EventPromptActivity.KIND_UNINSTALL);
     }
 }

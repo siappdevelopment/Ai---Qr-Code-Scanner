@@ -225,7 +225,7 @@
     <string name="create_barcode_stub_body">Αυτό το στοιχείο του κόμβου είναι για barcode (EAN/UPC), όχι για κωδικούς QR. Οι κατηγορίες QR είναι διαθέσιμες από τη Δημιουργία.</string>
     <string name="create_validation_field_limit">Αυτό το πεδίο περιορίζεται σε %1$d χαρακτήρες.</string>
     <string name="create_validation_qr_too_long">Αυτό είναι πολύ μεγάλο για να χωρέσει σε κωδικό QR. Συντομεύστε το κείμενο.</string>
-    <string name="create_validation_barcode_unavailable">Η δημιουργία barcode / EAN δεν είναι ακόμη διαθέσιμη. Χρησιμοποιήστε μια κατηγορία QR αντ' αυτού.</string>
+    <string name="create_validation_barcode_unavailable">Η δημιουργία barcode / EAN δεν είναι ακόμη διαθέσιμη. Χρησιμοποιήστε μια κατηγορία QR αντ\' αυτού.</string>
     <string name="create_validation_enter_value">Εισαγάγετε τιμή για κωδικοποίηση</string>
 
     <!-- Create forms — website -->

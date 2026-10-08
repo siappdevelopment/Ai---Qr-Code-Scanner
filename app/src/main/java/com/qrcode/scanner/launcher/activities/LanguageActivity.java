@@ -26,6 +26,7 @@ import com.qrcode.scanner.launcher.common.AdPlacement;
 import com.qrcode.scanner.launcher.common.AppUtils;
 import com.qrcode.scanner.launcher.common.ScreenFlowNavigation;
 import com.qrcode.scanner.launcher.remote.ScreenFlowConfig;
+import com.qrcode.scanner.ui.navigation.ThemeNavigation;
 
 import java.util.ArrayList;
 
@@ -241,18 +242,18 @@ public class LanguageActivity extends AppCompatActivity {
         String selectedCode = arrayListCode.get(selectedIndex);
         String appliedCode = AppUtils.getLanguage(this);
         boolean languageChanged = !selectedCode.equals(appliedCode);
-        if (AdPlacement.getLanguageInterstitialAdShow()) {
-            AdPlacement.loadLanguageInterstitialAd(this, () -> applyLanguageAndMoveToNextScreen(selectedCode, languageChanged));
-        } else {
-            applyLanguageAndMoveToNextScreen(selectedCode, languageChanged);
-        }
-    }
-
-    private void applyLanguageAndMoveToNextScreen(String selectedCode, boolean languageChanged) {
+        // Apply before the ad so the ad can never block the change; the host screen recreates on Settings.
         if (languageChanged) {
+            if (isOpenedFromSettings()) {
+                ThemeNavigation.INSTANCE.markReopenSettings();
+            }
             AppUtils.applyLanguage(this, selectedCode);
         }
-        moveToNextScreen(languageChanged);
+        if (AdPlacement.getLanguageInterstitialAdShow()) {
+            AdPlacement.loadLanguageInterstitialAd(this, () -> moveToNextScreen(languageChanged));
+        } else {
+            moveToNextScreen(languageChanged);
+        }
     }
 
     private void moveToNextScreen(boolean languageChanged) {

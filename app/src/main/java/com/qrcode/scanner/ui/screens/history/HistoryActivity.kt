@@ -7,6 +7,7 @@ import com.qrcode.scanner.ui.theme.enableThemedEdgeToEdge
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.qrcode.scanner.launcher.common.ScreenLoadAd
 import com.qrcode.scanner.ui.navigation.ComposeScanRequest
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 import com.qrcode.scanner.ui.components.ScreenWithAd
@@ -25,7 +26,8 @@ class HistoryActivity : ComponentActivity() {
                 ScreenWithAd(screenKey = "HistoryScreen") {
                 val context = LocalContext.current
                 HistoryScreen(
-                    modifier = Modifier.navigationBarsPadding(),
+                    // The ad slot already pads for the navigation bar; avoid a double gap above it.
+                    modifier = if (ScreenLoadAd.isEnabled("HistoryScreen")) Modifier else Modifier.navigationBarsPadding(),
                     onBack = { onBackPressedDispatcher.onBackPressed() },
                     onOpenScanner = {
                         ComposeScanRequest.request()

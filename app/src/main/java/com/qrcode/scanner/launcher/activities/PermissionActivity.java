@@ -189,7 +189,8 @@ public class PermissionActivity extends AppCompatActivity {
             }
         }
 
-        if (!permissionFlowActive && areAllRuntimePermissionsGranted() && AppUtils.hasOverlayPermission(this)) {
+        if (!permissionFlowActive && areAllRuntimePermissionsGranted()
+                && (AppUtils.hasOverlayPermission(this) || AppUtils.isDefaultHomeApp(this))) {
             completePermissionScreenAndNavigate();
         }
 
@@ -299,7 +300,8 @@ public class PermissionActivity extends AppCompatActivity {
         if (hasNavigated || !phoneStepCompleted || !cameraStepCompleted) {
             return;
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || AppUtils.hasOverlayPermission(this)) {
+        // A default launcher can already start screens from the background, so skip the overlay step.
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || AppUtils.hasOverlayPermission(this) || AppUtils.isDefaultHomeApp(this)) {
             finishOverlayStepAndNavigate();
             return;
         }

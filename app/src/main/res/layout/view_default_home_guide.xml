@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/overlay_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#99000000">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginHorizontal="@dimen/_14sdp"
+        android:background="@drawable/custom_radius_16"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/_20sdp">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="@dimen/_64sdp"
+            android:layout_height="@dimen/_64sdp"
+            android:src="@mipmap/ic_launcher" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_14sdp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_radius_100"
+                android:backgroundTint="@color/primary_light"
+                android:fontFamily="@font/sans_trial_medium"
+                android:includeFontPadding="false"
+                android:paddingHorizontal="@dimen/_8sdp"
+                android:paddingVertical="@dimen/_3sdp"
+                android:text="@string/default_home_guide_step"
+                android:textColor="@color/primary"
+                android:textSize="@dimen/_9sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tvGuideName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:fontFamily="@font/sans_trial_semi_bold"
+                android:includeFontPadding="false"
+                android:text="@string/app_name"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/_14sdp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:fontFamily="@font/sans_trial_regular"
+                android:includeFontPadding="false"
+                android:text="@string/default_home_guide_message"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/_11sdp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="@dimen/_44sdp"
+            android:layout_height="@dimen/_64sdp"
+            android:layout_marginStart="@dimen/_8sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_gravity="top|center_horizontal"
+                android:src="@drawable/ic_language_radio_unselected" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:includeFontPadding="false"
+                android:text="&#128070;"
+                android:textSize="@dimen/_28sdp" />
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

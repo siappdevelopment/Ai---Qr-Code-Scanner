@@ -136,6 +136,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />
         <activity
+            android:name="com.qrcode.scanner.launcher.activities.DefaultHomeGuideActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/Theme.ClEnd" />
+        <activity
+            android:name="com.qrcode.scanner.launcher.activities.DefaultSettingHomeActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
             android:name="com.qrcode.scanner.launcher.activities.Intro1Activity"
             android:exported="false"
             android:screenOrientation="portrait"

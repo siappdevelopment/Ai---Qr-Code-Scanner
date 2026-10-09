@@ -1227,8 +1227,9 @@ public class LauncherHomeFragment extends Fragment {
             tvTime.setText(formattedTime);
         }
 
-        tvDay.setText(new SimpleDateFormat("EEEE", Locale.ENGLISH).format(now));
-        tvDate.setText(new SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH).format(now));
+        Locale appLocale = requireContext().getResources().getConfiguration().getLocales().get(0);
+        tvDay.setText(new SimpleDateFormat("EEEE", appLocale).format(now));
+        tvDate.setText(new SimpleDateFormat("dd MMM yyyy", appLocale).format(now));
     }
 
     private void startDateTimeUpdates() {

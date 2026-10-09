@@ -59,6 +59,9 @@
     <string name="history_section_count_scan">%1$d scan</string>
     <string name="history_section_count_items">%1$d items</string>
     <string name="history_section_count_item">%1$d item</string>
+    <string name="default_home_guide_step">STEP 1 OF 3</string>
+    <string name="home_selection_tap_hand">&#128070;</string>
+    <string name="default_home_guide_message">Tap to set as your default Home app</string>
     <string name="history_menu_add_favorite">Add favorite</string>
     <string name="history_menu_remove_favorite">Remove favorite</string>
     <string name="history_empty_title">No Scan History Yet</string>

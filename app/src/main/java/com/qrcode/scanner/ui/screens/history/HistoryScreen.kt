@@ -153,9 +153,10 @@ fun HistoryScreen(
     val isEmpty = allItems.isEmpty()
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(PageBackground)
+            .then(modifier)
     ) {
         // Header
         Row(
@@ -632,12 +633,13 @@ private fun HistoryActivityCard(
                 DropdownMenu(
                     expanded = menuOpen,
                     onDismissRequest = { menuOpen = false },
-                    containerColor = White
+                    containerColor = CardSurface
                 ) {
                     DropdownMenuItem(
                         text = {
                             Text(
                                 text = if (entity.isFavorite) removeFavoriteLabel else addFavoriteLabel,
+                                color = TextPrimary,
                                 fontFamily = PlusJakartaSans,
                                 fontSize = 14.sp
                             )

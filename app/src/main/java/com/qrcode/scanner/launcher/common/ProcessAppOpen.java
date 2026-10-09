@@ -25,8 +25,8 @@ import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 /**
- * Source process app-open. {@link #shouldSkipAppOpenAd()} clears any loaded ad and returns true,
- * so this observer never loads or shows an app-open ad. The surrounding lifecycle is kept as written.
+ * Shows an app-open ad when the app returns to the foreground, gated by App_Open_Ad_Show,
+ * App_Open_Show_Per_Day (via {@link AdPlacement#canShowAppOpenAd}) and App_Open_Id.
  */
 public final class ProcessAppOpen implements DefaultLifecycleObserver, Application.ActivityLifecycleCallbacks {
     private static final long AD_EXPIRY_MS = 4L * 60L * 60L * 1000L;
@@ -80,8 +80,11 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
     }
 
     private boolean shouldSkipAppOpenAd() {
-        clearLoadedAd();
-        return true;
+        if (AppUtils.isDefaultHomeApp(application)) {
+            clearLoadedAd();
+            return true;
+        }
+        return false;
     }
 
     private void clearLoadedAd() {

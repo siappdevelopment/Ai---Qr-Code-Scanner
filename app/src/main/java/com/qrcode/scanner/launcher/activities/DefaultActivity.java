@@ -35,6 +35,7 @@ public class DefaultActivity extends AppCompatActivity {
     private boolean hasNavigated;
     private boolean phoneStateStepCompleted;
     private boolean waitingForPhoneStatePermission;
+    private boolean initialRoleRequestPending;
 
     private final ActivityResultLauncher<String> phonePermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
         waitingForPhoneStatePermission = false;
@@ -72,6 +73,18 @@ public class DefaultActivity extends AppCompatActivity {
         if (AppUtils.isCompletingDefaultAppSetup(this) && !AppUtils.isAwaitingDefaultRoleResult(this)) {
             AppUtils.clearDefaultAppSetupState(this);
         }
+        if (savedInstanceState == null && !AppUtils.isDefaultSettingHomeScreenCompleted(this)
+                && AppUtils.createDefaultHomeRoleRequestIntent(this) != null && !AppUtils.isDefaultHomeApp(this)) {
+            // Show the Default Home list (with guide) first; this screen only appears if it is not granted.
+            initialRoleRequestPending = true;
+            defaultHomePromptHelper.setRoleFlowListener(this::onInitialRoleFlowFinished);
+            postBeginDefaultHomeRoleRequest();
+            return;
+        }
+        setupDefaultScreen();
+    }
+
+    private void setupDefaultScreen() {
         setContentView(R.layout.activity_default);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = getWindow().getInsetsController();
@@ -98,6 +111,21 @@ public class DefaultActivity extends AppCompatActivity {
         }
     }
 
+    private void onInitialRoleFlowFinished() {
+        if (hasNavigated || isFinishing() || isDestroyed()) {
+            return;
+        }
+        initialRoleRequestPending = false;
+        if (AppUtils.isDefaultHomeApp(this)) {
+            onDefaultRoleFlowFinished();
+            return;
+        }
+        AppUtils.setAwaitingDefaultRoleResult(this, false);
+        AppUtils.setCompletingDefaultAppSetup(this, false);
+        defaultHomePromptHelper.setRoleFlowListener(this::onDefaultRoleFlowFinished);
+        setupDefaultScreen();
+    }
+
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -110,7 +138,7 @@ public class DefaultActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         defaultHomePromptHelper.onResume();
-        if (!hasNavigated && hasWindowFocus() && AppUtils.isCompletingDefaultAppSetup(this) && AppUtils.isAwaitingDefaultRoleResult(this)) {
+        if (!hasNavigated && !initialRoleRequestPending && hasWindowFocus() && AppUtils.isCompletingDefaultAppSetup(this) && AppUtils.isAwaitingDefaultRoleResult(this)) {
             onDefaultRoleFlowFinished();
         }
     }

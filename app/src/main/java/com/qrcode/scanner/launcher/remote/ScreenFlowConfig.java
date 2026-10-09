@@ -25,6 +25,7 @@ public final class ScreenFlowConfig {
     public static final String SCREEN_COLLECTION = "Collection";
     public static final String SCREEN_PERMISSION = "Permission";
     public static final String SCREEN_DEFAULT_HOME = "DefaultHome";
+    public static final String SCREEN_DEFAULT_SETTING_HOME = "DefultSettingHome";
     public static final String SCREEN_INTRO = "Intro";
 
     private static final String PREF_SHOW_SCREEN_FLOW = "show_screen_flow";
@@ -169,6 +170,7 @@ public final class ScreenFlowConfig {
                 || SCREEN_COLLECTION.equalsIgnoreCase(screen)
                 || SCREEN_PERMISSION.equalsIgnoreCase(screen)
                 || SCREEN_DEFAULT_HOME.equalsIgnoreCase(screen)
+                || SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screen)
                 || SCREEN_INTRO.equalsIgnoreCase(screen);
     }
 
@@ -217,6 +219,9 @@ public final class ScreenFlowConfig {
         }
         if (value.equalsIgnoreCase(SCREEN_DEFAULT_HOME) || value.equalsIgnoreCase("Default") || value.equalsIgnoreCase("DefaultApp") || value.equalsIgnoreCase("Default_Home")) {
             return SCREEN_DEFAULT_HOME;
+        }
+        if (value.equalsIgnoreCase(SCREEN_DEFAULT_SETTING_HOME) || value.equalsIgnoreCase("DefaultSettingHome")) {
+            return SCREEN_DEFAULT_SETTING_HOME;
         }
         if (value.equalsIgnoreCase(SCREEN_INTRO) || value.equalsIgnoreCase("IntroActivity") || value.equalsIgnoreCase("IntroScreen") || value.equalsIgnoreCase("Onboarding")) {
             return SCREEN_INTRO;

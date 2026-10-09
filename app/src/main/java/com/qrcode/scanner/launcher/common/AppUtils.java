@@ -48,6 +48,7 @@ public final class AppUtils {
     private static final String KEY_COLLECTION_COMPLETED = "collection_completed";
     private static final String KEY_PERMISSION_COMPLETED = "permission_completed";
     private static final String KEY_DEFAULT_HOME_COMPLETED = "default_home_completed";
+    private static final String KEY_DEFAULT_SETTING_HOME_COMPLETED = "default_setting_home_completed";
     private static final String KEY_INTRO_COMPLETED = "intro_completed";
     private static final String PREFS_DEFAULT_APP_FLOW = "default_app_flow";
     private static final String KEY_COMPLETING_DEFAULT_APP_SETUP = "completing_default_app_setup";
@@ -142,6 +143,17 @@ public final class AppUtils {
         screenFlowPrefs(context).edit().putBoolean(KEY_DEFAULT_HOME_COMPLETED, completed).apply();
     }
 
+    public static boolean isDefaultSettingHomeScreenCompleted(Context context) {
+        return context != null && screenFlowPrefs(context).getBoolean(KEY_DEFAULT_SETTING_HOME_COMPLETED, false);
+    }
+
+    public static void setDefaultSettingHomeScreenCompleted(Context context, boolean completed) {
+        if (context == null) {
+            return;
+        }
+        screenFlowPrefs(context).edit().putBoolean(KEY_DEFAULT_SETTING_HOME_COMPLETED, completed).apply();
+    }
+
     public static boolean getIntroCompleted(Context context) {
         return context != null && screenFlowPrefs(context).getBoolean(KEY_INTRO_COMPLETED, false);
     }
@@ -166,6 +178,7 @@ public final class AppUtils {
                 .putBoolean(KEY_COLLECTION_COMPLETED, false)
                 .putBoolean(KEY_PERMISSION_COMPLETED, false)
                 .putBoolean(KEY_DEFAULT_HOME_COMPLETED, false)
+                .putBoolean(KEY_DEFAULT_SETTING_HOME_COMPLETED, false)
                 .apply();
         setIntroCompleted(context, false);
     }

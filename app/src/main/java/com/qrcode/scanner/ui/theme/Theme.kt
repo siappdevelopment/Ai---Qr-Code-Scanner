@@ -161,6 +161,9 @@ fun ComponentActivity.enableThemedEdgeToEdge() {
     window.navigationBarColor = AndroidColor.TRANSPARENT
     @Suppress("DEPRECATION")
     window.statusBarColor = AndroidColor.TRANSPARENT
+    // Area behind the transparent navigation bar follows the saved theme, not the XML window default.
+    val pageBackground = if (dark) ScanPulsePalette.Dark.pageBackground else ScanPulsePalette.Light.pageBackground
+    window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(pageBackground.toArgb()))
 }
 
 private fun Context.findHostActivity(): Activity? {

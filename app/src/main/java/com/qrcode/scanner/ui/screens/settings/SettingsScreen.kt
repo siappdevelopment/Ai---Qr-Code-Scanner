@@ -250,7 +250,7 @@ fun SettingsScreen(
             onConfirm = {
                 showClearDialog = false
                 scope.launch {
-                    historyRepository.clearHistoryKeepingFavorites()
+                    historyRepository.deleteAll()
                     Toast.makeText(
                         context,
                         context.getString(R.string.toast_history_cleared),

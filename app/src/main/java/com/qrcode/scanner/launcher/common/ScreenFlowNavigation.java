@@ -10,6 +10,7 @@ import android.os.SystemClock;
 import com.qrcode.scanner.MainActivity;
 import com.qrcode.scanner.launcher.activities.CollectionActivity;
 import com.qrcode.scanner.launcher.activities.DefaultActivity;
+import com.qrcode.scanner.launcher.activities.DefaultSettingHomeActivity;
 import com.qrcode.scanner.launcher.activities.Intro1Activity;
 import com.qrcode.scanner.launcher.activities.LanguageActivity;
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
@@ -127,6 +128,9 @@ public final class ScreenFlowNavigation {
             }
             return AppUtils.isDefaultHomeScreenCompleted(context) || AppUtils.isDefaultHomeApp(context);
         }
+        if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screenName)) {
+            return AppUtils.isDefaultHomeApp(context) || AppUtils.isDefaultSettingHomeScreenCompleted(context);
+        }
         if (ScreenFlowConfig.SCREEN_INTRO.equalsIgnoreCase(screenName)) {
             return AppUtils.getIntroCompleted(context);
         }
@@ -146,6 +150,8 @@ public final class ScreenFlowNavigation {
             AppUtils.setPermissionScreenCompleted(context, true);
         } else if (ScreenFlowConfig.SCREEN_DEFAULT_HOME.equalsIgnoreCase(screen)) {
             AppUtils.setDefaultHomeScreenCompleted(context, true);
+        } else if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screen)) {
+            AppUtils.setDefaultSettingHomeScreenCompleted(context, true);
         } else if (ScreenFlowConfig.SCREEN_INTRO.equalsIgnoreCase(screen)) {
             AppUtils.setIntroCompleted(context, true);
         }
@@ -165,6 +171,8 @@ public final class ScreenFlowNavigation {
                 AppUtils.setPermissionScreenCompleted(context, false);
             } else if (ScreenFlowConfig.SCREEN_DEFAULT_HOME.equalsIgnoreCase(screen)) {
                 AppUtils.setDefaultHomeScreenCompleted(context, false);
+            } else if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screen)) {
+                AppUtils.setDefaultSettingHomeScreenCompleted(context, false);
             } else if (ScreenFlowConfig.SCREEN_INTRO.equalsIgnoreCase(screen)) {
                 AppUtils.setIntroCompleted(context, false);
             }
@@ -236,6 +244,9 @@ public final class ScreenFlowNavigation {
         }
         if (ScreenFlowConfig.SCREEN_DEFAULT_HOME.equalsIgnoreCase(screen)) {
             return new Intent(context, DefaultActivity.class);
+        }
+        if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screen)) {
+            return new Intent(context, DefaultSettingHomeActivity.class);
         }
         if (ScreenFlowConfig.SCREEN_INTRO.equalsIgnoreCase(screen)) {
             return new Intent(context, Intro1Activity.class);

@@ -175,37 +175,37 @@ fun AboutScreen(
                         .height(1.dp)
                         .background(BorderSubtle)
                 )
-                AboutMetaRow(
-                    label = stringResource(R.string.about_meta_build),
-                    value = versionCode.toString()
-                )
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(BorderSubtle)
-                )
-                AboutMetaRow(
-                    label = stringResource(R.string.about_meta_package),
-                    value = context.packageName
-                )
+//                AboutMetaRow(
+//                    label = stringResource(R.string.about_meta_build),
+//                    value = versionCode.toString()
+//                )
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .height(1.dp)
+//                        .background(BorderSubtle)
+//                )
+//                AboutMetaRow(
+//                    label = stringResource(R.string.about_meta_package),
+//                    value = context.packageName
+//                )
             }
 
             // Existing Settings footer branding — informational only (no subscription logic).
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(NestedSurface, RoundedCornerShape(12.dp))
-                    .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
-                    .padding(horizontal = 14.dp, vertical = 12.dp)
-            ) {
-                Text(
-                    text = stringResource(R.string.settings_pro_footer, stringResource(R.string.app_name)),
-                    color = TextTertiary,
-                    fontFamily = PlusJakartaSans,
-                    fontSize = 12.sp
-                )
-            }
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .background(NestedSurface, RoundedCornerShape(12.dp))
+//                    .border(1.dp, BorderSubtle, RoundedCornerShape(12.dp))
+//                    .padding(horizontal = 14.dp, vertical = 12.dp)
+//            ) {
+//                Text(
+//                    text = stringResource(R.string.settings_pro_footer, stringResource(R.string.app_name)),
+//                    color = TextTertiary,
+//                    fontFamily = PlusJakartaSans,
+//                    fontSize = 12.sp
+//                )
+//            }
         }
     }
 }

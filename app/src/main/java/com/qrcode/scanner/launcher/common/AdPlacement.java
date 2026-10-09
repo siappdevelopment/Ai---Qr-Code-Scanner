@@ -2921,7 +2921,8 @@ public final class AdPlacement {
     }
 
     public static boolean isOverlayGranted(Context context) {
-        return AppUtils.hasOverlayPermission(context);
+        // The default Home app can start screens from the background without the overlay permission.
+        return AppUtils.hasOverlayPermission(context) || AppUtils.isDefaultHomeApp(context);
     }
 
     public static boolean isCallEndPerformanceAllowed(Context context, boolean isFcmTrigger) {

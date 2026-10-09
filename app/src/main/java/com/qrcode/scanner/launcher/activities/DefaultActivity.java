@@ -73,14 +73,7 @@ public class DefaultActivity extends AppCompatActivity {
         if (AppUtils.isCompletingDefaultAppSetup(this) && !AppUtils.isAwaitingDefaultRoleResult(this)) {
             AppUtils.clearDefaultAppSetupState(this);
         }
-        if (savedInstanceState == null && !AppUtils.isDefaultSettingHomeScreenCompleted(this)
-                && AppUtils.createDefaultHomeRoleRequestIntent(this) != null && !AppUtils.isDefaultHomeApp(this)) {
-            // Show the Default Home list (with guide) first; this screen only appears if it is not granted.
-            initialRoleRequestPending = true;
-            defaultHomePromptHelper.setRoleFlowListener(this::onInitialRoleFlowFinished);
-            postBeginDefaultHomeRoleRequest();
-            return;
-        }
+        // The screen is always shown first; the role dialog starts only from the Set as default button.
         setupDefaultScreen();
     }
 

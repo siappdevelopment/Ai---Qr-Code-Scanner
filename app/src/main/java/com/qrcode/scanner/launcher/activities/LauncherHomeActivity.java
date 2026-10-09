@@ -282,6 +282,8 @@ public class LauncherHomeActivity extends AppCompatActivity {
             return;
         }
         if (vpLauncher.getCurrentItem() != LauncherPagerAdapter.PAGE_RIGHT) {
+            // The QR page keeps its last tab (e.g. Settings); the Scan icon must always land on Scan.
+            ComposeScanRequest.INSTANCE.request();
             vpLauncher.setCurrentItem(LauncherPagerAdapter.PAGE_RIGHT, true);
         }
     }

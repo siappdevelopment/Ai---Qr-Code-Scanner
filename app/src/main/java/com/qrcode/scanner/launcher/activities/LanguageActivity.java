@@ -49,6 +49,7 @@ public class LanguageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_language);
         hideNavigationBar();
         findIDs();
+        AdPlacement.preloadOnboardingInterstitialAd(this, false);
     }
 
     @Override

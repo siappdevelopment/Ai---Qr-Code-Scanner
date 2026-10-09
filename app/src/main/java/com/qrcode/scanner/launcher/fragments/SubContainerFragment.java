@@ -192,7 +192,13 @@ public class SubContainerFragment extends Fragment {
         }
 
         if (hasDisplayedNativeContent()) {
-            showNativeAdContentState();
+            if (nativeAdLoadInProgress) {
+                showNativeAdContentState();
+                return;
+            }
+            // isNativeAdEligible() passed, so the per-day interval (86400000 / per-day, e.g. 30s)
+            // has elapsed since the last show: reload instead of keeping the old ad.
+            beginNativeAdLoad();
             return;
         }
 

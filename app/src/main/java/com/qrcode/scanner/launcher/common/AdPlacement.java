@@ -159,6 +159,10 @@ public final class AdPlacement {
     private static final AtomicInteger appOpenLoadToken = new AtomicInteger();
     private static final AtomicInteger afterDefaultPreloadToken = new AtomicInteger();
     private static boolean afterDefaultAdPreloadInProgress;
+    private static final AtomicInteger onboardingInterPreloadToken = new AtomicInteger();
+    private static boolean onboardingInterPreloadInProgress;
+    @Nullable
+    private static InterstitialAd preloadedOnboardingInterstitial;
     @Nullable
     private static InterstitialAd preloadedAfterDefaultInterstitial;
     @Nullable
@@ -1238,6 +1242,12 @@ public final class AdPlacement {
             notifyComplete(listener);
             return;
         }
+        if (isOnboardingInterPreloadType()) {
+            if (tryShowPreloadedOnboardingInterstitial(activity, listener)) {
+                return;
+            }
+            clearOnboardingInterPreloadCache();
+        }
         loadInterstitialAdInternal(activity, getOtherInterstitialId(), listener, true);
     }
 
@@ -1246,7 +1256,84 @@ public final class AdPlacement {
             notifyComplete(listener);
             return;
         }
+        if (isOnboardingInterPreloadType()) {
+            if (tryShowPreloadedOnboardingInterstitial(activity, listener)) {
+                return;
+            }
+            clearOnboardingInterPreloadCache();
+        }
         loadInterstitialAdInternal(activity, getOtherInterstitialId(), listener, true);
+    }
+
+    /** Language and Intro interstitials follow inter_ads_click_type: "Preload" loads ahead, anything else loads on demand. */
+    private static boolean isOnboardingInterPreloadType() {
+        String type = RemoteConfigValues.getInterAdsClickType();
+        return type != null && "preload".equalsIgnoreCase(type.trim());
+    }
+
+    /** Called when the Language or Intro screen opens; no-op unless that screen's interstitial is on and the type is Preload. */
+    public static void preloadOnboardingInterstitialAd(Context context, boolean forIntro) {
+        boolean show = forIntro ? getIntroInterstitialAdShow() : getLanguageInterstitialAdShow();
+        if (context == null || !show || !isOnboardingInterPreloadType() || shouldUseQuizPriority()
+                || !canRequestAds(context) || !isNetworkAvailable(context)) {
+            return;
+        }
+        String unitId = getOtherInterstitialId();
+        if (unitId == null || unitId.trim().isEmpty() || preloadedOnboardingInterstitial != null || onboardingInterPreloadInProgress) {
+            return;
+        }
+        onboardingInterPreloadInProgress = true;
+        int token = onboardingInterPreloadToken.get();
+        InterstitialAd.load(context.getApplicationContext(), unitId.trim(), new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd ad) {
+                if (token != onboardingInterPreloadToken.get()) {
+                    return;
+                }
+                onboardingInterPreloadInProgress = false;
+                preloadedOnboardingInterstitial = ad;
+            }
+
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                if (token != onboardingInterPreloadToken.get()) {
+                    return;
+                }
+                onboardingInterPreloadInProgress = false;
+            }
+        });
+    }
+
+    private static boolean tryShowPreloadedOnboardingInterstitial(Activity activity, @Nullable OnInterstitialAdListener listener) {
+        if (activity == null || activity.isFinishing() || preloadedOnboardingInterstitial == null || shouldUseQuizPriority()) {
+            return false;
+        }
+        InterstitialAd ad = preloadedOnboardingInterstitial;
+        preloadedOnboardingInterstitial = null;
+        AtomicBoolean completed = new AtomicBoolean(false);
+        ad.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
+        ad.setFullScreenContentCallback(new FullScreenContentCallback() {
+            @Override
+            public void onAdDismissedFullScreenContent() {
+                notifyComplete(listener, completed);
+            }
+
+            @Override
+            public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                if (getGoogleAdFailedShowQuiz() && QuizAds.showInterstitial(activity, () -> notifyComplete(listener, completed))) {
+                    return;
+                }
+                notifyComplete(listener, completed);
+            }
+        });
+        ad.show(activity);
+        return true;
+    }
+
+    private static void clearOnboardingInterPreloadCache() {
+        onboardingInterPreloadToken.incrementAndGet();
+        onboardingInterPreloadInProgress = false;
+        preloadedOnboardingInterstitial = null;
     }
 
     public static void preloadAfterDefaultAd(Context context) {

@@ -20,6 +20,7 @@ public class Intro1Activity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro_1);
+        AdPlacement.preloadOnboardingInterstitialAd(this, true);
         hideNavigationAndAds();
         LinearLayout llIndicator = findViewById(R.id.llIndicator);
         AppCompatTextView btnNext = findViewById(R.id.btnNext);

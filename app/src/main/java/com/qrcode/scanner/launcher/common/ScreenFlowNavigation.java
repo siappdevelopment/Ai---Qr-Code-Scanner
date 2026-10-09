@@ -206,6 +206,15 @@ public final class ScreenFlowNavigation {
             openMain(activity);
             return;
         }
+        if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screenName)
+                && !(activity instanceof LauncherHomeActivity)) {
+            // Invisible step: keep the current screen alive underneath (no CLEAR_TASK, no finish) so
+            // nothing blinks before the system settings page. continueAfter() clears it afterwards.
+            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            activity.startActivity(intent);
+            activity.overridePendingTransition(0, 0);
+            return;
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
         if (activity instanceof LauncherHomeActivity) {

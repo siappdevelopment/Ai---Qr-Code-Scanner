@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
@@ -20,8 +21,10 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.appopen.AppOpenAd;
+import com.qrcode.scanner.MainActivity;
 import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
+import com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 /**
@@ -29,6 +32,7 @@ import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
  * App_Open_Show_Per_Day (via {@link AdPlacement#canShowAppOpenAd}) and App_Open_Id.
  */
 public final class ProcessAppOpen implements DefaultLifecycleObserver, Application.ActivityLifecycleCallbacks {
+    private static final String TAG = "ProcessAppOpen";
     private static final long AD_EXPIRY_MS = 4L * 60L * 60L * 1000L;
     private static final long APP_OPEN_DIALOG_DELAY_MS = 1500L;
 
@@ -53,24 +57,29 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
 
     private void fetchAd() {
         if (shouldSkipAppOpenAd() || isLoadingAd || isAdAvailable()) {
+            Log.d(TAG, "fetch skipped: skip=" + shouldSkipAppOpenAd() + " loading=" + isLoadingAd + " available=" + isAdAvailable());
             return;
         }
         String unitId = AdPlacement.getAppOpenId();
         if (!AdPlacement.getAppOpenAdShow() || unitId == null || unitId.isEmpty() || !AdPlacement.canRequestAds(application)) {
+            Log.d(TAG, "fetch blocked: show=" + AdPlacement.getAppOpenAdShow() + " unitId=" + unitId + " canRequest=" + AdPlacement.canRequestAds(application));
             return;
         }
         isLoadingAd = true;
+        Log.d(TAG, "fetch started");
         AppOpenAd.load(application, unitId, new AdRequest.Builder().build(), new AppOpenAd.AppOpenAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull AppOpenAd ad) {
                 appOpenAd = ad;
                 isLoadingAd = false;
                 loadTime = System.currentTimeMillis();
+                Log.d(TAG, "fetch loaded");
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 isLoadingAd = false;
+                Log.d(TAG, "fetch failed: " + loadAdError.getMessage());
             }
         });
     }
@@ -79,12 +88,23 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
         return appOpenAd != null && AdPlacement.getAppOpenAdShow() && AdPlacement.canShowAppOpenAd(application) && (System.currentTimeMillis() - loadTime) < AD_EXPIRY_MS;
     }
 
+    /** The resume ad belongs to the Right-Side page only; every other screen is skipped. */
     private boolean shouldSkipAppOpenAd() {
-        if (AppUtils.isDefaultHomeApp(application)) {
-            clearLoadedAd();
-            return true;
+        return !isRightSidePageOpen(currentActivity);
+    }
+
+    /**
+     * The Right-Side (QR app) UI: the launcher's right page, or, when the app is not the default Home,
+     * the same QR UI hosted by MainActivity and its QR activities (History, Create, Scan, ...).
+     */
+    private static boolean isRightSidePageOpen(@Nullable Activity activity) {
+        if (activity == null || activity.isFinishing()) {
+            return false;
         }
-        return false;
+        if (activity instanceof LauncherHomeActivity) {
+            return ((LauncherHomeActivity) activity).getLauncherCurrentItem() == LauncherPagerAdapter.PAGE_RIGHT;
+        }
+        return activity instanceof MainActivity || activity.getClass().getName().startsWith("com.qrcode.scanner.ui.");
     }
 
     private void clearLoadedAd() {
@@ -93,17 +113,21 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
     }
 
     private void showAdIfAvailable(@NonNull Activity activity) {
-        if (activity instanceof LauncherHomeActivity || shouldSkipAppOpenAd() || isShowingAd) {
+        if (shouldSkipAppOpenAd() || isShowingAd) {
+            Log.d(TAG, "show skipped: skip=" + shouldSkipAppOpenAd() + " showing=" + isShowingAd);
             return;
         }
         if (!AdPlacement.getAppOpenAdShow() || !AdPlacement.canShowAppOpenAd(application)) {
+            Log.d(TAG, "show blocked: show=" + AdPlacement.getAppOpenAdShow() + " canShow(perDay)=" + AdPlacement.canShowAppOpenAd(application));
             clearLoadedAd();
             return;
         }
         if (!isAdAvailable()) {
+            Log.d(TAG, "show: ad not ready yet, fetching");
             fetchAd();
             return;
         }
+        Log.d(TAG, "showing resume app open ad");
         final AppOpenAd adToShow = appOpenAd;
         adToShow.setFullScreenContentCallback(new FullScreenContentCallback() {
             @Override
@@ -133,6 +157,7 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
     public void onStart(@NonNull LifecycleOwner owner) {
         appInForeground = true;
         Activity activity = currentActivity;
+        Log.d(TAG, "process onStart activity=" + (activity == null ? "null" : activity.getClass().getSimpleName()) + " rightPage=" + isRightSidePageOpen(activity));
         if (activity == null || shouldSkipAppOpenAd()) {
             return;
         }
@@ -146,6 +171,9 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
     @Override
     public void onStop(@NonNull LifecycleOwner owner) {
         appInForeground = false;
+        Log.d(TAG, "process onStop activity=" + (currentActivity == null ? "null" : currentActivity.getClass().getSimpleName()) + " rightPage=" + isRightSidePageOpen(currentActivity));
+        // The user left from the Right-Side page (Share, Rate Us, another app): have the ad ready for the return.
+        fetchAd();
     }
 
     private void showAppOpenDialog(Activity activity, Runnable onDismiss) {

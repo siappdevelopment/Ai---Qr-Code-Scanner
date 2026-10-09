@@ -140,7 +140,7 @@
                 app:shimmer_base_alpha="0.9"
                 app:shimmer_highlight_alpha="1.0">
 
-                <include layout="@layout/shimmer_small_ad" />
+                <include layout="@layout/shimmer_intro_ad" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
 

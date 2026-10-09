@@ -185,6 +185,7 @@ public class DefaultActivity extends AppCompatActivity {
             return;
         }
         AppUtils.setCompletingDefaultAppSetup(this, true);
+        AppUtils.setDefaultSetupStep(this, ScreenFlowConfig.SCREEN_DEFAULT_HOME);
         AppUtils.setAwaitingDefaultRoleResult(this, true);
         defaultHomePromptHelper.handleSetAsDefaultClick();
     }

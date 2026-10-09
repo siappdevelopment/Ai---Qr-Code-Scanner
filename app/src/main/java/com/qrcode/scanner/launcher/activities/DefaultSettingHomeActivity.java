@@ -50,6 +50,7 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
         // Same setup flags DefaultActivity uses, so LauncherHomeActivity (opened by the system once this
         // app becomes the default Home) hands back to the screen flow instead of staying on the launcher.
         AppUtils.setCompletingDefaultAppSetup(this, true);
+        AppUtils.setDefaultSetupStep(this, ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME);
         AppUtils.setAwaitingDefaultRoleResult(this, true);
         setupFlagSet = true;
         try {

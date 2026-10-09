@@ -179,6 +179,7 @@ public final class AppUtils {
                 .putBoolean(KEY_PERMISSION_COMPLETED, false)
                 .putBoolean(KEY_DEFAULT_HOME_COMPLETED, false)
                 .putBoolean(KEY_DEFAULT_SETTING_HOME_COMPLETED, false)
+                .putInt("flow_progress_index", 0)
                 .apply();
         setIntroCompleted(context, false);
     }
@@ -243,8 +244,15 @@ public final class AppUtils {
         if (context == null) {
             return;
         }
+        // Resume after the flow step that started the setup, not always after DefaultHome: with DefaultHome
+        // first in Show_Screen_Flow, continuing after it would reset every later screen.
+        final String startedBy = getDefaultSetupStep(context);
         setCompletingDefaultAppSetup(context, false);
-        setDefaultHomeScreenCompleted(context, true);
+        if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equals(startedBy)) {
+            setDefaultSettingHomeScreenCompleted(context, true);
+        } else {
+            setDefaultHomeScreenCompleted(context, true);
+        }
         if (isDefaultHomeApp(context)) {
             TrackOnce.trackScreenOnce(context, "DEFAULT_HOME_APP_SET");
         } else {
@@ -253,9 +261,34 @@ public final class AppUtils {
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
             if (!activity.isFinishing() && !activity.isDestroyed()) {
-                AdPlacement.loadAfterDefaultAd(activity, () -> ScreenFlowNavigation.continueAfter(activity, ScreenFlowConfig.SCREEN_DEFAULT_HOME));
+                AdPlacement.loadAfterDefaultAd(activity, () -> ScreenFlowNavigation.continueAfter(activity, startedBy));
             }
         }
+    }
+
+    /** Which flow step (DefaultHome or DefultSettingHome) started the current default-app setup. */
+    public static void setDefaultSetupStep(Context context, String step) {
+        if (context == null) {
+            return;
+        }
+        context.getApplicationContext().getSharedPreferences(PREFS_DEFAULT_APP_FLOW, MODE_PRIVATE).edit().putString("default_setup_step", step).apply();
+    }
+
+    public static String getDefaultSetupStep(Context context) {
+        String step = context == null ? null : context.getApplicationContext().getSharedPreferences(PREFS_DEFAULT_APP_FLOW, MODE_PRIVATE).getString("default_setup_step", null);
+        return step == null || step.isEmpty() ? ScreenFlowConfig.SCREEN_DEFAULT_HOME : step;
+    }
+
+    /** Furthest flow position reached in this onboarding run. Completed screens before it are never cleared again. */
+    public static int getFlowProgress(Context context) {
+        return context == null ? 0 : screenFlowPrefs(context).getInt("flow_progress_index", 0);
+    }
+
+    public static void advanceFlowProgress(Context context, int position) {
+        if (context == null || position <= getFlowProgress(context)) {
+            return;
+        }
+        screenFlowPrefs(context).edit().putInt("flow_progress_index", position).apply();
     }
 
     public static Intent buildLauncherHomeIntent(Context context) {

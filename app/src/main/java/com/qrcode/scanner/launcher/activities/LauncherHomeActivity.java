@@ -103,6 +103,12 @@ public class LauncherHomeActivity extends AppCompatActivity {
             return;
         }
         LauncherQrSystemBars.INSTANCE.showTransparentNavigationBar(this);
+        if (com.qrcode.scanner.ui.navigation.ThemeNavigation.INSTANCE.isReopenSettingsPending()) {
+            // Recreated by a theme change and Settings reopens: paint the header colour now, not after Compose.
+            LauncherQrSystemBars.INSTANCE.applyHeaderStatusBar(this,
+                    com.qrcode.scanner.data.settings.SettingsRepositoryKt.readAppNightMode(this)
+                            == androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES);
+        }
         setContentView(R.layout.activity_launcher_home);
         setupLauncherHome();
         WidgetNavigation.openComposeDestinationFromIntent(this);
@@ -481,6 +487,10 @@ public class LauncherHomeActivity extends AppCompatActivity {
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 boolean openingSubPage = position == LauncherPagerAdapter.PAGE_HOME && positionOffset > 0f;
                 showQrPageNavigation(isSidePage(position) || openingSubPage);
+                if (position == LauncherPagerAdapter.PAGE_RIGHT && positionOffset > 0f) {
+                    // Swiping from the QR page to the wallpaper home: do not keep the header colour behind it.
+                    LauncherQrSystemBars.INSTANCE.clearHeaderWindowBackground(LauncherHomeActivity.this);
+                }
             }
 
             @Override
@@ -504,6 +514,9 @@ public class LauncherHomeActivity extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
                 if (state == ViewPager2.SCROLL_STATE_IDLE) {
                     navigatingToHome = false;
+                    if (vpLauncher.getCurrentItem() == LauncherPagerAdapter.PAGE_RIGHT) {
+                        LauncherQrSystemBars.INSTANCE.reapplyHeaderWindowBackground(LauncherHomeActivity.this);
+                    }
                     if (pendingRightSwipeOpen && vpLauncher.getCurrentItem() == LauncherPagerAdapter.PAGE_RIGHT) {
                         pendingRightSwipeOpen = false;
                         AdPlacement.loadRightSwipeInterstitialAd(LauncherHomeActivity.this, () -> {

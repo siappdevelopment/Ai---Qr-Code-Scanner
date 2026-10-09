@@ -105,6 +105,31 @@ fun ScanPulseNavHost(
             LauncherQrSystemBars.applyHeaderStatusBar(launcher, useDark)
         }
     }
+    // After a theme change the activity is recreated and the launcher resets its bars to transparent
+    // (Redmi/MIUI keeps that state). Re-apply the header bar when this page resumes, after the window settles.
+    val barsOwner = LocalLifecycleOwner.current
+    DisposableEffect(hostActivity, barsOwner, isScan, matchHeaderStatus, useDark) {
+        val launcher = hostActivity as? LauncherHomeActivity
+        if (launcher == null || isScan || !matchHeaderStatus) {
+            return@DisposableEffect onDispose { }
+        }
+        fun applyHeaderBar() {
+            if (launcher.launcherCurrentItem ==
+                com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter.PAGE_RIGHT
+            ) {
+                LauncherQrSystemBars.applyHeaderStatusBar(launcher, useDark)
+            }
+        }
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                applyHeaderBar()
+                launcher.window.decorView.post { applyHeaderBar() }
+            }
+        }
+        barsOwner.lifecycle.addObserver(observer)
+        launcher.window.decorView.post { applyHeaderBar() }
+        onDispose { barsOwner.lifecycle.removeObserver(observer) }
+    }
     // MainActivity only (default launcher not set): camera under status bar + swipe system nav.
     DisposableEffect(hostActivity, isScan, showBottomBar, useDark, matchHeaderStatus) {
         val activity = hostActivity as? MainActivity
@@ -120,9 +145,11 @@ fun ScanPulseNavHost(
             }
         }
         applyBars()
+        activity.window.decorView.post { applyBars() }
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 applyBars()
+                activity.window.decorView.post { applyBars() }
             }
         }
         activity.lifecycle.addObserver(observer)

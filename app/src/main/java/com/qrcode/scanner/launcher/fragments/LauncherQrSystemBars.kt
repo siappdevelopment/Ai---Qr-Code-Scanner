@@ -27,13 +27,36 @@ object LauncherQrSystemBars {
         }
         @Suppress("DEPRECATION")
         window.statusBarColor = palette.cardSurface.toArgb()
+        // Some devices (Redmi) leave the status bar area uncovered after a theme change and show the
+        // transparent window (wallpaper) there. Paint it so the bar always matches the header.
+        headerWindowColor = palette.cardSurface.toArgb()
+        applyHeaderWindowBackground(activity)
         WindowCompat.getInsetsController(window, window.decorView)
             .isAppearanceLightStatusBars = !useDark
+    }
+
+    private var headerWindowColor: Int? = null
+
+    private fun applyHeaderWindowBackground(activity: Activity) {
+        val color = headerWindowColor ?: return
+        activity.window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(color))
+    }
+
+    /** Back to the transparent wallpaper window (home page, Scan page, or while swiping away). */
+    fun clearHeaderWindowBackground(activity: Activity) {
+        activity.window.setBackgroundDrawable(android.graphics.drawable.ColorDrawable(Color.TRANSPARENT))
+    }
+
+    /** Re-applies the header window colour after a page swipe settles on the QR page. */
+    fun reapplyHeaderWindowBackground(activity: Activity) {
+        applyHeaderWindowBackground(activity)
     }
 
     /** Scan camera sits under the status bar, so the bar must not keep the previous screen color. */
     fun applyScanStatusBar(activity: Activity) {
         val window = activity.window
+        headerWindowColor = null
+        clearHeaderWindowBackground(activity)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isStatusBarContrastEnforced = false
         }
@@ -97,6 +120,8 @@ object LauncherQrSystemBars {
      */
     fun showTransparentNavigationBar(activity: Activity) {
         val componentActivity = activity as? ComponentActivity ?: return
+        headerWindowColor = null
+        clearHeaderWindowBackground(activity)
         val window = componentActivity.window
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             window.isNavigationBarContrastEnforced = false

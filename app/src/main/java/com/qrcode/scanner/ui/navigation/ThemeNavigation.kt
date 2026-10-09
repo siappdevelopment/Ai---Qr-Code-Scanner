@@ -12,6 +12,9 @@ object ThemeNavigation {
         reopenSettings = true
     }
 
+    /** Peek only: the launcher uses it to paint the header status bar before the first frame. */
+    fun isReopenSettingsPending(): Boolean = reopenSettings
+
     fun consumeReopenSettings(): Boolean {
         if (!reopenSettings) {
             return false

@@ -270,8 +270,34 @@ public class CallEndBackAd {
                 dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             }
-            dialog.setOnDismissListener(d -> finishNativeShow(context, ad, completed, true));
+            // Android 15+ draws dialogs edge-to-edge: apply the same system-bar insets as the other full native ad
+            // so the Install button stays above the navigation bar and the close button below the status bar.
+            final Window host = context.getWindow();
+            final int savedStatusColor = host.getStatusBarColor();
+            final int savedNavColor = host.getNavigationBarColor();
+            final androidx.core.view.WindowInsetsControllerCompat hostController =
+                    androidx.core.view.WindowCompat.getInsetsController(host, host.getDecorView());
+            final boolean savedLightStatus = hostController.isAppearanceLightStatusBars();
+            final boolean savedLightNav = hostController.isAppearanceLightNavigationBars();
+            final boolean savedStatusContrast = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q && host.isStatusBarContrastEnforced();
+            final boolean savedNavContrast = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q && host.isNavigationBarContrastEnforced();
+            AdPlacement.applyNativeFullSystemBars(context, dialog.getWindow(), adView);
+            dialog.setOnDismissListener(d -> {
+                host.setStatusBarColor(savedStatusColor);
+                host.setNavigationBarColor(savedNavColor);
+                hostController.setAppearanceLightStatusBars(savedLightStatus);
+                hostController.setAppearanceLightNavigationBars(savedLightNav);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    host.setStatusBarContrastEnforced(savedStatusContrast);
+                    host.setNavigationBarContrastEnforced(savedNavContrast);
+                }
+                finishNativeShow(context, ad, completed, true);
+            });
             dialog.show();
+            AdPlacement.applyNativeFullSystemBars(context, dialog.getWindow(), adView);
+            if (close != null) {
+                close.bringToFront();
+            }
         } catch (Exception e) {
             finishNativeShow(context, ad, completed, false);
         }

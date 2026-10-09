@@ -1,5 +1,6 @@
 package com.qrcode.scanner.launcher.common;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
@@ -14,7 +15,9 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
@@ -244,11 +247,11 @@ public final class QuizAds {
             }
             AppCompatImageView media = root.findViewById(R.id.ivQZAppMedia);
             if (media != null) {
-                media.setOnClickListener(v -> openLink(activity, RemoteConfigValues.pickQuizLink()));
+                bindTapOnly(media, () -> openLink(activity, RemoteConfigValues.pickQuizLink()));
             }
             AppCompatTextView button = root.findViewById(R.id.btnQZClick);
             if (button != null) {
-                button.setOnClickListener(v -> openLink(activity, RemoteConfigValues.pickQuizLink()));
+                bindTapOnly(button, () -> openLink(activity, RemoteConfigValues.pickQuizLink()));
             }
             dialog.setOnShowListener(shown -> matchQuizSystemBars(activity, dialog.getWindow()));
             dialog.show();
@@ -633,11 +636,45 @@ public final class QuizAds {
     }
 
     private static void wireLink(Activity activity, View root, @Nullable View button) {
-        View.OnClickListener listener = v -> openLink(activity, RemoteConfigValues.pickQuizLink());
-        root.setOnClickListener(listener);
+        Runnable open = () -> openLink(activity, RemoteConfigValues.pickQuizLink());
+        bindTapOnly(root, open);
         if (button != null) {
-            button.setOnClickListener(listener);
+            bindTapOnly(button, open);
         }
+    }
+
+    /**
+     * Click that ignores swipes. A touch that travels more than the touch slop is a swipe, so the
+     * click Android still delivers on release (finger lifted inside the view) is dropped. The touch
+     * listener returns false, so scrolling, ViewPager swipes and the pressed state are unchanged.
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    private static void bindTapOnly(View view, Runnable onTap) {
+        final int slop = ViewConfiguration.get(view.getContext()).getScaledTouchSlop();
+        final float[] down = new float[2];
+        final boolean[] swiped = new boolean[1];
+        view.setOnTouchListener((v, event) -> {
+            switch (event.getActionMasked()) {
+                case MotionEvent.ACTION_DOWN:
+                    down[0] = event.getRawX();
+                    down[1] = event.getRawY();
+                    swiped[0] = false;
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    if (Math.hypot(event.getRawX() - down[0], event.getRawY() - down[1]) > slop) {
+                        swiped[0] = true;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        });
+        view.setOnClickListener(v -> {
+            if (!swiped[0]) {
+                onTap.run();
+            }
+        });
     }
 
     private static void loadImage(@Nullable View root, @Nullable AppCompatImageView imageView, @Nullable List<String> urls, int index, int shimmerId) {

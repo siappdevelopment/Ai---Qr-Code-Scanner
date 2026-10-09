@@ -110,7 +110,8 @@ public class LanguageActivity extends AppCompatActivity {
             return;
         }
         rlAdView.setVisibility(View.VISIBLE);
-        if ("banner".equalsIgnoreCase(AdPlacement.getLanguageAdType())) {
+        // Quiz priority always shows the big Quiz native here, even when the Language ad type is banner.
+        if ("banner".equalsIgnoreCase(AdPlacement.getLanguageAdType()) && !AdPlacement.shouldUseQuizPriority()) {
             rlBannerAdView.setVisibility(View.VISIBLE);
             rlNativeAdView.setVisibility(View.GONE);
             AdPlacement.loadAdaptiveBannerAd(this, AdPlacement.getLanguageBannerId(), rlBannerAdView, slBannerShimmer, llBannerAd, false, true);

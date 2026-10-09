@@ -2032,7 +2032,7 @@ public final class AdPlacement {
     }
 
     /** Status and navigation bars use the same surface as the ad, with no nav-bar scrim. */
-    private static void applyNativeFullSystemBars(Activity activity, @Nullable Window window, @NonNull View content) {
+    static void applyNativeFullSystemBars(Activity activity, @Nullable Window window, @NonNull View content) {
         if (window == null) {
             return;
         }

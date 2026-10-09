@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="170dp"
+    android:height="170dp"
+    android:viewportWidth="240"
+    android:viewportHeight="240">
+
+    <path
+        android:fillColor="#DBEAFE"
+        android:pathData="M44,120a76,76 0,1 0,152 0a76,76 0,1 0,-152 0z" />
+
+    <!-- app tile -->
+    <path
+        android:fillColor="#2563EB"
+        android:pathData="M82,62H158Q170,62 170,74V150Q170,162 158,162H82Q70,162 70,150V74Q70,62 82,62Z"
+        android:strokeWidth="3"
+        android:strokeColor="#1D4ED8"
+        android:strokeLineJoin="round" />
+
+    <path
+        android:fillColor="#3B82F6"
+        android:pathData="M82,62H158Q170,62 170,74V92H70V74Q70,62 82,62Z" />
+
+    <!-- download arrow -->
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M120,98V132"
+        android:strokeWidth="8"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round" />
+
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M104,118L120,134L136,118"
+        android:strokeWidth="8"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M100,148H140"
+        android:strokeWidth="6"
+        android:strokeColor="#BFDBFE"
+        android:strokeLineCap="round" />
+
+    <!-- success badge -->
+    <path
+        android:fillColor="#16A34A"
+        android:pathData="M142,138a22,22 0,1 0,44 0a22,22 0,1 0,-44 0z"
+        android:strokeWidth="4"
+        android:strokeColor="#FFFFFF" />
+
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M153,139L161,147L175,131"
+        android:strokeWidth="5"
+        android:strokeColor="#FFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

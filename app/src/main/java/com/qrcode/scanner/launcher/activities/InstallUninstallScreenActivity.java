@@ -34,7 +34,7 @@ public class InstallUninstallScreenActivity extends EventPromptActivity {
                     getString(R.string.event_install_success),
                     R.string.event_install_sub, R.string.event_install_body, R.string.event_install_chip,
                     getString(R.string.event_fast),
-                    R.drawable.ic_event_hero_uninstall, R.drawable.ic_event_check, R.drawable.ic_event_check);
+                    R.drawable.ic_event_hero_install, R.drawable.ic_event_check, R.drawable.ic_event_check);
             return;
         }
         showContent(0xFFEAF1FB, 0xFF0063E5, 0xFFDBEAFE, 0xFF1D4ED8,

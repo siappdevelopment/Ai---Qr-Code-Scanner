@@ -996,6 +996,13 @@ public final class AdPlacement {
      * @param largeInline true = inline adaptive (taller / big), false = anchored adaptive
      */
     public static void loadAdaptiveBannerAd(Activity activity, String bannerId, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd, boolean googleOnly, boolean largeInline) {
+        loadAdaptiveBannerAd(activity, bannerId, rlBannerAdView, slBannerShimmer, llBannerAd, googleOnly, largeInline, null);
+    }
+
+    /**
+     * @param onGoogleFailedQuiz when set, replaces the default small Quiz banner fallback after a Google load failure
+     */
+    public static void loadAdaptiveBannerAd(Activity activity, String bannerId, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd, boolean googleOnly, boolean largeInline, @Nullable Runnable onGoogleFailedQuiz) {
         if (activity != null) {
             initializeIfConfigured(activity);
         }
@@ -1029,6 +1036,11 @@ public final class AdPlacement {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
                 adView.destroy();
+                if (!googleOnly && getGoogleAdFailedShowQuiz() && onGoogleFailedQuiz != null) {
+                    hideBannerContainer(rlBannerAdView, slBannerShimmer, llBannerAd);
+                    onGoogleFailedQuiz.run();
+                    return;
+                }
                 if (!googleOnly && getGoogleAdFailedShowQuiz() && QuizAds.showBanner(activity, rlBannerAdView, slBannerShimmer, llBannerAd)) {
                     return;
                 }

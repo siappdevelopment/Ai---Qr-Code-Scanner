@@ -114,7 +114,17 @@ public class LanguageActivity extends AppCompatActivity {
         if ("banner".equalsIgnoreCase(AdPlacement.getLanguageAdType()) && !AdPlacement.shouldUseQuizPriority()) {
             rlBannerAdView.setVisibility(View.VISIBLE);
             rlNativeAdView.setVisibility(View.GONE);
-            AdPlacement.loadAdaptiveBannerAd(this, AdPlacement.getLanguageBannerId(), rlBannerAdView, slBannerShimmer, llBannerAd, false, true);
+            // Google banner failed and Quiz is the fallback: show the big Quiz native, not the small Quiz banner.
+            AdPlacement.loadAdaptiveBannerAd(this, AdPlacement.getLanguageBannerId(), rlBannerAdView, slBannerShimmer, llBannerAd, false, true, () -> {
+                if (isFinishing() || isDestroyed()) {
+                    return;
+                }
+                rlBannerAdView.setVisibility(View.GONE);
+                rlNativeAdView.setVisibility(View.VISIBLE);
+                if (!com.qrcode.scanner.launcher.common.QuizAds.showNative(this, rlNativeAdView, slNativeShimmer, flNativeAd, "large")) {
+                    rlAdView.setVisibility(View.GONE);
+                }
+            });
         } else {
             rlBannerAdView.setVisibility(View.GONE);
             rlNativeAdView.setVisibility(View.VISIBLE);

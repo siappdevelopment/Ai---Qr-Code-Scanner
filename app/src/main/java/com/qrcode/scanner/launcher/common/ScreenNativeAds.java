@@ -23,11 +23,13 @@ import java.lang.ref.WeakReference;
 public final class ScreenNativeAds {
     public enum Slot {
         HOME,
-        SETTINGS
+        SETTINGS,
+        CREATE_HUB
     }
 
     private static final SlotState HOME_STATE = new SlotState();
     private static final SlotState SETTINGS_STATE = new SlotState();
+    private static final SlotState CREATE_HUB_STATE = new SlotState();
 
     private ScreenNativeAds() {
     }
@@ -35,6 +37,8 @@ public final class ScreenNativeAds {
     public static boolean isEnabled(Slot slot) {
         boolean show = slot == Slot.HOME
                 ? RemoteConfigValues.getMainBigTopAdShow()
+                : slot == Slot.CREATE_HUB
+                ? RemoteConfigValues.getCreateHubTopAdShow()
                 : RemoteConfigValues.getSettingsFragmentNativeAdShow();
         if (!show) {
             return false;
@@ -58,6 +62,10 @@ public final class ScreenNativeAds {
             return;
         }
         bindChrome(activity, host, state);
+        if (slot == Slot.CREATE_HUB) {
+            // No refresh seconds here: every time the Create hub opens it requests its own ad.
+            state.lastCycleAt = 0L;
+        }
         if (!HomeBottomAd.isQrPageOpen(activity)) {
             hideSlot(state);
             return;
@@ -68,6 +76,9 @@ public final class ScreenNativeAds {
     public static void onPageVisible() {
         Activity activity = null;
         for (Slot slot : Slot.values()) {
+            if (slot == Slot.CREATE_HUB) {
+                continue; // Create hub is its own activity, not part of the pager
+            }
             SlotState state = state(slot);
             if (currentHost(state) == null) {
                 continue;
@@ -84,6 +95,9 @@ public final class ScreenNativeAds {
 
     public static void onPageHidden() {
         for (Slot slot : Slot.values()) {
+            if (slot == Slot.CREATE_HUB) {
+                continue;
+            }
             SlotState state = state(slot);
             if (currentHost(state) != null) {
                 hideSlot(state);
@@ -291,17 +305,23 @@ public final class ScreenNativeAds {
     }
 
     private static String unitId(Slot slot) {
-        String id = slot == Slot.HOME ? RemoteConfigValues.getMainNativeId() : RemoteConfigValues.getSettingsFragmentNativeId();
+        String id = slot == Slot.HOME ? RemoteConfigValues.getMainNativeId()
+                : slot == Slot.CREATE_HUB ? RemoteConfigValues.getCreateHubNativeId()
+                : RemoteConfigValues.getSettingsFragmentNativeId();
         return id == null ? "" : id.trim();
     }
 
     private static int refreshSeconds(Slot slot) {
+        if (slot == Slot.CREATE_HUB) {
+            // The Create hub has no refresh seconds: it loads once and keeps that ad while the screen is open.
+            return 0;
+        }
         int seconds = slot == Slot.HOME ? RemoteConfigValues.getMainAdAutoSecond() : RemoteConfigValues.getSettingsFragmentNativeSecond();
         return Math.max(seconds, 0);
     }
 
     private static SlotState state(Slot slot) {
-        return slot == Slot.HOME ? HOME_STATE : SETTINGS_STATE;
+        return slot == Slot.HOME ? HOME_STATE : slot == Slot.CREATE_HUB ? CREATE_HUB_STATE : SETTINGS_STATE;
     }
 
     @Nullable

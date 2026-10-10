@@ -72,7 +72,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.qrcode.scanner.app.R
+import com.qrcode.scanner.launcher.common.ScreenNativeAds
 import com.qrcode.scanner.ui.components.AppBackButton
+import com.qrcode.scanner.ui.components.BigNativeAd
 import com.qrcode.scanner.ui.components.appHeaderBackground
 import com.qrcode.scanner.ui.theme.BorderSubtle
 import com.qrcode.scanner.ui.theme.CardSurface
@@ -153,6 +155,7 @@ fun CreateHubScreen(
                 .padding(top = 16.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            BigNativeAd(slot = ScreenNativeAds.Slot.CREATE_HUB)
             if (visibleCategories.isEmpty()) {
                 NoFormatsFound(
                     onReset = {

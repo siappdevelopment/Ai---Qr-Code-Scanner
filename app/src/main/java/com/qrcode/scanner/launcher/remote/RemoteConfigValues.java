@@ -64,6 +64,7 @@ public final class RemoteConfigValues {
     private static boolean settingsFragmentNativeAdShow;
     private static String settingsFragmentNativeId = "";
     private static int settingsFragmentNativeSecond;
+    private static boolean createHubTopAdShow;
 
     private static boolean launcherAppNativeAdShow;
     private static int launcherAppNativeAdShowPerDay;
@@ -187,6 +188,9 @@ public final class RemoteConfigValues {
         settingsFragmentNativeId = settingsFragmentScreen.optString("SettingsFragment_Native_Id", "");
         settingsFragmentNativeSecond = settingsFragmentScreen.optInt("SettingsFragment_Native_Second", 0);
         rememberInterFlags("SettingsFragmentScreen", settingsFragmentScreen);
+
+        JSONObject createHubScreen = child(screenObject, "CreateHubScreen");
+        createHubTopAdShow = createHubScreen.optBoolean("CreateHub_top_Ad_Show", createHubScreen.optBoolean("CreateHub_Top_Ad_Show", false));
 
         JSONObject eventScreen = screenObject;
         if (!eventScreen.has("charging_screen") && root.has("charging_screen")) {
@@ -366,6 +370,17 @@ public final class RemoteConfigValues {
 
     public static int getSettingsFragmentNativeSecond() {
         return settingsFragmentNativeSecond;
+    }
+
+    /** CreateHubScreen.CreateHub_top_Ad_Show: Big native at the top of the Create hub. */
+    public static boolean getCreateHubTopAdShow() {
+        return createHubTopAdShow;
+    }
+
+    /** The Create hub's own native id (CreateHubScreen.CreateHub_Native_Id). */
+    public static String getCreateHubNativeId() {
+        ScreenAdConfig config = getScreenAd("CreateHubScreen");
+        return config == null || config.nativeId == null ? "" : config.nativeId;
     }
 
     public static boolean getAppOpenAdShow() {

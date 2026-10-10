@@ -238,7 +238,7 @@
                 android:clipChildren="false"
                 android:clipToPadding="false"
                 app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="0dp"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:cardPreventCornerOverlap="false">
 

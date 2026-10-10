@@ -75,6 +75,7 @@ import com.qrcode.scanner.ui.theme.PageBackground
 import com.qrcode.scanner.ui.theme.PlusJakartaSans
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 import com.qrcode.scanner.ui.components.ScreenWithAd
+import com.qrcode.scanner.ui.components.navigationBarsPaddingUnlessKeyboard
 import com.qrcode.scanner.ui.components.runWithClickAd
 import com.qrcode.scanner.ui.components.bindScreenBackAd
 import com.qrcode.scanner.ui.theme.TextPrimary
@@ -91,6 +92,8 @@ class CommonQrFormActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableThemedEdgeToEdge()
+        // The ad stays at the screen bottom; ScreenWithAd(keyboardAware) shrinks only the form above the keyboard.
+        window.setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
         bindScreenBackAd("QrFormScreen")
         val type = QrCategoryType.fromIntentExtra(
             intent.getStringExtra(QrCategoryType.EXTRA_QR_CATEGORY)
@@ -102,7 +105,7 @@ class CommonQrFormActivity : ComponentActivity() {
         }
         setContent {
             QRCodeScannerTheme {
-                ScreenWithAd(screenKey = "QrFormScreen", nativeSize = nativeSize) {
+                ScreenWithAd(screenKey = "QrFormScreen", nativeSize = nativeSize, keyboardAware = true) {
                 CommonQrFormScreen(
                     category = type,
                     onBack = { onBackPressedDispatcher.onBackPressed() },
@@ -190,7 +193,7 @@ fun CommonQrFormScreen(
         modifier = modifier
             .fillMaxSize()
             .background(PageBackground)
-            .navigationBarsPadding()
+            .navigationBarsPaddingUnlessKeyboard()
     ) {
         FormTopBar(title = category.displayTitle(context), onBack = onBack)
 

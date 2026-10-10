@@ -31,6 +31,9 @@ fun BigNativeAd(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 )
+                // Let the card shadow draw outside the host bounds.
+                clipChildren = false
+                clipToPadding = false
                 ScreenNativeAds.attach(activity, this, slot)
             }
         },

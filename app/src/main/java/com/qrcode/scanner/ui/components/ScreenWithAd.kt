@@ -9,12 +9,25 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.positionInWindow
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
@@ -34,25 +47,56 @@ fun ScreenWithAd(
     /** When true, system/UI back runs ScreenInterAds for this screenKey first. */
     bindBackAd: Boolean = false,
     onBackLeave: (() -> Unit)? = null,
+    /**
+     * Forms with text fields: the keyboard covers the ad (the ad stays at the screen bottom) and only the
+     * part of the keyboard that overlaps the content shrinks the content area, so the form can scroll
+     * up to its last button.
+     */
+    keyboardAware: Boolean = false,
     content: @Composable () -> Unit
 ) {
     HideNavigationBarOnAdScreen()
     if (bindBackAd) {
         BindScreenBackInterAd(screenKey = screenKey, onLeave = onBackLeave)
     }
-    Column(modifier = modifier.fillMaxSize()) {
+    val density = LocalDensity.current
+    var adHeightPx by remember { mutableIntStateOf(0) }
+    var columnBottomPx by remember { mutableIntStateOf(0) }
+    // Exact overlap: where the keyboard starts in this window, against where this screen ends. The ime inset
+    // alone also counts the navigation bar area, which would leave a gap above the keyboard.
+    val rootHeightPx = LocalView.current.rootView.height
+    val keyboardOverlapPx = if (keyboardAware) {
+        val keyboardTop = rootHeightPx - WindowInsets.ime.getBottom(density)
+        (columnBottomPx - keyboardTop - adHeightPx).coerceAtLeast(0)
+    } else {
+        0
+    }
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .then(
+                if (keyboardAware) {
+                    Modifier.onGloballyPositioned { columnBottomPx = (it.positionInWindow().y + it.size.height).toInt() }
+                } else {
+                    Modifier
+                }
+            )
+    ) {
         Box(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
+                .padding(bottom = with(density) { keyboardOverlapPx.toDp() })
         ) {
             content()
         }
-        FirebaseScreenAd(
-            screenKey = screenKey,
-            nativeSize = nativeSize,
-            modifier = Modifier.navigationBarsPadding()
-        )
+        Box(modifier = Modifier.onSizeChanged { adHeightPx = it.height }) {
+            FirebaseScreenAd(
+                screenKey = screenKey,
+                nativeSize = nativeSize,
+                modifier = Modifier.navigationBarsPadding()
+            )
+        }
     }
 }
 
@@ -135,4 +179,13 @@ private fun Context.findActivity(): Activity? {
         current = current.baseContext
     }
     return null
+}
+
+/**
+ * navigationBarsPadding() that steps aside while the keyboard is open: the keyboard already covers the
+ * navigation bar area, so keeping that padding would leave a gap between the content and the keyboard.
+ */
+fun Modifier.navigationBarsPaddingUnlessKeyboard(): Modifier = composed {
+    val keyboardOpen = WindowInsets.ime.getBottom(LocalDensity.current) > 0
+    if (keyboardOpen) Modifier else Modifier.navigationBarsPadding()
 }

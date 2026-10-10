@@ -224,7 +224,12 @@ fun ScanPulseNavHost(
                     Column(modifier = Modifier.fillMaxWidth()) {
                         ScanPulseBottomBar(
                             currentRoute = currentRoute,
-                            onNavigate = { destination -> openRootTabWithAd(destination.route) },
+                            // Already on that tab (Home / Settings): a repeat tap does nothing, same as Scan below.
+                            onNavigate = { destination ->
+                                if (currentRoute != destination.route) {
+                                    openRootTabWithAd(destination.route)
+                                }
+                            },
                             // Already on Scan: a repeat tap does nothing (no navigation, no bottom-nav ad count).
                             onScanClick = {
                                 if (currentRoute != AppDestination.Scan.route) {

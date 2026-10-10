@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.ads.nativead.NativeAd;
@@ -214,6 +215,18 @@ public final class ScreenNativeAds {
         state.container = root.findViewById(R.id.rlNativeAdView);
         state.shimmer = root.findViewById(R.id.slNativeShimmer);
         state.content = root.findViewById(R.id.flNativeAd);
+        paintBigNativeFill(activity, root);
+    }
+
+    /**
+     * The Big native card (Home, Settings, Create) uses its own slightly tinted fill with a thin border.
+     * The ad/shimmer/Quiz layouts inside still carry the shared ad background, so recolor those to match.
+     */
+    private static void paintBigNativeFill(Activity activity, @Nullable View view) {
+        if (activity == null || view == null) {
+            return;
+        }
+        AdPlacement.paintNativeFill(view, ContextCompat.getColor(AdTheme.forApp(activity), R.color.big_native_bg));
     }
 
     private static void showShimmer(SlotState state) {
@@ -250,6 +263,7 @@ public final class ScreenNativeAds {
         hideShimmer(state);
         state.content.setVisibility(View.VISIBLE);
         AdPlacement.showLargeNative(activity, state.content, state.ad);
+        paintBigNativeFill(activity, state.content);
     }
 
     private static boolean showQuiz(Activity activity, SlotState state) {
@@ -260,6 +274,7 @@ public final class ScreenNativeAds {
         if (!shown) {
             return false;
         }
+        paintBigNativeFill(activity, state.content);
         FrameLayout host = currentHost(state);
         if (host != null) {
             host.setVisibility(View.VISIBLE);

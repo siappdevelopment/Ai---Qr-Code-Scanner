@@ -338,7 +338,7 @@ public abstract class EventPromptActivity extends AppCompatActivity {
         View bannerSlot = findViewById(R.id.llEventBanner);
         androidx.cardview.widget.CardView adCard = findViewById(R.id.eventAdCard);
         container.setVisibility(View.VISIBLE);
-        container.setBackgroundColor(adCardColor);
+        container.setBackground(null); // the rounded card paints the ad fill; a square container fill hid its corners
         if (adCard != null) {
             adCard.setCardBackgroundColor(adCardColor);
             adCard.setVisibility(View.VISIBLE);
@@ -415,7 +415,7 @@ public abstract class EventPromptActivity extends AppCompatActivity {
         FrameLayout nativeSlot = findViewById(R.id.flEventNative);
         View bannerSlot = findViewById(R.id.llEventBanner);
         container.setVisibility(View.VISIBLE);
-        container.setBackgroundColor(adCardColor);
+        container.setBackground(null);
         androidx.cardview.widget.CardView adCard = findViewById(R.id.eventAdCard);
         if (adCard != null) {
             adCard.setCardBackgroundColor(adCardColor);

@@ -77,6 +77,25 @@ public final class EventPromptLauncher {
         }
     }
 
+    private static int notificationIdFor(String kind) {
+        return EventPromptActivity.KIND_CHARGE_IN.equals(kind)
+                ? NOTIFICATION_CHARGE_IN
+                : EventPromptActivity.KIND_CHARGE_OUT.equals(kind)
+                ? NOTIFICATION_CHARGE_OUT
+                : EventPromptActivity.KIND_INSTALL.equals(kind)
+                ? NOTIFICATION_INSTALL
+                : NOTIFICATION_UNINSTALL;
+    }
+
+    /** Removes the full-screen-intent notification of this kind (the screen is up, or a newer one replaces it). */
+    public static void cancelNotification(Context context, String kind) {
+        if (context == null || kind == null) {
+            return;
+        }
+        androidx.core.app.NotificationManagerCompat.from(context.getApplicationContext()).cancel(notificationIdFor(kind));
+        Log.d("EventPrompt", "notification cancelled kind=" + kind);
+    }
+
     private static void showEvent(Context app, Intent intent, String kind) {
         try {
             Log.d("EventPrompt", "show overlay for " + kind);
@@ -92,13 +111,9 @@ public final class EventPromptLauncher {
             Log.d("EventPrompt", "startActivity accepted for " + kind);
         } catch (Exception startError) {
             Log.d("EventPrompt", "startActivity failed for " + kind + ": " + startError + ", posting notification");
-            int notificationId = EventPromptActivity.KIND_CHARGE_IN.equals(kind)
-                    ? NOTIFICATION_CHARGE_IN
-                    : EventPromptActivity.KIND_CHARGE_OUT.equals(kind)
-                    ? NOTIFICATION_CHARGE_OUT
-                    : EventPromptActivity.KIND_INSTALL.equals(kind)
-                    ? NOTIFICATION_INSTALL
-                    : NOTIFICATION_UNINSTALL;
+            int notificationId = notificationIdFor(kind);
+            // A stale notification of this kind must not suppress the new one: remove it first, then post.
+            cancelNotification(app, kind);
             String title = EventPromptActivity.KIND_CHARGE_IN.equals(kind)
                     ? app.getString(R.string.event_charge_in_title)
                     : EventPromptActivity.KIND_CHARGE_OUT.equals(kind)

@@ -38,6 +38,7 @@ import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.common.AdPlacement;
+import com.qrcode.scanner.launcher.common.EventPromptLauncher;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 /**
@@ -56,6 +57,8 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     private ValueAnimator holdAnimator;
     private boolean canExit;
     private boolean exiting;
+    /** True while this screen itself opens another activity (Settings): that is not the user leaving by HOME / Recents. */
+    private boolean internalNavigation;
     private int adRequest;
     private int adCardColor = Color.WHITE;
     @Nullable
@@ -67,6 +70,8 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("EventPrompt", "activity created kind=" + kindFrom(getIntent()));
+        // The screen is up: a full-screen-intent notification of this kind is no longer needed.
+        EventPromptLauncher.cancelNotification(this, kindFrom(getIntent()));
         if (!AdPlacement.isNetworkAvailable(this)) {
             Log.d("EventPrompt", "finish: no internet");
             finish();
@@ -90,6 +95,8 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
+        Log.d("EventPrompt", "onNewIntent: flipped in place kind=" + kindFrom(intent));
+        EventPromptLauncher.cancelNotification(this, kindFrom(intent));
         bindKind(kindFrom(intent));
         restartHold();
         loadBottomAd();
@@ -98,7 +105,42 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        internalNavigation = false;
         hideNavigationBar();
+    }
+
+    /**
+     * HOME or Recents: this screen is excludeFromRecents, so a hidden copy is useless and a later plug event
+     * would only reach a stopped instance. Close it. No back ad on this path (that is only for Done / Back).
+     */
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        Log.d("EventPrompt", "onUserLeaveHint finishing=" + isFinishing() + " internal=" + internalNavigation);
+        if (internalNavigation) {
+            return; // cleared on the next resume, after onStop has also skipped it
+        }
+        leaveWithoutAd("onUserLeaveHint");
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d("EventPrompt", "onStop finishing=" + isFinishing() + " configChange=" + isChangingConfigurations()
+                + " exiting=" + exiting + " internal=" + internalNavigation);
+        super.onStop();
+        // Also covers screen off / Recents where onUserLeaveHint is not called. Not while the Done / Back ad is
+        // showing over this screen (exiting) or while it opens its own Settings screen.
+        if (!isChangingConfigurations() && !isFinishing() && !exiting && !internalNavigation) {
+            leaveWithoutAd("onStop");
+        }
+    }
+
+    private void leaveWithoutAd(String from) {
+        if (isFinishing() || isChangingConfigurations()) {
+            return;
+        }
+        Log.d("EventPrompt", "leave without ad from=" + from + " kind=" + kindFrom(getIntent()));
+        finishAndRemoveTask();
     }
 
     private void hideNavigationBar() {
@@ -191,7 +233,10 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     private void bindClicks() {
         View settings = findViewById(R.id.ivEventSettings);
         View optimize = findViewById(R.id.llOptimizedSpeed);
-        View.OnClickListener openSettings = v -> startActivity(new Intent(this, LauncherSettingsActivity.class));
+        View.OnClickListener openSettings = v -> {
+            internalNavigation = true;
+            startActivity(new Intent(this, LauncherSettingsActivity.class));
+        };
         settings.setOnClickListener(openSettings);
         optimize.setOnClickListener(openSettings);
         btnEventDone = findViewById(R.id.btnEventDone);
@@ -587,12 +632,15 @@ public abstract class EventPromptActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        Log.d("EventPrompt", "onDestroy kind=" + kindFrom(getIntent()));
         adRequest++;
         if (holdAnimator != null) {
             holdAnimator.cancel();
             holdAnimator = null;
         }
         releaseAds();
+        // The next back ad is ready for the next event (nothing was consumed when the screen closed via HOME).
+        AdPlacement.preloadEventBackAd(getApplicationContext(), screenKey());
         super.onDestroy();
     }
 }

@@ -1469,6 +1469,17 @@ public final class AdPlacement {
         context.getApplicationContext().getSharedPreferences(LAUNCHER_APP_BACK_PREFS, Context.MODE_PRIVATE).edit().putBoolean("waitingForLauncherAppReturn", true).putString("lastLaunchedPackage", launched).apply();
     }
 
+    /**
+     * The launcher was opened fresh (not resumed from an external app), e.g. after the app was closed or removed
+     * from Recents. A pending "returned from an external app" mark from before that must not show the back ad.
+     */
+    public static void clearLauncherAppReturnPending(@Nullable Context context) {
+        if (context == null) {
+            return;
+        }
+        context.getApplicationContext().getSharedPreferences(LAUNCHER_APP_BACK_PREFS, Context.MODE_PRIVATE).edit().putBoolean("waitingForLauncherAppReturn", false).apply();
+    }
+
     public static void handleLauncherAppReturnAd(@Nullable Activity activity) {
         if (!(activity instanceof LauncherHomeActivity) || activity.isFinishing()) {
             return;

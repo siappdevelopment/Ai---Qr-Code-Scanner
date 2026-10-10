@@ -97,6 +97,10 @@ public class LauncherHomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         LauncherSettingsHelper.registerChangeListener(drawerSettingsListener);
         hideLauncherFromRecents();
+        if (savedInstanceState == null) {
+            // Fresh launch (app was closed / removed from Recents): not a return from an external app.
+            AdPlacement.clearLauncherAppReturnPending(this);
+        }
         pendingSavedInstanceState = savedInstanceState;
         if (shouldHandleAfterDefaultSetup()) {
             completeAfterDefaultSetup();

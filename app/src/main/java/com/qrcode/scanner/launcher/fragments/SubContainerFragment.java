@@ -364,7 +364,7 @@ public class SubContainerFragment extends Fragment {
             tvWeatherCondition.setText("Loading weather…");
         }
         if (tvWeatherLocation != null) {
-            String location = Locale.getDefault().getDisplayCountry();
+            String location = Locale.getDefault().getDisplayCountry(Locale.ENGLISH);
             tvWeatherLocation.setText(location == null || location.trim().isEmpty() ? "—" : location);
         }
         if (ivWeatherIcon != null) {

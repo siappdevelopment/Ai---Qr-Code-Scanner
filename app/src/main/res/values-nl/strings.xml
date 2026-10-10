@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Aangepaste app-lade en mappen</string>
     <string name="default_drawer_desc">Organiseer apps, verberg labels, pas rasterkolommen aan en schakel tussen lichte en donkere thema\'s.</string>
     <string name="set_as_default">Als standaard instellen</string>
+    <string name="launcher_default_title">Maak ons je standaard</string>
+    <string name="launcher_default_subtitle">Stel dit in als je standaard Phone Cleaner-launcher-app.</string>
+    <string name="launcher_default_set_now">Nu instellen</string>
     <string name="intro_title_1">Scan QR-codes direct</string>
     <string name="intro_desc_1">Scan QR-codes snel met je camera en krijg binnen enkele seconden toegang tot informatie</string>
     <string name="intro_title_2">Scan streepjescodes met gemak</string>

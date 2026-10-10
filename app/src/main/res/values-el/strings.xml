@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Προσαρμοσμένο συρτάρι εφαρμογών &amp; φάκελοι</string>
     <string name="default_drawer_desc">Οργανώστε εφαρμογές, αποκρύψτε ετικέτες, προσαρμόστε στήλες πλέγματος και εναλλάξτε μεταξύ φωτεινών και σκούρων θεμάτων.</string>
     <string name="set_as_default">Ορισμός ως προεπιλογή</string>
+    <string name="launcher_default_title">Κάντε μας την προεπιλογή σας</string>
+    <string name="launcher_default_subtitle">Ορίστε την ως την προεπιλεγμένη εφαρμογή εκκίνησης Phone Cleaner.</string>
+    <string name="launcher_default_set_now">Ορισμός τώρα</string>
     <string name="intro_title_1">Σαρώστε κωδικούς QR άμεσα</string>
     <string name="intro_desc_1">Σαρώστε γρήγορα κωδικούς QR με την κάμερά σας και αποκτήστε πρόσβαση σε πληροφορίες σε δευτερόλεπτα</string>
     <string name="intro_title_2">Σαρώστε barcode με ευκολία</string>

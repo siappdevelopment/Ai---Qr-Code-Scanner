@@ -79,7 +79,7 @@ public final class WeatherForecastGenerator {
         }
 
         String nowCondition = conditionFor(currentHour, temps[0], day);
-        String location = Locale.getDefault().getDisplayCountry();
+        String location = Locale.getDefault().getDisplayCountry(Locale.ENGLISH);
         if (location.trim().isEmpty()) {
             location = "Local";
         }

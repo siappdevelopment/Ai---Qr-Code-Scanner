@@ -635,6 +635,9 @@
     <string name="default_drawer_title">कस्टम ऐप दराज़ और फ़ोल्डर</string>
     <string name="default_drawer_desc">ऐप व्यवस्थित करें, लेबल छिपाएँ, ग्रिड कॉलम अनुकूलित करें और लाइट और डार्क थीम के बीच स्विच करें।</string>
     <string name="set_as_default">डिफ़ॉल्ट के रूप में सेट करें</string>
+    <string name="launcher_default_title">हमें अपना डिफ़ॉल्ट बनाएँ</string>
+    <string name="launcher_default_subtitle">इसे अपना डिफ़ॉल्ट Phone Cleaner लॉन्चर ऐप बनाएँ।</string>
+    <string name="launcher_default_set_now">अभी सेट करें</string>
     <string name="intro_title_1">QR कोड तुरंत स्कैन करें</string>
     <string name="intro_desc_1">अपने कैमरे से QR कोड जल्दी स्कैन करें और सेकंडों में जानकारी प्राप्त करें</string>
     <string name="intro_title_2">आसानी से बारकोड स्कैन करें</string>

@@ -635,6 +635,9 @@
     <string name="default_drawer_title">自定义应用抽屉和文件夹</string>
     <string name="default_drawer_desc">整理应用、隐藏标签、自定义网格列，并在浅色和深色主题之间切换。</string>
     <string name="set_as_default">设为默认</string>
+    <string name="launcher_default_title">将我们设为默认</string>
+    <string name="launcher_default_subtitle">将此设为您的默认 Phone Cleaner 启动器应用。</string>
+    <string name="launcher_default_set_now">立即设置</string>
     <string name="intro_title_1">即时扫描二维码</string>
     <string name="intro_desc_1">使用相机快速扫描二维码，几秒钟内即可访问信息</string>
     <string name="intro_title_2">轻松扫描条形码</string>

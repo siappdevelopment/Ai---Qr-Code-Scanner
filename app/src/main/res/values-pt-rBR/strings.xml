@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Gaveta de apps e pastas personalizadas</string>
     <string name="default_drawer_desc">Organize apps, oculte rótulos, personalize colunas da grade e alterne entre temas claro e escuro.</string>
     <string name="set_as_default">Definir como padrão</string>
+    <string name="launcher_default_title">Faça de nós o seu padrão</string>
+    <string name="launcher_default_subtitle">Defina como seu app de launcher Phone Cleaner padrão.</string>
+    <string name="launcher_default_set_now">Definir agora</string>
     <string name="intro_title_1">Escaneie QR codes instantaneamente</string>
     <string name="intro_desc_1">Escaneie rapidamente QR codes com sua câmera e acesse informações em segundos</string>
     <string name="intro_title_2">Escaneie códigos de barras com facilidade</string>

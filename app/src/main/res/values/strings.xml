@@ -587,6 +587,9 @@
     <string name="default_drawer_title">Custom App Drawer &amp; Folders</string>
     <string name="default_drawer_desc">Organize apps, hide labels, customize grid columns, and switch between light and dark themes.</string>
     <string name="set_as_default">Set as Default</string>
+    <string name="launcher_default_title">Make Us Your Default</string>
+    <string name="launcher_default_subtitle">Set this your default Phone Cleaner launcher app.</string>
+    <string name="launcher_default_set_now">Set Now</string>
     <string name="intro_title_1">Scan QR Codes Instantly</string>
     <string name="intro_desc_1">Quickly scan QR codes with your camera and access information in seconds</string>
     <string name="intro_title_2">Scan Barcodes With Ease</string>

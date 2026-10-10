@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Custom na App Drawer at Folder</string>
     <string name="default_drawer_desc">Ayusin ang mga app, itago ang mga label, i-customize ang grid columns, at magpalipat-lipat sa pagitan ng light at dark theme.</string>
     <string name="set_as_default">Itakda bilang Default</string>
+    <string name="launcher_default_title">Gawin Kaming Default Mo</string>
+    <string name="launcher_default_subtitle">Itakda ito bilang default mong Phone Cleaner launcher app.</string>
+    <string name="launcher_default_set_now">I-set Ngayon</string>
     <string name="intro_title_1">Agad na Mag-scan ng QR Code</string>
     <string name="intro_desc_1">Mabilis na mag-scan ng QR code gamit ang iyong camera at ma-access ang impormasyon sa ilang segundo</string>
     <string name="intro_title_2">Mag-scan ng Barcode nang Madali</string>

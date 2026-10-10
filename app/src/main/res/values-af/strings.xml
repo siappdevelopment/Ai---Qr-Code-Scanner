@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Pasgemaakte toep-laaie en gidse</string>
     <string name="default_drawer_desc">Organiseer toeps, versteek etikette, pas roosterkolomme aan en wissel tussen ligte en donker temas.</string>
     <string name="set_as_default">Stel as verstek</string>
+    <string name="launcher_default_title">Maak ons jou verstek</string>
+    <string name="launcher_default_subtitle">Stel dit as jou verstek Phone Cleaner-lanseerder-app.</string>
+    <string name="launcher_default_set_now">Stel nou</string>
     <string name="intro_title_1">Skandeer QR-kodes onmiddellik</string>
     <string name="intro_desc_1">Skandeer QR-kodes vinnig met jou kamera en kry toegang tot inligting binne sekondes</string>
     <string name="intro_title_2">Skandeer strepieskodes met gemak</string>

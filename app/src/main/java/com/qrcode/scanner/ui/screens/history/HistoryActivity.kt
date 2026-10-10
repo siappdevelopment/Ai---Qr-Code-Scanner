@@ -30,7 +30,8 @@ class HistoryActivity : ComponentActivity() {
                     modifier = if (ScreenLoadAd.isEnabled("HistoryScreen")) Modifier else Modifier.navigationBarsPadding(),
                     onBack = { onBackPressedDispatcher.onBackPressed() },
                     onOpenScanner = {
-                        ComposeScanRequest.request()
+                        // Starts the host explicitly: History may have nothing under it (opened from Call End).
+                        ComposeScanRequest.openScan(context)
                         finish()
                     },
                     onOpenDetail = { historyId ->

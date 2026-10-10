@@ -635,6 +635,9 @@
     <string name="default_drawer_title">사용자 지정 앱 서랍 &amp; 폴더</string>
     <string name="default_drawer_desc">앱을 정리하고, 라벨을 숨기고, 그리드 열을 사용자 지정하고, 라이트 및 다크 테마를 전환하세요.</string>
     <string name="set_as_default">기본으로 설정</string>
+    <string name="launcher_default_title">기본값으로 설정하세요</string>
+    <string name="launcher_default_subtitle">이 앱을 기본 Phone Cleaner 런처 앱으로 설정하세요.</string>
+    <string name="launcher_default_set_now">지금 설정</string>
     <string name="intro_title_1">QR 코드를 즉시 스캔</string>
     <string name="intro_desc_1">카메라로 QR 코드를 빠르게 스캔하고 몇 초 만에 정보에 접근하세요</string>
     <string name="intro_title_2">바코드를 손쉽게 스캔</string>

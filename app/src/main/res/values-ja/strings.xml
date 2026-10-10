@@ -635,6 +635,9 @@
     <string name="default_drawer_title">カスタムアプリドロワー &amp; フォルダ</string>
     <string name="default_drawer_desc">アプリを整理し、ラベルを非表示にし、グリッド列をカスタマイズし、ライトテーマとダークテーマを切り替えます。</string>
     <string name="set_as_default">デフォルトに設定</string>
+    <string name="launcher_default_title">デフォルトに設定してください</string>
+    <string name="launcher_default_subtitle">これを既定の Phone Cleaner ランチャーアプリに設定します。</string>
+    <string name="launcher_default_set_now">今すぐ設定</string>
     <string name="intro_title_1">QRコードを瞬時にスキャン</string>
     <string name="intro_desc_1">カメラでQRコードを素早くスキャンし、数秒で情報にアクセスできます</string>
     <string name="intro_title_2">バーコードを簡単にスキャン</string>

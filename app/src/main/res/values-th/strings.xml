@@ -635,6 +635,9 @@
     <string name="default_drawer_title">ลิ้นชักแอป &amp; โฟลเดอร์ที่กำหนดเอง</string>
     <string name="default_drawer_desc">จัดระเบียบแอป ซ่อนป้ายชื่อ ปรับแต่งคอลัมน์กริด และสลับระหว่างธีมสว่างและมืด</string>
     <string name="set_as_default">ตั้งเป็นค่าเริ่มต้น</string>
+    <string name="launcher_default_title">ตั้งเราเป็นค่าเริ่มต้นของคุณ</string>
+    <string name="launcher_default_subtitle">ตั้งเป็นแอปตัวเรียกใช้ Phone Cleaner เริ่มต้นของคุณ</string>
+    <string name="launcher_default_set_now">ตั้งค่าเลย</string>
     <string name="intro_title_1">สแกนคิวอาร์โค้ดทันที</string>
     <string name="intro_desc_1">สแกนคิวอาร์โค้ดอย่างรวดเร็วด้วยกล้องของคุณและเข้าถึงข้อมูลได้ในไม่กี่วินาที</string>
     <string name="intro_title_2">สแกนบาร์โค้ดได้อย่างง่ายดาย</string>

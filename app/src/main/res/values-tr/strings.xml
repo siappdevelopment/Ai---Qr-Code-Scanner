@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Özel Uygulama Çekmecesi ve Klasörler</string>
     <string name="default_drawer_desc">Uygulamaları düzenleyin, etiketleri gizleyin, ızgara sütunlarını özelleştirin ve açık ve koyu temalar arasında geçiş yapın.</string>
     <string name="set_as_default">Varsayılan Olarak Ayarla</string>
+    <string name="launcher_default_title">Bizi Varsayılan Yapın</string>
+    <string name="launcher_default_subtitle">Bunu varsayılan Phone Cleaner başlatıcı uygulamanız yapın.</string>
+    <string name="launcher_default_set_now">Şimdi Ayarla</string>
     <string name="intro_title_1">QR Kodları Anında Tarayın</string>
     <string name="intro_desc_1">Kameranızla QR kodları hızlıca tarayın ve bilgilere saniyeler içinde erişin</string>
     <string name="intro_title_2">Barkodları Kolayca Tarayın</string>

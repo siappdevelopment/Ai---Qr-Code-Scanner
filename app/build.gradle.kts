@@ -44,6 +44,23 @@ android {
     buildFeatures {
         compose = true
     }
+    flavorDimensions += "env"
+    productFlavors {
+        create("prod") {
+            dimension = "env"
+        }
+        create("qa") {
+            dimension = "env"
+            versionNameSuffix = "_qa"
+            versionCode = 0 + (defaultConfig.versionCode ?: 0)
+        }
+    }
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+//    @everyone  must Add this Line in Gradle for Change language in Live Build
 }
 
 dependencies {

@@ -239,6 +239,8 @@ public class LauncherHomeFragment extends Fragment {
         ivAppIcon3 = view.findViewById(R.id.ivAppIcon3);
         ivAppIcon4 = view.findViewById(R.id.ivAppIcon4);
         defaultHomePromptHelper.bind(llDefault);
+        // Fill time/day/date now so the first frame (e.g. after a theme change) never shows placeholder text.
+        updateDateTime();
 
         updateRightSwipeTutorialVisibility();
         setupClickListeners();
@@ -1232,7 +1234,8 @@ public class LauncherHomeFragment extends Fragment {
             tvTime.setText(formattedTime);
         }
 
-        Locale appLocale = requireContext().getResources().getConfiguration().getLocales().get(0);
+        // Home page text stays English (only the Default card is translated).
+        Locale appLocale = Locale.ENGLISH;
         tvDay.setText(new SimpleDateFormat("EEEE", appLocale).format(now));
         tvDate.setText(new SimpleDateFormat("dd MMM yyyy", appLocale).format(now));
     }

@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Настраиваемый ящик приложений и папки</string>
     <string name="default_drawer_desc">Упорядочивайте приложения, скрывайте подписи, настраивайте столбцы сетки и переключайтесь между светлой и тёмной темами.</string>
     <string name="set_as_default">Сделать по умолчанию</string>
+    <string name="launcher_default_title">Сделайте нас приложением по умолчанию</string>
+    <string name="launcher_default_subtitle">Установите это приложение лаунчером Phone Cleaner по умолчанию.</string>
+    <string name="launcher_default_set_now">Установить</string>
     <string name="intro_title_1">Мгновенно сканируйте QR-коды</string>
     <string name="intro_desc_1">Быстро сканируйте QR-коды камерой и получайте информацию за секунды</string>
     <string name="intro_title_2">Легко сканируйте штрихкоды</string>

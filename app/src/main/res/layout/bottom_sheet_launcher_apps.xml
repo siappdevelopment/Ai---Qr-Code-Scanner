@@ -71,7 +71,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/sans_trial_medium"
             android:singleLine="true"
-            android:text="Set as Default"
+            android:text="@string/set_as_default"
             android:textColor="@color/text_primary"
             android:textSize="@dimen/_13sdp"
             tools:ignore="HardcodedText" />
@@ -85,7 +85,7 @@
             android:fontFamily="@font/sans_trial_medium"
             android:gravity="center"
             android:paddingBottom="@dimen/_2sdp"
-            android:text="Set Now"
+            android:text="@string/launcher_default_set_now"
             android:textColor="@android:color/white"
             android:textSize="@dimen/_11sdp"
             tools:ignore="HardcodedText" />

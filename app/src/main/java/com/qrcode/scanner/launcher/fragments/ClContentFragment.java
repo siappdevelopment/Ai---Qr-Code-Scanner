@@ -13,7 +13,7 @@ import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.activities.AppWidgetsActivity;
 import com.qrcode.scanner.launcher.activities.ClEndActivity;
 import com.qrcode.scanner.ui.screens.history.HistoryActivity;
-import com.qrcode.scanner.ui.screens.scan.ScannerActivity;
+import com.qrcode.scanner.ui.navigation.ComposeScanRequest;
 
 public class ClContentFragment extends Fragment {
     private LinearLayout llScan, llHistory, llAppWidgets;
@@ -33,7 +33,11 @@ public class ClContentFragment extends Fragment {
     }
 
     private void initialClicks() {
-        llScan.setOnClickListener(v -> openAndFinish(ScannerActivity.class));
+        llScan.setOnClickListener(v -> {
+            // Scan opens the app's Scan fragment, not the separate ScannerActivity.
+            ComposeScanRequest.INSTANCE.openScan(requireContext());
+            ClEndActivity.finishAfterLaunch(this);
+        });
         llHistory.setOnClickListener(v -> openAndFinish(HistoryActivity.class));
         llAppWidgets.setOnClickListener(v -> openAndFinish(AppWidgetsActivity.class));
     }

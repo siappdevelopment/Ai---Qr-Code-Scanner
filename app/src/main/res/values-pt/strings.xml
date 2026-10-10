@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Gaveta de aplicações e pastas personalizadas</string>
     <string name="default_drawer_desc">Organize aplicações, oculte etiquetas, personalize colunas da grelha e alterne entre temas claros e escuros.</string>
     <string name="set_as_default">Definir como predefinição</string>
+    <string name="launcher_default_title">Torne-nos o seu padrão</string>
+    <string name="launcher_default_subtitle">Defina como a sua aplicação de lançador Phone Cleaner predefinida.</string>
+    <string name="launcher_default_set_now">Definir agora</string>
     <string name="intro_title_1">Digitalize códigos QR instantaneamente</string>
     <string name="intro_desc_1">Digitalize rapidamente códigos QR com a sua câmara e aceda a informações em segundos</string>
     <string name="intro_title_2">Digitalize códigos de barras com facilidade</string>

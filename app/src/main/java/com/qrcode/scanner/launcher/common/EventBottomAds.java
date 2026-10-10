@@ -71,10 +71,7 @@ public final class EventBottomAds {
             clear(screenKey);
             return;
         }
-        if (AdPlacement.shouldUseQuizPriority()) {
-            clear(screenKey);
-            return;
-        }
+        // Charging / Install bottom ads are Google-only, so Quiz priority does not stop the preload.
         if (useNative(screenKey)) {
             destroyBanner(cache);
             preloadNative(app, screenKey, cache);

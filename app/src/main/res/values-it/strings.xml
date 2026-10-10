@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Cassetto app e cartelle personalizzati</string>
     <string name="default_drawer_desc">Organizza le app, nascondi le etichette, personalizza le colonne della griglia e passa tra temi chiari e scuri.</string>
     <string name="set_as_default">Imposta come predefinito</string>
+    <string name="launcher_default_title">Rendici la tua scelta predefinita</string>
+    <string name="launcher_default_subtitle">Imposta questa come app launcher Phone Cleaner predefinita.</string>
+    <string name="launcher_default_set_now">Imposta ora</string>
     <string name="intro_title_1">Scansiona codici QR istantaneamente</string>
     <string name="intro_desc_1">Scansiona rapidamente codici QR con la fotocamera e accedi alle informazioni in pochi secondi</string>
     <string name="intro_title_2">Scansiona codici a barre con facilità</string>

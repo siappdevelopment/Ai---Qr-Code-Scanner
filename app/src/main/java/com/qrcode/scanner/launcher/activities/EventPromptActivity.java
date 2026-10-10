@@ -38,7 +38,6 @@ import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.common.AdPlacement;
-import com.qrcode.scanner.launcher.common.QuizAds;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 /**
@@ -442,10 +441,7 @@ public abstract class EventPromptActivity extends AppCompatActivity {
             if (request != adRequest || isFinishing()) {
                 return;
             }
-            if (AdPlacement.getGoogleAdFailedShowQuiz() && QuizAds.showNative(this, container, shimmer, nativeSlot, "large", true)) {
-                paintNativeCard(nativeSlot);
-                return;
-            }
+            // Charging / Install show Google ads only: no Quiz fallback when Google fails.
             hideAdPlaceholders();
         }, true, AdPlacement.onboardingNativeColor(this, true), true);
     }
@@ -514,9 +510,7 @@ public abstract class EventPromptActivity extends AppCompatActivity {
                 if (request != adRequest || isFinishing()) {
                     return;
                 }
-                if (AdPlacement.getGoogleAdFailedShowQuiz() && QuizAds.showBanner(this, container, shimmer, bannerSlot, true)) {
-                    return;
-                }
+                // Google ads only: no Quiz fallback when Google fails.
                 hideAdPlaceholders();
             });
         });

@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Cajón de apps y carpetas personalizados</string>
     <string name="default_drawer_desc">Organiza apps, oculta etiquetas, personaliza columnas de la cuadrícula y cambia entre temas claro y oscuro.</string>
     <string name="set_as_default">Establecer como predeterminado</string>
+    <string name="launcher_default_title">Haznos tu predeterminado</string>
+    <string name="launcher_default_subtitle">Establece esta como tu app de inicio Phone Cleaner predeterminada.</string>
+    <string name="launcher_default_set_now">Establecer ahora</string>
     <string name="intro_title_1">Escanea códigos QR al instante</string>
     <string name="intro_desc_1">Escanea rápidamente códigos QR con tu cámara y accede a la información en segundos</string>
     <string name="intro_title_2">Escanea códigos de barras con facilidad</string>

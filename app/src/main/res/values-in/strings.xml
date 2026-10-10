@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Laci Aplikasi &amp; Folder Khusus</string>
     <string name="default_drawer_desc">Atur aplikasi, sembunyikan label, sesuaikan kolom kisi, dan beralih antara tema terang dan gelap.</string>
     <string name="set_as_default">Jadikan Default</string>
+    <string name="launcher_default_title">Jadikan Kami Default Anda</string>
+    <string name="launcher_default_subtitle">Setel ini sebagai aplikasi peluncur Phone Cleaner default Anda.</string>
+    <string name="launcher_default_set_now">Setel Sekarang</string>
     <string name="intro_title_1">Pindai Kode QR Secara Instan</string>
     <string name="intro_desc_1">Pindai kode QR dengan cepat menggunakan kamera Anda dan akses informasi dalam hitungan detik</string>
     <string name="intro_title_2">Pindai Barcode dengan Mudah</string>

@@ -50,6 +50,13 @@ public class LanguageActivity extends AppCompatActivity {
         hideNavigationBar();
         findIDs();
         AdPlacement.preloadOnboardingInterstitialAd(this, false);
+        // Onboarding Back = Done (no going back). From Settings the normal Back (close) is kept.
+        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(!isOpenedFromSettings()) {
+            @Override
+            public void handleOnBackPressed() {
+                applySelectedLanguageAndContinue();
+            }
+        });
     }
 
     @Override

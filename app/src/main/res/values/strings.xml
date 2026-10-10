@@ -587,6 +587,9 @@
     <string name="default_drawer_title">Custom App Drawer &amp; Folders</string>
     <string name="default_drawer_desc">Organize apps, hide labels, customize grid columns, and switch between light and dark themes.</string>
     <string name="set_as_default">Set as Default</string>
+    <string name="default_launcher_reminder_channel">Default launcher reminder</string>
+    <string name="default_launcher_reminder_title">Make QR Code &amp; Scanner your home screen</string>
+    <string name="default_launcher_reminder_text">Set QR Code &amp; Scanner as your default launcher for faster, smoother access.</string>
     <string name="launcher_default_title">Make Us Your Default</string>
     <string name="launcher_default_subtitle">Set this your default Phone Cleaner launcher app.</string>
     <string name="launcher_default_set_now">Set Now</string>

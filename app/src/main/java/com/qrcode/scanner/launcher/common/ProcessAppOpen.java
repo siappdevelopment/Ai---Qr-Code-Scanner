@@ -156,6 +156,9 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
         appInForeground = true;
+        // The user is in the app: a stale "make this your default launcher" reminder is cleared.
+        DefaultLauncherReminder.cancelIfDefault(application);
+        DefaultLauncherReminder.dismissNotification(application);
         Activity activity = currentActivity;
         Log.d(TAG, "process onStart activity=" + (activity == null ? "null" : activity.getClass().getSimpleName()) + " rightPage=" + isRightSidePageOpen(activity));
         if (activity == null || shouldSkipAppOpenAd()) {

@@ -1,0 +1,8 @@
+{
+  "launcher_home_screen": {
+    "launcher_notification_push_show": true,
+    "launcher_notification_push_time": 24,
+    "launcher_notification_push_title": "Make Gallery your home screen",
+    "launcher_notification_push_description": "Set Gallery as your default launcher for faster, smoother access."
+  }
+}

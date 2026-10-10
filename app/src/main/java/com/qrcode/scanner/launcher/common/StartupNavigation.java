@@ -18,6 +18,10 @@ public final class StartupNavigation {
         if (activity == null || activity.isFinishing()) {
             return false;
         }
+        // Tap on the "make this app your default launcher" reminder: go to the Default screen when it applies.
+        if (DefaultLauncherReminder.handleSplashEntry(activity)) {
+            return false;
+        }
         ScreenFlowConfig.ensureShowScreenFlow(activity);
         if (!AppUtils.hasCompletedOnboarding(activity)) {
             ScreenFlowNavigation.openFirstScreen(activity);

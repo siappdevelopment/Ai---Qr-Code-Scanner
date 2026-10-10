@@ -635,6 +635,9 @@
     <string name="default_drawer_title">ลิ้นชักแอป &amp; โฟลเดอร์ที่กำหนดเอง</string>
     <string name="default_drawer_desc">จัดระเบียบแอป ซ่อนป้ายชื่อ ปรับแต่งคอลัมน์กริด และสลับระหว่างธีมสว่างและมืด</string>
     <string name="set_as_default">ตั้งเป็นค่าเริ่มต้น</string>
+    <string name="default_launcher_reminder_channel">การแจ้งเตือนตัวเรียกใช้เริ่มต้น</string>
+    <string name="default_launcher_reminder_title">ตั้ง QR Code &amp; Scanner เป็นหน้าจอหลักของคุณ</string>
+    <string name="default_launcher_reminder_text">ตั้ง QR Code &amp; Scanner เป็นตัวเรียกใช้เริ่มต้นของคุณเพื่อการเข้าถึงที่เร็วและลื่นไหลกว่า</string>
     <string name="launcher_default_title">ตั้งเราเป็นค่าเริ่มต้นของคุณ</string>
     <string name="launcher_default_subtitle">ตั้งเป็นแอปตัวเรียกใช้ Phone Cleaner เริ่มต้นของคุณ</string>
     <string name="launcher_default_set_now">ตั้งค่าเลย</string>

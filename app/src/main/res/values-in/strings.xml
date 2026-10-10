@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Laci Aplikasi &amp; Folder Khusus</string>
     <string name="default_drawer_desc">Atur aplikasi, sembunyikan label, sesuaikan kolom kisi, dan beralih antara tema terang dan gelap.</string>
     <string name="set_as_default">Jadikan Default</string>
+    <string name="default_launcher_reminder_channel">Pengingat peluncur default</string>
+    <string name="default_launcher_reminder_title">Jadikan QR Code &amp; Scanner layar utama Anda</string>
+    <string name="default_launcher_reminder_text">Setel QR Code &amp; Scanner sebagai peluncur default Anda untuk akses yang lebih cepat dan lancar.</string>
     <string name="launcher_default_title">Jadikan Kami Default Anda</string>
     <string name="launcher_default_subtitle">Setel ini sebagai aplikasi peluncur Phone Cleaner default Anda.</string>
     <string name="launcher_default_set_now">Setel Sekarang</string>

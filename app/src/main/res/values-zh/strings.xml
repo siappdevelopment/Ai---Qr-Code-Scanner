@@ -635,6 +635,9 @@
     <string name="default_drawer_title">自定义应用抽屉和文件夹</string>
     <string name="default_drawer_desc">整理应用、隐藏标签、自定义网格列，并在浅色和深色主题之间切换。</string>
     <string name="set_as_default">设为默认</string>
+    <string name="default_launcher_reminder_channel">默认启动器提醒</string>
+    <string name="default_launcher_reminder_title">将 QR Code &amp; Scanner 设为主屏幕</string>
+    <string name="default_launcher_reminder_text">将 QR Code &amp; Scanner 设为默认启动器，访问更快、更流畅。</string>
     <string name="launcher_default_title">将我们设为默认</string>
     <string name="launcher_default_subtitle">将此设为您的默认 Phone Cleaner 启动器应用。</string>
     <string name="launcher_default_set_now">立即设置</string>

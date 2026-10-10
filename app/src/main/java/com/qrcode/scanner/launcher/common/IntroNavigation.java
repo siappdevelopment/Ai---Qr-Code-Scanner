@@ -61,6 +61,21 @@ public class IntroNavigation {
         activity.finish();
     }
 
+    /**
+     * Onboarding Back: no going back to the previous screen. It does exactly what the Next button does.
+     */
+    public static void bindBackAsNext(androidx.appcompat.app.AppCompatActivity activity, int currentScreen) {
+        activity.getOnBackPressedDispatcher().addCallback(activity, new androidx.activity.OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (activity.isFinishing()) {
+                    return;
+                }
+                goToNextIntroButtonScreen(activity, currentScreen);
+            }
+        });
+    }
+
     public static void goToNextIntroButtonScreen(Activity activity, int currentScreen) {
         if (currentScreen >= getEffectiveIntroButtonScreenCount()) {
             moveToNextScreen(activity);

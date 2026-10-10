@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Προσαρμοσμένο συρτάρι εφαρμογών &amp; φάκελοι</string>
     <string name="default_drawer_desc">Οργανώστε εφαρμογές, αποκρύψτε ετικέτες, προσαρμόστε στήλες πλέγματος και εναλλάξτε μεταξύ φωτεινών και σκούρων θεμάτων.</string>
     <string name="set_as_default">Ορισμός ως προεπιλογή</string>
+    <string name="default_launcher_reminder_channel">Υπενθύμιση προεπιλεγμένου launcher</string>
+    <string name="default_launcher_reminder_title">Κάντε το QR Code &amp; Scanner την αρχική σας οθόνη</string>
+    <string name="default_launcher_reminder_text">Ορίστε το QR Code &amp; Scanner ως προεπιλεγμένο launcher για πιο γρήγορη και ομαλή πρόσβαση.</string>
     <string name="launcher_default_title">Κάντε μας την προεπιλογή σας</string>
     <string name="launcher_default_subtitle">Ορίστε την ως την προεπιλεγμένη εφαρμογή εκκίνησης Phone Cleaner.</string>
     <string name="launcher_default_set_now">Ορισμός τώρα</string>

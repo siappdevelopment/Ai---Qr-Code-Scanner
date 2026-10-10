@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Cassetto app e cartelle personalizzati</string>
     <string name="default_drawer_desc">Organizza le app, nascondi le etichette, personalizza le colonne della griglia e passa tra temi chiari e scuri.</string>
     <string name="set_as_default">Imposta come predefinito</string>
+    <string name="default_launcher_reminder_channel">Promemoria launcher predefinito</string>
+    <string name="default_launcher_reminder_title">Rendi QR Code &amp; Scanner la tua schermata Home</string>
+    <string name="default_launcher_reminder_text">Imposta QR Code &amp; Scanner come launcher predefinito per un accesso più rapido e fluido.</string>
     <string name="launcher_default_title">Rendici la tua scelta predefinita</string>
     <string name="launcher_default_subtitle">Imposta questa come app launcher Phone Cleaner predefinita.</string>
     <string name="launcher_default_set_now">Imposta ora</string>

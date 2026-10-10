@@ -260,6 +260,8 @@ fun ScanPulseNavHost(
             composable(AppDestination.Splash.route) {
                 val context = LocalContext.current
                 var adRoot by remember { mutableStateOf<View?>(null) }
+                // Splash: Back does nothing (no exit, no navigation) until the startup flow moves on.
+                androidx.activity.compose.BackHandler(enabled = true) { }
                 SplashScreen(onAdRootReady = { adRoot = it })
                 LaunchedEffect(adRoot) {
                     val root = adRoot ?: return@LaunchedEffect

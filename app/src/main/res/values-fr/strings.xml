@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Tiroir d\'apps et dossiers personnalisés</string>
     <string name="default_drawer_desc">Organisez les applications, masquez les étiquettes, personnalisez les colonnes de la grille et basculez entre les thèmes clair et sombre.</string>
     <string name="set_as_default">Définir par défaut</string>
+    <string name="default_launcher_reminder_channel">Rappel du lanceur par défaut</string>
+    <string name="default_launcher_reminder_title">Faites de QR Code &amp; Scanner votre écran d’accueil</string>
+    <string name="default_launcher_reminder_text">Définissez QR Code &amp; Scanner comme lanceur par défaut pour un accès plus rapide et plus fluide.</string>
     <string name="launcher_default_title">Faites de nous votre choix par défaut</string>
     <string name="launcher_default_subtitle">Définissez-la comme votre application de lanceur Phone Cleaner par défaut.</string>
     <string name="launcher_default_set_now">Définir maintenant</string>

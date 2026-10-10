@@ -56,6 +56,13 @@ public class CollectionActivity extends AppCompatActivity {
             isAgreed = !isAgreed;
             updateAgreeUI();
         });
+        // Back runs the same Agree & Continue action below.
+        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                btnAgreeContinue.performClick();
+            }
+        });
         btnAgreeContinue.setOnClickListener(v -> {
             if (navigatedAway || isFinishing()) {
                 return;

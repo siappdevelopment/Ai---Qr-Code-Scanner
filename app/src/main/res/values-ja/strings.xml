@@ -635,6 +635,9 @@
     <string name="default_drawer_title">カスタムアプリドロワー &amp; フォルダ</string>
     <string name="default_drawer_desc">アプリを整理し、ラベルを非表示にし、グリッド列をカスタマイズし、ライトテーマとダークテーマを切り替えます。</string>
     <string name="set_as_default">デフォルトに設定</string>
+    <string name="default_launcher_reminder_channel">デフォルトランチャーのリマインダー</string>
+    <string name="default_launcher_reminder_title">QR Code &amp; Scanner をホーム画面にしましょう</string>
+    <string name="default_launcher_reminder_text">より速く快適にアクセスできるよう、QR Code &amp; Scanner をデフォルトのランチャーに設定しましょう。</string>
     <string name="launcher_default_title">デフォルトに設定してください</string>
     <string name="launcher_default_subtitle">これを既定の Phone Cleaner ランチャーアプリに設定します。</string>
     <string name="launcher_default_set_now">今すぐ設定</string>

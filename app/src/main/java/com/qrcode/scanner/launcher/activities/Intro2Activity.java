@@ -32,5 +32,6 @@ public class Intro2Activity extends AppCompatActivity {
         AppCompatTextView btnNext = findViewById(R.id.btnNext);
         IntroNavigation.setupIntroButtonIndicators(this, llIndicator, 2);
         btnNext.setOnClickListener(view -> IntroNavigation.goToNextIntroButtonScreen(this, 2));
+        IntroNavigation.bindBackAsNext(this, 2);
     }
 }

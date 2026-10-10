@@ -189,12 +189,19 @@ public class PermissionActivity extends AppCompatActivity {
             }
         }
 
-        if (!permissionFlowActive && areAllRuntimePermissionsGranted()
+        if (!permissionFlowActive && areAllRuntimePermissionsGranted() && isNotificationStepSatisfied()
                 && (AppUtils.hasOverlayPermission(this) || AppUtils.isDefaultHomeApp(this))) {
             completePermissionScreenAndNavigate();
         }
 
         btnAllowPermission.setOnClickListener(view -> handleAllowPermissionClick());
+        // Back follows the Allow flow (its own guards stop a second request); it never returns to the previous screen.
+        getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                handleAllowPermissionClick();
+            }
+        });
     }
 
     private void scheduleCameraPermissionRequest() {
@@ -205,6 +212,41 @@ public class PermissionActivity extends AppCompatActivity {
             requestCameraPermission();
         }
     }
+
+    /**
+     * Notifications: asked here when Splash did not get them (Android 13+). Runs between Camera and Overlay.
+     * A denial (also a permanent one, which returns at once) just continues; nothing is marked granted.
+     */
+    private boolean isNotificationStepSatisfied() {
+        return Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || AdPlacement.isNotificationGranted(this);
+    }
+
+    private void scheduleNotificationPermissionRequest() {
+        View decorView = getWindow() != null ? getWindow().getDecorView() : null;
+        if (decorView != null) {
+            decorView.post(this::requestNotificationPermission);
+        } else {
+            requestNotificationPermission();
+        }
+    }
+
+    private void requestNotificationPermission() {
+        if (hasNavigated || isFinishing()) {
+            return;
+        }
+        if (isNotificationStepSatisfied()) {
+            scheduleOverlayPermissionRequest();
+            return;
+        }
+        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+    }
+
+    private final ActivityResultLauncher<String> notificationPermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
+        if (hasNavigated) {
+            return;
+        }
+        scheduleOverlayPermissionRequest();
+    });
 
     private void scheduleOverlayPermissionRequest() {
         View decorView = getWindow() != null ? getWindow().getDecorView() : null;
@@ -279,7 +321,7 @@ public class PermissionActivity extends AppCompatActivity {
         if (AppUtils.hasCameraPermission(this)) {
             cameraStepCompleted = true;
             AppUtils.trackCameraPermissionGrantedOnce(this);
-            scheduleOverlayPermissionRequest();
+            scheduleNotificationPermissionRequest();
             return;
         }
         cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
@@ -293,7 +335,7 @@ public class PermissionActivity extends AppCompatActivity {
         if (granted) {
             AppUtils.trackCameraPermissionGrantedOnce(this);
         }
-        scheduleOverlayPermissionRequest();
+        scheduleNotificationPermissionRequest();
     });
 
     private void requestOverlayPermission() {

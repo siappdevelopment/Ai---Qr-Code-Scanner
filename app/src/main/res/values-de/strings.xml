@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Benutzerdefinierte App-Schublade &amp; Ordner</string>
     <string name="default_drawer_desc">Organisieren Sie Apps, blenden Sie Beschriftungen aus, passen Sie Rasterspalten an und wechseln Sie zwischen hellem und dunklem Design.</string>
     <string name="set_as_default">Als Standard festlegen</string>
+    <string name="default_launcher_reminder_channel">Erinnerung an Standard-Launcher</string>
+    <string name="default_launcher_reminder_title">Mach QR Code &amp; Scanner zu deinem Startbildschirm</string>
+    <string name="default_launcher_reminder_text">Lege QR Code &amp; Scanner als Standard-Launcher fest – für schnelleren, flüssigeren Zugriff.</string>
     <string name="launcher_default_title">Mach uns zu deinem Standard</string>
     <string name="launcher_default_subtitle">Lege dies als deine Standard-Phone-Cleaner-Launcher-App fest.</string>
     <string name="launcher_default_set_now">Jetzt festlegen</string>

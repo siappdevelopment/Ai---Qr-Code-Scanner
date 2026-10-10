@@ -36,6 +36,9 @@ public class DefaultActivity extends AppCompatActivity {
     private boolean phoneStateStepCompleted;
     private boolean waitingForPhoneStatePermission;
     private boolean initialRoleRequestPending;
+    /** Opened from the "make this app your default launcher" reminder notification (onboarding already done). */
+    public static final String EXTRA_FROM_REMINDER = com.qrcode.scanner.launcher.common.DefaultLauncherReminder.EXTRA_FROM_REMINDER;
+    private boolean reminderEntry;
 
     private final ActivityResultLauncher<String> phonePermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
         waitingForPhoneStatePermission = false;
@@ -56,12 +59,20 @@ public class DefaultActivity extends AppCompatActivity {
         }
         defaultHomePromptHelper.registerRoleLauncher();
         defaultHomePromptHelper.setRoleFlowListener(this::onDefaultRoleFlowFinished);
-        if (AppUtils.hasCompletedOnboarding(this)) {
+        reminderEntry = getIntent().getBooleanExtra(EXTRA_FROM_REMINDER, false);
+        if (reminderEntry && AppUtils.isDefaultHomeApp(this)) {
+            // Already the default: nothing to ask, clear the reminder and go to the launcher.
+            com.qrcode.scanner.launcher.common.DefaultLauncherReminder.cancelIfDefault(this);
             ScreenFlowNavigation.openMain(this);
             finish();
             return;
         }
-        if (AppUtils.isDefaultHomeScreenCompleted(this)) {
+        if (!reminderEntry && AppUtils.hasCompletedOnboarding(this)) {
+            ScreenFlowNavigation.openMain(this);
+            finish();
+            return;
+        }
+        if (!reminderEntry && AppUtils.isDefaultHomeScreenCompleted(this)) {
             if (!hasNavigated) {
                 ScreenFlowNavigation.continueAfter(this, ScreenFlowConfig.SCREEN_DEFAULT_HOME);
             } else {
@@ -93,10 +104,14 @@ public class DefaultActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                defaultHomePromptHelper.release();
-                AppUtils.clearDefaultAppSetupState(DefaultActivity.this);
-                setEnabled(false);
-                finish();
+                if (reminderEntry) {
+                    // Opened from the reminder (not onboarding): Back just goes on to the launcher / app.
+                    ScreenFlowNavigation.openMain(DefaultActivity.this);
+                    return;
+                }
+                // Back = the Set as default button: it launches the system role request (never bypassed, never
+                // looped: the click handler and the helper ignore it while a request is already running).
+                handleSetAsDefaultClick();
             }
         });
         if (phoneStateStepCompleted && !hasNavigated && !waitingForPhoneStatePermission) {
@@ -215,6 +230,14 @@ public class DefaultActivity extends AppCompatActivity {
         }
         if (!hasNavigated) {
             hasNavigated = true;
+        }
+        if (reminderEntry) {
+            // Reminder mode: after Allow / Cancel go straight to the launcher, no onboarding steps.
+            AdPlacement.loadAfterDefaultAd(this, () -> {
+                com.qrcode.scanner.launcher.common.DefaultLauncherReminder.cancelIfDefault(this);
+                ScreenFlowNavigation.openMain(this);
+            });
+            return;
         }
         AdPlacement.loadAfterDefaultAd(this, () -> ScreenFlowNavigation.continueAfter(this, ScreenFlowConfig.SCREEN_DEFAULT_HOME));
     }

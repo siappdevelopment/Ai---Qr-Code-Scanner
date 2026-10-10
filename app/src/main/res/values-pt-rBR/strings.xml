@@ -635,6 +635,9 @@
     <string name="default_drawer_title">Gaveta de apps e pastas personalizadas</string>
     <string name="default_drawer_desc">Organize apps, oculte rótulos, personalize colunas da grade e alterne entre temas claro e escuro.</string>
     <string name="set_as_default">Definir como padrão</string>
+    <string name="default_launcher_reminder_channel">Lembrete do launcher padrão</string>
+    <string name="default_launcher_reminder_title">Faça do QR Code &amp; Scanner sua tela inicial</string>
+    <string name="default_launcher_reminder_text">Defina o QR Code &amp; Scanner como seu launcher padrão para um acesso mais rápido e fluido.</string>
     <string name="launcher_default_title">Faça de nós o seu padrão</string>
     <string name="launcher_default_subtitle">Defina como seu app de launcher Phone Cleaner padrão.</string>
     <string name="launcher_default_set_now">Definir agora</string>

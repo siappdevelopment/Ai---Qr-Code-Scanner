@@ -1,0 +1,70 @@
+package {{PACKAGE}}.launcher.common;
+
+import android.content.Context;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
+import {{PACKAGE}}.Advertisement.ADSMainClass;
+import {{PACKAGE}}.Advertisement.MyApplication;
+import {{PACKAGE}}.manager.StartupFlowManager;
+
+/**
+ * The job behind {@link DefaultLauncherReminder}. Every run re-reads the real state, so a config
+ * switch-off or Gallery becoming the default stops the reminders immediately. Runs that belong to
+ * the sub-15-minute one-time chain schedule the next run themselves.
+ */
+public class DefaultLauncherReminderWorker extends Worker {
+
+    private static final String TAG = DefaultLauncherReminder.TAG;
+
+    public DefaultLauncherReminderWorker(@NonNull Context context, @NonNull WorkerParameters params) {
+        super(context, params);
+    }
+
+    @NonNull
+    @Override
+    public Result doWork() {
+        Context context = getApplicationContext();
+        boolean chain = getInputData().getBoolean(DefaultLauncherReminder.KEY_CHAIN, false);
+        try {
+            ADSMainClass.initAppContext(context);
+
+            // Remote Config OFF → no notification, stop (periodic and chain both cancelled).
+            if (!ADSMainClass.getLauncherNotificationPushShow()) {
+                DefaultLauncherReminder.cancelWork(context);
+                Log.e(TAG, "run: reminder OFF → stopped");
+                return Result.success();
+            }
+
+            // Notification condition: the real default-launcher state is read on EVERY run. While
+            // Gallery is the default nothing is posted (and any leftover reminder is cleared), but the
+            // schedule is NOT cancelled — if the user later removes the default without opening the
+            // app, a following run finds NOT_DEFAULT and posts the reminder again.
+            boolean isDefault = Utils.isDefaultHomeApp(context);
+            Log.e(TAG, "Default Launcher status = " + (isDefault ? "DEFAULT" : "NOT_DEFAULT"));
+
+            String skipReason = null;
+            if (isDefault) {
+                skipReason = "already default";
+                DefaultLauncherReminder.onDefaultLauncherConfirmed(context);
+            } else if (!StartupFlowManager.isFirstRunCompleted(context)) {
+                skipReason = "onboarding not finished"; // that flow already leads to the Default screen
+            } else if (MyApplication.isAppInForeground()) {
+                skipReason = "app in foreground";
+            }
+            boolean shown = skipReason == null && DefaultLauncherReminder.showNotification(context);
+            Log.e(TAG, "Notification shown = " + shown
+                    + (skipReason != null ? " (" + skipReason + ")"
+                    : (!shown ? " (notifications disabled)" : "")));
+        } catch (Exception e) {
+            Log.e(TAG, "reminder run failed: " + e.getMessage());
+        }
+        if (chain) {
+            DefaultLauncherReminder.scheduleNextChainRun(context);
+        }
+        return Result.success();
+    }
+}

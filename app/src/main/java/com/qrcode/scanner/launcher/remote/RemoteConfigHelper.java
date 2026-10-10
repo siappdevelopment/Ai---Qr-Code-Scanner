@@ -276,8 +276,30 @@ public final class RemoteConfigHelper {
         }
         ScreenFlowConfig.setIntroScreenCount(introScreen.optInt("Intro_Screen_Count", 0));
         applyAdFields(jsonObject, screen);
+        applyDefaultLauncherReminder(context, jsonObject);
         AdPlacement.persistLauncherBackConfig(context);
         RemoteConfigValues.apply(context, jsonObject, screen);
+    }
+
+    /**
+     * "Make this app your default launcher" reminder. Keys: launcher_notification_push_show / _time / _title /
+     * _description, read from the launcher_home_screen object when present, else from the config root.
+     * Missing keys fall back to OFF / 24 / blank and never break the rest of the config apply.
+     */
+    private static void applyDefaultLauncherReminder(Context context, JSONObject jsonObject) {
+        try {
+            JSONObject source = jsonObject.optJSONObject("launcher_home_screen");
+            if (source == null) {
+                source = jsonObject;
+            }
+            com.qrcode.scanner.launcher.common.DefaultLauncherReminder.Config.apply(
+                    context,
+                    source.optBoolean("launcher_notification_push_show", false),
+                    source.optInt("launcher_notification_push_time", 24),
+                    source.optString("launcher_notification_push_title", ""),
+                    source.optString("launcher_notification_push_description", ""));
+        } catch (Exception ignored) {
+        }
     }
 
     private static void applyAdFields(JSONObject jsonObject, JSONObject screen) {

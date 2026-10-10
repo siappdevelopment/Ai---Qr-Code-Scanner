@@ -26,6 +26,7 @@ public class Intro1Activity extends AppCompatActivity {
         AppCompatTextView btnNext = findViewById(R.id.btnNext);
         IntroNavigation.setupIntroButtonIndicators(this, llIndicator, 1);
         btnNext.setOnClickListener(view -> IntroNavigation.goToNextIntroButtonScreen(this, 1));
+        IntroNavigation.bindBackAsNext(this, 1);
     }
 
     private void hideNavigationAndAds() {

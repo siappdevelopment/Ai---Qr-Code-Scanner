@@ -98,6 +98,7 @@ dependencies {
     implementation(libs.facebook)
     implementation(libs.audience.network.sdk)
     implementation(libs.installreferrer)
+    implementation(libs.androidx.work.runtime)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.config)
     implementation(libs.firebase.analytics)

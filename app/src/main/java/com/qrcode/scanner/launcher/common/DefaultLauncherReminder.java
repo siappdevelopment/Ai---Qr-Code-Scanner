@@ -1,0 +1,380 @@
+package com.qrcode.scanner.launcher.common;
+
+import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.work.Data;
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+
+import com.qrcode.scanner.MainActivity;
+
+import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.launcher.activities.DefaultActivity;
+
+
+import java.util.concurrent.TimeUnit;
+
+/**
+ * "Make the app your default launcher" reminder notification.
+ * <ul>
+ *   <li>Controlled by Remote Config {@code launcher_home_screen}: {@code launcher_notification_push_show}
+ *   and {@code launcher_notification_push_time} (reverse hours: seconds = 86400 / value).</li>
+ *   <li>Two WorkManager strategies, never both at once:
+ *     <ul>
+ *       <li>interval ≥ 15 min → one unique {@link PeriodicWorkRequest} ({@link #UNIQUE_WORK_NAME});</li>
+ *       <li>interval &lt; 15 min → WorkManager cannot run periodic work that fast, so a unique
+ *       one-time chain ({@link #UNIQUE_CHAIN_NAME}) where each run schedules the next one.</li>
+ *     </ul>
+ *   WorkManager is not an exact clock: Doze / standby / OEM limits may delay any run.</li>
+ *   <li>{@link #sync(Context)} is idempotent and only called when the config is applied, never from
+ *   onResume.</li>
+ *   <li>The worker re-checks the real default-launcher status every run, so reminders stop as soon
+ *   as the app is the default.</li>
+ *   <li>Tap: notification → Splash → DefaultActivity (reminder mode) → Launcher home page.</li>
+ * </ul>
+ */
+public final class DefaultLauncherReminder {
+
+    public static final String TAG = "DefaultLauncherNav";
+
+    /** Intent extra on the notification's Splash intent. */
+    public static final String EXTRA_FROM_REMINDER = "extra_from_default_launcher_reminder";
+
+    /** Unique name: periodic strategy (interval ≥ 15 min). */
+    static final String UNIQUE_WORK_NAME = "default_launcher_reminder_work";
+    /** Unique name: self-rescheduling one-time strategy (interval &lt; 15 min). */
+    static final String UNIQUE_CHAIN_NAME = "default_launcher_reminder_chain";
+    /** Worker input flag: this run belongs to the one-time chain and must schedule the next one. */
+    static final String KEY_CHAIN = "reminder_chain";
+
+    private static final String CHANNEL_ID = "default_launcher_reminder_channel";
+    private static final int NOTIFICATION_ID = 7001;
+    private static final int REQUEST_CODE = 7001;
+
+    /** Fallback when the Remote Config value is missing / zero / negative. */
+    private static final int DEFAULT_PUSH_TIME = 24;
+    private static final long SECONDS_PER_DAY = 24L * 60L * 60L;
+    private static final long PERIODIC_MIN_SECONDS =
+            TimeUnit.MILLISECONDS.toSeconds(PeriodicWorkRequest.MIN_PERIODIC_INTERVAL_MILLIS);
+    /** Safety floor for absurd values (push_time &gt; 17280): never schedule faster than this. */
+    private static final long CHAIN_MIN_SECONDS = 5L;
+
+    private DefaultLauncherReminder() {
+    }
+
+    /**
+     * Reminder settings from Remote Config, kept in their own prefs so the Worker (which can start in a
+     * fresh process) reads the latest activated values. Safe defaults: OFF, 24, blank text.
+     */
+    public static final class Config {
+        private static final String PREFS = "default_launcher_reminder_prefs";
+        private static final String KEY_SHOW = "push_show";
+        private static final String KEY_TIME = "push_time";
+        private static final String KEY_TITLE = "push_title";
+        private static final String KEY_DESCRIPTION = "push_description";
+
+        private static android.content.SharedPreferences prefs;
+
+        private Config() {
+        }
+
+        private static android.content.SharedPreferences prefs() {
+            return prefs;
+        }
+
+        static void init(Context context) {
+            if (prefs == null && context != null) {
+                prefs = context.getApplicationContext().getSharedPreferences(PREFS, Context.MODE_PRIVATE);
+            }
+        }
+
+        /** Stores the four values from the config and re-syncs the schedule (idempotent). */
+        public static void apply(@NonNull Context context, boolean show, int time, @Nullable String title, @Nullable String description) {
+            init(context);
+            prefs().edit()
+                    .putBoolean(KEY_SHOW, show)
+                    .putInt(KEY_TIME, time)
+                    .putString(KEY_TITLE, title == null ? "" : title)
+                    .putString(KEY_DESCRIPTION, description == null ? "" : description)
+                    .apply();
+            sync(context);
+        }
+
+        static boolean getLauncherNotificationPushShow() {
+            return prefs != null && prefs.getBoolean(KEY_SHOW, false);
+        }
+
+        static int getLauncherNotificationPushTime() {
+            return prefs == null ? DEFAULT_PUSH_TIME : prefs.getInt(KEY_TIME, DEFAULT_PUSH_TIME);
+        }
+
+        static String getLauncherNotificationPushTitle() {
+            return prefs == null ? "" : prefs.getString(KEY_TITLE, "");
+        }
+
+        static String getLauncherNotificationPushDescription() {
+            return prefs == null ? "" : prefs.getString(KEY_DESCRIPTION, "");
+        }
+    }
+
+    /** Result of turning a Remote Config value into a schedule. Nothing is changed silently. */
+    static final class Plan {
+        final int pushTime;
+        final long intervalSeconds;
+        final boolean periodic;
+
+        Plan(int pushTime, long intervalSeconds, boolean periodic) {
+            this.pushTime = pushTime;
+            this.intervalSeconds = intervalSeconds;
+            this.periodic = periodic;
+        }
+
+        String describeInterval() {
+            return intervalSeconds + " s (" + (intervalSeconds / 60d) + " min)";
+        }
+    }
+
+    /**
+     * seconds = 86400 / pushTime: 12 → 7200 s, 24 → 3600 s, 48 → 1800 s, 5760 → 15 s.
+     * ≥ 900 s → periodic; below → one-time chain at the TRUE interval (not forced up to 15 min).
+     * Invalid (≤ 0) falls back to 24; the 5 s floor only applies to push_time &gt; 17280. Both are logged.
+     */
+    @NonNull
+    static Plan plan(int pushTime) {
+        int time = pushTime;
+        if (time <= 0) {
+            Log.e(TAG, "push_time=" + pushTime + " invalid → using fallback " + DEFAULT_PUSH_TIME);
+            time = DEFAULT_PUSH_TIME;
+        }
+        long seconds = SECONDS_PER_DAY / time;
+        if (seconds < CHAIN_MIN_SECONDS) {
+            Log.e(TAG, "calculated " + seconds + " s is below the safety floor → using "
+                    + CHAIN_MIN_SECONDS + " s");
+            seconds = CHAIN_MIN_SECONDS;
+        }
+        return new Plan(pushTime, seconds, seconds >= PERIODIC_MIN_SECONDS);
+    }
+
+    /**
+     * Applies the current Remote Config + default-launcher state to the reminder work:
+     * OFF → everything cancelled; ON → exactly one strategy scheduled / kept, the other one
+     * cancelled. The default-launcher state does not change the schedule, only whether a run posts.
+     */
+    public static void sync(@NonNull Context context) {
+        try {
+            Context app = context.getApplicationContext();
+            Config.init(app);
+            
+            if (!Config.getLauncherNotificationPushShow()) {
+                cancelWork(app);
+                Log.e(TAG, "reminder OFF → worker cancelled");
+                return;
+            }
+            // Scheduled whatever the current default state: each run decides by itself whether to
+            // post (it never does while the app is the default), so the reminders resume on their
+            // own if the default is removed later.
+            boolean isDefault = AppUtils.isDefaultHomeApp(app);
+            Log.e(TAG, "Default Launcher status = " + (isDefault ? "DEFAULT" : "NOT_DEFAULT"));
+            Plan plan = plan(Config.getLauncherNotificationPushTime());
+            Log.e(TAG, "Calculated interval = " + plan.describeInterval() + " (push_time=" + plan.pushTime + ")");
+            WorkManager workManager = WorkManager.getInstance(app);
+            if (plan.periodic) {
+                Log.e(TAG, "Scheduling strategy = PERIODIC (>= 15 min)");
+                workManager.cancelUniqueWork(UNIQUE_CHAIN_NAME);
+                PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(
+                        DefaultLauncherReminderWorker.class, plan.intervalSeconds, TimeUnit.SECONDS)
+                        // The user just opened the app: the first reminder is one interval away.
+                        .setInitialDelay(plan.intervalSeconds, TimeUnit.SECONDS)
+                        .build();
+                // UPDATE: same unique work, a changed interval is applied in place; an unchanged
+                // config does not restart the schedule, so repeated applies never stack workers.
+                workManager.enqueueUniquePeriodicWork(
+                        UNIQUE_WORK_NAME, ExistingPeriodicWorkPolicy.UPDATE, request);
+                Log.e(TAG, "Worker scheduled = periodic every " + plan.intervalSeconds + " s");
+            } else {
+                Log.e(TAG, "Scheduling strategy = ONE_TIME_CHAIN (sub-15-minute: periodic work cannot "
+                        + "run this fast; each run schedules the next)");
+                workManager.cancelUniqueWork(UNIQUE_WORK_NAME);
+                // KEEP: a chain that is already pending keeps its next run; app restarts and
+                // repeated config applies neither duplicate it nor keep postponing it.
+                workManager.enqueueUniqueWork(UNIQUE_CHAIN_NAME, ExistingWorkPolicy.KEEP,
+                        chainRequest(plan.intervalSeconds));
+                Log.e(TAG, "Worker scheduled = one-time in " + plan.intervalSeconds
+                        + " s (best effort, Android may defer it)");
+            }
+        } catch (Exception e) {
+            // A bad config / WorkManager hiccup must never break the config apply.
+            Log.e(TAG, "reminder sync failed: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Called by a chain run after its work: queues the next run using the CURRENT Remote Config
+     * interval (so a changed value is picked up), or hands over to {@link #sync(Context)} when the
+     * strategy changed (interval became ≥ 15 min) or the reminder must stop.
+     */
+    static void scheduleNextChainRun(@NonNull Context context) {
+        try {
+            Context app = context.getApplicationContext();
+            Config.init(app);
+            if (!Config.getLauncherNotificationPushShow()) {
+                sync(app); // cancels everything
+                return;
+            }
+            Plan plan = plan(Config.getLauncherNotificationPushTime());
+            if (plan.periodic) {
+                sync(app); // interval is now ≥ 15 min: switch to the periodic strategy
+                return;
+            }
+            // APPEND_OR_REPLACE: queued behind the run that is finishing right now.
+            WorkManager.getInstance(app).enqueueUniqueWork(UNIQUE_CHAIN_NAME,
+                    ExistingWorkPolicy.APPEND_OR_REPLACE, chainRequest(plan.intervalSeconds));
+            Log.e(TAG, "Next execution scheduled = in " + plan.intervalSeconds + " s (best effort)");
+        } catch (Exception e) {
+            Log.e(TAG, "next reminder scheduling failed: " + e.getMessage());
+        }
+    }
+
+    private static OneTimeWorkRequest chainRequest(long delaySeconds) {
+        return new OneTimeWorkRequest.Builder(DefaultLauncherReminderWorker.class)
+                .setInitialDelay(delaySeconds, TimeUnit.SECONDS)
+                .setInputData(new Data.Builder().putBoolean(KEY_CHAIN, true).build())
+                .build();
+    }
+
+    /**
+     * the app is the default launcher: clear any reminder still showing, but KEEP the reminder
+     * work scheduled. If the user later removes the app as the default without opening the app,
+     * the next worker run must still be there to post the reminder. While the app is the default
+     * the worker simply posts nothing.
+     */
+    public static void onDefaultLauncherConfirmed(@NonNull Context context) {
+        dismissNotification(context);
+        Log.e(TAG, "already default → no reminder shown (schedule kept)");
+    }
+
+    /**
+     * The user is in the app: a reminder still sitting in the status bar is stale, so remove it.
+     * Only the notification is cleared; the reminder schedule keeps running.
+     */
+    public static void dismissNotification(@NonNull Context context) {
+        NotificationManagerCompat.from(context.getApplicationContext()).cancel(NOTIFICATION_ID);
+    }
+
+    /** Cheap check for foreground / known-state moments. Only clears a showing reminder; never schedules or cancels the work. */
+    public static void cancelIfDefault(@NonNull Context context) {
+        if (AppUtils.isDefaultHomeApp(context)) {
+            onDefaultLauncherConfirmed(context);
+        }
+    }
+
+    static void cancelWork(Context app) {
+        WorkManager workManager = WorkManager.getInstance(app);
+        workManager.cancelUniqueWork(UNIQUE_WORK_NAME);
+        workManager.cancelUniqueWork(UNIQUE_CHAIN_NAME);
+    }
+
+    public static boolean isFromReminder(@Nullable Intent intent) {
+        return intent != null && intent.getBooleanExtra(EXTRA_FROM_REMINDER, false);
+    }
+
+    /**
+     * Splash step for a notification tap. Only takes over when onboarding is already finished and
+     * the app is not the default; otherwise Splash continues exactly as normal (first-launch flow
+     * untouched). The extra is consumed so a recreated Splash can't repeat this.
+     *
+     * @return true when navigation to DefaultActivity was started (Splash must stop)
+     */
+    public static boolean handleSplashEntry(@NonNull Activity splash) {
+        Intent intent = splash.getIntent();
+        if (!isFromReminder(intent)) {
+            return false;
+        }
+        intent.removeExtra(EXTRA_FROM_REMINDER);
+        Log.e(TAG, "Notification Click → Splash");
+        if (!AppUtils.hasCompletedOnboarding(splash)) {
+            return false;
+        }
+        if (AppUtils.isDefaultHomeApp(splash)) {
+            onDefaultLauncherConfirmed(splash);
+            return false; // normal path: Splash → Launcher home
+        }
+        Intent next = new Intent(splash, DefaultActivity.class)
+                .putExtra(DefaultActivity.EXTRA_FROM_REMINDER, true);
+        splash.startActivity(next);
+        Log.e(TAG, "Splash → DefaultActivity");
+        splash.finish();
+        return true;
+    }
+
+    /** @return true when the notification was actually posted */
+    static boolean showNotification(@NonNull Context context) {
+        Context app = context.getApplicationContext();
+        Config.init(app);
+        if (!NotificationManagerCompat.from(app).areNotificationsEnabled()) {
+            return false;
+        }
+        NotificationManager manager = (NotificationManager) app.getSystemService(Context.NOTIFICATION_SERVICE);
+        if (manager == null) {
+            return false;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    CHANNEL_ID, app.getString(R.string.default_launcher_reminder_channel),
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            manager.createNotificationChannel(channel);
+        }
+        // MAIN + LAUNCHER so MainActivity runs its normal Splash (ads/init) before the reminder redirect.
+        Intent splash = new Intent(app, MainActivity.class)
+                .setAction(Intent.ACTION_MAIN)
+                .addCategory(Intent.CATEGORY_LAUNCHER)
+                .putExtra(EXTRA_FROM_REMINDER, true)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(app, REQUEST_CODE, splash,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Latest activated Remote Config text (read at post time, so a changed value is used by
+        // the very next notification). Blank / missing → the built-in localized text, never empty.
+        String title = Config.getLauncherNotificationPushTitle();
+        if (title == null || title.trim().isEmpty()) {
+            title = app.getString(R.string.default_launcher_reminder_title);
+        }
+        String description = Config.getLauncherNotificationPushDescription();
+        if (description == null || description.trim().isEmpty()) {
+            description = app.getString(R.string.default_launcher_reminder_text);
+        }
+        Log.e(TAG, "Notification text → title=\"" + title + "\" description=\"" + description + "\"");
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(app, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(description)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(description))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setOnlyAlertOnce(true)
+                .setAutoCancel(true);
+        try {
+            // Fixed id: a new reminder replaces the previous one instead of stacking.
+            manager.notify(NOTIFICATION_ID, builder.build());
+            return true;
+        } catch (SecurityException ignored) {
+            // POST_NOTIFICATIONS revoked between the check and the post.
+            return false;
+        }
+    }
+}

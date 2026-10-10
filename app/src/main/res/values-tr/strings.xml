@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">Görseli Kaydet</string>
     <string name="qr_preview_saving">Kaydediliyor…</string>
     <string name="qr_preview_create">Oluştur</string>
+    <string name="qr_preview_save_and_create">Kaydet ve oluştur</string>
     <string name="qr_preview_creating">Oluşturuluyor…</string>
     <string name="qr_preview_code_specifications">Kod Özellikleri</string>
     <string name="qr_preview_spec_export">Dışa Aktar</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">Küre</string>
     <string name="qr_icon_custom">Özel</string>
     <string name="qr_palette_electric_cobalt">Elektrik Kobalt</string>
+    <string name="qr_palette_black">Siyah</string>
     <string name="qr_palette_deep_sapphire">Derin Safir</string>
     <string name="qr_palette_neon_cyan">Neon Camgöbeği</string>
     <string name="qr_palette_monochrome_slate">Tek Renkli Kayrak</string>

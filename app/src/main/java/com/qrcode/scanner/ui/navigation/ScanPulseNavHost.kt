@@ -225,7 +225,12 @@ fun ScanPulseNavHost(
                         ScanPulseBottomBar(
                             currentRoute = currentRoute,
                             onNavigate = { destination -> openRootTabWithAd(destination.route) },
-                            onScanClick = { openRootTabWithAd(AppDestination.Scan.route) },
+                            // Already on Scan: a repeat tap does nothing (no navigation, no bottom-nav ad count).
+                            onScanClick = {
+                                if (currentRoute != AppDestination.Scan.route) {
+                                    openRootTabWithAd(AppDestination.Scan.route)
+                                }
+                            },
                             // Never pad between app nav and ad (causes black gap). System nav is swipe-hide on MainActivity.
                             includeNavigationBarPadding = false
                         )

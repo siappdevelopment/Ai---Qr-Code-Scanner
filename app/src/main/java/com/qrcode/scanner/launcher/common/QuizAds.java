@@ -591,7 +591,7 @@ public final class QuizAds {
         }
         View button = root.findViewById(R.id.btnQZClick);
         if (button != null && button.getBackground() != null) {
-            tint(button, AdPlacement.getNativeAdButtonColor());
+            tint(button, AdPlacement.getNativeAdButtonColor(root.getContext()));
         }
     }
 

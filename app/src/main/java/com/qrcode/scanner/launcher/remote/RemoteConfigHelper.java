@@ -285,7 +285,8 @@ public final class RemoteConfigHelper {
         boolean googleAdFailedShowQuiz = jsonObject.optBoolean("Google_Ad_Failed_Show_Quiz", false);
         AdPlacement.setGoogleAdFailedShowQuiz(googleAdFailedShowQuiz);
         AdPlacement.setNativeAdLabelColor(jsonObject.optString("Native_Ad_Label_Color", ""));
-        AdPlacement.setNativeAdButtonColor(jsonObject.optString("Native_Ad_Button_Color", ""));
+        AdPlacement.setNativeAdButtonColor(jsonObject.optString("Native_Ad_Button_Color_light", ""));
+        AdPlacement.setNativeAdButtonColorDark(jsonObject.optString("Native_Ad_Button_Color_dark", ""));
         AdPlacement.setAppOpenId(jsonObject.optString("App_Open_Id", ""));
         JSONObject splashScreen = screen.optJSONObject("SplashScreen");
         if (splashScreen == null) {

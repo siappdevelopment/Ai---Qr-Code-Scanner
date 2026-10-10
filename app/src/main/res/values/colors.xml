@@ -8,7 +8,7 @@
     <color name="event_header">#C2E6F6</color>
     <color name="event_sheet">#FFFFFF</color>
     <color name="event_title">#111827</color>
-    <color name="event_accent">#0063E5</color>
+    <color name="event_accent">@color/primary</color>
     <color name="event_muted">#475569</color>
     <color name="event_card">#F5F5F5</color>
     <color name="event_fast">#FEF3C7</color>

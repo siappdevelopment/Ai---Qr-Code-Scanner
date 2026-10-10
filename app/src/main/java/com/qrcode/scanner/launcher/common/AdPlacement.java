@@ -108,6 +108,7 @@ public final class AdPlacement {
     private static boolean googleAdFailedShowQuiz;
     private static String nativeAdLabelColor = "";
     private static String nativeAdButtonColor = "";
+    private static String nativeAdButtonColorDark = "";
     private static String appOpenId = "";
     private static String otherInterstitialId = "";
     private static String otherBannerId = "";
@@ -435,7 +436,31 @@ public final class AdPlacement {
         return nativeAdLabelColor;
     }
 
+    /** Light-theme button colour (Native_Ad_Button_Color_light). */
     public static String getNativeAdButtonColor() {
+        return nativeAdButtonColor;
+    }
+
+    public static void setNativeAdButtonColorDark(String value) {
+        nativeAdButtonColorDark = value == null ? "" : value;
+    }
+
+    /** Dark-theme button colour (Native_Ad_Button_Color_dark). */
+    public static String getNativeAdButtonColorDark() {
+        return nativeAdButtonColorDark;
+    }
+
+    /**
+     * Button colour for the theme the ad is drawn in. The context is the one the ad was inflated with,
+     * so a screen that forces light ads gets the light colour. Dark falls back to light when not set.
+     */
+    public static String getNativeAdButtonColor(@Nullable Context adContext) {
+        boolean dark = adContext != null
+                && (adContext.getResources().getConfiguration().uiMode & android.content.res.Configuration.UI_MODE_NIGHT_MASK)
+                == android.content.res.Configuration.UI_MODE_NIGHT_YES;
+        if (dark && nativeAdButtonColorDark != null && !nativeAdButtonColorDark.trim().isEmpty()) {
+            return nativeAdButtonColorDark;
+        }
         return nativeAdButtonColor;
     }
 
@@ -2414,7 +2439,7 @@ public final class AdPlacement {
         if (adView.getCallToActionView() instanceof AppCompatTextView) {
             AppCompatTextView button = (AppCompatTextView) adView.getCallToActionView();
             applyCallToAction(button, nativeAd.getCallToAction());
-            applyBackgroundColor(button, nativeAdButtonColor, R.color.primary);
+            applyBackgroundColor(button, getNativeAdButtonColor(adView.getContext()), R.color.primary);
         }
         View attribution = adView.findViewById(R.id.ad_attribution);
         applyBackgroundColor(attribution, nativeAdLabelColor, 0);

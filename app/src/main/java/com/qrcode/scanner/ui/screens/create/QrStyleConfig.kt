@@ -11,10 +11,10 @@ import java.io.Serializable
 data class QrStyleConfig(
     val bodyPattern: BodyPattern = BodyPattern.CLASSIC,
     val eyeStyle: EyeStyle = EyeStyle.SQUARE,
-    val foregroundColor: Int = COLOR_COBALT,
+    val foregroundColor: Int = COLOR_BLACK,
     val backgroundColor: Int = COLOR_WHITE,
-    val paletteKey: String = PALETTE_COBALT,
-    val paletteName: String = "Electric Cobalt",
+    val paletteKey: String = PALETTE_BLACK,
+    val paletteName: String = "Black",
     val centerIcon: CenterIcon = CenterIcon.NONE,
     val customLogoUri: String? = null,
     val frame: FrameTemplate = FrameTemplate.NONE,
@@ -54,6 +54,7 @@ data class QrStyleConfig(
     companion object {
         private const val serialVersionUID = 1L
 
+        const val COLOR_BLACK = 0xFF000000.toInt()
         const val COLOR_COBALT = 0xFF0033CC.toInt()
         const val COLOR_SAPPHIRE = 0xFF001A99.toInt()
         /**
@@ -64,6 +65,7 @@ data class QrStyleConfig(
         const val COLOR_SLATE = 0xFF0F172A.toInt()
         const val COLOR_WHITE = 0xFFFFFFFF.toInt()
 
+        const val PALETTE_BLACK = "black"
         const val PALETTE_COBALT = "cobalt"
         const val PALETTE_SAPPHIRE = "sapphire"
         const val PALETTE_CYAN = "cyan"

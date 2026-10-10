@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">이미지 저장</string>
     <string name="qr_preview_saving">저장 중…</string>
     <string name="qr_preview_create">만들기</string>
+    <string name="qr_preview_save_and_create">저장 및 만들기</string>
     <string name="qr_preview_creating">만드는 중…</string>
     <string name="qr_preview_code_specifications">코드 사양</string>
     <string name="qr_preview_spec_export">내보내기</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">지구본</string>
     <string name="qr_icon_custom">사용자 지정</string>
     <string name="qr_palette_electric_cobalt">일렉트릭 코발트</string>
+    <string name="qr_palette_black">블랙</string>
     <string name="qr_palette_deep_sapphire">딥 사파이어</string>
     <string name="qr_palette_neon_cyan">네온 시안</string>
     <string name="qr_palette_monochrome_slate">모노크롬 슬레이트</string>

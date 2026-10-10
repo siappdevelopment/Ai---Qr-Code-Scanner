@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">画像を保存</string>
     <string name="qr_preview_saving">保存中…</string>
     <string name="qr_preview_create">作成</string>
+    <string name="qr_preview_save_and_create">保存して作成</string>
     <string name="qr_preview_creating">作成中…</string>
     <string name="qr_preview_code_specifications">コード仕様</string>
     <string name="qr_preview_spec_export">エクスポート</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">地球儀</string>
     <string name="qr_icon_custom">カスタム</string>
     <string name="qr_palette_electric_cobalt">エレクトリックコバルト</string>
+    <string name="qr_palette_black">ブラック</string>
     <string name="qr_palette_deep_sapphire">ディープサファイア</string>
     <string name="qr_palette_neon_cyan">ネオンシアン</string>
     <string name="qr_palette_monochrome_slate">モノクロームスレート</string>

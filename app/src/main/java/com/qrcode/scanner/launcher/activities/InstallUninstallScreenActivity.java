@@ -3,6 +3,7 @@ package com.qrcode.scanner.launcher.activities;
 import android.content.Intent;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
@@ -29,7 +30,7 @@ public class InstallUninstallScreenActivity extends EventPromptActivity {
     @Override
     protected void bindKind(String kind) {
         if (KIND_INSTALL.equals(kind)) {
-            showContent(0xFFEAF1FB, 0xFF0063E5, 0xFFDBEAFE, 0xFF1D4ED8,
+            showContent(0xFFEAF1FB, ContextCompat.getColor(this, R.color.primary), 0xFFDBEAFE, 0xFF1D4ED8,
                     getString(R.string.event_install_title),
                     getString(R.string.event_install_success),
                     R.string.event_install_sub, R.string.event_install_body, R.string.event_install_chip,
@@ -37,7 +38,7 @@ public class InstallUninstallScreenActivity extends EventPromptActivity {
                     R.drawable.ic_event_hero_install, R.drawable.ic_event_check, R.drawable.ic_event_check);
             return;
         }
-        showContent(0xFFEAF1FB, 0xFF0063E5, 0xFFDBEAFE, 0xFF1D4ED8,
+        showContent(0xFFEAF1FB, ContextCompat.getColor(this, R.color.primary), 0xFFDBEAFE, 0xFF1D4ED8,
                 getString(R.string.event_uninstall_title),
                 getString(R.string.event_uninstall_success),
                 R.string.event_uninstall_sub, R.string.event_uninstall_body, R.string.event_uninstall_chip,

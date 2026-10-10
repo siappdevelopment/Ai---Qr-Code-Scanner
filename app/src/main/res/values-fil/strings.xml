@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">I-save ang Larawan</string>
     <string name="qr_preview_saving">Nagse-save…</string>
     <string name="qr_preview_create">Gumawa</string>
+    <string name="qr_preview_save_and_create">I-save at Gumawa</string>
     <string name="qr_preview_creating">Gumagawa…</string>
     <string name="qr_preview_code_specifications">Mga Espesipikasyon ng Code</string>
     <string name="qr_preview_spec_export">I-export</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">Globo</string>
     <string name="qr_icon_custom">Custom</string>
     <string name="qr_palette_electric_cobalt">Electric Cobalt</string>
+    <string name="qr_palette_black">Itim</string>
     <string name="qr_palette_deep_sapphire">Deep Sapphire</string>
     <string name="qr_palette_neon_cyan">Neon Cyan</string>
     <string name="qr_palette_monochrome_slate">Monochrome Slate</string>

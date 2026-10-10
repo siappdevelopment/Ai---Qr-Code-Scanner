@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">Stoor beeld</string>
     <string name="qr_preview_saving">Stoor…</string>
     <string name="qr_preview_create">Skep</string>
+    <string name="qr_preview_save_and_create">Stoor &amp; Skep</string>
     <string name="qr_preview_creating">Skep…</string>
     <string name="qr_preview_code_specifications">Kode-spesifikasies</string>
     <string name="qr_preview_spec_export">Voer uit</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">Aardbol</string>
     <string name="qr_icon_custom">Pasgemaak</string>
     <string name="qr_palette_electric_cobalt">Elektriese kobalt</string>
+    <string name="qr_palette_black">Swart</string>
     <string name="qr_palette_deep_sapphire">Diep saffier</string>
     <string name="qr_palette_neon_cyan">Neon-siaan</string>
     <string name="qr_palette_monochrome_slate">Monochroom-leiklip</string>

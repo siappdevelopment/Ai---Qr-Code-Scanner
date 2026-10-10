@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">Αποθήκευση εικόνας</string>
     <string name="qr_preview_saving">Αποθήκευση…</string>
     <string name="qr_preview_create">Δημιουργία</string>
+    <string name="qr_preview_save_and_create">Αποθήκευση &amp; Δημιουργία</string>
     <string name="qr_preview_creating">Δημιουργία…</string>
     <string name="qr_preview_code_specifications">Προδιαγραφές κωδικού</string>
     <string name="qr_preview_spec_export">Εξαγωγή</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">Υδρόγειος</string>
     <string name="qr_icon_custom">Προσαρμοσμένο</string>
     <string name="qr_palette_electric_cobalt">Ηλεκτρικό κοβάλτιο</string>
+    <string name="qr_palette_black">Μαύρο</string>
     <string name="qr_palette_deep_sapphire">Βαθύ ζαφείρι</string>
     <string name="qr_palette_neon_cyan">Νέον κυανό</string>
     <string name="qr_palette_monochrome_slate">Μονόχρωμο σχιστόλιθο</string>

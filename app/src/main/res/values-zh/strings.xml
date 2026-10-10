@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">保存图像</string>
     <string name="qr_preview_saving">保存中…</string>
     <string name="qr_preview_create">创建</string>
+    <string name="qr_preview_save_and_create">保存并创建</string>
     <string name="qr_preview_creating">创建中…</string>
     <string name="qr_preview_code_specifications">代码规格</string>
     <string name="qr_preview_spec_export">导出</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">地球</string>
     <string name="qr_icon_custom">自定义</string>
     <string name="qr_palette_electric_cobalt">电光钴蓝</string>
+    <string name="qr_palette_black">黑色</string>
     <string name="qr_palette_deep_sapphire">深蓝宝石</string>
     <string name="qr_palette_neon_cyan">霓虹青</string>
     <string name="qr_palette_monochrome_slate">单色石板</string>

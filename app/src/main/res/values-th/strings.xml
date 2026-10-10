@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">บันทึกภาพ</string>
     <string name="qr_preview_saving">กำลังบันทึก…</string>
     <string name="qr_preview_create">สร้าง</string>
+    <string name="qr_preview_save_and_create">บันทึกและสร้าง</string>
     <string name="qr_preview_creating">กำลังสร้าง…</string>
     <string name="qr_preview_code_specifications">ข้อกำหนดโค้ด</string>
     <string name="qr_preview_spec_export">ส่งออก</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">ลูกโลก</string>
     <string name="qr_icon_custom">กำหนดเอง</string>
     <string name="qr_palette_electric_cobalt">ไฟฟ้าโคบอลต์</string>
+    <string name="qr_palette_black">ดำ</string>
     <string name="qr_palette_deep_sapphire">แซฟไฟร์เข้ม</string>
     <string name="qr_palette_neon_cyan">นีออนไซแอน</string>
     <string name="qr_palette_monochrome_slate">สเลทโมโนโครม</string>

@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">Сохранить изображение</string>
     <string name="qr_preview_saving">Сохранение…</string>
     <string name="qr_preview_create">Создать</string>
+    <string name="qr_preview_save_and_create">Сохранить и создать</string>
     <string name="qr_preview_creating">Создание…</string>
     <string name="qr_preview_code_specifications">Характеристики кода</string>
     <string name="qr_preview_spec_export">Экспорт</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">Глобус</string>
     <string name="qr_icon_custom">Свой</string>
     <string name="qr_palette_electric_cobalt">Электрик-кобальт</string>
+    <string name="qr_palette_black">Чёрный</string>
     <string name="qr_palette_deep_sapphire">Тёмный сапфир</string>
     <string name="qr_palette_neon_cyan">Неоновый циан</string>
     <string name="qr_palette_monochrome_slate">Монохромный сланец</string>

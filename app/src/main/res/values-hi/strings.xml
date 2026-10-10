@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">छवि सहेजें</string>
     <string name="qr_preview_saving">सहेजा जा रहा है…</string>
     <string name="qr_preview_create">बनाएँ</string>
+    <string name="qr_preview_save_and_create">सहेजें और बनाएं</string>
     <string name="qr_preview_creating">बनाया जा रहा है…</string>
     <string name="qr_preview_code_specifications">कोड विशिष्टताएँ</string>
     <string name="qr_preview_spec_export">निर्यात</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">ग्लोब</string>
     <string name="qr_icon_custom">कस्टम</string>
     <string name="qr_palette_electric_cobalt">इलेक्ट्रिक कोबाल्ट</string>
+    <string name="qr_palette_black">काला</string>
     <string name="qr_palette_deep_sapphire">डीप सैफायर</string>
     <string name="qr_palette_neon_cyan">नियॉन सियान</string>
     <string name="qr_palette_monochrome_slate">मोनोक्रोम स्लेट</string>

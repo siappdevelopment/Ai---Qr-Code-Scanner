@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">Afbeelding opslaan</string>
     <string name="qr_preview_saving">Opslaan…</string>
     <string name="qr_preview_create">Maken</string>
+    <string name="qr_preview_save_and_create">Opslaan &amp; maken</string>
     <string name="qr_preview_creating">Maken…</string>
     <string name="qr_preview_code_specifications">Codespecificaties</string>
     <string name="qr_preview_spec_export">Exporteren</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">Wereldbol</string>
     <string name="qr_icon_custom">Aangepast</string>
     <string name="qr_palette_electric_cobalt">Elektrisch kobalt</string>
+    <string name="qr_palette_black">Zwart</string>
     <string name="qr_palette_deep_sapphire">Diep saffier</string>
     <string name="qr_palette_neon_cyan">Neoncyaan</string>
     <string name="qr_palette_monochrome_slate">Monochrome leisteen</string>

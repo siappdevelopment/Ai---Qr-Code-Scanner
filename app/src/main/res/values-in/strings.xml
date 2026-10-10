@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">Simpan Gambar</string>
     <string name="qr_preview_saving">Menyimpan…</string>
     <string name="qr_preview_create">Buat</string>
+    <string name="qr_preview_save_and_create">Simpan &amp; Buat</string>
     <string name="qr_preview_creating">Membuat…</string>
     <string name="qr_preview_code_specifications">Spesifikasi Kode</string>
     <string name="qr_preview_spec_export">Ekspor</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">Bola Dunia</string>
     <string name="qr_icon_custom">Khusus</string>
     <string name="qr_palette_electric_cobalt">Kobalt Elektrik</string>
+    <string name="qr_palette_black">Hitam</string>
     <string name="qr_palette_deep_sapphire">Safir Dalam</string>
     <string name="qr_palette_neon_cyan">Cyan Neon</string>
     <string name="qr_palette_monochrome_slate">Monokrom Slate</string>

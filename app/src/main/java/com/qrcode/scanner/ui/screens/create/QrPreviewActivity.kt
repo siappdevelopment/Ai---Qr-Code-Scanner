@@ -443,54 +443,6 @@ private fun QrPreviewScreen(
                 }
             }
             }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(52.dp)
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(if (exporting || bitmap == null) NestedSurface else CobaltPrimary)
-                    .clickable(
-                        enabled = bitmap != null && !exporting,
-                        indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
-                    ) {
-                        withExportBmp { bmp ->
-                            exporting = true
-                            scope.launch {
-                                val result = withContext(Dispatchers.IO) {
-                                    QrExportHelper.savePngToGallery(context, bmp)
-                                }
-                                Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
-                                exporting = false
-                            }
-                        }
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Image,
-                        contentDescription = null,
-                        tint = if (bitmap != null && !exporting) White else TextTertiary,
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Text(
-                        text = if (exporting) {
-                            stringResource(R.string.qr_preview_saving)
-                        } else {
-                            stringResource(R.string.qr_preview_save_image)
-                        },
-                        color = if (bitmap != null && !exporting) White else TextTertiary,
-                        fontFamily = PlusJakartaSans,
-                        fontWeight = FontWeight.SemiBold,
-                        fontSize = 16.sp
-                    )
-                }
-            }
-
             // Primary Save — Phase 7 persistence (payload unchanged by style)
             Box(
                 modifier = Modifier
@@ -507,6 +459,15 @@ private fun QrPreviewScreen(
                         saving = true
                         scope.launch {
                             try {
+                                // Save & Create: the image goes to the gallery first, then the QR is created.
+                                (exportBitmap ?: bitmap)?.let { bmp ->
+                                    val saved = withContext(Dispatchers.IO) {
+                                        QrExportHelper.savePngToGallery(context, bmp)
+                                    }
+                                    if (!saved.success) {
+                                        Toast.makeText(context, saved.message, Toast.LENGTH_SHORT).show()
+                                    }
+                                }
                                 val id = if (historyId > 0L) {
                                     historyId
                                 } else {
@@ -555,7 +516,7 @@ private fun QrPreviewScreen(
                         text = if (saving) {
                             stringResource(R.string.qr_preview_creating)
                         } else {
-                            stringResource(R.string.qr_preview_create)
+                            stringResource(R.string.qr_preview_save_and_create)
                         },
                         color = if (saving || bitmap == null) TextTertiary else White,
                         fontFamily = PlusJakartaSans,

@@ -329,6 +329,18 @@ private fun QrCustomizationScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     PaletteSwatch(
+                        color = Color(QrStyleConfig.COLOR_BLACK),
+                        selected = style.paletteKey == QrStyleConfig.PALETTE_BLACK,
+                        onClick = {
+                            style = style.copy(
+                                paletteKey = QrStyleConfig.PALETTE_BLACK,
+                                paletteName = context.getString(R.string.qr_palette_black),
+                                foregroundColor = QrStyleConfig.COLOR_BLACK,
+                                backgroundColor = QrStyleConfig.COLOR_WHITE
+                            )
+                        }
+                    )
+                    PaletteSwatch(
                         color = Color(QrStyleConfig.COLOR_COBALT),
                         selected = style.paletteKey == QrStyleConfig.PALETTE_COBALT,
                         onClick = {

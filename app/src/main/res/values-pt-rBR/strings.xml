@@ -413,6 +413,7 @@
     <string name="qr_preview_save_image">Salvar imagem</string>
     <string name="qr_preview_saving">Salvando…</string>
     <string name="qr_preview_create">Criar</string>
+    <string name="qr_preview_save_and_create">Salvar e criar</string>
     <string name="qr_preview_creating">Criando…</string>
     <string name="qr_preview_code_specifications">Especificações do código</string>
     <string name="qr_preview_spec_export">Exportar</string>
@@ -458,6 +459,7 @@
     <string name="qr_icon_globe">Globo</string>
     <string name="qr_icon_custom">Personalizado</string>
     <string name="qr_palette_electric_cobalt">Cobalto elétrico</string>
+    <string name="qr_palette_black">Preto</string>
     <string name="qr_palette_deep_sapphire">Safira profunda</string>
     <string name="qr_palette_neon_cyan">Ciano neon</string>
     <string name="qr_palette_monochrome_slate">Ardósia monocromática</string>

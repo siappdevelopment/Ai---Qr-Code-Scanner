@@ -800,6 +800,7 @@ public final class RemoteConfigValues {
         editor.putString("appOpenId", AdPlacement.getAppOpenId() == null ? "" : AdPlacement.getAppOpenId());
         editor.putString("nativeAdLabelColor", AdPlacement.getNativeAdLabelColor() == null ? "" : AdPlacement.getNativeAdLabelColor());
         editor.putString("nativeAdButtonColor", AdPlacement.getNativeAdButtonColor() == null ? "" : AdPlacement.getNativeAdButtonColor());
+        editor.putString("nativeAdButtonColorDark", AdPlacement.getNativeAdButtonColorDark() == null ? "" : AdPlacement.getNativeAdButtonColorDark());
         editor.putString("clEndBackAdShowCountryList", formatCountryList(clEndBackAdShowCountryList));
         editor.putInt("notificationInstallDays", notificationInstallDays);
         editor.putInt("notificationCallInstallDays", notificationCallInstallDays);

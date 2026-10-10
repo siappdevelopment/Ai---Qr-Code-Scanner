@@ -585,6 +585,10 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
         tvMoreApps = view.findViewById(R.id.tvMoreApps);
 
         rlNativeListAdView = view.findViewById(R.id.rlNativeListAdView);
+        if (rlNativeListAdView instanceof com.qrcode.scanner.launcher.common.ScrollForwardingRelativeLayout) {
+            // Dragging on the sticky ad scrolls the app list instead of clicking the ad.
+            ((com.qrcode.scanner.launcher.common.ScrollForwardingRelativeLayout) rlNativeListAdView).setScrollTarget(rvApps);
+        }
         slNativeListShimmer = view.findViewById(R.id.slNativeListShimmer);
         flNativeListAd = view.findViewById(R.id.flNativeListAd);
 

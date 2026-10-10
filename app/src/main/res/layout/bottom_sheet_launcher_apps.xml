@@ -140,7 +140,7 @@
 
         </LinearLayout>
 
-        <RelativeLayout
+        <com.qrcode.scanner.launcher.common.ScrollForwardingRelativeLayout
             android:id="@+id/rlNativeListAdView"
             android:layout_width="match_parent"
             android:layout_height="@dimen/launcher_native_list_ad_height"
@@ -185,7 +185,7 @@
 
             </androidx.cardview.widget.CardView>
 
-        </RelativeLayout>
+        </com.qrcode.scanner.launcher.common.ScrollForwardingRelativeLayout>
 
     </FrameLayout>
 

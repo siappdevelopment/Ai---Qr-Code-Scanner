@@ -79,7 +79,14 @@ public final class ScreenFlowNavigation {
         List<String> flow = ScreenFlowConfig.getShowScreenFlow();
         String next = findNextIncomplete(context, flow, startIndex);
         if (next == null) {
-            openMain(context);
+            // Flow finished: also close the last onboarding screen. The launcher opens in its own task
+            // (taskAffinity ""), so CLEAR_TASK would leave this activity alive in the app task, and it would
+            // show again when an Event/Charging screen is closed.
+            if (context instanceof Activity && !(context instanceof LauncherHomeActivity)) {
+                openMain((Activity) context);
+            } else {
+                openMain(context);
+            }
             return;
         }
         if (context instanceof Activity) {

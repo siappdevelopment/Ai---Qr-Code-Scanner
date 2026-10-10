@@ -62,6 +62,9 @@ public class CallEndBackAd {
     private static boolean interstitialLoading;
     private static boolean appOpenLoading;
     private static boolean nativeLoading;
+    private static long interstitialFailedAt;
+    private static long appOpenFailedAt;
+    private static long nativeFailedAt;
     public static boolean isAdShowing = true;
     private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
@@ -105,6 +108,7 @@ public class CallEndBackAd {
         preloadIfConfigured(context, showType);
         Dialog loading = showLoadingDialog(context);
         AtomicBoolean finished = new AtomicBoolean(false);
+        long startedAt = System.currentTimeMillis();
         long deadline = System.currentTimeMillis() + READY_WAIT_MS;
         Runnable poll = new Runnable() {
             @Override
@@ -126,21 +130,33 @@ public class CallEndBackAd {
                     }
                     return;
                 }
-                if (System.currentTimeMillis() >= deadline) {
+                // The ad failed to load (or no load is running): stop waiting at once, no retry loop.
+                if (System.currentTimeMillis() >= deadline || !isLoading(showType) || failedSince(showType, startedAt)) {
                     if (finished.compareAndSet(false, true)) {
                         dismissDialog(loading);
-                        Log.d(TAG, "wait timeout for " + showType);
+                        Log.d(TAG, "wait ended without ad for " + showType);
                         failShow(context);
                     }
                     return;
-                }
-                if (!isLoading(showType)) {
-                    preloadIfConfigured(context, showType);
                 }
                 mainHandler.postDelayed(this, READY_POLL_MS);
             }
         };
         mainHandler.postDelayed(poll, READY_POLL_MS);
+    }
+
+    private static boolean failedSince(String type, long since) {
+        String normalized = normalizeAdType(type);
+        if (TYPE_INTER.equals(normalized)) {
+            return interstitialFailedAt >= since;
+        }
+        if (TYPE_APP_OPEN.equals(normalized)) {
+            return appOpenFailedAt >= since;
+        }
+        if (TYPE_NATIVE.equals(normalized)) {
+            return nativeFailedAt >= since;
+        }
+        return false;
     }
 
     private static boolean isLoading(String type) {
@@ -166,7 +182,6 @@ public class CallEndBackAd {
             dialog.setContentView(LayoutInflater.from(AdTheme.forApp(activity)).inflate(R.layout.dialog_loading_ads, null, false));
             if (dialog.getWindow() != null) {
                 dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
             }
             dialog.show();
             return dialog;
@@ -353,6 +368,7 @@ public class CallEndBackAd {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 appOpenLoading = false;
+                appOpenFailedAt = System.currentTimeMillis();
                 isAdsEnabled = true;
                 AppUtils.trackScreen(context, "CL_END_APP_OPEN_FAILED");
                 Log.d(TAG, "appopen failed: " + loadAdError);
@@ -448,6 +464,7 @@ public class CallEndBackAd {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 interstitialLoading = false;
+                interstitialFailedAt = System.currentTimeMillis();
                 isAdsEnabled = true;
                 AppUtils.trackScreen(context, "CL_END_INTER_FAILED");
                 Log.d(TAG, "inter failed: " + loadAdError);
@@ -484,6 +501,7 @@ public class CallEndBackAd {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
                 nativeLoading = false;
+                nativeFailedAt = System.currentTimeMillis();
                 isAdsEnabled = true;
                 AppUtils.trackScreen(context, "CL_END_NATIVE_FAILED");
                 Log.d(TAG, "native failed: " + adError);

@@ -16,7 +16,7 @@
         android:fontFamily="@font/sans_trial_medium"
         android:gravity="center"
         android:paddingBottom="@dimen/_2sdp"
-        android:text="Create Reminder"
+        android:text="@string/cl_end_create_reminder"
         android:textColor="@android:color/white"
         android:textSize="@dimen/_12sdp"
         tools:ignore="HardcodedText" />
@@ -59,7 +59,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/sans_trial_regular"
-                android:hint="Remind me about"
+                android:hint="@string/cl_end_remind_hint"
                 android:paddingBottom="@dimen/_2sdp"
                 android:textColor="@color/text_secondary"
                 android:textColorHint="@color/text_secondary"
@@ -91,7 +91,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
-                android:text="Select date &amp; time"
+                android:text="@string/cl_end_select_datetime"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
@@ -203,7 +203,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/_2sdp"
                 android:singleLine="true"
-                android:text="No"
+                android:text="@string/cl_end_no"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
@@ -219,7 +219,7 @@
                 android:gravity="center"
                 android:paddingBottom="@dimen/_2sdp"
                 android:singleLine="true"
-                android:text="Yes"
+                android:text="@string/cl_end_yes"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />

@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_6sdp"
                 android:fontFamily="@font/sans_trial_regular"
-                android:text="Date"
+                android:text="@string/cl_end_date"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_10sdp"
                 tools:ignore="HardcodedText" />
@@ -79,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_6sdp"
                 android:fontFamily="@font/sans_trial_regular"
-                android:text="Time"
+                android:text="@string/cl_end_time"
                 android:textColor="@color/text_secondary"
                 android:textSize="@dimen/_10sdp"
                 tools:ignore="HardcodedText" />

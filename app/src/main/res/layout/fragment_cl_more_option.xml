@@ -34,7 +34,7 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
-                android:text="Add to Contact"
+                android:text="@string/cl_end_more_add_contact"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
@@ -63,7 +63,7 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
-                android:text="Send Message"
+                android:text="@string/cl_end_more_send_message"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
@@ -92,7 +92,7 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
-                android:text="Send Mail"
+                android:text="@string/cl_end_more_send_mail"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
@@ -121,7 +121,7 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
-                android:text="Calendar"
+                android:text="@string/cl_end_more_calendar"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
@@ -150,7 +150,7 @@
                 android:layout_marginStart="@dimen/_8sdp"
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
-                android:text="Web"
+                android:text="@string/cl_end_more_web"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />

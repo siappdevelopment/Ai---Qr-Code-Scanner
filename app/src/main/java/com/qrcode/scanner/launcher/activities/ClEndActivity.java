@@ -80,10 +80,29 @@ public class ClEndActivity extends AppCompatActivity {
         findIDs();
     }
 
+    /** The launch helper appends the English call type to the time; swap it for the selected language. */
+    private String localizeCallType(String timeType, String callType) {
+        if (callType == null || callType.isEmpty() || !timeType.endsWith(callType)) {
+            return timeType;
+        }
+        int resId;
+        if ("Incoming".equalsIgnoreCase(callType)) {
+            resId = R.string.cl_end_call_incoming;
+        } else if ("Outgoing".equalsIgnoreCase(callType)) {
+            resId = R.string.cl_end_call_outgoing;
+        } else if ("Missed Call".equalsIgnoreCase(callType)) {
+            resId = R.string.cl_end_call_missed;
+        } else {
+            return timeType;
+        }
+        return timeType.substring(0, timeType.length() - callType.length()) + getString(resId);
+    }
+
     private void findIDs() {
         Intent intent = getIntent();
         timeType = intent.getStringExtra("timeType") != null ? intent.getStringExtra("timeType") : "";
         duration = intent.getStringExtra("duration") != null ? intent.getStringExtra("duration") : "";
+        timeType = localizeCallType(timeType, intent.getStringExtra("CallType"));
 
         llCallView = findViewById(R.id.llCallView);
         tvTimeType = findViewById(R.id.tvTimeType);

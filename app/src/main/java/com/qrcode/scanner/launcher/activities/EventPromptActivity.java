@@ -99,7 +99,9 @@ public abstract class EventPromptActivity extends AppCompatActivity {
         EventPromptLauncher.cancelNotification(this, kindFrom(intent));
         bindKind(kindFrom(intent));
         restartHold();
-        loadBottomAd();
+        if (reloadAdsOnNewIntent()) {
+            loadBottomAd();
+        }
     }
 
     @Override
@@ -164,6 +166,14 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     protected abstract String kindFrom(@Nullable Intent intent);
 
     protected abstract void bindKind(String kind);
+
+    /**
+     * Whether a new event reaching this already open screen requests its ads again. The Charging screen
+     * returns false: it only refreshes its content and keeps the ads it already loaded.
+     */
+    protected boolean reloadAdsOnNewIntent() {
+        return true;
+    }
 
     protected void showContent(int header, int accent, int badgeBg, int badgeText,
                                CharSequence titleText, CharSequence successText,

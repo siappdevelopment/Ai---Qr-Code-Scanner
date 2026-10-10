@@ -103,6 +103,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_8sdp"
+                android:visibility="gone"
                 android:background="@drawable/custom_radius_16"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"

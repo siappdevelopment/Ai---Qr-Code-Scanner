@@ -3,6 +3,9 @@ package com.qrcode.scanner.launcher.activities;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.ComponentName;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -57,6 +60,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
     @Nullable
     private Bundle pendingSavedInstanceState;
     private final ExecutorService appsExecutor = Executors.newSingleThreadExecutor();
+    private BroadcastReceiver installedAppsReceiver;
 
     /**
      * Language change: LanguageActivity applies the locale while this activity is stopped behind it, so this
@@ -248,6 +252,13 @@ public class LauncherHomeActivity extends AppCompatActivity {
     protected void onDestroy() {
         LauncherSettingsHelper.unregisterChangeListener(drawerSettingsListener);
         SubContainerFragment.clearCachedNativeAd();
+        if (installedAppsReceiver != null) {
+            try {
+                unregisterReceiver(installedAppsReceiver);
+            } catch (Exception ignored) {
+            }
+            installedAppsReceiver = null;
+        }
         appsExecutor.shutdownNow();
         super.onDestroy();
     }
@@ -377,6 +388,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
         vpLauncher = findViewById(R.id.vpLauncher);
         setupViewPager();
         preloadInstalledApps();
+        registerInstalledAppsReceiver();
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -602,6 +614,34 @@ public class LauncherHomeActivity extends AppCompatActivity {
         if (homeFragment != null) {
             homeFragment.onRightSwipeNavigationCompleted();
         }
+    }
+
+    /**
+     * The app lists are loaded once at start. Without this receiver an app installed or removed while the
+     * drawer is closed (the drawer only listens while it is open) stays missing until the activity restarts.
+     */
+    private void registerInstalledAppsReceiver() {
+        if (installedAppsReceiver != null) {
+            return;
+        }
+        installedAppsReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent == null || appsExecutor.isShutdown()) {
+                    return;
+                }
+                Fragment fragment = getSupportFragmentManager().findFragmentByTag(LauncherAppsBottomSheet.TAG);
+                if (fragment instanceof LauncherAppsBottomSheet && fragment.isAdded() && fragment.getView() != null) {
+                    return; // the open drawer refreshes itself
+                }
+                appsExecutor.execute(() -> LauncherAppsHelper.replaceAppLists(LauncherAppsHelper.loadInstalledApps(getApplicationContext())));
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_PACKAGE_ADDED);
+        filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        filter.addDataScheme("package");
+        registerReceiver(installedAppsReceiver, filter);
     }
 
     private void preloadInstalledApps() {

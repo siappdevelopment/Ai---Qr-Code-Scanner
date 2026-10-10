@@ -61,13 +61,13 @@ public class ClMessageFragment extends Fragment {
             selectMessage(4);
             return false;
         });
-        ivSendMessage1.setOnClickListener(v -> sendMessage("Sorry, I can't talk right now."));
-        ivSendMessage2.setOnClickListener(v -> sendMessage("Can I call you back later?"));
-        ivSendMessage3.setOnClickListener(v -> sendMessage("In a meeting right now."));
+        ivSendMessage1.setOnClickListener(v -> sendMessage(getString(R.string.cl_end_msg_busy)));
+        ivSendMessage2.setOnClickListener(v -> sendMessage(getString(R.string.cl_end_msg_callback)));
+        ivSendMessage3.setOnClickListener(v -> sendMessage(getString(R.string.cl_end_msg_meeting)));
         ivSendCustomMessage.setOnClickListener(v -> {
             String message = Objects.requireNonNull(etCustomMessage.getText()).toString().trim();
             if (message.isEmpty()) {
-                Toast.makeText(getContext(), "Please Enter Message", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.cl_end_toast_enter_message), Toast.LENGTH_SHORT).show();
                 return;
             }
             sendMessage(message);
@@ -136,7 +136,7 @@ public class ClMessageFragment extends Fragment {
             startActivity(intent);
             ClEndActivity.finishAfterLaunch(this);
         } catch (Exception e) {
-            Toast.makeText(getContext(), "No SMS App Found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.cl_end_toast_no_sms), Toast.LENGTH_SHORT).show();
         }
     }
 

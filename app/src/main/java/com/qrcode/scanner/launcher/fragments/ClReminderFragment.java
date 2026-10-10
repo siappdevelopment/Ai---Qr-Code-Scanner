@@ -168,7 +168,7 @@ public class ClReminderFragment extends Fragment implements OnReminderDeleteList
         btnYes.setOnClickListener(view -> {
             String title = Objects.requireNonNull(etAbout.getText()).toString().trim();
             if (title.isEmpty()) {
-                Toast.makeText(getContext(), "Please Enter Remind About", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getString(R.string.cl_end_toast_enter_remind), Toast.LENGTH_SHORT).show();
                 return;
             }
 

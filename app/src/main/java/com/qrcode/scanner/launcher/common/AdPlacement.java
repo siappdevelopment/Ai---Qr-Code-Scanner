@@ -1582,7 +1582,7 @@ public final class AdPlacement {
         if (showPreloadedEventBackAd(activity, screenKey, adType, next)) {
             return;
         }
-        executeSequencedAd(activity, next, adType, config.interId, config.fullNativeId);
+        executeSequencedAd(activity, next, adType, config.interId, config.fullNativeId, false);
     }
 
     /** One ready back ad per event screen, for the sequence step that will show next. */
@@ -1769,7 +1769,7 @@ public final class AdPlacement {
         Log.d("EventPromptAd", "back preload shown " + screenKey + " type=" + adType);
         AtomicBoolean completed = new AtomicBoolean(false);
         OnInterstitialAdListener listener = next::run;
-        boolean quizOnFail = launcherQuizOnGoogleFail();
+        boolean quizOnFail = false; // Charging / Install: Google ads only, no Quiz fallback when a Google ad fails.
         if (nativeAd != null) {
             presentNativeFullAd(activity, nativeAd, listener, completed);
             return true;
@@ -1946,7 +1946,10 @@ public final class AdPlacement {
     }
 
     private static void executeSequencedAd(Activity activity, Runnable continueAction, String adType, @Nullable String interstitialId, @Nullable String fullNativeId) {
-        boolean quizOnFail = launcherQuizOnGoogleFail();
+        executeSequencedAd(activity, continueAction, adType, interstitialId, fullNativeId, launcherQuizOnGoogleFail());
+    }
+
+    private static void executeSequencedAd(Activity activity, Runnable continueAction, String adType, @Nullable String interstitialId, @Nullable String fullNativeId, boolean quizOnFail) {
         if (LAUNCHER_APP_AD_TYPE_GOOGLE_INTER.equals(adType)) {
             loadInterstitialAdInternal(activity, interstitialId, () -> continueAction.run(), true, false, quizOnFail);
             return;

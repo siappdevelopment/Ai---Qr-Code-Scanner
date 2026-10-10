@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.DocumentScanner
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.Image
+import androidx.compose.material.icons.outlined.Layers
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.QrCode2
@@ -35,7 +36,10 @@ import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,8 +55,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.app.R
+import com.qrcode.scanner.launcher.common.AppUtils
 import com.qrcode.scanner.launcher.common.ScreenNativeAds
 import com.qrcode.scanner.ui.components.BigNativeAd
 import com.qrcode.scanner.ui.components.headerBottomStroke
@@ -107,6 +115,7 @@ fun HomeScreen(
                 .padding(top = 12.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
+            OverlayPermissionCard()
             InstantScannerHero(onOpenScanner = onOpenScanner)
             BigNativeAd(slot = ScreenNativeAds.Slot.HOME)
             QuickToolsSection(
@@ -614,4 +623,103 @@ private object HomeColors {
     val IconWellBorder get() = if (dark) Color(0xFF314056) else Color(0xFFD0E2FF)
     val ProBadgeBg get() = if (dark) Color(0xFF1A2433) else Color(0xFFEBF3FF)
     val Meta get() = if (dark) Color(0xFFA8AEB8) else Color(0xFF6B7280)
+}
+/**
+ * Shown on Home while the app is neither the default Home app nor allowed to display over other apps.
+ * Allow opens the system "Display over other apps" screen for this app. It disappears once either is true;
+ * the state is re-read every time Home resumes (coming back from that settings screen).
+ */
+@Composable
+private fun OverlayPermissionCard() {
+    val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
+    fun needsOverlay() = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M &&
+        !AppUtils.hasOverlayPermission(context) && !AppUtils.isDefaultHomeApp(context)
+    var show by remember { mutableStateOf(needsOverlay()) }
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                show = needsOverlay()
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+    if (!show) {
+        return
+    }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(CardSurface, RoundedCornerShape(20.dp))
+            .border(1.dp, HomeColors.Outline, RoundedCornerShape(20.dp))
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .size(44.dp)
+                .background(HomeColors.IconWell, RoundedCornerShape(14.dp))
+                .border(1.dp, HomeColors.IconWellBorder, RoundedCornerShape(14.dp)),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Outlined.Layers,
+                contentDescription = null,
+                tint = CobaltPrimary,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(horizontal = 12.dp)
+        ) {
+            Text(
+                text = stringResource(R.string.home_overlay_title),
+                color = HomeColors.OnSurface,
+                fontFamily = PlusJakartaSans,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.SemiBold,
+                lineHeight = 20.sp
+            )
+//            Spacer(modifier = Modifier.height(2.dp))
+//            Text(
+//                text = stringResource(R.string.home_overlay_description),
+//                color = HomeColors.OnSurfaceVariant,
+//                fontFamily = PlusJakartaSans,
+//                fontSize = 12.sp,
+//                lineHeight = 17.sp
+//            )
+        }
+        Box(
+            modifier = Modifier
+                .height(38.dp)
+                .background(CobaltPrimary, RoundedCornerShape(12.dp))
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null
+                ) {
+                    try {
+                        context.startActivity(
+                            android.content.Intent(
+                                android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                                android.net.Uri.parse("package:" + context.packageName)
+                            )
+                        )
+                    } catch (_: Exception) {
+                    }
+                }
+                .padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.home_overlay_allow),
+                color = White,
+                fontFamily = PlusJakartaSans,
+                fontSize = 13.sp,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
 }

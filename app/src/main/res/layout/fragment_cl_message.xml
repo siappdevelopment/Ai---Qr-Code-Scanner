@@ -35,7 +35,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
-                android:text="Sorry, I can't talk right now."
+                android:text="@string/cl_end_msg_busy"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
@@ -71,7 +71,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
-                android:text="Can I call you back later?"
+                android:text="@string/cl_end_msg_callback"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
@@ -108,7 +108,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/sans_trial_regular"
                 android:paddingBottom="@dimen/_2sdp"
-                android:text="In a meeting right now."
+                android:text="@string/cl_end_msg_meeting"
                 android:textColor="@color/text_primary"
                 android:textSize="@dimen/_12sdp"
                 tools:ignore="HardcodedText" />
@@ -146,7 +146,7 @@
                 android:layout_weight="1"
                 android:background="@null"
                 android:fontFamily="@font/sans_trial_regular"
-                android:hint="Write personal message..."
+                android:hint="@string/cl_end_message_hint"
                 android:paddingBottom="@dimen/_1sdp"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_primary"

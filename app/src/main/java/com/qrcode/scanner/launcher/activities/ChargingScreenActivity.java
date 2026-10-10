@@ -26,6 +26,12 @@ public class ChargingScreenActivity extends EventPromptActivity {
         return KIND_CHARGE_OUT.equals(kind) ? KIND_CHARGE_OUT : KIND_CHARGE_IN;
     }
 
+    /** A plug in / plug out event while this screen is open only updates the content; ads are not requested again. */
+    @Override
+    protected boolean reloadAdsOnNewIntent() {
+        return false;
+    }
+
     @Override
     protected void bindKind(String kind) {
         int level = batteryPercent();

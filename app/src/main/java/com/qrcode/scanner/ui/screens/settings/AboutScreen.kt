@@ -175,10 +175,10 @@ fun AboutScreen(
                         .height(1.dp)
                         .background(BorderSubtle)
                 )
-//                AboutMetaRow(
-//                    label = stringResource(R.string.about_meta_build),
-//                    value = versionCode.toString()
-//                )
+                AboutMetaRow(
+                    label = stringResource(R.string.about_meta_build),
+                    value = versionCode.toString()
+                )
 //                Box(
 //                    modifier = Modifier
 //                        .fillMaxWidth()

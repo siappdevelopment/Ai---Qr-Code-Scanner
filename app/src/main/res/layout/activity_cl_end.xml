@@ -38,7 +38,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/sans_trial_medium"
-                    android:text="Private Number"
+                    android:text="@string/cl_end_private_number"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/_13sdp"
                     tools:ignore="HardcodedText" />

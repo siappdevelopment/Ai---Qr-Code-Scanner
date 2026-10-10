@@ -3,6 +3,7 @@ package com.qrcode.scanner.ui.navigation
 import android.content.Context
 import android.content.Intent
 import com.qrcode.scanner.MainActivity
+import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
 import com.qrcode.scanner.launcher.common.AppUtils
 import com.qrcode.scanner.launcher.common.ScreenFlowNavigation
 import com.qrcode.scanner.launcher.remote.ScreenFlowConfig
@@ -36,7 +37,12 @@ object ComposeScanRequest {
     fun openScan(context: Context) {
         request()
         val intent = if (AppUtils.isDefaultHomeApp(context) || ScreenFlowConfig.getRedirectHomeLauncher()) {
-            AppUtils.buildLauncherHomeIntent(context)
+            // Plain intent to the launcher, not the HOME intent: a HOME intent makes LauncherHomeActivity first
+            // return to its wallpaper Home page (and clear the task) before it slides to the QR page, which showed
+            // a white/black frame. Without the HOME category it goes straight to the QR page (see onResume).
+            Intent(context, LauncherHomeActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            }
         } else {
             Intent(context, MainActivity::class.java).apply {
                 putExtra(ScreenFlowNavigation.EXTRA_SKIP_STARTUP_SPLASH, true)

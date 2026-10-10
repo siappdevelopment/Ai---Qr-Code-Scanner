@@ -200,7 +200,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
         LauncherAppsBottomSheet.clearSuppressBackgroundDismiss();
         returnHomeForThemeChangeIfNeeded();
         if (ComposeScanRequest.INSTANCE.isPending()) {
-            openQrShell();
+            openQrShell(false);
         }
     }
 
@@ -328,13 +328,22 @@ public class LauncherHomeActivity extends AppCompatActivity {
     }
 
     public void openQrShell() {
+        openQrShell(true);
+    }
+
+    /**
+     * @param animate true for taps on the Home page (slide); false when the app is opened on the Scan page from
+     *                outside (History / Call End), so the launcher Home page stays loaded next to it and no slide
+     *                frame is shown over the wallpaper.
+     */
+    private void openQrShell(boolean animate) {
         if (vpLauncher == null || isFinishing() || isDestroyed()) {
             return;
         }
         if (vpLauncher.getCurrentItem() != LauncherPagerAdapter.PAGE_RIGHT) {
             // The QR page keeps its last tab (e.g. Settings); the Scan icon must always land on Scan.
             ComposeScanRequest.INSTANCE.request();
-            vpLauncher.setCurrentItem(LauncherPagerAdapter.PAGE_RIGHT, true);
+            vpLauncher.setCurrentItem(LauncherPagerAdapter.PAGE_RIGHT, animate);
         }
     }
 

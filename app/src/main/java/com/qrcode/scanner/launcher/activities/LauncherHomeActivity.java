@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
+import android.view.WindowManager;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
@@ -57,6 +58,41 @@ public class LauncherHomeActivity extends AppCompatActivity {
     private Bundle pendingSavedInstanceState;
     private final ExecutorService appsExecutor = Executors.newSingleThreadExecutor();
 
+    /**
+     * Language change: LanguageActivity applies the locale while this activity is stopped behind it, so this
+     * activity is recreated in the background. Its translucent wallpaper window is then created without ever
+     * being laid out as the visible wallpaper target, and the Home page shows a plain window colour (white in
+     * Light, black in Dark) until a swipe or the drawer forces a new layout. The first resume of that recreated
+     * activity happens while it is still invisible, so the refresh must wait until the window really has focus
+     * on the Home page.
+     */
+    private boolean wallpaperRefreshPending = true;
+
+    private void refreshWallpaperWindowIfNeeded() {
+        if (!wallpaperRefreshPending || vpLauncher == null || !hasWindowFocus()
+                || vpLauncher.getCurrentItem() != LauncherPagerAdapter.PAGE_HOME) {
+            return;
+        }
+        wallpaperRefreshPending = false;
+        final android.view.Window window = getWindow();
+        window.getDecorView().post(() -> {
+            if (isFinishing() || isDestroyed()) {
+                return;
+            }
+            window.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER);
+            window.getDecorView().requestLayout();
+            window.getDecorView().invalidate();
+        });
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            refreshWallpaperWindowIfNeeded();
+        }
+    }
+
     /** Marks the home task hidden in Recent Apps without closing or reopening the screen. */
     private void hideLauncherFromRecents() {
         try {
@@ -107,11 +143,15 @@ public class LauncherHomeActivity extends AppCompatActivity {
             return;
         }
         LauncherQrSystemBars.INSTANCE.showTransparentNavigationBar(this);
-        if (com.qrcode.scanner.ui.navigation.ThemeNavigation.INSTANCE.isReopenSettingsPending()) {
-            // Recreated by a theme change and Settings reopens: paint the header colour now, not after Compose.
-            LauncherQrSystemBars.INSTANCE.applyHeaderStatusBar(this,
-                    com.qrcode.scanner.data.settings.SettingsRepositoryKt.readAppNightMode(this)
-                            == androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES);
+        if (com.qrcode.scanner.ui.navigation.ThemeNavigation.INSTANCE.isReopenSettingsPending()
+                && savedInstanceState != null
+                && savedInstanceState.getInt(KEY_RESTORE_LAUNCHER_PAGE, LauncherPagerAdapter.PAGE_HOME) == LauncherPagerAdapter.PAGE_RIGHT) {
+            // Recreated on the QR page and Settings reopens: paint the header colour now, not after Compose.
+            // Only on the QR page: this also sets the window background, which on the Home page would replace
+            // the wallpaper with a solid colour (white in Light, black in Dark).
+//            LauncherQrSystemBars.INSTANCE.applyHeaderStatusBar(this,
+//                    com.qrcode.scanner.data.settings.SettingsRepositoryKt.readAppNightMode(this)
+//                            == androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES);
         }
         setContentView(R.layout.activity_launcher_home);
         setupLauncherHome();
@@ -500,6 +540,9 @@ public class LauncherHomeActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 syncQrCamera(position == LauncherPagerAdapter.PAGE_RIGHT);
+                if (position == LauncherPagerAdapter.PAGE_HOME) {
+                    refreshWallpaperWindowIfNeeded();
+                }
                 if (lastSelectedPage == LauncherPagerAdapter.PAGE_RIGHT && position != LauncherPagerAdapter.PAGE_RIGHT) {
                     com.qrcode.scanner.launcher.common.HomeBottomAd.onPageHidden();
                 }

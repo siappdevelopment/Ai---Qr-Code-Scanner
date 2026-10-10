@@ -88,8 +88,16 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
         return appOpenAd != null && AdPlacement.getAppOpenAdShow() && AdPlacement.canShowAppOpenAd(application) && (System.currentTimeMillis() - loadTime) < AD_EXPIRY_MS;
     }
 
-    /** The resume ad belongs to the Right-Side page only; every other screen is skipped. */
+    /**
+     * Resume App Open ads only run while this app is the default Home launcher, and only on the Right-Side page.
+     * The launcher status is read live on every call, so a previously loaded ad or a delayed callback can never
+     * show after another launcher has become the default.
+     */
     private boolean shouldSkipAppOpenAd() {
+        if (!AppUtils.isDefaultHomeApp(application)) {
+            clearLoadedAd();
+            return true;
+        }
         return !isRightSidePageOpen(currentActivity);
     }
 
@@ -149,6 +157,11 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
                 AdPlacement.setAppOpenLastShowTime(application, System.currentTimeMillis());
             }
         });
+        // Last check right before showing: the launcher status may have changed since the ad was loaded.
+        if (!AppUtils.isDefaultHomeApp(application) || activity.isFinishing() || activity.isDestroyed()) {
+            clearLoadedAd();
+            return;
+        }
         isShowingAd = true;
         adToShow.show(activity);
     }

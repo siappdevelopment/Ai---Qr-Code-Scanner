@@ -519,6 +519,12 @@ public class LauncherHomeActivity extends AppCompatActivity {
                     }
                     if (pendingRightSwipeOpen && vpLauncher.getCurrentItem() == LauncherPagerAdapter.PAGE_RIGHT) {
                         pendingRightSwipeOpen = false;
+                        LauncherHomeFragment popupFragment = findLauncherHomeFragment();
+                        if (popupFragment != null && popupFragment.canShowDefaultHomePopup()) {
+                            // The Default Home permission screen is due: no Right Swipe ad, show the permission screen.
+                            popupFragment.maybeShowDefaultHomePopup();
+                            return;
+                        }
                         AdPlacement.loadRightSwipeInterstitialAd(LauncherHomeActivity.this, () -> {
                             if (isFinishing() || isDestroyed()) {
                                 return;

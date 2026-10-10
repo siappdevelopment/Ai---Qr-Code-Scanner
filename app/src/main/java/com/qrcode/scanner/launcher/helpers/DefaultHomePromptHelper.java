@@ -85,21 +85,32 @@ public final class DefaultHomePromptHelper {
         llDefault.setVisibility(AppUtils.isDefaultHomeApp(getContext()) ? GONE : VISIBLE);
     }
 
-    public void maybeShowDefaultHomePopup() {
+    /**
+     * True when maybeShowDefaultHomePopup() would show the Default Home permission screen right now.
+     * Used by the Right Swipe flow to skip its ad in that case.
+     */
+    public boolean canShowDefaultHomePopup() {
         if (defaultHomePopupLaunchInProgress || waitingForDefaultHome || !isActive()) {
-            return;
+            return false;
         }
         Activity hostActivity = getHostActivity();
         if (hostActivity == null || hostActivity.isFinishing()) {
-            return;
+            return false;
         }
         if (!AdPlacement.getDefaultAppPopupShow()) {
-            return;
+            return false;
         }
         if (AppUtils.isDefaultHomeApp(getContext())) {
-            return;
+            return false;
         }
         if (!AdPlacement.canShowDefaultAppPopup(getContext())) {
+            return false;
+        }
+        return AppUtils.createDefaultHomeRoleRequestIntent(getContext()) != null;
+    }
+
+    public void maybeShowDefaultHomePopup() {
+        if (!canShowDefaultHomePopup()) {
             return;
         }
         if (roleLauncher == null) {

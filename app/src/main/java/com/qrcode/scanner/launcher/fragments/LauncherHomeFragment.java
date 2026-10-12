@@ -1264,7 +1264,6 @@ public class LauncherHomeFragment extends Fragment {
         try {
             requireContext().unregisterReceiver(timeChangeReceiver);
         } catch (Exception e) {
-            e.printStackTrace();
         }
         timeReceiverRegistered = false;
     }

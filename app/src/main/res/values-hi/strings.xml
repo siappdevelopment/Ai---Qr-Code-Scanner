@@ -665,7 +665,7 @@
     <string name="default_launcher_reminder_title">QR Code &amp; Scanner को अपनी होम स्क्रीन बनाएँ</string>
     <string name="default_launcher_reminder_text">तेज़ और सहज एक्सेस के लिए QR Code &amp; Scanner को अपना डिफ़ॉल्ट लॉन्चर बनाएँ।</string>
     <string name="launcher_default_title">हमें अपना डिफ़ॉल्ट बनाएँ</string>
-    <string name="launcher_default_subtitle">इसे अपना डिफ़ॉल्ट Phone Cleaner लॉन्चर ऐप बनाएँ।</string>
+    <string name="launcher_default_subtitle">इसे अपना डिफ़ॉल्ट QR Code लॉन्चर ऐप बनाएँ।</string>
     <string name="launcher_default_set_now">अभी सेट करें</string>
     <string name="intro_title_1">QR कोड तुरंत स्कैन करें</string>
     <string name="intro_desc_1">अपने कैमरे से QR कोड जल्दी स्कैन करें और सेकंडों में जानकारी प्राप्त करें</string>

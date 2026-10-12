@@ -665,7 +665,7 @@
     <string name="default_launcher_reminder_title">Rendi QR Code &amp; Scanner la tua schermata Home</string>
     <string name="default_launcher_reminder_text">Imposta QR Code &amp; Scanner come launcher predefinito per un accesso più rapido e fluido.</string>
     <string name="launcher_default_title">Rendici la tua scelta predefinita</string>
-    <string name="launcher_default_subtitle">Imposta questa come app launcher Phone Cleaner predefinita.</string>
+    <string name="launcher_default_subtitle">Imposta questa come app launcher QR Code predefinita.</string>
     <string name="launcher_default_set_now">Imposta ora</string>
     <string name="intro_title_1">Scansiona codici QR istantaneamente</string>
     <string name="intro_desc_1">Scansiona rapidamente codici QR con la fotocamera e accedi alle informazioni in pochi secondi</string>

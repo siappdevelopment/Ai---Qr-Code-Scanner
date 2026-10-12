@@ -3,7 +3,6 @@ package com.qrcode.scanner.launcher.common;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
@@ -20,7 +19,6 @@ public class CallEndViewManager {
         if (AppUtils.isDefaultHomeApp(context)) {
             // The default Home app may start screens from the background, so no overlay window is needed.
             context.startActivity(intent);
-            Log.d("EventPrompt", "default home app, activity started without overlay");
             return;
         }
         LayoutInflater inflater = LayoutInflater.from(context);
@@ -36,18 +34,14 @@ public class CallEndViewManager {
         WindowManager.LayoutParams params = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT, type, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, PixelFormat.TRANSLUCENT);
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         windowManager.addView(floatView, params);
-//        Log.d("EventPrompt", "overlay added, starting activity in 250ms");
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             try {
                 context.startActivity(intent);
-                Log.d("EventPrompt", "activity started from overlay");
             } catch (Exception startError) {
-                Log.d("EventPrompt", "activity start from overlay failed: " + startError);
             }
             try {
                 windowManager.removeView(floatView);
             } catch (Exception removeError) {
-                Log.d("EventPrompt", "overlay remove failed: " + removeError);
             }
         }, 250);
     }

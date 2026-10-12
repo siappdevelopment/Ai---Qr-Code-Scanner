@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Build;
-import android.util.Log;
 
 import com.qrcode.scanner.launcher.activities.EventPromptActivity;
 
@@ -21,15 +20,12 @@ public final class EventPromptWatch {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (context == null || intent == null || intent.getAction() == null) {
-                Log.d("EventPrompt", "live receiver ignored empty intent");
                 return;
             }
             String action = intent.getAction();
             if (EventPromptLauncher.isHeldBackDelivery()) {
-                Log.d("EventPrompt", "live receiver ignored held-back delivery action=" + action);
                 return;
             }
-            Log.d("EventPrompt", "live receiver action=" + action + " data=" + intent.getData());
             if (Intent.ACTION_POWER_CONNECTED.equals(action)) {
                 EventPromptLauncher.open(context, EventPromptActivity.KIND_CHARGE_IN);
                 return;
@@ -43,15 +39,12 @@ public final class EventPromptWatch {
                 return;
             }
             if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false) || intent.getData() == null) {
-                Log.d("EventPrompt", "live package event skipped: replacing or missing package");
                 return;
             }
             String packageName = intent.getData().getSchemeSpecificPart();
             if (packageName == null || packageName.equals(context.getPackageName())) {
-                Log.d("EventPrompt", "live package event skipped package=" + packageName);
                 return;
             }
-            Log.d("EventPrompt", "live " + (installed ? "install" : "uninstall") + " package=" + packageName);
             EventPromptLauncher.open(context, installed ? EventPromptActivity.KIND_INSTALL : EventPromptActivity.KIND_UNINSTALL);
         }
     };
@@ -61,7 +54,6 @@ public final class EventPromptWatch {
 
     public static void register(Application application) {
         if (application == null || registered) {
-            Log.d("EventPrompt", "live receivers already registered=" + registered);
             return;
         }
         IntentFilter power = new IntentFilter();
@@ -79,6 +71,5 @@ public final class EventPromptWatch {
             application.registerReceiver(RECEIVER, packages);
         }
         registered = true;
-        Log.d("EventPrompt", "live receivers registered");
     }
 }

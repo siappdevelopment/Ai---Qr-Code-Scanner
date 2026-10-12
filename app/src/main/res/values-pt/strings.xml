@@ -665,7 +665,7 @@
     <string name="default_launcher_reminder_title">Torne o QR Code &amp; Scanner o seu ecrã principal</string>
     <string name="default_launcher_reminder_text">Defina o QR Code &amp; Scanner como o seu launcher predefinido para um acesso mais rápido e fluido.</string>
     <string name="launcher_default_title">Torne-nos o seu padrão</string>
-    <string name="launcher_default_subtitle">Defina como a sua aplicação de lançador Phone Cleaner predefinida.</string>
+    <string name="launcher_default_subtitle">Defina como a sua aplicação de lançador QR Code predefinida.</string>
     <string name="launcher_default_set_now">Definir agora</string>
     <string name="intro_title_1">Digitalize códigos QR instantaneamente</string>
     <string name="intro_desc_1">Digitalize rapidamente códigos QR com a sua câmara e aceda a informações em segundos</string>

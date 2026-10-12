@@ -89,6 +89,15 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
     private boolean nativeListAdVisible;
     @Nullable
     private NativeAd loadedNativeListAd;
+    /**
+     * The last Google native list ad stays here after the drawer closes. Opening the drawer again shows it while
+     * no new ad is due (the per-day interval), instead of showing no ad until the next one loads.
+     */
+    @Nullable
+    private static NativeAd cachedNativeListAd;
+    private static long cachedNativeListAdAt;
+    /** Google native ads expire after an hour; an older cached one is dropped. */
+    private static final long CACHED_NATIVE_LIST_AD_MAX_AGE_MS = 55L * 60L * 1000L;
 
     private LauncherAppsAdapter launcherAppsAdapter;
     private final LauncherAppContextPopup appContextPopup = new LauncherAppContextPopup();
@@ -760,6 +769,8 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
         if (shouldShowNativeListAd()) {
             launcherAppsAdapter.setListNativeShimmerVisible(true);
             launcherAppsAdapter.setListNativePlaceholderEnabled(true);
+        } else if (hasCachedNativeListAd()) {
+            launcherAppsAdapter.setListNativePlaceholderEnabled(true);
         }
         rvApps.setAdapter(launcherAppsAdapter);
         rvApps.post(this::updateStickyNativeListAdPosition);
@@ -1093,11 +1104,50 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
         return AdPlacement.isNetworkAvailable(requireContext()) && nativeId != null && !nativeId.isEmpty() && AdPlacement.canRequestAds(requireContext());
     }
 
+    private boolean hasCachedNativeListAd() {
+        if (cachedNativeListAd == null || AdPlacement.shouldUseQuizPriority() || !AdPlacement.getLauncherAppNativeListAdShow()) {
+            return false;
+        }
+        if (System.currentTimeMillis() - cachedNativeListAdAt > CACHED_NATIVE_LIST_AD_MAX_AGE_MS) {
+            cachedNativeListAd.destroy();
+            cachedNativeListAd = null;
+            return false;
+        }
+        return true;
+    }
+
+    /** No new ad is due: show the last one again. Returns false when there is none (or it cannot be shown). */
+    private boolean showCachedNativeListAd() {
+        if (!isAdded() || rlNativeListAdView == null || slNativeListShimmer == null || flNativeListAd == null || !hasCachedNativeListAd()) {
+            return false;
+        }
+        if (!AdPlacement.canRequestAds(requireContext())) {
+            return false;
+        }
+        if (launcherAppsAdapter != null) {
+            launcherAppsAdapter.setListNativePlaceholderEnabled(true);
+            launcherAppsAdapter.setListNativeShimmerVisible(false);
+        }
+        if (!(nativeListAdVisible && flNativeListAd.getChildCount() > 0)) {
+            AdPlacement.bindLoadedNative(requireActivity(), flNativeListAd, cachedNativeListAd, NATIVE_LIST_AD_TYPE);
+            loadedNativeListAd = cachedNativeListAd;
+            nativeListAdVisible = true;
+            slNativeListShimmer.stopShimmer();
+            slNativeListShimmer.setVisibility(GONE);
+            applyNativeListBottomPadding(true);
+        }
+        revealNativeListAdAfterBind();
+        return true;
+    }
+
     private void maybeLoadNativeListAd() {
         if (rlNativeListAdView == null || slNativeListShimmer == null || flNativeListAd == null || !isAdded()) {
             return;
         }
         if (!shouldShowNativeListAd()) {
+            if (showCachedNativeListAd()) {
+                return;
+            }
             hideNativeListAdContainer();
             if (launcherAppsAdapter != null) {
                 launcherAppsAdapter.setListNativePlaceholderEnabled(false);
@@ -1144,11 +1194,20 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
                 }
                 return;
             }
+            if (nativeAd != null && cachedNativeListAd != null && cachedNativeListAd != nativeAd) {
+                if (loadedNativeListAd == cachedNativeListAd) {
+                    loadedNativeListAd = null;
+                }
+                cachedNativeListAd.destroy();
+                cachedNativeListAd = null;
+            }
             if (nativeAd != null) {
                 if (loadedNativeListAd != null && loadedNativeListAd != nativeAd) {
                     loadedNativeListAd.destroy();
                 }
                 loadedNativeListAd = nativeAd;
+                cachedNativeListAd = nativeAd;
+                cachedNativeListAdAt = System.currentTimeMillis();
             }
             if (flNativeListAd.getChildCount() > 0) {
                 nativeListAdVisible = true;
@@ -1220,6 +1279,10 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
     }
 
     private void destroyLoadedNativeListAd() {
+        if (loadedNativeListAd != null && loadedNativeListAd == cachedNativeListAd) {
+            loadedNativeListAd = null; // kept in the cache for the next time the drawer opens
+            return;
+        }
         if (loadedNativeListAd != null) {
             loadedNativeListAd.destroy();
             loadedNativeListAd = null;

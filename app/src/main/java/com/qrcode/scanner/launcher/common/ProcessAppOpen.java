@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Window;
 
 import androidx.annotation.NonNull;
@@ -58,29 +57,24 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
 
     private void fetchAd() {
         if (shouldSkipAppOpenAd() || isLoadingAd || isAdAvailable()) {
-            Log.d(TAG, "fetch skipped: skip=" + shouldSkipAppOpenAd() + " loading=" + isLoadingAd + " available=" + isAdAvailable());
             return;
         }
         String unitId = AdPlacement.getAppOpenId();
         if (!AdPlacement.getAppOpenAdShow() || unitId == null || unitId.isEmpty() || !AdPlacement.canRequestAds(application)) {
-            Log.d(TAG, "fetch blocked: show=" + AdPlacement.getAppOpenAdShow() + " unitId=" + unitId + " canRequest=" + AdPlacement.canRequestAds(application));
             return;
         }
         isLoadingAd = true;
-        Log.d(TAG, "fetch started");
         AppOpenAd.load(application, unitId, new AdRequest.Builder().build(), new AppOpenAd.AppOpenAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull AppOpenAd ad) {
                 appOpenAd = ad;
                 isLoadingAd = false;
                 loadTime = System.currentTimeMillis();
-                Log.d(TAG, "fetch loaded");
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                 isLoadingAd = false;
-                Log.d(TAG, "fetch failed: " + loadAdError.getMessage());
             }
         });
     }
@@ -123,20 +117,16 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
 
     private void showAdIfAvailable(@NonNull Activity activity) {
         if (shouldSkipAppOpenAd() || isShowingAd) {
-            Log.d(TAG, "show skipped: skip=" + shouldSkipAppOpenAd() + " showing=" + isShowingAd);
             return;
         }
         if (!AdPlacement.getAppOpenAdShow() || !AdPlacement.canShowAppOpenAd(application)) {
-            Log.d(TAG, "show blocked: show=" + AdPlacement.getAppOpenAdShow() + " canShow(perDay)=" + AdPlacement.canShowAppOpenAd(application));
             clearLoadedAd();
             return;
         }
         if (!isAdAvailable()) {
-            Log.d(TAG, "show: ad not ready yet, fetching");
             fetchAd();
             return;
         }
-        Log.d(TAG, "showing resume app open ad");
         final AppOpenAd adToShow = appOpenAd;
         adToShow.setFullScreenContentCallback(new FullScreenContentCallback() {
             @Override
@@ -175,7 +165,6 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
         DefaultLauncherReminder.cancelIfDefault(application);
         DefaultLauncherReminder.dismissNotification(application);
         Activity activity = currentActivity;
-        Log.d(TAG, "process onStart activity=" + (activity == null ? "null" : activity.getClass().getSimpleName()) + " rightPage=" + isRightSidePageOpen(activity));
         if (activity == null || shouldSkipAppOpenAd()) {
             return;
         }
@@ -189,7 +178,6 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
     @Override
     public void onStop(@NonNull LifecycleOwner owner) {
         appInForeground = false;
-        Log.d(TAG, "process onStop activity=" + (currentActivity == null ? "null" : currentActivity.getClass().getSimpleName()) + " rightPage=" + isRightSidePageOpen(currentActivity));
         // The user left from the Right-Side page (Share, Rate Us, another app): have the ad ready for the return.
         fetchAd();
     }

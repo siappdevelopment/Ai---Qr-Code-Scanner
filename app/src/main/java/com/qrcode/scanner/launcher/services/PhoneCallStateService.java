@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.qrcode.scanner.launcher.activities.EventPromptActivity;
 import com.qrcode.scanner.launcher.common.AdPlacement;
@@ -31,14 +30,11 @@ public class PhoneCallStateService extends BroadcastReceiver {
         }
 
         String action = intent.getAction();
-        Log.d("EventPrompt", "PhoneCallStateService action=" + action);
         if (Intent.ACTION_POWER_CONNECTED.equals(action)) {
-            Log.d("EventPrompt", "charge in broadcast received");
             EventPromptLauncher.open(context, EventPromptActivity.KIND_CHARGE_IN);
             return;
         }
         if (Intent.ACTION_POWER_DISCONNECTED.equals(action)) {
-            Log.d("EventPrompt", "charge out broadcast received");
             EventPromptLauncher.open(context, EventPromptActivity.KIND_CHARGE_OUT);
             return;
         }
@@ -100,7 +96,6 @@ public class PhoneCallStateService extends BroadcastReceiver {
                 isShowScreenCall = false;
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

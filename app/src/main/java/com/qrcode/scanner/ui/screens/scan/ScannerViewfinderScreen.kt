@@ -8,7 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -329,10 +328,6 @@ fun ScannerViewfinderScreen(
                             vibrateEnabled = prefs?.vibrateOnDetection == true,
                             beepEnabled = prefs?.beepOnDetection == true
                         )
-                        Log.i(
-                            TAG,
-                            "continuous accept format=$name rawLen=${raw.length} session=${continuousSession.size()}"
-                        )
                     }
                 )
             }
@@ -485,7 +480,6 @@ private fun CameraPreviewHost(
             boundCamera.value = bound
             onCameraReady(bound)
         } catch (t: Throwable) {
-            Log.e(TAG, "Failed to bind camera", t)
             onCameraReady(null)
         }
     }
@@ -595,7 +589,6 @@ private fun processImageProxy(
             }
         }
         .addOnFailureListener { e ->
-            Log.w(TAG, "Barcode analyze failed", e)
         }
         .addOnCompleteListener {
             imageProxy.close()

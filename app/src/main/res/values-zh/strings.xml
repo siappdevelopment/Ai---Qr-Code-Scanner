@@ -665,7 +665,7 @@
     <string name="default_launcher_reminder_title">将 QR Code &amp; Scanner 设为主屏幕</string>
     <string name="default_launcher_reminder_text">将 QR Code &amp; Scanner 设为默认启动器，访问更快、更流畅。</string>
     <string name="launcher_default_title">将我们设为默认</string>
-    <string name="launcher_default_subtitle">将此设为您的默认 Phone Cleaner 启动器应用。</string>
+    <string name="launcher_default_subtitle">将此设为您的默认 QR Code 启动器应用。</string>
     <string name="launcher_default_set_now">立即设置</string>
     <string name="intro_title_1">即时扫描二维码</string>
     <string name="intro_desc_1">使用相机快速扫描二维码，几秒钟内即可访问信息</string>

@@ -665,7 +665,7 @@
     <string name="default_launcher_reminder_title">Сделайте QR Code &amp; Scanner главным экраном</string>
     <string name="default_launcher_reminder_text">Сделайте QR Code &amp; Scanner лаунчером по умолчанию для более быстрого и плавного доступа.</string>
     <string name="launcher_default_title">Сделайте нас приложением по умолчанию</string>
-    <string name="launcher_default_subtitle">Установите это приложение лаунчером Phone Cleaner по умолчанию.</string>
+    <string name="launcher_default_subtitle">Установите это приложение лаунчером QR Code по умолчанию.</string>
     <string name="launcher_default_set_now">Установить</string>
     <string name="intro_title_1">Мгновенно сканируйте QR-коды</string>
     <string name="intro_desc_1">Быстро сканируйте QR-коды камерой и получайте информацию за секунды</string>

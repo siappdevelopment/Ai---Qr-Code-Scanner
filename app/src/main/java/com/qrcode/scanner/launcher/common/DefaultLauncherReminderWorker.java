@@ -1,7 +1,6 @@
 package com.qrcode.scanner.launcher.common;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
@@ -36,7 +35,6 @@ public class DefaultLauncherReminderWorker extends Worker {
             // Remote Config OFF → no notification, stop (periodic and chain both cancelled).
             if (!DefaultLauncherReminder.Config.getLauncherNotificationPushShow()) {
                 DefaultLauncherReminder.cancelWork(context);
-                Log.e(TAG, "run: reminder OFF → stopped");
                 return Result.success();
             }
 
@@ -45,7 +43,6 @@ public class DefaultLauncherReminderWorker extends Worker {
             // schedule is NOT cancelled — if the user later removes the default without opening the
             // app, a following run finds NOT_DEFAULT and posts the reminder again.
             boolean isDefault = AppUtils.isDefaultHomeApp(context);
-            Log.e(TAG, "Default Launcher status = " + (isDefault ? "DEFAULT" : "NOT_DEFAULT"));
 
             String skipReason = null;
             if (isDefault) {
@@ -57,11 +54,7 @@ public class DefaultLauncherReminderWorker extends Worker {
                 skipReason = "app in foreground";
             }
             boolean shown = skipReason == null && DefaultLauncherReminder.showNotification(context);
-            Log.e(TAG, "Notification shown = " + shown
-                    + (skipReason != null ? " (" + skipReason + ")"
-                    : (!shown ? " (notifications disabled)" : "")));
         } catch (Exception e) {
-            Log.e(TAG, "reminder run failed: " + e.getMessage());
         }
         if (chain) {
             DefaultLauncherReminder.scheduleNextChainRun(context);

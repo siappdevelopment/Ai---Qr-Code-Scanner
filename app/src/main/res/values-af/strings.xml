@@ -665,7 +665,7 @@
     <string name="default_launcher_reminder_title">Maak QR Code &amp; Scanner jou tuisskerm</string>
     <string name="default_launcher_reminder_text">Stel QR Code &amp; Scanner as jou verstek-lanseerder vir vinniger, gladder toegang.</string>
     <string name="launcher_default_title">Maak ons jou verstek</string>
-    <string name="launcher_default_subtitle">Stel dit as jou verstek Phone Cleaner-lanseerder-app.</string>
+    <string name="launcher_default_subtitle">Stel dit as jou verstek QR Code-lanseerder-app.</string>
     <string name="launcher_default_set_now">Stel nou</string>
     <string name="intro_title_1">Skandeer QR-kodes onmiddellik</string>
     <string name="intro_desc_1">Skandeer QR-kodes vinnig met jou kamera en kry toegang tot inligting binne sekondes</string>

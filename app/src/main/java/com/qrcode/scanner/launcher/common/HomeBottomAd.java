@@ -3,7 +3,6 @@ package com.qrcode.scanner.launcher.common;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -534,7 +533,6 @@ public final class HomeBottomAd {
     }
 
     private static void log(String message) {
-        Log.d(TAG, message);
     }
 
     private static final class State {

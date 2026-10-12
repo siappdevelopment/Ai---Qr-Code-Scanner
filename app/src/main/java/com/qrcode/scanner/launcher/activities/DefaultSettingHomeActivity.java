@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
-import android.util.Log;
 
 import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultLauncher;
@@ -27,7 +26,6 @@ import com.qrcode.scanner.launcher.remote.ScreenFlowConfig;
 public class DefaultSettingHomeActivity extends ComponentActivity {
     private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
-                Log.e("Milind", "Settings result code=" + result.getResultCode());
                 stopHomeWatch();
                 continueFlow();
             });
@@ -68,11 +66,9 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
         try {
             settingsLauncher.launch(intent);
         } catch (Exception e) {
-            Log.e("Milind", "openHomeSettings: "+e );
             clearSetupFlags();
             return false;
         }
-        Log.e("Milind", "openHomeSettings: launched");
         guidePending = true;
         startHomeWatch();
         return true;
@@ -94,7 +90,6 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
         super.onPause();
         if (guidePending) {
             guidePending = false;
-            Log.e("Milind", "starting guide over Settings");
             startActivity(new Intent(this, DefaultHomeGuideActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         }
     }
@@ -146,7 +141,6 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
             }
             String now = currentHomePackage();
             if (now != null && !now.equals(homePackageAtStart) && !now.equals(getPackageName())) {
-                Log.e("Milind", "default Home changed to " + now + ", moving the flow on");
                 moveOnFromBackground();
                 return;
             }
@@ -163,7 +157,6 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
         continueFlow();
         watchHandler.postDelayed(() -> {
             if (!isFinishing() && !ProcessAppOpen.isAppInForeground()) {
-                Log.e("Milind", "background start did not bring the app forward, waiting for the return");
                 flowContinued = false;
             }
         }, BACKGROUND_START_CHECK_MS);

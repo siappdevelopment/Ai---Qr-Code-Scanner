@@ -9,7 +9,6 @@ import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
-import android.util.Log
 
 /**
  * One-shot detection feedback for an accepted live-camera scan.
@@ -29,7 +28,6 @@ internal object DetectionFeedback {
         vibrateEnabled: Boolean,
         beepEnabled: Boolean
     ) {
-        Log.i(TAG, "accepted detection vibrate=$vibrateEnabled beep=$beepEnabled")
         if (vibrateEnabled) {
             vibrateOnce(context.applicationContext)
         }
@@ -57,7 +55,6 @@ internal object DetectionFeedback {
                 vibrator.vibrate(VIBRATE_MS)
             }
         } catch (t: Throwable) {
-            Log.w(TAG, "vibrate failed", t)
         }
     }
 
@@ -79,7 +76,6 @@ internal object DetectionFeedback {
                 }
             } catch (t: Throwable) {
                 toneGenerator = null
-                Log.w(TAG, "beep failed", t)
             }
         }
     }

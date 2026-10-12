@@ -19,7 +19,6 @@ import android.os.Looper;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -1181,6 +1180,23 @@ public final class AdPlacement {
         adLoader.loadAd(new AdRequest.Builder().build());
     }
 
+    /**
+     * Shows an already loaded Google native ad again in a new container (the app drawer re-shows its last ad when it is
+     * opened again before a new one is due). The ad must not have been destroyed.
+     */
+    public static void bindLoadedNative(Activity activity, FrameLayout flNativeAd, NativeAd nativeAd, String type) {
+        if (activity == null || activity.isFinishing() || flNativeAd == null || nativeAd == null) {
+            return;
+        }
+        Context adContext = AdTheme.forAds(activity, false);
+        NativeAdView adView = (NativeAdView) LayoutInflater.from(adContext).inflate(resolveGoogleNativeLayout(type), flNativeAd, false);
+        populateNativeAdView(nativeAd, adView, type);
+        flNativeAd.removeAllViews();
+        flNativeAd.addView(GestureSafeNativeAdView.wrap(adView));
+        flNativeAd.setVisibility(View.VISIBLE);
+        paintOnboardingNative(flNativeAd, onboardingNativeColor(activity, false));
+    }
+
     public static void requestLargeNativeAd(Activity activity, String unitId, @Nullable java.util.function.Consumer<NativeAd> onLoaded, @Nullable Runnable onFailed) {
         if (activity != null) {
             initializeIfConfigured(activity);
@@ -1684,7 +1700,6 @@ public final class AdPlacement {
         cache.unitId = unitId;
         cache.loading = true;
         int token = cache.token;
-        Log.d("EventPromptAd", "back preload start " + screenKey + " type=" + type);
         if (LAUNCHER_APP_AD_TYPE_GOOGLE_INTER.equals(type)) {
             InterstitialAd.load(app, unitId, new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
                 @Override
@@ -1695,14 +1710,12 @@ public final class AdPlacement {
                     cache.loading = false;
                     cache.inter = ad;
                     cache.loadedAt = System.currentTimeMillis();
-                    Log.d("EventPromptAd", "back preload ready " + screenKey + " type=" + type);
                 }
 
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     if (token == cache.token) {
                         cache.loading = false;
-                        Log.d("EventPromptAd", "back preload failed " + screenKey + " type=" + type);
                     }
                 }
             });
@@ -1718,14 +1731,12 @@ public final class AdPlacement {
                     cache.loading = false;
                     cache.appOpen = ad;
                     cache.loadedAt = System.currentTimeMillis();
-                    Log.d("EventPromptAd", "back preload ready " + screenKey + " type=" + type);
                 }
 
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
                     if (token == cache.token) {
                         cache.loading = false;
-                        Log.d("EventPromptAd", "back preload failed " + screenKey + " type=" + type);
                     }
                 }
             });
@@ -1739,13 +1750,11 @@ public final class AdPlacement {
             cache.loading = false;
             cache.nativeAd = nativeAd;
             cache.loadedAt = System.currentTimeMillis();
-            Log.d("EventPromptAd", "back preload ready " + screenKey + " type=" + type);
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
                 if (token == cache.token) {
                     cache.loading = false;
-                    Log.d("EventPromptAd", "back preload failed " + screenKey + " type=" + type);
                 }
             }
         }).build().loadAd(new AdRequest.Builder().build());
@@ -1766,7 +1775,6 @@ public final class AdPlacement {
         NativeAd nativeAd = cache.nativeAd;
         cache.nativeAd = null;
         cache.clear();
-        Log.d("EventPromptAd", "back preload shown " + screenKey + " type=" + adType);
         AtomicBoolean completed = new AtomicBoolean(false);
         OnInterstitialAdListener listener = next::run;
         boolean quizOnFail = false; // Charging / Install: Google ads only, no Quiz fallback when a Google ad fails.

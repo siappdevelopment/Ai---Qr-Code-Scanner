@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.util.Log;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.BatteryManager;
@@ -75,12 +74,10 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("EventPrompt", "activity created kind=" + kindFrom(getIntent()));
         checkFreshOnResume = true;
         // The screen is up: a full-screen-intent notification of this kind is no longer needed.
         EventPromptLauncher.cancelNotification(this, kindFrom(getIntent()));
-        if (!AdPlacement.isNetworkAvailable(this)) {
-            Log.d("EventPrompt", "finish: no internet");
+        if (!EventPromptLauncher.hasInternet(this)) {
             finish();
             return;
         }
@@ -102,7 +99,6 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        Log.d("EventPrompt", "onNewIntent: flipped in place kind=" + kindFrom(intent));
         checkFreshOnResume = !resumed;
         EventPromptLauncher.cancelNotification(this, kindFrom(intent));
         bindKind(kindFrom(intent));
@@ -119,7 +115,6 @@ public abstract class EventPromptActivity extends AppCompatActivity {
         if (checkFreshOnResume) {
             checkFreshOnResume = false;
             if (isStaleLaunch(getIntent())) {
-                Log.d("EventPrompt", "stale launch closed kind=" + kindFrom(getIntent()));
                 leaveWithoutAd("stale launch");
                 return;
             }
@@ -146,7 +141,6 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
-        Log.d("EventPrompt", "onUserLeaveHint finishing=" + isFinishing() + " internal=" + internalNavigation);
         // The back ad (Google Inter / App Open) is its own activity: starting it also calls onUserLeaveHint.
         if (exiting || internalNavigation) {
             return; // cleared on the next resume, after onStop has also skipped it
@@ -156,8 +150,6 @@ public abstract class EventPromptActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        Log.d("EventPrompt", "onStop finishing=" + isFinishing() + " configChange=" + isChangingConfigurations()
-                + " exiting=" + exiting + " internal=" + internalNavigation);
         super.onStop();
         // Also covers screen off / Recents where onUserLeaveHint is not called. Not while the Done / Back ad is
         // showing over this screen (exiting) or while it opens its own Settings screen.
@@ -170,7 +162,6 @@ public abstract class EventPromptActivity extends AppCompatActivity {
         if (isFinishing() || isChangingConfigurations()) {
             return;
         }
-        Log.d("EventPrompt", "leave without ad from=" + from + " kind=" + kindFrom(getIntent()));
         finishAndRemoveTask();
     }
 
@@ -381,7 +372,6 @@ public abstract class EventPromptActivity extends AppCompatActivity {
             loadBannerAd(request);
         }
         if (preload) {
-            Log.d("EventPrompt", "preload cache miss, loading on screen");
             com.qrcode.scanner.launcher.common.EventBottomAds.prepare(this, screenKey);
         }
     }
@@ -396,7 +386,6 @@ public abstract class EventPromptActivity extends AppCompatActivity {
                 ready.destroy();
                 return true;
             }
-            Log.d("EventPrompt", "preload native shown");
             showReadyNative(ready);
             return true;
         }
@@ -408,7 +397,6 @@ public abstract class EventPromptActivity extends AppCompatActivity {
             ready.destroy();
             return true;
         }
-        Log.d("EventPrompt", "preload banner shown");
         showReadyBanner(ready);
         return true;
     }
@@ -671,7 +659,6 @@ public abstract class EventPromptActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.d("EventPrompt", "onDestroy kind=" + kindFrom(getIntent()));
         adRequest++;
         if (holdAnimator != null) {
             holdAnimator.cancel();

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.DisplayMetrics;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -63,10 +62,6 @@ public final class EventBottomAds {
         AdPlacement.preloadEventBackAd(app, screenKey);
         Cache cache = cacheFor(screenKey);
         boolean wants = wantsPreload(screenKey);
-        Log.d("EventPromptAd", "prepare " + screenKey
-                + " wantsPreload=" + wants
-                + " nativeAd=" + (cache.nativeAd != null)
-                + " nativeLoading=" + cache.nativeLoading);
         if (!wants) {
             clear(screenKey);
             return;
@@ -127,15 +122,10 @@ public final class EventBottomAds {
         String unitId = RemoteConfigValues.getEventScreenConfig(screenKey).nativeId.trim();
         AdPlacement.initializeIfConfigured(app);
         if (unitId.isEmpty() || !AdPlacement.canRequestAds(app) || !AdPlacement.isNetworkAvailable(app)) {
-            Log.d("EventPromptAd", "preloadNative skip " + screenKey
-                    + " unitId.empty=" + unitId.isEmpty()
-                    + " canRequestAds=" + AdPlacement.canRequestAds(app)
-                    + " network=" + AdPlacement.isNetworkAvailable(app));
             return;
         }
         int request = cache.token;
         cache.nativeLoading = true;
-        Log.d("EventPrompt", "preload native start " + screenKey);
         new AdLoader.Builder(app, unitId).forNativeAd(loaded -> {
             if (request != cache.token || !wantsPreload(screenKey) || !useNative(screenKey)) {
                 loaded.destroy();
@@ -148,13 +138,11 @@ public final class EventBottomAds {
             }
             loaded.setOnPaidEventListener(value -> AdPlacement.logAdRevenue(app, value));
             cache.nativeAd = loaded;
-            Log.d("EventPrompt", "preload native ready " + screenKey);
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(LoadAdError adError) {
                 if (request == cache.token) {
                     cache.nativeLoading = false;
-                    Log.d("EventPrompt", "preload native failed " + screenKey);
                 }
             }
         }).build().loadAd(new AdRequest.Builder().build());
@@ -188,7 +176,6 @@ public final class EventBottomAds {
                 cache.bannerLoading = false;
                 adView.setOnPaidEventListener(value -> AdPlacement.logAdRevenue(app, value));
                 cache.bannerAd = adView;
-                Log.d("EventPrompt", "preload banner ready " + screenKey);
             }
 
             @Override
@@ -196,11 +183,9 @@ public final class EventBottomAds {
                 if (request == cache.token) {
                     cache.bannerLoading = false;
                     adView.destroy();
-                    Log.d("EventPrompt", "preload banner failed " + screenKey);
                 }
             }
         });
-        Log.d("EventPrompt", "preload banner start " + screenKey);
         adView.loadAd(new AdRequest.Builder().build());
     }
 

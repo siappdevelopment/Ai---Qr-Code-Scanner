@@ -1,7 +1,6 @@
 package com.qrcode.scanner;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.qrcode.scanner.data.settings.SettingsRepositoryKt;
 import com.qrcode.scanner.launcher.activities.EventPromptActivity;
@@ -24,14 +23,9 @@ public class QrScannerApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("EventPrompt", "application started");
         AppUtils.restoreSavedLanguage(this);
         SettingsRepositoryKt.applyStoredAppNightMode(this);
         RemoteConfigValues.ensureLoaded(this);
-        Log.d("EventPrompt", "startup config uninstall=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_UNINSTALL)
-                + " install=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_INSTALL)
-                + " chargeIn=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_CHARGE_IN)
-                + " chargeOut=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_CHARGE_OUT));
         EventPromptWatch.register(this);
         AdPlacement.initializeIfConfigured(this);
         new com.qrcode.scanner.launcher.common.ProcessAppOpen(this).register();

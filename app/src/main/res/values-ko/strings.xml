@@ -665,7 +665,7 @@
     <string name="default_launcher_reminder_title">QR Code &amp; Scanner를 홈 화면으로 설정하세요</string>
     <string name="default_launcher_reminder_text">더 빠르고 부드러운 사용을 위해 QR Code &amp; Scanner를 기본 런처로 설정하세요.</string>
     <string name="launcher_default_title">기본값으로 설정하세요</string>
-    <string name="launcher_default_subtitle">이 앱을 기본 Phone Cleaner 런처 앱으로 설정하세요.</string>
+    <string name="launcher_default_subtitle">이 앱을 기본 QR Code 런처 앱으로 설정하세요.</string>
     <string name="launcher_default_set_now">지금 설정</string>
     <string name="intro_title_1">QR 코드를 즉시 스캔</string>
     <string name="intro_desc_1">카메라로 QR 코드를 빠르게 스캔하고 몇 초 만에 정보에 접근하세요</string>

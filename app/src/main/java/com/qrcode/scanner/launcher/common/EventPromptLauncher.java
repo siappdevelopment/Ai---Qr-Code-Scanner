@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.media.AudioManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
 import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.activities.ChargingScreenActivity;
@@ -70,6 +69,32 @@ public final class EventPromptLauncher {
     }
 
     /**
+     * Internet check for the event screens. {@code getActiveNetwork()} returns null for an app that the phone has put
+     * to sleep in the background (Xiaomi / Android battery limits block its network), although Wi-Fi or mobile data is
+     * connected, which made these screens skip with "no internet". Read the network capabilities themselves instead.
+     */
+    public static boolean hasInternet(Context context) {
+        if (AdPlacement.isNetworkAvailable(context)) {
+            return true;
+        }
+        try {
+            android.net.ConnectivityManager cm = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (cm == null) {
+                return false;
+            }
+            for (android.net.Network network : cm.getAllNetworks()) {
+                android.net.NetworkCapabilities caps = cm.getNetworkCapabilities(network);
+                if (caps != null && caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET)
+                        && caps.hasCapability(android.net.NetworkCapabilities.NET_CAPABILITY_VALIDATED)) {
+                    return true;
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
+
+    /**
      * Charging / Install broadcasts that were held back while the app was closed or frozen are delivered the moment
      * the app starts or comes to the foreground. Those events are old, so a screen opened for them would just
      * appear on top of whatever the user opened the app for. A real plug / install does not happen in the first
@@ -81,42 +106,26 @@ public final class EventPromptLauncher {
     }
 
     public static void open(Context context, String kind) {
-        Log.d("EventPrompt", "open requested kind=" + kind);
         if (context == null || kind == null || kind.trim().isEmpty()) {
-            Log.d("EventPrompt", "open skipped: missing context or kind");
             return;
         }
         RemoteConfigValues.ensureLoaded(context);
         RemoteConfigValues.EventScreenConfig config = RemoteConfigValues.getEventScreenConfig(RemoteConfigValues.eventScreenKeyForKind(kind));
-        Log.d("EventPrompt", "config uninstall=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_UNINSTALL)
-                + " install=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_INSTALL)
-                + " chargeIn=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_CHARGE_IN)
-                + " chargeOut=" + RemoteConfigValues.isEventScreenEnabled(EventPromptActivity.KIND_CHARGE_OUT)
-                + " bottomAds=" + config.bottomAdShow
-                + " loadType=" + config.adLoadType
-                + " adType=" + config.bottomAdType
-                + " seconds=" + config.buttonShowSec
-                + " backAds=" + config.backAdShow);
         if (!RemoteConfigValues.isEventScreenEnabled(kind)) {
-            Log.d("EventPrompt", "open skipped: " + kind + " flag is false");
             return;
         }
-        if (!AdPlacement.isNetworkAvailable(context)) {
-            Log.d("EventPrompt", "open skipped: no internet for " + kind);
+        if (!hasInternet(context)) {
             return;
         }
         long now = System.currentTimeMillis();
         if (callActive || isPhoneCallInProgress(context) || now < quietUntil || ClEndActivity.isVisible()) {
-            Log.d("EventPrompt", "open skipped: phone call / Call End screen in progress, " + kind + " does not open");
             return;
         }
         if (kind.equals(lastKind) && now - lastOpenAt < 1500L) {
-            Log.d("EventPrompt", "open skipped: duplicate " + kind + " within 1500ms");
             return;
         }
         lastKind = kind;
         lastOpenAt = now;
-        Log.d("EventPrompt", "opening " + kind);
         Context app = context.getApplicationContext();
         Class<?> screen = RemoteConfigValues.EVENT_SCREEN_CHARGING.equals(RemoteConfigValues.eventScreenKeyForKind(kind))
                 ? ChargingScreenActivity.class
@@ -149,7 +158,6 @@ public final class EventPromptLauncher {
             return;
         }
         androidx.core.app.NotificationManagerCompat.from(context.getApplicationContext()).cancel(notificationIdFor(kind));
-        Log.d("EventPrompt", "notification cancelled kind=" + kind);
     }
 
     private static void showEvent(Context app, Intent intent, String kind) {
@@ -157,23 +165,16 @@ public final class EventPromptLauncher {
         // up. Android still creates it inside this app's existing task, so it would be waiting there and appear the
         // next time the app is opened. Start it only when it can really show: app open, overlay allowed, or default Home.
         if (!ProcessAppOpen.isAppInForeground() && !AppUtils.hasOverlayPermission(app) && !AppUtils.isDefaultHomeApp(app)) {
-            Log.d("EventPrompt", "open skipped: app in background without overlay permission, " + kind + " is not started");
             return;
         }
         try {
-            Log.d("EventPrompt", "show overlay for " + kind);
             new CallEndViewManager().showCallEnd(app, intent);
-            Log.d("EventPrompt", "overlay accepted for " + kind);
             return;
         } catch (Exception overlayError) {
-            Log.d("EventPrompt", "overlay failed for " + kind + ": " + overlayError);
         }
         try {
-            Log.d("EventPrompt", "startActivity for " + kind);
             app.startActivity(intent);
-            Log.d("EventPrompt", "startActivity accepted for " + kind);
         } catch (Exception startError) {
-            Log.d("EventPrompt", "startActivity failed for " + kind + ": " + startError + ", posting notification");
             int notificationId = notificationIdFor(kind);
             // A stale notification of this kind must not suppress the new one: remove it first, then post.
             cancelNotification(app, kind);

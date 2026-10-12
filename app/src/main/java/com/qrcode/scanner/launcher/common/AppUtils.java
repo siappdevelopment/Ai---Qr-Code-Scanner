@@ -12,7 +12,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
-import android.util.Log;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -96,7 +95,6 @@ public final class AppUtils {
         try {
             AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode));
         } catch (IllegalStateException e) {
-            Log.e("AppUtils", "setApplicationLocales rejected by the system, using resources fallback", e);
             Locale locale = Locale.forLanguageTag(languageCode);
             Locale.setDefault(locale);
             Context app = context.getApplicationContext();

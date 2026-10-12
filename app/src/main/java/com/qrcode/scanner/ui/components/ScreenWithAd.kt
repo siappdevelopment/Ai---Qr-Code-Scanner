@@ -54,6 +54,8 @@ fun ScreenWithAd(
      * up to its last button.
      */
     keyboardAware: Boolean = false,
+    /** False hides the bottom ad (for example while a search is active). */
+    showAd: Boolean = true,
     content: @Composable () -> Unit
 ) {
     HideNavigationBarOnAdScreen()
@@ -95,14 +97,16 @@ fun ScreenWithAd(
         Box(modifier = Modifier.onSizeChanged { adHeightPx = it.height }) {
             // Gap between the content (normal or scrolling) and the ad, only while the ad actually takes space.
             // onSizeChanged sits after the padding, so it measures the ad itself and cannot feed back into the gap.
-            FirebaseScreenAd(
-                screenKey = screenKey,
-                nativeSize = nativeSize,
-                modifier = Modifier
-                    .navigationBarsPadding()
-                    .padding(top = if (adContentHeightPx > 0) AdContentGap else 0.dp)
-                    .onSizeChanged { adContentHeightPx = it.height }
-            )
+            if (showAd) {
+                FirebaseScreenAd(
+                    screenKey = screenKey,
+                    nativeSize = nativeSize,
+                    modifier = Modifier
+                        .navigationBarsPadding()
+                        .padding(top = if (adContentHeightPx > 0) AdContentGap else 0.dp)
+                        .onSizeChanged { adContentHeightPx = it.height }
+                )
+            }
         }
     }
 }

@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -72,11 +71,6 @@ public class CallEndBackAd {
         onCompleteAdCallBack = onFinishAd;
         dropUnconfiguredAds();
         String showType = resolveShowType(context);
-        Log.d(TAG, "show dueType=" + showType
-                + " interReady=" + (fullScreenAds != null)
-                + " appOpenReady=" + (appOpenAd != null)
-                + " nativeReady=" + (nativeAd != null)
-                + " cursor=" + (context != null ? readSequenceCursor(context) : -1));
         if (showType.isEmpty()) {
             failShow(context);
             return;
@@ -134,7 +128,6 @@ public class CallEndBackAd {
                 if (System.currentTimeMillis() >= deadline || !isLoading(showType) || failedSince(showType, startedAt)) {
                     if (finished.compareAndSet(false, true)) {
                         dismissDialog(loading);
-                        Log.d(TAG, "wait ended without ad for " + showType);
                         failShow(context);
                     }
                     return;
@@ -361,7 +354,6 @@ public class CallEndBackAd {
                 ad.setOnPaidEventListener(adValue -> AdPlacement.logAdRevenue(context, adValue));
                 appOpenAd = ad;
                 AppUtils.trackScreen(context, "CL_END_APP_OPEN_LOAD");
-                Log.d(TAG, "appopen loaded");
                 onAppOpenListner(context);
             }
 
@@ -371,7 +363,6 @@ public class CallEndBackAd {
                 appOpenFailedAt = System.currentTimeMillis();
                 isAdsEnabled = true;
                 AppUtils.trackScreen(context, "CL_END_APP_OPEN_FAILED");
-                Log.d(TAG, "appopen failed: " + loadAdError);
             }
         });
     }
@@ -422,7 +413,6 @@ public class CallEndBackAd {
         }
         dropUnconfiguredAds();
         Set<String> types = configuredTypes();
-        Log.d(TAG, "preload types=" + types);
         if (types.contains(TYPE_INTER)) {
             admobFullScreenAdLoad(context);
         }
@@ -457,7 +447,6 @@ public class CallEndBackAd {
                 interstitialAd.setOnPaidEventListener(adValue -> AdPlacement.logAdRevenue(context, adValue));
                 CallEndBackAd.fullScreenAds = interstitialAd;
                 AppUtils.trackScreen(context, "CL_END_INTER_LOAD");
-                Log.d(TAG, "inter loaded");
                 onContactListner(context);
             }
 
@@ -467,7 +456,6 @@ public class CallEndBackAd {
                 interstitialFailedAt = System.currentTimeMillis();
                 isAdsEnabled = true;
                 AppUtils.trackScreen(context, "CL_END_INTER_FAILED");
-                Log.d(TAG, "inter failed: " + loadAdError);
             }
         });
     }
@@ -496,7 +484,6 @@ public class CallEndBackAd {
             nativeAd = loadedAd;
             nativeAd.setOnPaidEventListener(adValue -> AdPlacement.logAdRevenue(context, adValue));
             AppUtils.trackScreen(context, "CL_END_NATIVE_LOAD");
-            Log.d(TAG, "native loaded");
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
@@ -504,7 +491,6 @@ public class CallEndBackAd {
                 nativeFailedAt = System.currentTimeMillis();
                 isAdsEnabled = true;
                 AppUtils.trackScreen(context, "CL_END_NATIVE_FAILED");
-                Log.d(TAG, "native failed: " + adError);
             }
         }).build();
         adLoader.loadAd(new AdRequest.Builder().build());
@@ -709,7 +695,6 @@ public class CallEndBackAd {
             cursor = 0L;
         }
         preferences.edit().putLong(SEQUENCE_CURSOR, cursor + 1L).apply();
-        Log.d(TAG, "cursor -> " + (cursor + 1L));
     }
 
     private static long readSequenceCursor(Context context) {

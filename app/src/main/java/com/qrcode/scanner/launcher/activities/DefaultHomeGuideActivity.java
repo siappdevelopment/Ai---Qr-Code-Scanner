@@ -3,7 +3,6 @@ package com.qrcode.scanner.launcher.activities;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,7 +30,6 @@ public class DefaultHomeGuideActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.e("Milind", "onCreate: " );
         setContentView(R.layout.activity_overlay_permission_default_home);
         ((ImageView) findViewById(R.id.ivGuideIcon)).setImageDrawable(getApplicationInfo().loadIcon(getPackageManager()));
         ((TextView) findViewById(R.id.tvGuideName)).setText(getApplicationInfo().loadLabel(getPackageManager()));
@@ -58,7 +56,6 @@ public class DefaultHomeGuideActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (!isFinishing() && !getIntent().getBooleanExtra(EXTRA_RESHOWN, false)) {
-            Log.e("Milind", "guide covered by system screen, showing again on top");
             startActivity(new Intent(this, DefaultHomeGuideActivity.class)
                     .putExtra(EXTRA_RESHOWN, true)
                     // MULTIPLE_TASK: without it Android only brings this same task to front (START_TASK_TO_FRONT).
@@ -106,7 +103,6 @@ public class DefaultHomeGuideActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        Log.e("Milind", "onDestroy: " );
         if (handClickAnimator != null) {
             handClickAnimator.cancel();
         }

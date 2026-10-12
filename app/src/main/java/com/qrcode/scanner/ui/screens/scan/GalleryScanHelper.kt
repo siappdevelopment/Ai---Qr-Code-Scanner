@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
-import android.util.Log
 import android.media.ExifInterface
 import androidx.core.content.FileProvider
 import java.io.File
@@ -124,10 +123,8 @@ object GalleryScanHelper {
                 }
             } ?: return null
 
-            Log.d(TAG, "decodeBitmap ok ${decoded.width}x${decoded.height} uri=$uri sample=$sample")
             applyExifOrientation(context, uri, decoded)
         } catch (e: Exception) {
-            Log.w(TAG, "decodeBitmap failed for $uri", e)
             null
         }
     }
@@ -151,7 +148,6 @@ object GalleryScanHelper {
                 file
             )
         } catch (e: Exception) {
-            Log.w(TAG, "cacheCopy failed", e)
             null
         }
     }
@@ -186,7 +182,6 @@ object GalleryScanHelper {
                 if (it != bitmap) bitmap.recycle()
             }
         } catch (e: Exception) {
-            Log.w(TAG, "EXIF orientation failed", e)
             bitmap
         }
     }
@@ -222,10 +217,6 @@ object GalleryScanHelper {
 
     suspend fun detect(bitmap: Bitmap, mode: String): List<DetectedCode> =
         suspendCancellableCoroutine { cont ->
-            Log.d(
-                TAG,
-                "detect start mode=$mode size=${bitmap.width}x${bitmap.height} config=${bitmap.config}"
-            )
             val scanner = BarcodeScanning.getClient(barcodeOptionsFor(mode))
             cont.invokeOnCancellation {
                 runCatching { scanner.close() }
@@ -242,7 +233,6 @@ object GalleryScanHelper {
             val image = InputImage.fromBitmap(forScan, 0)
             scanner.process(image)
                 .addOnSuccessListener { barcodes ->
-                    Log.d(TAG, "detect success count=${barcodes.size}")
                     val results = barcodes.mapNotNull { barcode ->
                         val raw = barcode.rawValue?.takeIf { it.isNotBlank() }
                             ?: barcode.displayValue?.takeIf { it.isNotBlank() }
@@ -260,7 +250,6 @@ object GalleryScanHelper {
                     runCatching { scanner.close() }
                 }
                 .addOnFailureListener { e ->
-                    Log.w(TAG, "ML Kit gallery detect failed", e)
                     if (forScan !== bitmap && !forScan.isRecycled) {
                         forScan.recycle()
                     }

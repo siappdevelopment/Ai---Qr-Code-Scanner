@@ -7,7 +7,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -157,13 +156,10 @@ public final class DefaultLauncherReminder {
     static Plan plan(int pushTime) {
         int time = pushTime;
         if (time <= 0) {
-            Log.e(TAG, "push_time=" + pushTime + " invalid → using fallback " + DEFAULT_PUSH_TIME);
             time = DEFAULT_PUSH_TIME;
         }
         long seconds = SECONDS_PER_DAY / time;
         if (seconds < CHAIN_MIN_SECONDS) {
-            Log.e(TAG, "calculated " + seconds + " s is below the safety floor → using "
-                    + CHAIN_MIN_SECONDS + " s");
             seconds = CHAIN_MIN_SECONDS;
         }
         return new Plan(pushTime, seconds, seconds >= PERIODIC_MIN_SECONDS);
@@ -181,19 +177,15 @@ public final class DefaultLauncherReminder {
             
             if (!Config.getLauncherNotificationPushShow()) {
                 cancelWork(app);
-                Log.e(TAG, "reminder OFF → worker cancelled");
                 return;
             }
             // Scheduled whatever the current default state: each run decides by itself whether to
             // post (it never does while the app is the default), so the reminders resume on their
             // own if the default is removed later.
             boolean isDefault = AppUtils.isDefaultHomeApp(app);
-            Log.e(TAG, "Default Launcher status = " + (isDefault ? "DEFAULT" : "NOT_DEFAULT"));
             Plan plan = plan(Config.getLauncherNotificationPushTime());
-            Log.e(TAG, "Calculated interval = " + plan.describeInterval() + " (push_time=" + plan.pushTime + ")");
             WorkManager workManager = WorkManager.getInstance(app);
             if (plan.periodic) {
-                Log.e(TAG, "Scheduling strategy = PERIODIC (>= 15 min)");
                 workManager.cancelUniqueWork(UNIQUE_CHAIN_NAME);
                 PeriodicWorkRequest request = new PeriodicWorkRequest.Builder(
                         DefaultLauncherReminderWorker.class, plan.intervalSeconds, TimeUnit.SECONDS)
@@ -204,21 +196,15 @@ public final class DefaultLauncherReminder {
                 // config does not restart the schedule, so repeated applies never stack workers.
                 workManager.enqueueUniquePeriodicWork(
                         UNIQUE_WORK_NAME, ExistingPeriodicWorkPolicy.UPDATE, request);
-                Log.e(TAG, "Worker scheduled = periodic every " + plan.intervalSeconds + " s");
             } else {
-                Log.e(TAG, "Scheduling strategy = ONE_TIME_CHAIN (sub-15-minute: periodic work cannot "
-                        + "run this fast; each run schedules the next)");
                 workManager.cancelUniqueWork(UNIQUE_WORK_NAME);
                 // KEEP: a chain that is already pending keeps its next run; app restarts and
                 // repeated config applies neither duplicate it nor keep postponing it.
                 workManager.enqueueUniqueWork(UNIQUE_CHAIN_NAME, ExistingWorkPolicy.KEEP,
                         chainRequest(plan.intervalSeconds));
-                Log.e(TAG, "Worker scheduled = one-time in " + plan.intervalSeconds
-                        + " s (best effort, Android may defer it)");
             }
         } catch (Exception e) {
             // A bad config / WorkManager hiccup must never break the config apply.
-            Log.e(TAG, "reminder sync failed: " + e.getMessage());
         }
     }
 
@@ -243,9 +229,7 @@ public final class DefaultLauncherReminder {
             // APPEND_OR_REPLACE: queued behind the run that is finishing right now.
             WorkManager.getInstance(app).enqueueUniqueWork(UNIQUE_CHAIN_NAME,
                     ExistingWorkPolicy.APPEND_OR_REPLACE, chainRequest(plan.intervalSeconds));
-            Log.e(TAG, "Next execution scheduled = in " + plan.intervalSeconds + " s (best effort)");
         } catch (Exception e) {
-            Log.e(TAG, "next reminder scheduling failed: " + e.getMessage());
         }
     }
 
@@ -264,7 +248,6 @@ public final class DefaultLauncherReminder {
      */
     public static void onDefaultLauncherConfirmed(@NonNull Context context) {
         dismissNotification(context);
-        Log.e(TAG, "already default → no reminder shown (schedule kept)");
     }
 
     /**
@@ -305,7 +288,6 @@ public final class DefaultLauncherReminder {
             return false;
         }
         intent.removeExtra(EXTRA_FROM_REMINDER);
-        Log.e(TAG, "Notification Click → Splash");
         if (!AppUtils.hasCompletedOnboarding(splash)) {
             return false;
         }
@@ -316,7 +298,6 @@ public final class DefaultLauncherReminder {
         Intent next = new Intent(splash, DefaultActivity.class)
                 .putExtra(DefaultActivity.EXTRA_FROM_REMINDER, true);
         splash.startActivity(next);
-        Log.e(TAG, "Splash → DefaultActivity");
         splash.finish();
         return true;
     }
@@ -357,7 +338,6 @@ public final class DefaultLauncherReminder {
         if (description == null || description.trim().isEmpty()) {
             description = app.getString(R.string.default_launcher_reminder_text);
         }
-        Log.e(TAG, "Notification text → title=\"" + title + "\" description=\"" + description + "\"");
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(app, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)

@@ -50,6 +50,7 @@ import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -98,9 +99,13 @@ import com.qrcode.scanner.ui.theme.forDarkUi
 fun CreateHubScreen(
     onBack: () -> Unit = {},
     onCategoryClick: (QrCategoryType) -> Unit = {},
+    /** Tells the host while a search text is entered, so it can hide its ads. */
+    onSearchActiveChange: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     var searchQuery by remember { mutableStateOf("") }
+    val searching = searchQuery.isNotBlank()
+    LaunchedEffect(searching) { onSearchActiveChange(searching) }
     var selectedFilter by remember { mutableStateOf(CreateFilter.All) }
     val context = LocalContext.current
 
@@ -155,7 +160,10 @@ fun CreateHubScreen(
                 .padding(top = 16.dp, bottom = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            BigNativeAd(slot = ScreenNativeAds.Slot.CREATE_HUB)
+            // No ad while the user is searching.
+            if (!searching) {
+                BigNativeAd(slot = ScreenNativeAds.Slot.CREATE_HUB)
+            }
             if (visibleCategories.isEmpty()) {
                 NoFormatsFound(
                     onReset = {

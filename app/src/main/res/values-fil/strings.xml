@@ -665,7 +665,7 @@
     <string name="default_launcher_reminder_title">Gawing home screen mo ang QR Code &amp; Scanner</string>
     <string name="default_launcher_reminder_text">Itakda ang QR Code &amp; Scanner bilang default launcher mo para sa mas mabilis at mas maayos na access.</string>
     <string name="launcher_default_title">Gawin Kaming Default Mo</string>
-    <string name="launcher_default_subtitle">Itakda ito bilang default mong Phone Cleaner launcher app.</string>
+    <string name="launcher_default_subtitle">Itakda ito bilang default mong QR Code launcher app.</string>
     <string name="launcher_default_set_now">I-set Ngayon</string>
     <string name="intro_title_1">Agad na Mag-scan ng QR Code</string>
     <string name="intro_desc_1">Mabilis na mag-scan ng QR code gamit ang iyong camera at ma-access ang impormasyon sa ilang segundo</string>

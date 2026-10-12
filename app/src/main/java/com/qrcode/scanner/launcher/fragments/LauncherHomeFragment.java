@@ -16,6 +16,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -32,6 +33,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -77,6 +79,7 @@ public class LauncherHomeFragment extends Fragment {
     private LauncherAppsBottomSheet appsBottomSheet;
     private RelativeLayout rlQuickAction;
     private LinearLayout llGoogleSearch, llRightSwipe, llDateTime, llDefault, llGoogleFolder, llToolsFolder, llScan, llCreate, llHistory, llSetting, llCreateQR, llSettings;
+    private ObjectAnimator defaultArrowAnimator;
     private CardView cvGoogleFolder, cvToolsFolder;
     private GridLayout gvGoogleApps, gvToolsApps;
     private AppCompatImageView ivGoogleVoiceSearch, ivTopAppIcon1, ivTopAppIcon2, ivAppIcon1, ivAppIcon2, ivAppIcon3, ivAppIcon4;
@@ -1355,6 +1358,7 @@ public class LauncherHomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         defaultHomePromptHelper.onResume();
+        startDefaultArrowSwing();
         updateRightSwipeTutorialVisibility();
         startDateTimeUpdates();
         applyLauncherSizeSettings();
@@ -1366,6 +1370,7 @@ public class LauncherHomeFragment extends Fragment {
     public void onPause() {
         super.onPause();
         stopDateTimeUpdates();
+        stopDefaultArrowSwing();
         dismissAppsFolderDialog();
     }
 
@@ -1384,7 +1389,40 @@ public class LauncherHomeFragment extends Fragment {
         recycleVelocityTracker();
         clearAppsSheetOpeningState();
         resetAppsGestureState();
+        stopDefaultArrowSwing();
         llDefault = null;
         super.onDestroyView();
+    }
+
+    /** The arrow on the "Set as default" card swings right and back left, repeating while the page is visible. */
+    private void startDefaultArrowSwing() {
+        stopDefaultArrowSwing();
+        if (llDefault == null) {
+            return;
+        }
+        View arrow = llDefault.findViewById(R.id.ivDefaultArrow);
+        if (arrow == null) {
+            return;
+        }
+        float distance = 8f * getResources().getDisplayMetrics().density;
+        defaultArrowAnimator = ObjectAnimator.ofFloat(arrow, View.TRANSLATION_X, 0f, distance);
+        defaultArrowAnimator.setDuration(550L);
+        defaultArrowAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        defaultArrowAnimator.setRepeatMode(ObjectAnimator.REVERSE);
+        defaultArrowAnimator.setRepeatCount(ObjectAnimator.INFINITE);
+        defaultArrowAnimator.start();
+    }
+
+    private void stopDefaultArrowSwing() {
+        if (defaultArrowAnimator != null) {
+            defaultArrowAnimator.cancel();
+            defaultArrowAnimator = null;
+        }
+        if (llDefault != null) {
+            View arrow = llDefault.findViewById(R.id.ivDefaultArrow);
+            if (arrow != null) {
+                arrow.setTranslationX(0f);
+            }
+        }
     }
 }

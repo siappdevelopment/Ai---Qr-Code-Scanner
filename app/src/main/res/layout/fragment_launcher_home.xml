@@ -363,6 +363,7 @@
                 </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ivDefaultArrow"
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
                     android:src="@drawable/ic_arrow"

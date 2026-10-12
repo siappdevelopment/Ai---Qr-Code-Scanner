@@ -101,6 +101,7 @@
         <RelativeLayout
             android:id="@+id/rlAdView"
             android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_8sdp"
             android:layout_height="wrap_content"
             android:background="@color/ad_background">
 

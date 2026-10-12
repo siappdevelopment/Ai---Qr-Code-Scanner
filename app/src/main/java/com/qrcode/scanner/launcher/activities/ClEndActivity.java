@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -69,6 +70,27 @@ public class ClEndActivity extends AppCompatActivity {
         if (activity instanceof ClEndActivity && !activity.isFinishing()) {
             activity.finish();
         }
+    }
+
+    /** The Call End screen always shows English, whatever language the app is set to. */
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(englishContext(newBase));
+    }
+
+    @Override
+    public void applyOverrideConfiguration(Configuration overrideConfiguration) {
+        if (overrideConfiguration != null) {
+            overrideConfiguration = new Configuration(overrideConfiguration);
+            overrideConfiguration.setLocale(java.util.Locale.ENGLISH);
+        }
+        super.applyOverrideConfiguration(overrideConfiguration);
+    }
+
+    private static Context englishContext(Context base) {
+        Configuration configuration = new Configuration(base.getResources().getConfiguration());
+        configuration.setLocale(java.util.Locale.ENGLISH);
+        return base.createConfigurationContext(configuration);
     }
 
     @Override

@@ -27,6 +27,7 @@ import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.composed
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
@@ -62,6 +63,7 @@ fun ScreenWithAd(
     val density = LocalDensity.current
     var adHeightPx by remember { mutableIntStateOf(0) }
     var columnBottomPx by remember { mutableIntStateOf(0) }
+    var adContentHeightPx by remember { mutableIntStateOf(0) }
     // Exact overlap: where the keyboard starts in this window, against where this screen ends. The ime inset
     // alone also counts the navigation bar area, which would leave a gap above the keyboard.
     val rootHeightPx = LocalView.current.rootView.height
@@ -91,10 +93,15 @@ fun ScreenWithAd(
             content()
         }
         Box(modifier = Modifier.onSizeChanged { adHeightPx = it.height }) {
+            // Gap between the content (normal or scrolling) and the ad, only while the ad actually takes space.
+            // onSizeChanged sits after the padding, so it measures the ad itself and cannot feed back into the gap.
             FirebaseScreenAd(
                 screenKey = screenKey,
                 nativeSize = nativeSize,
-                modifier = Modifier.navigationBarsPadding()
+                modifier = Modifier
+                    .navigationBarsPadding()
+                    .padding(top = if (adContentHeightPx > 0) AdContentGap else 0.dp)
+                    .onSizeChanged { adContentHeightPx = it.height }
             )
         }
     }
@@ -189,3 +196,6 @@ fun Modifier.navigationBarsPaddingUnlessKeyboard(): Modifier = composed {
     val keyboardOpen = WindowInsets.ime.getBottom(LocalDensity.current) > 0
     if (keyboardOpen) Modifier else Modifier.navigationBarsPadding()
 }
+
+/** Space kept between a screen's content and its bottom ad. */
+private val AdContentGap = 8.dp

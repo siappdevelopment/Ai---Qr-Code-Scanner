@@ -12,6 +12,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -76,14 +77,33 @@ public final class AppUtils {
     public static void restoreSavedLanguage(@NonNull Context context) {
         String languageCode = getLanguage(context);
         appLanguage = languageCode;
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode));
+        setAppLocales(context, languageCode);
     }
 
     public static void applyLanguage(@NonNull Context context, @NonNull String languageCode) {
         String normalizedCode = languageCode.isEmpty() ? "en" : languageCode;
         setLanguage(context, normalizedCode);
         appLanguage = normalizedCode;
-        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(normalizedCode));
+        setAppLocales(context, normalizedCode);
+    }
+
+    /**
+     * Android 13 can reject the platform per-app locale call with "Can't change activity type once set" when this
+     * app has a Home-type task (it is a launcher) next to its normal tasks. The language is already saved, so
+     * instead of crashing, fall back to updating this app's own resources configuration.
+     */
+    private static void setAppLocales(@NonNull Context context, @NonNull String languageCode) {
+        try {
+            AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(languageCode));
+        } catch (IllegalStateException e) {
+            Log.e("AppUtils", "setApplicationLocales rejected by the system, using resources fallback", e);
+            Locale locale = Locale.forLanguageTag(languageCode);
+            Locale.setDefault(locale);
+            Context app = context.getApplicationContext();
+            Configuration configuration = new Configuration(app.getResources().getConfiguration());
+            configuration.setLocale(locale);
+            app.getResources().updateConfiguration(configuration, app.getResources().getDisplayMetrics());
+        }
     }
 
     public static String getStringForLanguage(@NonNull Context context, @NonNull String languageCode, int stringResId) {

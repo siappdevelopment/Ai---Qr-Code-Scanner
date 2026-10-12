@@ -119,7 +119,8 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
         Log.d("EventPrompt", "onUserLeaveHint finishing=" + isFinishing() + " internal=" + internalNavigation);
-        if (internalNavigation) {
+        // The back ad (Google Inter / App Open) is its own activity: starting it also calls onUserLeaveHint.
+        if (exiting || internalNavigation) {
             return; // cleared on the next resume, after onStop has also skipped it
         }
         leaveWithoutAd("onUserLeaveHint");

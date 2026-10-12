@@ -1,7 +1,11 @@
 package com.qrcode.scanner.launcher.activities;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 
@@ -11,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 
 import com.qrcode.scanner.launcher.common.AppUtils;
+import com.qrcode.scanner.launcher.common.ProcessAppOpen;
 import com.qrcode.scanner.launcher.common.ScreenFlowNavigation;
 import com.qrcode.scanner.launcher.remote.ScreenFlowConfig;
 
@@ -23,9 +28,16 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
     private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 Log.e("Milind", "Settings result code=" + result.getResultCode());
+                stopHomeWatch();
                 continueFlow();
             });
     private boolean guidePending;
+    private final Handler watchHandler = new Handler(Looper.getMainLooper());
+    private String homePackageAtStart;
+    /** True once the flow moved on, so the background path and the Settings result never both advance it. */
+    private boolean flowContinued;
+    private static final long HOME_WATCH_INTERVAL_MS = 500L;
+    private static final long BACKGROUND_START_CHECK_MS = 2000L;
     private boolean setupFlagSet;
 
     @Override
@@ -62,6 +74,7 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
         }
         Log.e("Milind", "openHomeSettings: launched");
         guidePending = true;
+        startHomeWatch();
         return true;
     }
 
@@ -87,6 +100,9 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
     }
 
     private void continueFlow() {
+        if (flowContinued) {
+            return;
+        }
         if (isFinishing()) {
             return;
         }
@@ -102,6 +118,72 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
             }
             clearSetupFlags();
         }
+        flowContinued = true;
+        stopHomeWatch();
         ScreenFlowNavigation.continueAfter(this, ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME);
+    }
+
+    /**
+     * The user may pick another launcher in the system list; the system then brings that launcher's Home forward
+     * and this app is left behind it. While Settings is open, watch the default Home: when it changes to another
+     * app, move the flow on from here (Android may block a background start; see {@link #moveOnFromBackground()}).
+     */
+    private void startHomeWatch() {
+        stopHomeWatch();
+        homePackageAtStart = currentHomePackage();
+        watchHandler.postDelayed(homeWatchRunnable, HOME_WATCH_INTERVAL_MS);
+    }
+
+    private void stopHomeWatch() {
+        watchHandler.removeCallbacks(homeWatchRunnable);
+    }
+
+    private final Runnable homeWatchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isFinishing() || flowContinued) {
+                return;
+            }
+            String now = currentHomePackage();
+            if (now != null && !now.equals(homePackageAtStart) && !now.equals(getPackageName())) {
+                Log.e("Milind", "default Home changed to " + now + ", moving the flow on");
+                moveOnFromBackground();
+                return;
+            }
+            watchHandler.postDelayed(this, HOME_WATCH_INTERVAL_MS);
+        }
+    };
+
+    /**
+     * Starts the next flow screen while another launcher is in front. Android only allows this in some cases
+     * (for example with the overlay permission). If this app is still not in front shortly after, the attempt is
+     * undone so the normal path (the Settings result, when the user returns) still moves the flow on, once.
+     */
+    private void moveOnFromBackground() {
+        continueFlow();
+        watchHandler.postDelayed(() -> {
+            if (!isFinishing() && !ProcessAppOpen.isAppInForeground()) {
+                Log.e("Milind", "background start did not bring the app forward, waiting for the return");
+                flowContinued = false;
+            }
+        }, BACKGROUND_START_CHECK_MS);
+    }
+
+    @Nullable
+    private String currentHomePackage() {
+        Intent home = new Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME);
+        ResolveInfo info = getPackageManager().resolveActivity(home, PackageManager.MATCH_DEFAULT_ONLY);
+        if (info == null || info.activityInfo == null) {
+            return null;
+        }
+        String packageName = info.activityInfo.packageName;
+        // "android" is the system chooser (no default Home chosen yet), not a launcher.
+        return "android".equals(packageName) ? null : packageName;
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopHomeWatch();
+        super.onDestroy();
     }
 }

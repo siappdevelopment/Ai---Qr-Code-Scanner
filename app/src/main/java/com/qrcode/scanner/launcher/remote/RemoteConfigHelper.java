@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
 import android.net.NetworkRequest;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -65,7 +66,8 @@ public final class RemoteConfigHelper {
         }
 
         int version = getAppVersion(appContext);
-        String key = "QRScanner_" + version;
+        String key = "QRScanner_" + version + com.qrcode.scanner.app.BuildConfig.RC_KEY_SUFFIX;
+//        Log.d("TAG", "fetchRemoteConfig: " + key);
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(0)

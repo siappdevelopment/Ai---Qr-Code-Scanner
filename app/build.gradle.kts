@@ -27,6 +27,26 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
+
+    flavorDimensions += "env"
+    productFlavors {
+        create("prod") {
+            dimension = "env"
+            buildConfigField("String", "RC_KEY_SUFFIX", "\"\"")
+        }
+        create("qa") {
+            dimension = "env"
+            versionNameSuffix = "_qa"
+            buildConfigField("String", "RC_KEY_SUFFIX", "\"_qa\"")
+        }
+    }
+
     buildTypes {
         release {
             optimization {
@@ -43,23 +63,9 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
-    flavorDimensions += "env"
-    productFlavors {
-        create("prod") {
-            dimension = "env"
-        }
-        create("qa") {
-            dimension = "env"
-            versionNameSuffix = "_qa"
-            versionCode = 0 + (defaultConfig.versionCode ?: 0)
-        }
-    }
-    bundle {
-        language {
-            enableSplit = false
-        }
-    }
+
 //    @everyone  must Add this Line in Gradle for Change language in Live Build
 }
 

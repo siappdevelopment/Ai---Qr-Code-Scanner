@@ -52,6 +52,26 @@ public class IntroNavigation {
         }
     }
 
+    /**
+     * With 2 or 3 intro screens the LAST one shows its Next button at the top (right side, wrap size) instead of
+     * at the bottom. With a single intro screen, and on the earlier screens, the layout stays as it is.
+     */
+    public static void moveNextButtonToTopIfLast(Context context, View btnNext, int currentScreen) {
+        int count = getEffectiveIntroButtonScreenCount();
+        if (count < 2 || currentScreen != count || btnNext == null || !(btnNext.getParent() instanceof android.view.ViewGroup)) {
+            return;
+        }
+        android.view.ViewGroup parent = (android.view.ViewGroup) btnNext.getParent();
+        parent.removeView(btnNext);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.gravity = android.view.Gravity.END;
+        params.setMargins(0, AppUtils.dpToPx(context, 10), AppUtils.dpToPx(context, 14), 0);
+        btnNext.setLayoutParams(params);
+        btnNext.setPadding(AppUtils.dpToPx(context, 24), AppUtils.dpToPx(context, 10), AppUtils.dpToPx(context, 24), AppUtils.dpToPx(context, 10));
+        parent.addView(btnNext, 0);
+    }
+
     public static void openIntroButtonFlow(Activity activity) {
         if (getEffectiveIntroButtonScreenCount() == 0) {
             completeIntroAndOpenDefaultApp(activity);

@@ -25,3 +25,9 @@
 -keep class com.google.ads.mediation.facebook.** { *; }
 -keep class com.facebook.ads.** { *; }
 -dontwarn com.facebook.ads.**
+
+# ---- WorkManager (default launcher reminder) ----
+# R8 stripped OverwritingInputMerger's constructor ("Could not create Input Merger"), so no work ever ran.
+# WorkManager creates mergers and workers by reflection.
+-keep class * extends androidx.work.InputMerger { <init>(); }
+-keep class * extends androidx.work.ListenableWorker { <init>(android.content.Context, androidx.work.WorkerParameters); }

@@ -31,6 +31,7 @@ public class Intro3Activity extends AppCompatActivity {
         LinearLayout llIndicator = findViewById(R.id.llIndicator);
         AppCompatTextView btnNext = findViewById(R.id.btnNext);
         IntroNavigation.setupIntroButtonIndicators(this, llIndicator, 3);
+        IntroNavigation.moveNextButtonToTopIfLast(this, btnNext, 3);
         btnNext.setOnClickListener(view -> IntroNavigation.goToNextIntroButtonScreen(this, 3));
         IntroNavigation.bindBackAsNext(this, 3);
     }

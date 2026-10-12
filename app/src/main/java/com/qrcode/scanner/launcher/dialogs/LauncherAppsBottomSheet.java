@@ -138,6 +138,9 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
     private int appliedContentPaddingTop = -1;
     private int appliedContentPaddingBottom = -1;
     private int appliedRecyclerPaddingBottom = -1;
+    /** Bottom space the list keeps for the sticky list ad. Window-insets code must not remove it. */
+    private int nativeListAdReservePx;
+    private int lastImeBottomPx;
     private int appliedStatusBarScrimHeight = -1;
     private int appliedStatusBarScrimColor = Color.TRANSPARENT;
     private boolean animatedDismissRequested;
@@ -1289,12 +1292,57 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
         }
     }
 
+    /**
+     * Ad hidden: give the list back its normal bottom space and drawing area. While the ad is shown, its real position
+     * decides (see {@link #syncStickyListInset}): in its list slot the rows below it stay visible; floating at the
+     * bottom it must not cover any rows.
+     */
     private void applyNativeListBottomPadding(boolean enabled) {
         if (rvApps == null) {
             return;
         }
-        int bottom = enabled ? getResources().getDimensionPixelSize(R.dimen.launcher_native_list_spacer_height) : getResources().getDimensionPixelSize(R.dimen.launcher_native_list_margin);
-        rvApps.setPadding(rvApps.getPaddingLeft(), rvApps.getPaddingTop(), rvApps.getPaddingRight(), bottom);
+        if (!enabled) {
+            applyStickyListInset(false, 0, 0);
+            return;
+        }
+        syncStickyListInset();
+    }
+
+    /** Reads where the ad is now. At its natural bottom spot (translationY 0) it floats over the list: reserve that space. */
+    private void syncStickyListInset() {
+        if (rvApps == null) {
+            return;
+        }
+        if (!nativeListAdVisible || rlNativeListAdView == null || rlNativeListAdView.getVisibility() != VISIBLE || rlNativeListAdView.getHeight() <= 0
+                || !(rlNativeListAdView.getParent() instanceof View)) {
+            applyStickyListInset(false, 0, 0);
+            return;
+        }
+        View parent = (View) rlNativeListAdView.getParent();
+        boolean floating = Math.abs(rlNativeListAdView.getTranslationY()) < 1f;
+        if (!floating) {
+            applyStickyListInset(false, 0, 0);
+            return;
+        }
+        int marginBottom = getResources().getDimensionPixelSize(R.dimen.launcher_native_list_margin);
+        int adTop = parent.getHeight() - rlNativeListAdView.getHeight() - marginBottom;
+        int reserve = Math.max(0, rvApps.getBottom() - adTop);
+        applyStickyListInset(true, reserve, adTop - rvApps.getTop());
+    }
+
+    private void applyStickyListInset(boolean floating, int reservePx, int clipBottomPx) {
+        nativeListAdReservePx = floating ? reservePx : 0;
+        int padding = Math.max(nativeListAdReservePx, lastImeBottomPx);
+        if (rvApps.getPaddingBottom() != padding) {
+            appliedRecyclerPaddingBottom = padding;
+            rvApps.setPadding(rvApps.getPaddingLeft(), rvApps.getPaddingTop(), rvApps.getPaddingRight(), padding);
+        }
+        rvApps.setClipToPadding(false);
+        if (floating && rvApps.getWidth() > 0) {
+            rvApps.setClipBounds(new android.graphics.Rect(0, 0, rvApps.getWidth(), Math.max(0, clipBottomPx)));
+        } else {
+            rvApps.setClipBounds(null);
+        }
     }
 
     private void parkNativeListAdOffScreen() {
@@ -1308,6 +1356,11 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
     }
 
     private void updateStickyNativeListAdPosition() {
+        updateStickyNativeListAdPositionCore();
+        syncStickyListInset();
+    }
+
+    private void updateStickyNativeListAdPositionCore() {
         if (!nativeListAdVisible || rlNativeListAdView == null || rvApps == null || launcherAppsAdapter == null) {
             return;
         }
@@ -1695,7 +1748,8 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
         if (rvApps == null) {
             return;
         }
-        int paddingBottom = Math.max(imeBottom, 0);
+        lastImeBottomPx = Math.max(imeBottom, 0);
+        int paddingBottom = Math.max(lastImeBottomPx, nativeListAdReservePx);
         if (appliedRecyclerPaddingBottom == paddingBottom) {
             return;
         }
@@ -1733,8 +1787,8 @@ public class LauncherAppsBottomSheet extends BottomSheetDialogFragment implement
         if (contentRoot != null) {
             contentRoot.setPadding(contentRoot.getPaddingLeft(), contentRootDefaultPaddingTop, contentRoot.getPaddingRight(), 0);
         }
-        if (rvApps != null && rvApps.getPaddingBottom() != 0) {
-            rvApps.setPadding(rvApps.getPaddingLeft(), rvApps.getPaddingTop(), rvApps.getPaddingRight(), 0);
+        if (rvApps != null && rvApps.getPaddingBottom() != nativeListAdReservePx) {
+            rvApps.setPadding(rvApps.getPaddingLeft(), rvApps.getPaddingTop(), rvApps.getPaddingRight(), nativeListAdReservePx);
         }
         updateStatusBarScrimIfNeeded(Color.TRANSPARENT, 0);
     }

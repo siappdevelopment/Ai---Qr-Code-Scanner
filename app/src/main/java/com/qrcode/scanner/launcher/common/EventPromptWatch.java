@@ -25,6 +25,10 @@ public final class EventPromptWatch {
                 return;
             }
             String action = intent.getAction();
+            if (EventPromptLauncher.isHeldBackDelivery()) {
+                Log.d("EventPrompt", "live receiver ignored held-back delivery action=" + action);
+                return;
+            }
             Log.d("EventPrompt", "live receiver action=" + action + " data=" + intent.getData());
             if (Intent.ACTION_POWER_CONNECTED.equals(action)) {
                 EventPromptLauncher.open(context, EventPromptActivity.KIND_CHARGE_IN);

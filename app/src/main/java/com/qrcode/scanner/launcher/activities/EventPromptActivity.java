@@ -47,6 +47,9 @@ import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
  */
 public abstract class EventPromptActivity extends AppCompatActivity {
     public static final String EXTRA_KIND = "event_kind";
+    /** When the event was received. A screen that first becomes visible long after this is a held-back one. */
+    public static final String EXTRA_LAUNCHED_AT = "event_launched_at";
+    private static final long STALE_LAUNCH_MS = 6000L;
     public static final String KIND_INSTALL = "install";
     public static final String KIND_UNINSTALL = "uninstall";
     public static final String KIND_CHARGE_IN = "charge_in";
@@ -59,6 +62,9 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     private boolean exiting;
     /** True while this screen itself opens another activity (Settings): that is not the user leaving by HOME / Recents. */
     private boolean internalNavigation;
+    private boolean resumed;
+    /** The next time this screen becomes visible, check that it is not a held-back (stale) launch. */
+    private boolean checkFreshOnResume;
     private int adRequest;
     private int adCardColor = Color.WHITE;
     @Nullable
@@ -70,6 +76,7 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("EventPrompt", "activity created kind=" + kindFrom(getIntent()));
+        checkFreshOnResume = true;
         // The screen is up: a full-screen-intent notification of this kind is no longer needed.
         EventPromptLauncher.cancelNotification(this, kindFrom(getIntent()));
         if (!AdPlacement.isNetworkAvailable(this)) {
@@ -96,6 +103,7 @@ public abstract class EventPromptActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         setIntent(intent);
         Log.d("EventPrompt", "onNewIntent: flipped in place kind=" + kindFrom(intent));
+        checkFreshOnResume = !resumed;
         EventPromptLauncher.cancelNotification(this, kindFrom(intent));
         bindKind(kindFrom(intent));
         restartHold();
@@ -107,8 +115,28 @@ public abstract class EventPromptActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        resumed = true;
+        if (checkFreshOnResume) {
+            checkFreshOnResume = false;
+            if (isStaleLaunch(getIntent())) {
+                Log.d("EventPrompt", "stale launch closed kind=" + kindFrom(getIntent()));
+                leaveWithoutAd("stale launch");
+                return;
+            }
+        }
         internalNavigation = false;
         hideNavigationBar();
+    }
+
+    @Override
+    protected void onPause() {
+        resumed = false;
+        super.onPause();
+    }
+
+    private static boolean isStaleLaunch(@Nullable Intent intent) {
+        long launchedAt = intent == null ? 0L : intent.getLongExtra(EXTRA_LAUNCHED_AT, 0L);
+        return launchedAt > 0L && System.currentTimeMillis() - launchedAt > STALE_LAUNCH_MS;
     }
 
     /**

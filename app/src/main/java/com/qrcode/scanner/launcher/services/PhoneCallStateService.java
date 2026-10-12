@@ -51,6 +51,11 @@ public class PhoneCallStateService extends BroadcastReceiver {
             return;
         }
 
+        // Charging / Install events that waited while this app was frozen are delivered right after a phone-state
+        // broadcast wakes it. Tell the event screens, so they do not open next to the Call End screen.
+        String phoneState = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
+        EventPromptLauncher.onPhoneStateChanged(phoneState != null && !TelephonyManager.EXTRA_STATE_IDLE.equals(phoneState));
+
         try {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
             if (state == null) {

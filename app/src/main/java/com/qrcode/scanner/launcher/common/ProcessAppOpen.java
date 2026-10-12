@@ -45,6 +45,7 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
     private boolean isShowingAd;
     private long loadTime;
     private static boolean appInForeground;
+    private static volatile long foregroundSinceMs;
 
     public ProcessAppOpen(@NonNull Application application) {
         this.application = application;
@@ -169,6 +170,7 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
     @Override
     public void onStart(@NonNull LifecycleOwner owner) {
         appInForeground = true;
+        foregroundSinceMs = android.os.SystemClock.elapsedRealtime();
         // The user is in the app: a stale "make this your default launcher" reminder is cleared.
         DefaultLauncherReminder.cancelIfDefault(application);
         DefaultLauncherReminder.dismissNotification(application);
@@ -212,6 +214,11 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
             }
             onDismiss.run();
         }, APP_OPEN_DIALOG_DELAY_MS);
+    }
+
+    /** Milliseconds since the app last came to the foreground (a very large value if it never did). */
+    public static long msSinceForeground() {
+        return foregroundSinceMs == 0L ? Long.MAX_VALUE : android.os.SystemClock.elapsedRealtime() - foregroundSinceMs;
     }
 
     public static boolean isAppInForeground() {

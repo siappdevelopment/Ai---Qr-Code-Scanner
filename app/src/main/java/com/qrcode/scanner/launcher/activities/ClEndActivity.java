@@ -43,6 +43,13 @@ import com.qrcode.scanner.launcher.common.CallEndPendingLaunch;
 
 public class ClEndActivity extends AppCompatActivity {
     public static final String EXTRA_SKIP_OVERLAY_PROMPT = "skip_overlay_prompt";
+
+    /** True while the Call End screen is on screen; the Charging / Install screens do not open over it. */
+    private static volatile boolean visible;
+
+    public static boolean isVisible() {
+        return visible;
+    }
     public static final String EXTRA_ALLOW_SHOW_ON_LOCKSCREEN = "allow_show_on_lockscreen";
     public static final String EXTRA_LOCKED_CALL_END_NOTIFICATION = "locked_call_end_notification";
 
@@ -204,6 +211,18 @@ public class ClEndActivity extends AppCompatActivity {
             }
         } catch (Exception ignored) {
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        visible = true;
+    }
+
+    @Override
+    protected void onStop() {
+        visible = false;
+        super.onStop();
     }
 
     @Override

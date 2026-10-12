@@ -29,6 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -251,6 +256,17 @@ fun ScanPulseNavHost(
             } else {
                 MAIN_GRAPH_ROUTE
             },
+            // The default crossfade (700 ms) shows what is behind the page while it runs. In the launcher the Scan
+            // page is transparent, so the wallpaper showed for about a second when opening Scan from Home or
+            // Settings. Moves to or from Scan switch instantly; every other move keeps the default fade.
+            enterTransition = {
+                if (involvesScan(initialState.destination.route, targetState.destination.route)) EnterTransition.None
+                else fadeIn(animationSpec = tween(700))
+            },
+            exitTransition = {
+                if (involvesScan(initialState.destination.route, targetState.destination.route)) ExitTransition.None
+                else fadeOut(animationSpec = tween(700))
+            },
             modifier = if (isScan) {
                 Modifier.fillMaxSize()
             } else {
@@ -400,3 +416,6 @@ fun ScanPulseNavHost(
         }
     }
 }
+
+private fun involvesScan(from: String?, to: String?): Boolean =
+    from == AppDestination.Scan.route || to == AppDestination.Scan.route

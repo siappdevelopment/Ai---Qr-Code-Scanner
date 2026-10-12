@@ -707,6 +707,7 @@ private fun OverlayPermissionCard() {
                                 android.net.Uri.parse("package:" + context.packageName)
                             )
                         )
+                        com.qrcode.scanner.launcher.activities.OverlayPermissionGuideActivity.show(context)
                     } catch (_: Exception) {
                     }
                 }

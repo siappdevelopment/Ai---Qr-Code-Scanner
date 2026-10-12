@@ -19,7 +19,7 @@ import com.qrcode.scanner.app.R;
 import com.qrcode.scanner.launcher.common.AppUtils;
 
 /**
- * Guide card shown as a translucent Activity on top of the system "Default home app" screen.
+ * Guide card shown at the bottom, as a translucent Activity on top of the system "Default home app" screen.
  * It is a normal Activity window, so it needs no overlay permission. Any touch closes it, and it
  * closes once this app is the default Home.
  */
@@ -39,7 +39,7 @@ public class DefaultHomeGuideActivity extends AppCompatActivity {
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         WindowManager.LayoutParams params = window.getAttributes();
-        params.gravity = Gravity.CENTER;
+        params.gravity = Gravity.BOTTOM;
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.dimAmount = 0.2f;

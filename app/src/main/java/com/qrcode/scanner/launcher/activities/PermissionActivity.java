@@ -48,6 +48,8 @@ public class PermissionActivity extends AppCompatActivity {
     private boolean cameraStepCompleted;
     private boolean waitingForOverlaySettings;
     private boolean pausedForOverlaySettings;
+    /** Set when the Overlay settings screen is launched; the guide card starts once it takes over (onPause). */
+    private boolean overlayGuidePending;
     private boolean hasNavigated;
 
     @Override
@@ -77,6 +79,10 @@ public class PermissionActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (overlayGuidePending) {
+            overlayGuidePending = false;
+            OverlayPermissionGuideActivity.show(this);
+        }
         if (waitingForOverlaySettings) {
             pausedForOverlaySettings = true;
             startOverlayPermissionMonitor();
@@ -349,9 +355,11 @@ public class PermissionActivity extends AppCompatActivity {
         }
         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
         waitingForOverlaySettings = true;
+        overlayGuidePending = true;
         try {
             overlaySettingsLauncher.launch(intent);
         } catch (Exception ignored) {
+            overlayGuidePending = false;
             waitingForOverlaySettings = false;
             finishOverlayStepAndNavigate();
         }

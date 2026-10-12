@@ -143,6 +143,13 @@
             android:taskAffinity=""
             android:theme="@style/Theme.ClEnd" />
         <activity
+            android:name="com.qrcode.scanner.launcher.activities.OverlayPermissionGuideActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/Theme.ClEnd" />
+        <activity
             android:name="com.qrcode.scanner.launcher.activities.DefaultSettingHomeActivity"
             android:exported="false"
             android:screenOrientation="portrait"

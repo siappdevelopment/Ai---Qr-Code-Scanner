@@ -199,6 +199,7 @@ public final class ScreenInterAds {
         InterstitialAd.load(activity, unitId, new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(InterstitialAd ad) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.INTERSTITIAL_LOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
                 handler.removeCallbacks(timeout);
                 dismiss(loading);
                 if (activity.isFinishing() || done.get()) {
@@ -209,6 +210,7 @@ public final class ScreenInterAds {
 
             @Override
             public void onAdFailedToLoad(LoadAdError loadAdError) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.INTERSTITIAL_FAIL, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
                 handler.removeCallbacks(timeout);
                 dismiss(loading);
                 if (done.get()) {
@@ -317,9 +319,11 @@ public final class ScreenInterAds {
         }
         int token = nextToken(kind);
         setInFlight(kind, true);
+        AnalyticsEvents.ad(appContext, AnalyticsEvents.INTERSTITIAL_PRELOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId(kind));
         InterstitialAd.load(appContext, unitId(kind), new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(InterstitialAd ad) {
+                AnalyticsEvents.ad(appContext, AnalyticsEvents.INTERSTITIAL_LOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId(kind));
                 if (token != token(kind)) {
                     return;
                 }
@@ -329,6 +333,7 @@ public final class ScreenInterAds {
 
             @Override
             public void onAdFailedToLoad(LoadAdError loadAdError) {
+                AnalyticsEvents.ad(appContext, AnalyticsEvents.INTERSTITIAL_FAIL, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId(kind));
                 if (token != token(kind)) {
                     return;
                 }

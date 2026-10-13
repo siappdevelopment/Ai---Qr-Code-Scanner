@@ -112,6 +112,12 @@ class GalleryCropActivity : ComponentActivity() {
                     scanMode = scanMode,
                     onBack = { onBackPressedDispatcher.onBackPressed() },
                     onDetectedSingle = { code ->
+                        com.qrcode.scanner.launcher.common.AnalyticsEvents.log(
+                            this,
+                            com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_SCAN_SUCCESS,
+                            "scan_type", "gallery",
+                            "result_type", code.formatName
+                        )
                         startActivity(
                             ScanIntents.openScanResult(
                                 context = this,
@@ -123,6 +129,11 @@ class GalleryCropActivity : ComponentActivity() {
                         finish()
                     },
                     onDetectionFailed = { uri, reason ->
+                        com.qrcode.scanner.launcher.common.AnalyticsEvents.log(
+                            this,
+                            com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_SCAN_FAIL,
+                            "scan_type", "gallery"
+                        )
                         startActivity(
                             ScanIntents.openDetectionError(
                                 context = this,

@@ -43,6 +43,7 @@ import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -126,6 +127,7 @@ fun CommonQrFormScreen(
 ) {
     val context = LocalContext.current
     val clipboard = LocalClipboardManager.current
+    LaunchedEffect(category) { CreateAnalytics.logFormView(context, category) }
     val labels = remember(category, context) { FormLabels.forCategory(category, context) }
     val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
     val settingsPrefs by settingsRepository.preferences.collectAsStateWithLifecycle(
@@ -174,6 +176,7 @@ fun CommonQrFormScreen(
             return
         }
         error = null
+        CreateAnalytics.logGenerateStart(context, category)
         val built = QrPayloadBuilder.build(category, input)
         context.runWithClickAd("QrFormScreen") {
             previewLauncher.launch(

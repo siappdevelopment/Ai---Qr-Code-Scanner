@@ -135,6 +135,9 @@ public class LauncherHomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            com.qrcode.scanner.launcher.common.AnalyticsEvents.log(this, com.qrcode.scanner.launcher.common.AnalyticsEvents.LAUNCHER_HOME_VIEW);
+        }
         LauncherSettingsHelper.registerChangeListener(drawerSettingsListener);
         hideLauncherFromRecents();
         if (savedInstanceState == null) {

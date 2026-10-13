@@ -27,6 +27,11 @@ import com.qrcode.scanner.launcher.common.TrackOnce;
  */
 public final class DefaultHomePromptHelper {
     public static final long POLL_INTERVAL_MS = 500L;
+    /**
+     * After the user has declined the system "set as default" dialog, Android stops showing it and the request
+     * returns at once with no screen. A result this quick means the dialog was suppressed.
+     */
+    private static final long SUPPRESSED_ROLE_RESULT_MS = 800L;
 
     @Nullable
     private final Fragment fragment;
@@ -39,6 +44,11 @@ public final class DefaultHomePromptHelper {
     private boolean defaultHomeSelectionStarted;
     private boolean defaultHomePopupLaunchInProgress;
     private boolean launcherRegistered;
+    /** Set when the role request came from the in-launcher button (not the automatic popup). */
+    private boolean roleRequestFromClick;
+    private long roleRequestLaunchedAt;
+    /** The Home settings list was opened as the fallback; coming back without choosing this app ends the wait. */
+    private boolean homeSettingsOpened;
     @Nullable
     private RoleFlowListener roleFlowListener;
 
@@ -124,6 +134,7 @@ public final class DefaultHomePromptHelper {
         defaultHomePopupLaunchInProgress = true;
         waitingForDefaultHome = true;
         defaultHomeSelectionStarted = true;
+        roleRequestFromClick = false;
         roleLauncher.launch(roleIntent);
     }
 
@@ -142,6 +153,8 @@ public final class DefaultHomePromptHelper {
         waitingForDefaultHome = true;
         defaultHomeSelectionStarted = true;
         Intent roleIntent = AppUtils.createDefaultHomeRoleRequestIntent(getContext());
+        roleRequestFromClick = true;
+        roleRequestLaunchedAt = android.os.SystemClock.elapsedRealtime();
         if (roleIntent != null && roleLauncher != null) {
             roleLauncher.launch(roleIntent);
             return;
@@ -154,6 +167,12 @@ public final class DefaultHomePromptHelper {
     }
 
     public void onResume() {
+        if (homeSettingsOpened && waitingForDefaultHome && isActive() && !AppUtils.isDefaultHomeApp(getContext())) {
+            homeSettingsOpened = false;
+            completeCancelled();
+            return;
+        }
+        homeSettingsOpened = false;
         if (waitingForDefaultHome && isActive() && AppUtils.isDefaultHomeApp(getContext())) {
             completeSuccess();
         } else {
@@ -181,7 +200,39 @@ public final class DefaultHomePromptHelper {
         if (AppUtils.isDefaultHomeApp(getContext())) {
             completeSuccess();
         } else {
+            boolean suppressed = roleRequestFromClick
+                    && android.os.SystemClock.elapsedRealtime() - roleRequestLaunchedAt < SUPPRESSED_ROLE_RESULT_MS;
+            roleRequestFromClick = false;
+            if (suppressed && openHomeSettingsFallback()) {
+                // The system dialog was suppressed: send the user to the Home settings list, and wait for the choice.
+                startPolling();
+                return;
+            }
             completeCancelled();
+        }
+    }
+
+    /** Opens the system Default home app list (and the guide card over it). False when no such screen exists. */
+    private boolean openHomeSettingsFallback() {
+        Activity host = getHostActivity();
+        if (host == null || host.isFinishing()) {
+            return false;
+        }
+        Intent settings = new Intent(android.provider.Settings.ACTION_HOME_SETTINGS);
+        if (settings.resolveActivity(host.getPackageManager()) == null) {
+            settings = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
+            if (settings.resolveActivity(host.getPackageManager()) == null) {
+                return AppUtils.openDefaultHomeChooser(host);
+            }
+        }
+        try {
+            host.startActivity(settings);
+            homeSettingsOpened = true;
+            host.startActivity(new Intent(host, com.qrcode.scanner.launcher.activities.DefaultHomeGuideActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            return true;
+        } catch (Exception e) {
+            return false;
         }
     }
 

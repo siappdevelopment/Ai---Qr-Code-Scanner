@@ -45,6 +45,9 @@ public class LanguageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            com.qrcode.scanner.launcher.common.AnalyticsEvents.log(this, com.qrcode.scanner.launcher.common.AnalyticsEvents.LANGUAGE_VIEW);
+        }
         applyNavigationBarColor();
         setContentView(R.layout.activity_language);
         hideNavigationBar();

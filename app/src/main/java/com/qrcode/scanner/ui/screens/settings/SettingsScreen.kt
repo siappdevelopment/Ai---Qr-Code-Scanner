@@ -35,6 +35,7 @@ import androidx.compose.material.icons.outlined.Vibration
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -88,6 +89,9 @@ fun SettingsScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        com.qrcode.scanner.launcher.common.AnalyticsEvents.log(context, com.qrcode.scanner.launcher.common.AnalyticsEvents.SETTINGS_VIEW)
+    }
     val repository = remember { SettingsRepositoryProvider.get(context) }
     val historyRepository = remember { HistoryRepositoryProvider.get(context) }
     val scope = rememberCoroutineScope()

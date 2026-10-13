@@ -62,6 +62,9 @@ public class LauncherSettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            com.qrcode.scanner.launcher.common.AnalyticsEvents.log(this, com.qrcode.scanner.launcher.common.AnalyticsEvents.LAUNCHER_SETTINGS_VIEW);
+        }
         setContentView(R.layout.activity_launcher_settings);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {

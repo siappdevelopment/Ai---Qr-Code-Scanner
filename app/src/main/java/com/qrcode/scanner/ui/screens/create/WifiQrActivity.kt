@@ -36,6 +36,7 @@ import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -107,6 +108,7 @@ fun WifiQrFormScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    LaunchedEffect(Unit) { CreateAnalytics.logFormView(context, QrCategoryType.WIFI) }
     val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
     val settingsPrefs by settingsRepository.preferences.collectAsStateWithLifecycle(
         initialValue = SettingsPreferences()
@@ -138,6 +140,7 @@ fun WifiQrFormScreen(
             return
         }
         error = null
+        CreateAnalytics.logGenerateStart(context, QrCategoryType.WIFI)
         val built = QrPayloadBuilder.build(QrCategoryType.WIFI, input)
         context.runWithClickAd("QrFormScreen") {
             previewLauncher.launch(

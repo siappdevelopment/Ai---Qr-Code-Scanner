@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            com.qrcode.scanner.launcher.common.AnalyticsEvents.log(this, com.qrcode.scanner.launcher.common.AnalyticsEvents.MAIN_VIEW)
+        }
         defaultHomePopupHost.register()
         AdPlacement.requestCallEndIpCountryIfNeeded(this)
         enableThemedEdgeToEdge()

@@ -19,6 +19,9 @@ public class Intro1Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState == null) {
+            com.qrcode.scanner.launcher.common.AnalyticsEvents.log(this, com.qrcode.scanner.launcher.common.AnalyticsEvents.INTRO_1_VIEW);
+        }
         setContentView(R.layout.activity_intro_1);
         AdPlacement.preloadOnboardingInterstitialAd(this, true);
         hideNavigationAndAds();

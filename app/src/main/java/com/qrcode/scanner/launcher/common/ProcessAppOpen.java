@@ -67,6 +67,7 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
         AppOpenAd.load(application, unitId, new AdRequest.Builder().build(), new AppOpenAd.AppOpenAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull AppOpenAd ad) {
+                AnalyticsEvents.ad(application, AnalyticsEvents.APP_OPEN_AD_LOAD, AnalyticsEvents.FORMAT_APP_OPEN, unitId);
                 appOpenAd = ad;
                 isLoadingAd = false;
                 loadTime = System.currentTimeMillis();
@@ -74,6 +75,7 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                AnalyticsEvents.ad(application, AnalyticsEvents.APP_OPEN_AD_FAIL, AnalyticsEvents.FORMAT_APP_OPEN, unitId);
                 isLoadingAd = false;
             }
         });
@@ -161,6 +163,7 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
     public void onStart(@NonNull LifecycleOwner owner) {
         appInForeground = true;
         foregroundSinceMs = android.os.SystemClock.elapsedRealtime();
+        AnalyticsEvents.log(application, AnalyticsEvents.APP_OPEN);
         // The user is in the app: a stale "make this your default launcher" reminder is cleared.
         DefaultLauncherReminder.cancelIfDefault(application);
         DefaultLauncherReminder.dismissNotification(application);

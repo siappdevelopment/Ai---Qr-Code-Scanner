@@ -301,6 +301,13 @@ fun ScanResultScreen(
         ScanPayloadMapper.detectType(rawValue, format, formatName)
     }
     val kind = remember(detectedType) { resolveKind(detectedType) }
+    LaunchedEffect(Unit) {
+        com.qrcode.scanner.launcher.common.AnalyticsEvents.log(
+            context,
+            com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_RESULT_VIEW,
+            "result_type", detectedType
+        )
+    }
     val isUrl = kind == ResultKind.Website
     var favorite by remember(historyId) { mutableStateOf(initialFavorite) }
     LaunchedEffect(initialFavorite) { favorite = initialFavorite }
@@ -493,6 +500,12 @@ fun ScanResultScreen(
                             indication = null,
                             interactionSource = remember { MutableInteractionSource() }
                         ) {
+                            com.qrcode.scanner.launcher.common.AnalyticsEvents.log(
+                                context,
+                                com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_RESULT_OPEN,
+                                "result_type", detectedType,
+                                "action", "open"
+                            )
                             openUrl(context, displayValue)
                         },
                     contentAlignment = Alignment.Center
@@ -527,6 +540,12 @@ fun ScanResultScreen(
                     icon = Icons.Outlined.ContentCopy,
                     modifier = Modifier.weight(1f),
                     onClick = {
+                        com.qrcode.scanner.launcher.common.AnalyticsEvents.log(
+                            context,
+                            com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_RESULT_COPY,
+                            "result_type", detectedType,
+                            "action", "copy"
+                        )
                         copyToClipboard(context, displayValue)
                         Toast.makeText(
                             context,
@@ -543,7 +562,15 @@ fun ScanResultScreen(
                     label = stringResource(R.string.action_share),
                     icon = Icons.Outlined.Share,
                     modifier = Modifier.weight(1f),
-                    onClick = { shareResult(context, displayValue, isUrl) }
+                    onClick = {
+                        com.qrcode.scanner.launcher.common.AnalyticsEvents.log(
+                            context,
+                            com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_RESULT_SHARE,
+                            "result_type", detectedType,
+                            "action", "share"
+                        )
+                        shareResult(context, displayValue, isUrl)
+                    }
                 )
 //                SecondaryAction(
 //                    label = if (favorite) "Saved" else "Save Fav",

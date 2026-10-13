@@ -369,9 +369,11 @@ public final class AdPlacement {
         }
         int token = ++rightSwipePreloadToken;
         rightSwipePreloadInFlight = true;
+        AnalyticsEvents.ad(activity, AnalyticsEvents.INTERSTITIAL_PRELOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
         InterstitialAd.load(activity, unitId, new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd ad) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.INTERSTITIAL_LOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
                 if (token != rightSwipePreloadToken || !isRightSwipePreloadType()) {
                     rightSwipePreloadInFlight = false;
                     return;
@@ -382,6 +384,7 @@ public final class AdPlacement {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.INTERSTITIAL_FAIL, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
                 if (token == rightSwipePreloadToken) {
                     rightSwipePreloadInFlight = false;
                 }
@@ -990,6 +993,7 @@ public final class AdPlacement {
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.BANNER_LOAD, AnalyticsEvents.FORMAT_BANNER, bannerId);
                 adView.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
                 slBannerShimmer.setVisibility(View.GONE);
                 llBannerAd.setVisibility(View.VISIBLE);
@@ -998,6 +1002,7 @@ public final class AdPlacement {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.BANNER_FAIL, AnalyticsEvents.FORMAT_BANNER, bannerId);
                 adView.destroy();
                 if (getGoogleAdFailedShowQuiz() && QuizAds.showBanner(activity, rlBannerAdView, slBannerShimmer, llBannerAd)) {
                     return;
@@ -1049,6 +1054,7 @@ public final class AdPlacement {
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.BANNER_LOAD, AnalyticsEvents.FORMAT_BANNER, unitId);
                 adView.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
                 if (slBannerShimmer != null) {
                     slBannerShimmer.setVisibility(View.GONE);
@@ -1059,6 +1065,7 @@ public final class AdPlacement {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.BANNER_FAIL, AnalyticsEvents.FORMAT_BANNER, unitId);
                 adView.destroy();
                 if (!googleOnly && getGoogleAdFailedShowQuiz() && onGoogleFailedQuiz != null) {
                     hideBannerContainer(rlBannerAdView, slBannerShimmer, llBannerAd);
@@ -1133,6 +1140,7 @@ public final class AdPlacement {
             paintOnboardingNative(slNativeShimmer, fillColor);
         }
         AdLoader adLoader = new AdLoader.Builder(activity, unitId).forNativeAd(nativeAd -> {
+            AnalyticsEvents.ad(activity, AnalyticsEvents.NATIVE_LOAD, AnalyticsEvents.FORMAT_NATIVE, unitId);
             if (activity.isFinishing() || activity.isDestroyed() || flNativeAd == null) {
                 nativeAd.destroy();
                 return;
@@ -1160,6 +1168,7 @@ public final class AdPlacement {
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.NATIVE_FAIL, AnalyticsEvents.FORMAT_NATIVE, unitId);
                 if (!googleOnly && getGoogleAdFailedShowQuiz()
                         && QuizAds.showNative(activity, rlNativeAdView, slNativeShimmer, flNativeAd, type, lightAds, false)) {
                     paintOnboardingNative(flNativeAd, fillColor);
@@ -1210,6 +1219,7 @@ public final class AdPlacement {
             return;
         }
         AdLoader adLoader = new AdLoader.Builder(context, id).forNativeAd(nativeAd -> {
+            AnalyticsEvents.ad(context, AnalyticsEvents.NATIVE_LOAD, AnalyticsEvents.FORMAT_NATIVE, id);
             nativeAd.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
             if (onLoaded != null) {
                 onLoaded.accept(nativeAd);
@@ -1217,6 +1227,7 @@ public final class AdPlacement {
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+            AnalyticsEvents.ad(context, AnalyticsEvents.NATIVE_FAIL, AnalyticsEvents.FORMAT_NATIVE, id);
                 if (onFailed != null) {
                     onFailed.run();
                 }
@@ -1256,6 +1267,7 @@ public final class AdPlacement {
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.BANNER_LOAD, AnalyticsEvents.FORMAT_BANNER, id);
                 adView.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
                 if (onLoaded != null) {
                     onLoaded.accept(adView);
@@ -1264,6 +1276,7 @@ public final class AdPlacement {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.BANNER_FAIL, AnalyticsEvents.FORMAT_BANNER, id);
                 adView.destroy();
                 if (onFailed != null) {
                     onFailed.run();
@@ -1337,9 +1350,11 @@ public final class AdPlacement {
         }
         onboardingInterPreloadInProgress = true;
         int token = onboardingInterPreloadToken.get();
+        AnalyticsEvents.ad(context, AnalyticsEvents.INTERSTITIAL_PRELOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
         InterstitialAd.load(context.getApplicationContext(), unitId.trim(), new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd ad) {
+                AnalyticsEvents.ad(context, AnalyticsEvents.INTERSTITIAL_LOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
                 if (token != onboardingInterPreloadToken.get()) {
                     return;
                 }
@@ -1349,6 +1364,7 @@ public final class AdPlacement {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                AnalyticsEvents.ad(context, AnalyticsEvents.INTERSTITIAL_FAIL, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
                 if (token != onboardingInterPreloadToken.get()) {
                     return;
                 }
@@ -1402,6 +1418,7 @@ public final class AdPlacement {
             AppOpenAd.load(context, getAppOpenId(), new AdRequest.Builder().build(), new AppOpenAd.AppOpenAdLoadCallback() {
                 @Override
                 public void onAdLoaded(@NonNull AppOpenAd ad) {
+                    AnalyticsEvents.ad(context, AnalyticsEvents.APP_OPEN_AD_LOAD, AnalyticsEvents.FORMAT_APP_OPEN, getAppOpenId());
                     afterDefaultAdPreloadInProgress = false;
                     if (token == afterDefaultPreloadToken.get()) {
                         preloadedAfterDefaultAppOpen = ad;
@@ -1410,6 +1427,7 @@ public final class AdPlacement {
 
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    AnalyticsEvents.ad(context, AnalyticsEvents.APP_OPEN_AD_FAIL, AnalyticsEvents.FORMAT_APP_OPEN, getAppOpenId());
                     afterDefaultAdPreloadInProgress = false;
                 }
             });
@@ -1420,9 +1438,11 @@ public final class AdPlacement {
         }
         afterDefaultAdPreloadInProgress = true;
         int token = afterDefaultPreloadToken.get();
+        AnalyticsEvents.ad(context, AnalyticsEvents.INTERSTITIAL_PRELOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, getOtherInterstitialId());
         InterstitialAd.load(context, getOtherInterstitialId(), new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd ad) {
+                AnalyticsEvents.ad(context, AnalyticsEvents.INTERSTITIAL_LOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, getOtherInterstitialId());
                 afterDefaultAdPreloadInProgress = false;
                 if (token == afterDefaultPreloadToken.get()) {
                     preloadedAfterDefaultInterstitial = ad;
@@ -1431,6 +1451,7 @@ public final class AdPlacement {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                AnalyticsEvents.ad(context, AnalyticsEvents.INTERSTITIAL_FAIL, AnalyticsEvents.FORMAT_INTERSTITIAL, getOtherInterstitialId());
                 afterDefaultAdPreloadInProgress = false;
             }
         });
@@ -1701,9 +1722,11 @@ public final class AdPlacement {
         cache.loading = true;
         int token = cache.token;
         if (LAUNCHER_APP_AD_TYPE_GOOGLE_INTER.equals(type)) {
+            AnalyticsEvents.ad(app, AnalyticsEvents.INTERSTITIAL_PRELOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
             InterstitialAd.load(app, unitId, new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
                 @Override
                 public void onAdLoaded(@NonNull InterstitialAd ad) {
+                    AnalyticsEvents.ad(app, AnalyticsEvents.INTERSTITIAL_LOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
                     if (token != cache.token) {
                         return;
                     }
@@ -1714,6 +1737,7 @@ public final class AdPlacement {
 
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    AnalyticsEvents.ad(app, AnalyticsEvents.INTERSTITIAL_FAIL, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
                     if (token == cache.token) {
                         cache.loading = false;
                     }
@@ -1725,6 +1749,7 @@ public final class AdPlacement {
             AppOpenAd.load(app, unitId, new AdRequest.Builder().build(), new AppOpenAd.AppOpenAdLoadCallback() {
                 @Override
                 public void onAdLoaded(@NonNull AppOpenAd ad) {
+                    AnalyticsEvents.ad(app, AnalyticsEvents.APP_OPEN_AD_LOAD, AnalyticsEvents.FORMAT_APP_OPEN, unitId);
                     if (token != cache.token) {
                         return;
                     }
@@ -1735,6 +1760,7 @@ public final class AdPlacement {
 
                 @Override
                 public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                    AnalyticsEvents.ad(app, AnalyticsEvents.APP_OPEN_AD_FAIL, AnalyticsEvents.FORMAT_APP_OPEN, unitId);
                     if (token == cache.token) {
                         cache.loading = false;
                     }
@@ -1743,6 +1769,7 @@ public final class AdPlacement {
             return;
         }
         new AdLoader.Builder(app, unitId).forNativeAd(nativeAd -> {
+            AnalyticsEvents.ad(app, AnalyticsEvents.NATIVE_LOAD, AnalyticsEvents.FORMAT_NATIVE, unitId);
             if (token != cache.token) {
                 nativeAd.destroy();
                 return;
@@ -1753,6 +1780,7 @@ public final class AdPlacement {
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                AnalyticsEvents.ad(app, AnalyticsEvents.NATIVE_FAIL, AnalyticsEvents.FORMAT_NATIVE, unitId);
                 if (token == cache.token) {
                     cache.loading = false;
                 }
@@ -2017,6 +2045,7 @@ public final class AdPlacement {
         };
         handler.postDelayed(timeout, INTERSTITIAL_LOADING_DIALOG_TIMEOUT_MS);
         AdLoader loader = new AdLoader.Builder(activity, nativeId).forNativeAd(nativeAd -> {
+            AnalyticsEvents.ad(activity, AnalyticsEvents.NATIVE_LOAD, AnalyticsEvents.FORMAT_NATIVE, nativeId);
             handler.removeCallbacks(timeout);
             dismissInterstitialLoadingDialog(dialog);
             if (activity.isFinishing()) {
@@ -2028,6 +2057,7 @@ public final class AdPlacement {
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.NATIVE_FAIL, AnalyticsEvents.FORMAT_NATIVE, nativeId);
                 handler.removeCallbacks(timeout);
                 dismissInterstitialLoadingDialog(dialog);
                 if (quizOnFail && QuizAds.showNativeFull(activity, () -> notifyComplete(listener, completed))) {
@@ -2252,6 +2282,7 @@ public final class AdPlacement {
         InterstitialAd.load(activity, interstitialId, new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd ad) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.INTERSTITIAL_LOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, interstitialId);
                 if (token != interstitialLoadToken.get()) {
                     return;
                 }
@@ -2277,6 +2308,7 @@ public final class AdPlacement {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.INTERSTITIAL_FAIL, AnalyticsEvents.FORMAT_INTERSTITIAL, interstitialId);
                 if (token != interstitialLoadToken.get()) {
                     return;
                 }
@@ -2333,6 +2365,7 @@ public final class AdPlacement {
         AppOpenAd.load(activity, appOpenUnitId, new AdRequest.Builder().build(), new AppOpenAd.AppOpenAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull AppOpenAd ad) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.APP_OPEN_AD_LOAD, AnalyticsEvents.FORMAT_APP_OPEN, appOpenUnitId);
                 if (token != appOpenLoadToken.get() || activity.isFinishing()) {
                     dismissInterstitialLoadingDialog(loadingDialog);
                     if (quizOnFail && !activity.isFinishing()
@@ -2364,6 +2397,7 @@ public final class AdPlacement {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                AnalyticsEvents.ad(activity, AnalyticsEvents.APP_OPEN_AD_FAIL, AnalyticsEvents.FORMAT_APP_OPEN, appOpenUnitId);
                 if (token != appOpenLoadToken.get()) {
                     return;
                 }

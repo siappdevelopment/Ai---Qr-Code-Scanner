@@ -179,6 +179,9 @@ private fun QrPreviewScreen(
     val context = LocalContext.current
     val repository = remember { HistoryRepositoryProvider.get(context) }
     val scope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        com.qrcode.scanner.launcher.common.AnalyticsEvents.log(context, com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_PREVIEW_VIEW, "qr_type", category.name)
+    }
 
     var style by remember { mutableStateOf(initialStyle) }
     var bitmap by remember { mutableStateOf<Bitmap?>(null) }
@@ -310,6 +313,9 @@ private fun QrPreviewScreen(
                 onClick = {
                     withExportBmp { bmp ->
                         val result = QrExportHelper.shareBitmap(context, bmp, displayTitle)
+                        if (result.success) {
+                            com.qrcode.scanner.launcher.common.AnalyticsEvents.log(context, com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_SHARE, "qr_type", category.name)
+                        }
                         if (!result.success) {
                             Toast.makeText(context, result.message, Toast.LENGTH_SHORT).show()
                         }
@@ -464,6 +470,9 @@ private fun QrPreviewScreen(
                                     val saved = withContext(Dispatchers.IO) {
                                         QrExportHelper.savePngToGallery(context, bmp)
                                     }
+                                    if (saved.success) {
+                                        com.qrcode.scanner.launcher.common.AnalyticsEvents.log(context, com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_SAVE, "qr_type", category.name)
+                                    }
                                     if (!saved.success) {
                                         Toast.makeText(context, saved.message, Toast.LENGTH_SHORT).show()
                                     }
@@ -487,8 +496,10 @@ private fun QrPreviewScreen(
                                     context.getString(R.string.qr_preview_toast_generated),
                                     Toast.LENGTH_SHORT
                                 ).show()
+                                com.qrcode.scanner.launcher.common.AnalyticsEvents.log(context, com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_GENERATE_SUCCESS, "qr_type", category.name)
                                 onSavedAndDone(id)
                             } catch (e: Exception) {
+                                com.qrcode.scanner.launcher.common.AnalyticsEvents.log(context, com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_GENERATE_FAIL, "qr_type", category.name)
                                 Toast.makeText(
                                     context,
                                     e.message ?: context.getString(R.string.qr_preview_toast_unable_save),

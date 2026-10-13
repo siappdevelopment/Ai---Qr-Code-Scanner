@@ -130,6 +130,9 @@ fun ScannerViewfinderScreen(
     safeContentPadding: PaddingValues? = null
 ) {
     val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        com.qrcode.scanner.launcher.common.AnalyticsEvents.log(context, com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_SCANNER_VIEW)
+    }
     val settingsRepository = remember { SettingsRepositoryProvider.get(context) }
     // Null until first DataStore emission — avoids treating Continuous as OFF while prefs load.
     var settingsPreferences by remember { mutableStateOf<SettingsPreferences?>(null) }
@@ -208,6 +211,14 @@ fun ScannerViewfinderScreen(
     var zoomRatio by remember { mutableFloatStateOf(1f) }
     val scanMode = ScanMode.Batch
     var camera by remember { mutableStateOf<Camera?>(null) }
+    // First time the camera is ready on this screen: scanning has started.
+    var scanStartLogged by remember { mutableStateOf(false) }
+    LaunchedEffect(camera) {
+        if (camera != null && !scanStartLogged) {
+            scanStartLogged = true
+            com.qrcode.scanner.launcher.common.AnalyticsEvents.log(context, com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_SCAN_START)
+        }
+    }
     val detectionHandled = remember { AtomicBoolean(false) }
     val continuousSession = remember { ContinuousBatchSession() }
     val continuousFinishStarted = remember { AtomicBoolean(false) }
@@ -317,6 +328,12 @@ fun ScannerViewfinderScreen(
                                 context = context,
                                 vibrateEnabled = prefs?.vibrateOnDetection != false,
                                 beepEnabled = prefs?.beepOnDetection == true
+                            )
+                            com.qrcode.scanner.launcher.common.AnalyticsEvents.log(
+                                context,
+                                com.qrcode.scanner.launcher.common.AnalyticsEvents.QR_SCAN_SUCCESS,
+                                "scan_type", "camera",
+                                "result_type", name
                             )
                             onBarcodeDetected(raw, format, name)
                         }

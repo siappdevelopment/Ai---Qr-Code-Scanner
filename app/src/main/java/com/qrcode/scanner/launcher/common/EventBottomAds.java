@@ -127,6 +127,7 @@ public final class EventBottomAds {
         int request = cache.token;
         cache.nativeLoading = true;
         new AdLoader.Builder(app, unitId).forNativeAd(loaded -> {
+            AnalyticsEvents.ad(app, AnalyticsEvents.NATIVE_LOAD, AnalyticsEvents.FORMAT_NATIVE, unitId);
             if (request != cache.token || !wantsPreload(screenKey) || !useNative(screenKey)) {
                 loaded.destroy();
                 cache.nativeLoading = false;
@@ -141,6 +142,7 @@ public final class EventBottomAds {
         }).withAdListener(new AdListener() {
             @Override
             public void onAdFailedToLoad(LoadAdError adError) {
+                AnalyticsEvents.ad(app, AnalyticsEvents.NATIVE_FAIL, AnalyticsEvents.FORMAT_NATIVE, unitId);
                 if (request == cache.token) {
                     cache.nativeLoading = false;
                 }
@@ -168,6 +170,7 @@ public final class EventBottomAds {
         adView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
+                AnalyticsEvents.ad(app, AnalyticsEvents.BANNER_LOAD, AnalyticsEvents.FORMAT_BANNER, unitId);
                 if (request != cache.token || !wantsPreload(screenKey) || useNative(screenKey)) {
                     adView.destroy();
                     cache.bannerLoading = false;
@@ -180,6 +183,7 @@ public final class EventBottomAds {
 
             @Override
             public void onAdFailedToLoad(LoadAdError adError) {
+                AnalyticsEvents.ad(app, AnalyticsEvents.BANNER_FAIL, AnalyticsEvents.FORMAT_BANNER, unitId);
                 if (request == cache.token) {
                     cache.bannerLoading = false;
                     adView.destroy();

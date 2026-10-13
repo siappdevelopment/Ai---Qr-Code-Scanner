@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -53,6 +54,9 @@ fun SplashScreen(
 ) {
     val context = LocalContext.current
     val view = LocalView.current
+    LaunchedEffect(Unit) {
+        com.qrcode.scanner.launcher.common.AnalyticsEvents.log(context, com.qrcode.scanner.launcher.common.AnalyticsEvents.SPLASH_VIEW)
+    }
     val repository = remember { SettingsRepositoryProvider.get(context) }
     val initialPreferences = remember(context) {
         SettingsPreferences(

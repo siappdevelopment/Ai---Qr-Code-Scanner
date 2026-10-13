@@ -1,0 +1,276 @@
+================================================================================
+FIREBASE CUSTOM EVENTS AUDIT  -  QR Code & Scanner (com.qrcode.scanner.app)
+================================================================================
+
+Reference guide (primary): QR_Code_Scanner_Generator_Firebase_Event_Naming_Guide.pdf
+  (Downloads folder, 75 event names in 8 sections + recommended parameters + naming rules).
+  The other PDFs in Downloads (App_Firebase_Event_Naming_Guide.pdf and the two
+  SMS_App guides) were not used: they are for a generic app / an SMS app.
+
+How the audit was done
+  - The PDF was read fully (events, parameters, naming rules).
+  - The code was searched for every Firebase Analytics call (FirebaseAnalytics, logEvent,
+    AppUtils.trackScreen / trackScreenOnce / TrackOnce).  All existing events are listed in
+    section A and were NOT modified.
+  - New events follow the guide's naming rules: lowercase, underscores, no Activity class
+    names, variable data in parameters.
+  - IMPORTANT (not verified): the Gradle build could not be run in this environment (Gradle
+    fails here with "Unable to establish loopback connection"), and the new events were not
+    observed on a device / in DebugView.  Please build the app and check DebugView.
+
+Verified facts are stated as such.  Anything not verified is marked  [UNVERIFIED].
+
+--------------------------------------------------------------------------------
+A. EVENTS ALREADY PRESENT  (all preserved, none modified)
+--------------------------------------------------------------------------------
+All custom events below are logged through AppUtils.trackScreenEvent()
+(AppUtils.java), which calls FirebaseAnalytics.logEvent(<name>, bundle{value=1}).
+They use UPPERCASE names (the guide asks for lowercase); they were left exactly as they are.
+
+Type "custom" = logged by the app code.  Once = logged only the first time per install
+(AppUtils.trackScreenOnce stores the name in SharedPreferences "analytics_events").
+Always = logged every time.
+
+ 1. CAMERA_GRANTED                 custom, Once
+      Purpose : camera permission granted.
+      Where   : AppUtils.trackCameraPermissionGrantedOnce(), called from PermissionActivity.
+      Fires   : when the Permission screen sees the camera permission granted.
+ 2. READ_PHONE_STATE_GRANTED       custom, Once
+      Purpose : phone-state permission granted (needed for Call End).
+      Where   : AppUtils.trackPhoneStatePermissionGrantedOnce(), called from PermissionActivity
+                and DefaultActivity.
+      Fires   : when the permission is found granted on those screens.
+ 3. OVERLAY_PERMISSION_GRANTED     custom, Once
+      Purpose : "display over other apps" permission granted.
+      Where   : AppUtils.trackOverlayPermissionGrantedOnce(), called from PermissionActivity.
+      Fires   : when the overlay permission is found granted after the settings screen.
+ 4. POST_NOTIFICATIONS_GRANTED     custom, Once
+      Where   : StartupFlow (TrackOnce.trackScreenOnce).
+      Fires   : when the notification permission is granted in the startup flow.
+ 5. DEFAULT_HOME_APP_SET           custom, Once
+      Purpose : the app became the default Home app.
+      Where   : AppUtils.navigateAfterDefaultAppSetup(), DefaultActivity, DefaultHomePromptHelper.
+ 6. DEFAULT_HOME_APP_CANCEL        custom, Once
+      Purpose : the default-Home dialog was cancelled / the app did not become default.
+      Where   : AppUtils.navigateAfterDefaultAppSetup(), DefaultHomePromptHelper.
+ 7. FULL_NATIVE_LOAD               custom, Always
+      Purpose : the full-screen native ad for the notification (FCM) flow loaded.
+      Where   : ADSNativeFullDisplay.
+ 8. FULL_NATIVE_FAILED             custom, Always
+      Where   : ADSNativeFullDisplay (ad failed to load).
+ 9. CL_END_APP_OPEN_LOAD           custom, Always   (Call End back ad, App Open loaded)
+10. CL_END_APP_OPEN_FAILED         custom, Always
+11. CL_END_INTER_LOAD              custom, Always   (Call End back ad, Interstitial loaded)
+12. CL_END_INTER_FAILED            custom, Always
+13. CL_END_NATIVE_LOAD             custom, Always   (Call End back ad, Native loaded)
+14. CL_END_NATIVE_FAILED           custom, Always
+      9-14 : CallEndBackAd.java, in the Google ad load callbacks.
+15. ad_impression                  Firebase STANDARD event name, logged manually by the code
+      Purpose : ad revenue / impression (params: ad_platform="Google Ad Manager", currency, value).
+      Where   : AdPlacement.logAdRevenue(), used as the paid-event listener of interstitial,
+                app open and native ads (21 call sites).
+      Fires   : on each paid event of those ads.
+
+Existing events preserved: 14 custom + 1 standard-name event = 15.
+
+--------------------------------------------------------------------------------
+B. NEWLY ADDED EVENTS  (54)
+--------------------------------------------------------------------------------
+Single helper: launcher/common/AnalyticsEvents.java  (new file).
+  AnalyticsEvents.log(context, name, key, value, ...)  and  AnalyticsEvents.ad(...).
+  Every new event carries the guide's common parameters  platform="android"  and
+  app_version=<versionName>.  Failures inside the helper are swallowed (never crash the app).
+Create-flow helper: ui/screens/create/CreateAnalytics.kt  (new file).
+
+Why none of them duplicates an existing or Firebase-managed event: none of these names exist
+in the code (section A) and none is in Firebase's automatic event list, with the one
+caution marked on app_open below.
+
+B1. Core app flow  (11)
+  app_open
+    Why     : guide "App Open".  Not logged anywhere before.
+    Where   : ProcessAppOpen.onStart()  (process lifecycle).
+    Fires   : every time the app comes to the foreground (Firebase's definition of app_open).
+    Params  : platform, app_version.
+    [UNVERIFIED] Firebase does not list app_open among its automatically collected events
+      (it is a standard event you log yourself), but this was not checked in the Console.
+      If the Console shows app_open counts from before this change, remove this one call.
+  splash_view       SplashScreen composable (ui/screens/splash/SplashScreen.kt); when the splash is shown.
+  language_view     LanguageActivity.onCreate (first creation only: savedInstanceState == null).
+  intro_1_view      Intro1Activity.onCreate  (first creation only).
+  intro_2_view      Intro2Activity.onCreate  (first creation only).
+  intro_3_view      Intro3Activity.onCreate  (first creation only).
+  main_view         MainActivity.onCreate (first creation only): the QR app main host.
+  permission_view   PermissionActivity.onCreate (first creation only).
+  launcher_home_view  LauncherHomeActivity.onCreate (first creation only): the launcher shell.
+  launcher_settings_view  LauncherSettingsActivity.onCreate (first creation only).
+  settings_view     SettingsScreen composable (QR app Settings tab); each time the tab is entered.
+  Params for all of these: platform, app_version.
+
+B2. QR scanner  (8)
+  qr_scanner_view   ScannerViewfinderScreen composable (used by ScannerActivity and the Scan tab):
+                    each time the scanner screen is shown.
+  qr_scan_start     same screen: first time the camera is bound and ready on that screen
+                    (once per screen visit, not on lens switch).
+  qr_scan_success   a code was accepted.  Camera: ScannerViewfinderScreen, inside the single-shot
+                    accept guard (detectionHandled.compareAndSet).  Gallery: GalleryCropActivity,
+                    onDetectedSingle.   Params: scan_type = camera | gallery, result_type = barcode
+                    format name (e.g. QR_CODE).
+  qr_scan_fail      GalleryCropActivity.onDetectionFailed (no code found / detection error from a
+                    gallery image).   Params: scan_type = gallery.
+                    Not logged for the live camera: there is no discrete "failed scan" for the
+                    camera (a frame without a code is normal), so nothing would be accurate.
+  qr_result_view    ScanResultScreen composable (shared by the scan result and the History detail
+                    screen): when the result is shown.   Params: result_type = detected type.
+  qr_result_open    "Open in browser" button on the result.   Params: result_type, action=open.
+                    The automatic "auto open URL" setting is NOT logged (not a user action).
+  qr_result_copy    Copy / Copy link button.   Params: result_type, action=copy.
+  qr_result_share   Share button.   Params: result_type, action=share.
+
+B3. QR generator  (8)
+  qr_edit_view      CommonQrFormScreen and WifiQrFormScreen (create forms): when a form opens.
+                    Params: qr_type = QrCategoryType name.
+  qr_generate_start the Generate button on the form after validation passed, just before the
+                    preview opens.   Params: qr_type.
+  qr_preview_view   QrPreviewScreen: when the preview screen is shown.   Params: qr_type.
+  qr_generate_success  QrPreviewScreen "Save & Create": the QR was created and stored in History.
+                    Params: qr_type.
+  qr_generate_fail  same button: an exception while saving / creating.   Params: qr_type.
+  qr_save           same button: the PNG was written to the gallery (QrExportHelper result.success).
+                    Params: qr_type.
+  qr_share          preview Share icon, only when the share sheet was started (result.success).
+                    Params: qr_type.
+  barcode_view      create form of a barcode category (BARCODE or any barcode symbology type).
+                    Params: qr_type.   (Fires together with qr_edit_view.)
+
+B4. Type-specific create-form views  (18)
+  Fired by CreateAnalytics.logFormView() together with qr_edit_view, no parameters
+  except the common ones.
+  General: general_website_view (WEBSITE), general_text_view (PLAIN_TEXT),
+           general_contact_view (CONTACT), general_phone_view (PHONE), general_email_view (EMAIL),
+           general_sms_view (SMS), general_calendar_view (CALENDAR), general_wifi_view (WIFI).
+  Social : social_facebook_view, social_instagram_view, social_linkedin_view, social_paypal_view,
+           social_snapchat_view, social_spotify_view, social_tiktok_view, social_twitter_view,
+           social_whatsapp_view, social_youtube_view.
+  App types the guide does not name (Location, App link) get qr_edit_view only.
+
+B5. Ads  (9)  -  load / fail / preload of Google ads
+  Names: banner_load, banner_fail, native_load, native_fail, interstitial_load,
+         interstitial_fail, interstitial_preload, app_open_ad_load, app_open_ad_fail.
+  Params : ad_format (banner | native | interstitial | app_open), ad_unit (the ad unit id).
+           (The guide's "placement" and "mediation_source" are not sent: no reliable value
+           exists at these call sites.)
+  Where  : the Google ad load callbacks (onAdLoaded / onAdFailedToLoad / native load lambda):
+           AdPlacement (banner x3, native x4, interstitial x5, app open x3 load sites),
+           ScreenInterAds (2 sites), ProcessAppOpen (App Open), EventBottomAds (native, banner).
+  Fires  : *_load when Google reports the ad loaded, *_fail when Google reports a load failure,
+           interstitial_preload when a preload request is started (right-swipe, onboarding,
+           after-default, event back-ad, ScreenInterAds preload).
+  Not logged for: Quiz ads (not Google ads); Call End back ad and the FCM full native ad,
+           which already have their own events (CL_END_*, FULL_NATIVE_*, section A) - logging
+           them again would duplicate those events.
+  Note   : a preloaded ad produces interstitial_preload (request) and later interstitial_load /
+           interstitial_fail (result): they are different moments, not duplicates.
+
+--------------------------------------------------------------------------------
+C. EVENTS NOT ADDED  (21 of the 75 guide events)
+--------------------------------------------------------------------------------
+C1. Excluded because they are unnecessary / not applicable to this app
+  rewarded_load, rewarded_impression, rewarded_complete, rewarded_fail
+      The app has no rewarded ads (no RewardedAd anywhere in the code).
+  batch_scan_view, batch_scan_start, batch_scan_success, batch_scan_fail
+      Continuous / batch scanning is switched off in the code
+      (ScannerViewfinderScreen: "val continuousBatchScan = false", setting removed), so these
+      screens cannot be reached by a user.
+  faq_view
+      There is no FAQ screen in the app.
+  general_vcard_view
+      No separate vCard screen: contact data is created in the Contact form (general_contact_view).
+  qr_collection_view, qr_templates_view, collection_view
+      The guide gives no description, and no screen in the app could be matched to
+      "QR Collection", "QR Templates" or "Collection" without guessing (the app's
+      CollectionActivity is the data-collection consent step of onboarding, not a QR collection).
+      Not added to avoid inventing a meaning.   [Needs your confirmation which screen is meant.]
+
+C2. Excluded because an equivalent event already exists (different name)
+  permission_granted
+      Existing: CAMERA_GRANTED, READ_PHONE_STATE_GRANTED, OVERLAY_PERMISSION_GRANTED,
+      POST_NOTIFICATIONS_GRANTED (section A) cover the same purpose per permission.  The
+      permission_type / result parameters of the guide are expressed by the event name there.
+  banner_impression, native_impression, interstitial_impression, app_open_ad_impression
+      Existing: ad_impression (logged by AdPlacement.logAdRevenue on every paid ad event, with
+      revenue).  A second set of per-format impression events would duplicate it.  The
+      per-format breakdown is the only difference; the existing event cannot be changed (rule).
+
+C3. Excluded because Firebase / AdMob is expected to collect it  [UNVERIFIED - see section D]
+  banner_click, native_click, interstitial_click
+      Firebase's automatic event list contains ad_click when AdMob is linked to the Firebase
+      project.  The PDF does not say this, and the project's AdMob link was not checked.
+
+Events intentionally not added: 21.
+
+--------------------------------------------------------------------------------
+D. FIREBASE-SIDE EVENTS  (documented; no code change needed)
+--------------------------------------------------------------------------------
+The PDF itself does not name any Firebase-collected event, so everything below comes from
+Firebase's general documentation and is marked for Console verification.
+  screen_view   [UNVERIFIED in this project]  Firebase automatically logs screen_view for each
+                Activity.  The guide says not to use Activity class names as event names, so
+                the *_view events above are separate custom events.  No code change.
+  ad_impression Already logged manually by the app (A15).  If AdMob is linked to Firebase,
+                Firebase may also record its own ad_impression: check the Console for double
+                counting.  Not changed (existing event).
+  ad_click      [UNVERIFIED]  Expected from the AdMob link; see C3.  No code change.
+  first_open / session_start / user_engagement  Automatic Firebase events; not part of the guide.
+  app_open      Not in Firebase's automatic list per its documentation (see B1) [UNVERIFIED].
+
+--------------------------------------------------------------------------------
+E. FINAL SUMMARY
+--------------------------------------------------------------------------------
+  Guide events reviewed                          : 75
+  Existing events preserved                      : 15  (14 custom UPPERCASE + ad_impression)
+  New custom events added                        : 54
+       core flow 11, scanner 8, generator 8, type views 18, ads 9
+  Guide events intentionally not added           : 21
+       (rewarded 4, batch 4, impressions 4, clicks 3, collection/templates 3,
+        permission_granted 1, faq 1, vcard 1)
+  Firebase-managed events documented             : 4  (screen_view, ad_click, ad_impression
+                                                       duplicate risk, first_open/session_start)
+  Items that could not be verified               :
+       - the build (Gradle could not run here) and the events at run time (DebugView),
+       - whether Firebase already counts app_open,
+       - whether AdMob is linked (ad_click / ad_impression behaviour),
+       - which screen the guide means by "QR Collection", "QR Templates", "Collection".
+
+Recommended parameters of the guide NOT sent: screen_name, source, template_type, scan_count,
+result_count, platform (social), permission_type, placement, mediation_source.  Reason: there is
+no value in the code for them at the event points, and inventing values was not allowed.
+Sent: platform, app_version (all), qr_type, scan_type, result_type, action, ad_format, ad_unit.
+
+--------------------------------------------------------------------------------
+MODIFIED / NEW FILES
+--------------------------------------------------------------------------------
+NEW   launcher/common/AnalyticsEvents.java        event names + log helper
+NEW   ui/screens/create/CreateAnalytics.kt        create-form events + type mapping
+MOD   MainActivity.kt                             main_view
+MOD   launcher/activities/LanguageActivity.java            language_view
+MOD   launcher/activities/Intro1Activity.java, Intro2Activity.java, Intro3Activity.java
+                                                           intro_1/2/3_view
+MOD   launcher/activities/PermissionActivity.java          permission_view
+MOD   launcher/activities/LauncherHomeActivity.java        launcher_home_view
+MOD   launcher/activities/LauncherSettingsActivity.java    launcher_settings_view
+MOD   launcher/common/ProcessAppOpen.java         app_open, app_open_ad_load / _fail
+MOD   launcher/common/AdPlacement.java            ad load / fail / preload events (34 lines)
+MOD   launcher/common/ScreenInterAds.java         interstitial load / fail / preload
+MOD   launcher/common/EventBottomAds.java         native / banner load / fail
+MOD   ui/screens/splash/SplashScreen.kt           splash_view
+MOD   ui/screens/settings/SettingsScreen.kt       settings_view
+MOD   ui/screens/scan/ScannerViewfinderScreen.kt  qr_scanner_view, qr_scan_start, qr_scan_success (camera)
+MOD   ui/screens/scan/GalleryCropActivity.kt      qr_scan_success / qr_scan_fail (gallery)
+MOD   ui/screens/scan/ScanResultActivity.kt       qr_result_view / open / copy / share
+MOD   ui/screens/create/CommonQrFormActivity.kt   qr_edit_view, type views, qr_generate_start
+MOD   ui/screens/create/WifiQrActivity.kt         same, for the Wi-Fi form
+MOD   ui/screens/create/QrPreviewActivity.kt      qr_preview_view, qr_generate_success / fail, qr_save, qr_share
+Each change only adds a logging call; no existing line of logic, UI, navigation, ads or Remote
+Config behaviour was changed, and no existing event was touched.
+================================================================================

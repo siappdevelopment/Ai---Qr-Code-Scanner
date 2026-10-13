@@ -189,6 +189,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        com.qrcode.scanner.launcher.helpers.DefaultHomePromptHelper.reportDefaultSetIfRequested(this);
         AdPlacement.prepareRightSwipePreload(this);
         hideLauncherFromRecents();
         if (shouldHandleAfterDefaultSetup()) {

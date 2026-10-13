@@ -26,6 +26,7 @@ public final class DefaultHomePopupHost {
     }
 
     public void onHostResume() {
+        DefaultHomePromptHelper.reportDefaultSetIfRequested(activity);
         helper.onResume();
         Intent intent = activity.getIntent();
         if (intent == null || !intent.getBooleanExtra(EXTRA_RIGHT_SWIPE_QR_VISIBLE, false)) {

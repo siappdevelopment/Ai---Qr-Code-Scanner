@@ -66,6 +66,31 @@ public final class DefaultHomePromptHelper {
         this.activity = activity;
     }
 
+    /**
+     * The system makes this app the default Home and restarts the launcher, so the result callback of the screen that
+     * asked can be gone. The request is therefore remembered, and the next time the launcher resumes as the default
+     * Home app the DEFAULT_HOME_APP_SET event is sent (once, as before).
+     */
+    private static void markRoleRequestPending(Context context) {
+        if (context == null) {
+            return;
+        }
+        context.getApplicationContext().getSharedPreferences("default_home_role_request", Context.MODE_PRIVATE)
+                .edit().putBoolean("pending", true).apply();
+    }
+
+    public static void reportDefaultSetIfRequested(@Nullable Context context) {
+        if (context == null) {
+            return;
+        }
+        android.content.SharedPreferences prefs = context.getApplicationContext()
+                .getSharedPreferences("default_home_role_request", Context.MODE_PRIVATE);
+        if (prefs.getBoolean("pending", false) && AppUtils.isDefaultHomeApp(context)) {
+            prefs.edit().putBoolean("pending", false).apply();
+            TrackOnce.trackScreenOnce(context, "DEFAULT_HOME_APP_SET");
+        }
+    }
+
     public void setRoleFlowListener(@Nullable RoleFlowListener listener) {
         this.roleFlowListener = listener;
     }
@@ -134,6 +159,7 @@ public final class DefaultHomePromptHelper {
         defaultHomePopupLaunchInProgress = true;
         waitingForDefaultHome = true;
         defaultHomeSelectionStarted = true;
+        markRoleRequestPending(getContext());
         roleRequestFromClick = false;
         roleLauncher.launch(roleIntent);
     }
@@ -155,6 +181,7 @@ public final class DefaultHomePromptHelper {
         Intent roleIntent = AppUtils.createDefaultHomeRoleRequestIntent(getContext());
         roleRequestFromClick = true;
         roleRequestLaunchedAt = android.os.SystemClock.elapsedRealtime();
+        markRoleRequestPending(getContext());
         if (roleIntent != null && roleLauncher != null) {
             roleLauncher.launch(roleIntent);
             return;

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">QR Code &amp; Scanner</string>
     <string name="main_app_name">QR Code &amp; Barcode Scanner Home</string>
-    <string name="app_name_launcher">#QR Code &amp; Scanner</string>
+    <string name="app_name_launcher">#QR Code &amp; Barcode Scanner Home</string>
 
 
     <string name="action_back">Back</string>

@@ -1,0 +1,32 @@
+{
+  "_comment": "Root key Cl_End_Screen_Show turns the whole Call End screen on/off. Everything else lives in Screen -> ClEndScreen. ClEnd_Ad_Type = banner | native. ClEnd_Back_Ad_Type = inter | appopen | native (one format) or alternate (follow ClEnd_Back_Ad_Sequence: [[format, how many times in a row], ...], the position is stored in cl_end_ad_preferences/back_ad_sequence_cursor).",
+  "Cl_End_Screen_Show": true,
+  "Screen": {
+    "ClEndScreen": {
+      "ClEnd_Ad_Show": true,
+      "ClEnd_Ad_Type": "banner",
+      "ClEnd_Banner_Id": "ca-app-pub-3940256099942544/9214589741",
+      "ClEnd_Native_Id": "ca-app-pub-3940256099942544/2247696110",
+
+      "ClEnd_Back_Ad_Show": true,
+      "ClEnd_Back_Ad_Type": "alternate",
+      "ClEnd_Back_Ad_Sequence": [["inter", 2], ["native", 1], ["appopen", 1]],
+      "ClEnd_Back_Ad_Show_After_Day": 1,
+      "ClEnd_Back_Ad_Show_Per_Day": 4,
+      "ClEnd_Back_Ad_Interstitial_Id": "ca-app-pub-3940256099942544/1033173712",
+      "ClEnd_Back_Ad_Native_Id": "",
+      "ClEnd_Back_Ad_Country_IP": false,
+      "ClEnd_Back_Ad_Show_Country": [],
+
+      "Notification_Install_Days": 0,
+      "Notification_Call_Install_Days": 0,
+      "Notification_Call_Overlay_Install_Days": 0,
+      "All_Allow_Permission_Show_Notification": false,
+      "Notification_Back_Ad_Show": false,
+      "Notification_Close_Button_Show": false,
+      "Notification_Country": [],
+      "Notification_Call_Country": [],
+      "Notification_Call_Overlay_Country": []
+    }
+  }
+}

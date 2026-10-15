@@ -32,7 +32,7 @@ import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 import com.qrcode.scanner.data.settings.SettingsRepositoryKt;
 import com.qrcode.scanner.launcher.adapters.ClEndPagerAdapter;
 import com.qrcode.scanner.launcher.common.ADSNativeFullDisplay;

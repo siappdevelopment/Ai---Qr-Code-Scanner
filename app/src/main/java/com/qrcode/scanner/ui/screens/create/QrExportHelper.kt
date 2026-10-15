@@ -14,7 +14,7 @@ import android.print.PrintDocumentInfo
 import android.print.PrintManager
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
-import com.qrcode.scanner.app.R
+import com.qrcode.scanner.spapp.R
 import java.io.File
 import java.io.FileOutputStream
 

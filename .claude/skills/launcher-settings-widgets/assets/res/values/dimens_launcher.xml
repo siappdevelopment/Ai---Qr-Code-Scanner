@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="launcher_native_list_ad_height">@dimen/_195sdp</dimen>
+    <dimen name="launcher_native_list_spacer_height">@dimen/_215sdp</dimen>
+    <dimen name="launcher_native_list_margin">@dimen/_10sdp</dimen>
+</resources>

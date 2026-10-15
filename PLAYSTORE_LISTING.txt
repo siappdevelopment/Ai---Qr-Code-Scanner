@@ -1,0 +1,91 @@
+PLAY STORE LISTING - QR Code & Scanner
+(Play Console limits: Title 30, Short description 80, Full description 4000 characters)
+
+=====================================================
+APP TITLE (pick one, max 30)
+=====================================================
+1. QR Code & Barcode Scanner
+2. QR Scanner & QR Generator
+3. QR Code & Scanner
+
+=====================================================
+SHORT DESCRIPTION (pick one, max 80)
+=====================================================
+1. Scan, create & share QR codes and barcodes fast. Free QR reader and generator.
+2. Fast QR & barcode scanner, QR maker, history and a smart home screen launcher.
+3. Scan any QR code or barcode, create custom QR codes, and save your history.
+
+=====================================================
+FULL DESCRIPTION (max 4000)
+=====================================================
+QR Code & Scanner is a fast, simple and powerful QR code reader, barcode scanner and QR code generator in one app. Point your camera at any QR code or barcode and get the result in a second. Need your own code? Create a QR code or barcode in a few taps, style it and share it.
+
+Everything works right on your phone: no sign-up and no account needed.
+
+📷 FAST QR & BARCODE SCANNER
+• Scan QR codes and barcodes instantly with your camera
+• Auto-focus and pinch-style zoom for small or far-away codes
+• Flashlight (torch) for scanning in the dark
+• Switch between front and back camera
+• Continuous (batch) scan mode: scan many codes one after another and review them together
+• Vibrate and beep feedback when a code is scanned (you can turn them off)
+• Open websites automatically after a scan (optional)
+
+🖼️ SCAN FROM GALLERY
+• Pick any photo or screenshot and scan the code inside it
+• Crop, rotate and flip the picture to select the exact code
+• Several codes in one picture? Choose the one you want to open
+
+🛠️ CREATE QR CODES & BARCODES
+Make a code for almost anything:
+• Website / URL, plain text, contact, phone number, email, SMS
+• Wi-Fi network (name, security type, password, hidden network)
+• WhatsApp, location, calendar event, app link
+• Social: Facebook, Instagram, YouTube, X (Twitter), TikTok, Snapchat, LinkedIn, Spotify, PayPal
+• Barcodes: Code 128, Code 39, Code 93, Codabar, ITF, EAN-13, EAN-8, UPC-A, UPC-E, Data Matrix, PDF 417, Aztec
+
+🎨 CUSTOMIZE YOUR QR CODE
+• Pick your own colors and color palette
+• Change the body pattern and the corner (eye) style
+• Add a frame around the code
+• Put your logo or icon in the center
+• Save as image, export as PNG or SVG, and share with any app
+
+🕘 HISTORY & FAVORITES
+• Every scan and every code you create is saved on your phone
+• Search your history by text, link or title
+• Filter by Scanned or Created, grouped by Today, Yesterday and Earlier
+• Mark favorites for quick access
+• Delete one item or clear everything whenever you want
+
+🏠 SMART HOME SCREEN LAUNCHER (OPTIONAL)
+• Use the app as your home screen with a clean clock, date and weather card
+• App drawer with search, long-press for App Info and Uninstall
+• Quick dock for Phone, Messages, Browser and Camera
+• Swipe right from the home screen to open the QR scanner
+• Choose app icon size, label size and sort order (A-Z, Z-A, install date)
+• Home screen widgets: scan and create shortcuts in different styles
+• You decide: set it as the default home app only if you want to
+
+✨ MORE
+• Light and dark theme
+• Many app languages
+• Small, smooth and easy to use
+• Works without sending your scans to us
+
+HOW TO USE
+1. Open the app and allow camera access
+2. Point the camera at a QR code or barcode, or tap Gallery to scan a photo
+3. See the result, then open, copy or share it
+4. Tap Create to make your own QR code or barcode
+
+PERMISSIONS
+• Camera: needed to scan codes
+• Notifications, Phone state and Display over other apps: only for optional features such as screens that appear after a call, when a charger is connected, or when an app is installed or removed. You can skip them and still use scanning and creating.
+
+Download QR Code & Scanner now and scan, create and share QR codes and barcodes in seconds. If you like the app, please rate us and share it with your friends. Your feedback helps us improve!
+
+=====================================================
+KEYWORDS TO KEEP IN MIND (already used above)
+=====================================================
+qr code reader, qr scanner, barcode scanner, qr generator, qr code maker, create qr code, wifi qr code, scan from gallery, qr history, qr code widget, home screen launcher

@@ -1,0 +1,26 @@
+<!-- Outside <application> -->
+<queries>
+    <intent><action android:name="android.intent.action.MAIN" /><category android:name="android.intent.category.LAUNCHER" /></intent>
+    <intent><action android:name="android.intent.action.DIAL" /></intent>
+    <intent><action android:name="android.intent.action.SENDTO" /><data android:scheme="smsto" /></intent>
+    <intent><action android:name="android.intent.action.SENDTO" /><data android:scheme="mailto" /></intent>
+    <package android:name="com.google.android.googlequicksearchbox" />
+</queries>
+
+<!-- Inside <application>: the Home activity. HOME + DEFAULT is what makes the app selectable as the Home app. -->
+<activity
+    android:name=".launcher.activities.LauncherHomeActivity"
+    android:clearTaskOnLaunch="true"
+    android:excludeFromRecents="true"
+    android:exported="true"
+    android:launchMode="singleTask"
+    android:screenOrientation="portrait"
+    android:stateNotNeeded="true"
+    android:taskAffinity=""
+    android:theme="@style/Theme.Home">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.HOME" />
+        <category android:name="android.intent.category.DEFAULT" />
+    </intent-filter>
+</activity>

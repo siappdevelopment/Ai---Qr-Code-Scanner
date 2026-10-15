@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.media.AudioManager;
 import android.telephony.TelephonyManager;
 
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 import com.qrcode.scanner.launcher.activities.ChargingScreenActivity;
 import com.qrcode.scanner.launcher.activities.ClEndActivity;
 import com.qrcode.scanner.launcher.activities.EventPromptActivity;

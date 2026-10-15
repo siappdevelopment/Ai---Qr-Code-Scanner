@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Başlatıcı Ayarları</string>
+    <string name="serialize">Sırala</string>
+    <string name="by_name_asc_a_to_z">Ada göre ARTAN (A\'dan Z\'ye)</string>
+    <string name="by_name_desc_z_to_a">Ada göre AZALAN (Z\'den A\'ya)</string>
+    <string name="by_installed_date">Yüklenme Tarihine Göre</string>
+    <string name="preview">Önizleme</string>
+    <string name="label_visibility">Etiket Görünürlüğü</string>
+    <string name="hide_app_name">Uygulama adını gizle</string>
+    <string name="app_icon_size">Uygulama Simge Boyutu</string>
+    <string name="app_label_size">Uygulama Etiket Boyutu</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Uygulama Widget\'ları</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">QR araçlarınıza doğrudan ana ekranınızdan hızlıca erişmek için bir widget seçin.</string>
+    <string name="quick_access">Hızlı Erişim</string>
+    <string name="app_icon_1x1">Uygulama Simgesi 1 x 1</string>
+    <string name="qr_scanner_generator">QR Tarayıcı ve Oluşturucu</string>
+    <string name="create_1_x_1">1 x 1 Oluştur</string>
+    <string name="style_a">Stil A</string>
+    <string name="style_b">Stil B</string>
+    <string name="style_c">Stil C</string>
+    <string name="scan_qr">QR Tara</string>
+    <string name="create_qr">QR Oluştur</string>
+    <string name="widget_pin_not_supported">Bu cihazda widget sabitleme desteklenmiyor</string>
+    <string name="widget_pin_failed">Widget eklenemiyor. Lütfen tekrar deneyin.</string>
+</resources>

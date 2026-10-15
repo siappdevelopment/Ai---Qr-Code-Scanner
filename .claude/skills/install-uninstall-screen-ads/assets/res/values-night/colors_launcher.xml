@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary">#4A78C8</color>
+    <color name="primary_light">#334A78C8</color>
+    <color name="text_primary">@color/text_primary_dark</color>
+    <color name="text_secondary">@color/text_secondary_dark</color>
+    <color name="surface_primary">@color/surface_primary_dark</color>
+    <color name="surface_secondary">@color/surface_secondary_dark</color>
+    <color name="onboarding_native_bg">#242833</color>
+    <color name="big_native_bg">#1E2736</color>
+    <color name="big_native_border">#38425A</color>
+    <color name="ad_background">@color/onboarding_native_bg</color>
+    <color name="ad_shimmer">#2A2F38</color>
+    <color name="splash_ad_card">#242833</color>
+    <color name="splash_ad_stroke">#3A4150</color>
+    <color name="splash_ad_block">#3A4250</color>
+    <color name="launcher_bg">@color/launcher_bg_dark</color>
+    <color name="cl_end_tab_track">#252830</color>
+    <color name="cl_end_tab_stroke">#3A3F4A</color>
+    <color name="home_action_surface">#1A1D24</color>
+    <color name="home_action_stroke">#343944</color>
+    <color name="home_action_icon_well">#1A2433</color>
+    <color name="home_action_icon_well_stroke">#314056</color>
+    <color name="home_action_icon">#4A78C8</color>
+    <color name="dock_scan">#9EBFEE</color>
+    <color name="dock_scan_fill">#339EBFEE</color>
+    <color name="dock_create">#C4A6EE</color>
+    <color name="dock_create_fill">#33C4A6EE</color>
+    <color name="dock_history">#7DCCAE</color>
+    <color name="dock_history_fill">#337DCCAE</color>
+    <color name="dock_settings">#F0A36A</color>
+    <color name="dock_settings_fill">#33F0A36A</color>
+</resources>

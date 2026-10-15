@@ -16,7 +16,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
 import com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;

@@ -1,5 +1,5 @@
 ================================================================================
-FIREBASE CUSTOM EVENTS AUDIT  -  QR Code & Scanner (com.qrcode.scanner.app)
+FIREBASE CUSTOM EVENTS AUDIT  -  QR Code & Scanner (com.qrcode.scanner.spapp)
 ================================================================================
 
 Reference guide (primary): QR_Code_Scanner_Generator_Firebase_Event_Naming_Guide.pdf

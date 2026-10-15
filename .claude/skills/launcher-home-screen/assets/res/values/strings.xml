@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QR Code &amp; Scanner</string>
+    <string name="launcher_default_title">Make Us Your Default</string>
+    <string name="launcher_default_subtitle">Set this your default QR Code launcher app.</string>
+</resources>

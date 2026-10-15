@@ -1,0 +1,16 @@
+{
+  "_comment": "DefaultHome step and the Right Swipe popup. PermissionDefaultScreen also carries the ad of the Permission and DefaultHome screens.",
+  "Show_Screen_Flow": ["Language", "Collection", "Permission", "DefaultHome", "Intro"],
+  "Default_App_Popup_Show": true,
+  "Default_App_Popup_Count": 3,
+  "Screen": {
+    "PermissionDefaultScreen": {
+      "PermissionDefault_Ad_Show": true,
+      "PermissionDefault_Ad_Type": "native",
+      "PermissionDefault_Banner_Id": "ca-app-pub-3940256099942544/9214589741",
+      "PermissionDefault_Native_Id": "ca-app-pub-3940256099942544/2247696110",
+      "After_Default_Ad_Show": true,
+      "After_Default_Ad_Type": "inter"
+    }
+  }
+}

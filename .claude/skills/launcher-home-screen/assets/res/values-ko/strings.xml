@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_default_title">기본값으로 설정하세요</string>
+    <string name="launcher_default_subtitle">이 앱을 기본 QR Code 런처 앱으로 설정하세요.</string>
+</resources>

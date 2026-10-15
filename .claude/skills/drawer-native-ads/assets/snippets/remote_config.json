@@ -1,0 +1,10 @@
+{
+  "_comment": "Inside the profile \"Screen\" object. Quiz priority (QuizAdsDesign.Ad_Priority) switches the slot to Quiz ads.",
+  "Screen": {
+    "LauncherAppScreen": {
+      "LauncherApp_Native_List_Ad_Show": true,
+      "LauncherApp_Native_List_Ad_Show_Per_Day": 24,
+      "LauncherApp_Native_List_Id": "ca-app-pub-3940256099942544/2247696110"
+    }
+  }
+}

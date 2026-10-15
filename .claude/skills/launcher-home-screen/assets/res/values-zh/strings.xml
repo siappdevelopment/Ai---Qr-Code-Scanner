@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_default_title">将我们设为默认</string>
+    <string name="launcher_default_subtitle">将此设为您的默认 QR Code 启动器应用。</string>
+</resources>

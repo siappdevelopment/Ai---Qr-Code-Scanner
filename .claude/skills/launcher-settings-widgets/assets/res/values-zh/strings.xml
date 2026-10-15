@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">启动器设置</string>
+    <string name="serialize">排序</string>
+    <string name="by_name_asc_a_to_z">按名称升序（A 到 Z）</string>
+    <string name="by_name_desc_z_to_a">按名称降序（Z 到 A）</string>
+    <string name="by_installed_date">按安装日期</string>
+    <string name="preview">预览</string>
+    <string name="label_visibility">标签可见性</string>
+    <string name="hide_app_name">隐藏应用名称</string>
+    <string name="app_icon_size">应用图标大小</string>
+    <string name="app_label_size">应用标签大小</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">应用小部件</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">选择一个小部件，直接从主屏幕快速访问您的二维码工具。</string>
+    <string name="quick_access">快速访问</string>
+    <string name="app_icon_1x1">应用图标 1 x 1</string>
+    <string name="qr_scanner_generator">二维码扫描器和生成器</string>
+    <string name="create_1_x_1">创建 1 x 1</string>
+    <string name="style_a">样式 A</string>
+    <string name="style_b">样式 B</string>
+    <string name="style_c">样式 C</string>
+    <string name="scan_qr">扫描二维码</string>
+    <string name="create_qr">创建二维码</string>
+    <string name="widget_pin_not_supported">此设备不支持固定小部件</string>
+    <string name="widget_pin_failed">无法添加小部件。请重试。</string>
+</resources>

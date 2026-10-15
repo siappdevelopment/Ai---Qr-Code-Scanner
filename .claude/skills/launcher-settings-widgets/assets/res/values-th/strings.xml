@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">การตั้งค่าตัวเรียกใช้</string>
+    <string name="serialize">จัดเรียง</string>
+    <string name="by_name_asc_a_to_z">ตามชื่อจากน้อยไปมาก (A ถึง Z)</string>
+    <string name="by_name_desc_z_to_a">ตามชื่อจากมากไปน้อย (Z ถึง A)</string>
+    <string name="by_installed_date">ตามวันที่ติดตั้ง</string>
+    <string name="preview">ดูตัวอย่าง</string>
+    <string name="label_visibility">การมองเห็นป้ายชื่อ</string>
+    <string name="hide_app_name">ซ่อนชื่อแอป</string>
+    <string name="app_icon_size">ขนาดไอคอนแอป</string>
+    <string name="app_label_size">ขนาดป้ายชื่อแอป</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">วิดเจ็ตแอป</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">เลือกวิดเจ็ตเพื่อเข้าถึงเครื่องมือคิวอาร์ของคุณอย่างรวดเร็วจากหน้าจอหลัก</string>
+    <string name="quick_access">การเข้าถึงด่วน</string>
+    <string name="app_icon_1x1">ไอคอนแอป 1 x 1</string>
+    <string name="qr_scanner_generator">สแกนเนอร์ &amp; ตัวสร้างคิวอาร์</string>
+    <string name="create_1_x_1">สร้าง 1 x 1</string>
+    <string name="style_a">สไตล์ A</string>
+    <string name="style_b">สไตล์ B</string>
+    <string name="style_c">สไตล์ C</string>
+    <string name="scan_qr">สแกนคิวอาร์</string>
+    <string name="create_qr">สร้างคิวอาร์</string>
+    <string name="widget_pin_not_supported">อุปกรณ์นี้ไม่รองรับการปักหมุดวิดเจ็ต</string>
+    <string name="widget_pin_failed">ไม่สามารถเพิ่มวิดเจ็ตได้ กรุณาลองอีกครั้ง</string>
+</resources>

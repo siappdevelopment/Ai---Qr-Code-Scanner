@@ -4,7 +4,7 @@ import android.content.Intent;
 
 import androidx.annotation.Nullable;
 
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 /** Charger plug-in / plug-out screen, driven by the "charging_screen" config. */

@@ -21,7 +21,7 @@ import androidx.work.WorkManager;
 
 import com.qrcode.scanner.MainActivity;
 
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 import com.qrcode.scanner.launcher.activities.DefaultActivity;
 
 

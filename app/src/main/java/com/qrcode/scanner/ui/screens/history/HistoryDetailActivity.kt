@@ -29,7 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.qrcode.scanner.app.R
+import com.qrcode.scanner.spapp.R
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.ui.screens.scan.ScanResultScreen
 import com.qrcode.scanner.ui.theme.CobaltPrimary

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Launcher-instellings</string>
+    <string name="serialize">Sorteer</string>
+    <string name="by_name_asc_a_to_z">Volgens naam ASC (A tot Z)</string>
+    <string name="by_name_desc_z_to_a">Volgens naam DESC (Z tot A)</string>
+    <string name="by_installed_date">Volgens installasiedatum</string>
+    <string name="preview">Voorskou</string>
+    <string name="label_visibility">Etiket-sigbaarheid</string>
+    <string name="hide_app_name">Versteek toep-naam</string>
+    <string name="app_icon_size">Toep-ikoon-grootte</string>
+    <string name="app_label_size">Toep-etiket-grootte</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Toep-widgets</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Kies \'n widget om vinnig toegang tot jou QR-nutsmiddels direk vanaf jou tuisskerm te kry.</string>
+    <string name="quick_access">Vinnige toegang</string>
+    <string name="app_icon_1x1">Toep-ikoon 1 x 1</string>
+    <string name="qr_scanner_generator">QR-skandeerder en -genereerder</string>
+    <string name="create_1_x_1">Skep 1 x 1</string>
+    <string name="style_a">Styl A</string>
+    <string name="style_b">Styl B</string>
+    <string name="style_c">Styl C</string>
+    <string name="scan_qr">Skandeer QR</string>
+    <string name="create_qr">Skep QR</string>
+    <string name="widget_pin_not_supported">Widget-vaspenning word nie op hierdie toestel ondersteun nie</string>
+    <string name="widget_pin_failed">Kan nie widget byvoeg nie. Probeer asseblief weer.</string>
+</resources>

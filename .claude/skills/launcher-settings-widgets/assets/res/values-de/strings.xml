@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Launcher-Einstellungen</string>
+    <string name="serialize">Sortieren</string>
+    <string name="by_name_asc_a_to_z">Nach Name ASC (A bis Z)</string>
+    <string name="by_name_desc_z_to_a">Nach Name DESC (Z bis A)</string>
+    <string name="by_installed_date">Nach Installationsdatum</string>
+    <string name="preview">Vorschau</string>
+    <string name="label_visibility">Beschriftungssichtbarkeit</string>
+    <string name="hide_app_name">App-Namen ausblenden</string>
+    <string name="app_icon_size">App-Symbolgröße</string>
+    <string name="app_label_size">App-Beschriftungsgröße</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">App-Widgets</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Wählen Sie ein Widget, um direkt vom Startbildschirm aus schnell auf Ihre QR-Tools zuzugreifen.</string>
+    <string name="quick_access">Schnellzugriff</string>
+    <string name="app_icon_1x1">App-Symbol 1 x 1</string>
+    <string name="qr_scanner_generator">QR-Scanner &amp; Generator</string>
+    <string name="create_1_x_1">1 x 1 erstellen</string>
+    <string name="style_a">Stil A</string>
+    <string name="style_b">Stil B</string>
+    <string name="style_c">Stil C</string>
+    <string name="scan_qr">QR scannen</string>
+    <string name="create_qr">QR erstellen</string>
+    <string name="widget_pin_not_supported">Widget-Anpinnen wird auf diesem Gerät nicht unterstützt</string>
+    <string name="widget_pin_failed">Widget kann nicht hinzugefügt werden. Bitte versuchen Sie es erneut.</string>
+</resources>

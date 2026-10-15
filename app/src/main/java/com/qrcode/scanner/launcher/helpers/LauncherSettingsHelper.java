@@ -5,7 +5,7 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

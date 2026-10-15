@@ -1,0 +1,10 @@
+<!-- Outside <application>: without these the installed-app list is filtered on Android 11+ -->
+<uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" /> <!-- Uninstall from the long-press menu -->
+<queries>
+    <intent>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent>
+</queries>
+<!-- The drawer is a DialogFragment: no manifest entry. It also listens for PACKAGE_ADDED / PACKAGE_REMOVED /
+     PACKAGE_REPLACED with a runtime receiver (registerPackageReceiver), nothing to declare. -->

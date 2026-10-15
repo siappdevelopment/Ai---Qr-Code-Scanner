@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="set_as_default">Stel as verstek</string>
+    <string name="launcher_default_set_now">Stel nou</string>
+</resources>

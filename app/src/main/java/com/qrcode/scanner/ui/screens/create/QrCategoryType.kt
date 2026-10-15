@@ -2,7 +2,7 @@ package com.qrcode.scanner.ui.screens.create
 
 import android.content.Context
 import androidx.annotation.StringRes
-import com.qrcode.scanner.app.R
+import com.qrcode.scanner.spapp.R
 
 /**
  * Create-flow QR categories from Stitch Create QR Category Hub

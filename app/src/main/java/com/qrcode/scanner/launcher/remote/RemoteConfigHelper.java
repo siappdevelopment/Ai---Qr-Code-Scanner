@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 import com.qrcode.scanner.launcher.common.AdPlacement;
 
 import org.json.JSONArray;
@@ -65,7 +65,7 @@ public final class RemoteConfigHelper {
         }
 
         int version = getAppVersion(appContext);
-        String key = "QRScanner_" + version + com.qrcode.scanner.app.BuildConfig.RC_KEY_SUFFIX;
+        String key = "QRScanner_" + version + com.qrcode.scanner.spapp.BuildConfig.RC_KEY_SUFFIX;
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(0)

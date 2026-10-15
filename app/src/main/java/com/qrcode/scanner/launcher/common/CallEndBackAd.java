@@ -27,7 +27,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

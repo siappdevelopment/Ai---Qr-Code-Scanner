@@ -1,0 +1,5 @@
+{
+  "_comment": "Profile root. Order of Show_Screen_Flow decides where the steps appear. DefultSettingHome is the 'open the system Home settings' step; DefaultHome is the in-app role request screen. Use one of them (or both).",
+  "Show_Screen_Flow": ["Language", "Collection", "Permission", "DefultSettingHome", "Intro"],
+  "Screen": { "IntroScreen": { "Intro_Screen_Count": 3 } }
+}

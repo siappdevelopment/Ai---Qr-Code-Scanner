@@ -59,7 +59,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.qrcode.scanner.app.R
+import com.qrcode.scanner.spapp.R
 import com.qrcode.scanner.launcher.common.AppUtils
 import com.qrcode.scanner.launcher.common.ScreenNativeAds
 import com.qrcode.scanner.ui.components.BigNativeAd

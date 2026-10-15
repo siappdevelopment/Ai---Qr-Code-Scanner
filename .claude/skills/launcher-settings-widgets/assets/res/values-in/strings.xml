@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Pengaturan Peluncur</string>
+    <string name="serialize">Urutkan</string>
+    <string name="by_name_asc_a_to_z">Berdasarkan Nama ASC (A ke Z)</string>
+    <string name="by_name_desc_z_to_a">Berdasarkan Nama DESC (Z ke A)</string>
+    <string name="by_installed_date">Berdasarkan Tanggal Dipasang</string>
+    <string name="preview">Pratinjau</string>
+    <string name="label_visibility">Visibilitas Label</string>
+    <string name="hide_app_name">Sembunyikan nama aplikasi</string>
+    <string name="app_icon_size">Ukuran Ikon Aplikasi</string>
+    <string name="app_label_size">Ukuran Label Aplikasi</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Widget Aplikasi</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Pilih widget untuk mengakses alat QR Anda dengan cepat langsung dari layar beranda.</string>
+    <string name="quick_access">Akses Cepat</string>
+    <string name="app_icon_1x1">Ikon Aplikasi 1 x 1</string>
+    <string name="qr_scanner_generator">Pemindai &amp; Pembuat QR</string>
+    <string name="create_1_x_1">Buat 1 x 1</string>
+    <string name="style_a">Gaya A</string>
+    <string name="style_b">Gaya B</string>
+    <string name="style_c">Gaya C</string>
+    <string name="scan_qr">Pindai QR</string>
+    <string name="create_qr">Buat QR</string>
+    <string name="widget_pin_not_supported">Penyematan widget tidak didukung di perangkat ini</string>
+    <string name="widget_pin_failed">Tidak dapat menambahkan widget. Silakan coba lagi.</string>
+</resources>

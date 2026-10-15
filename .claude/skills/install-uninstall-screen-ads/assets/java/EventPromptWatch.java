@@ -1,0 +1,75 @@
+package com.qrcode.scanner.launcher.common;
+
+import android.app.Application;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.Build;
+
+import com.qrcode.scanner.launcher.activities.EventPromptActivity;
+
+/**
+ * Charger broadcasts are not delivered to a manifest receiver on current Android.
+ * Register them for as long as this process is alive.
+ */
+public final class EventPromptWatch {
+    private static boolean registered;
+
+    private static final BroadcastReceiver RECEIVER = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (context == null || intent == null || intent.getAction() == null) {
+                return;
+            }
+            String action = intent.getAction();
+            if (EventPromptLauncher.isHeldBackDelivery()) {
+                return;
+            }
+            if (Intent.ACTION_POWER_CONNECTED.equals(action)) {
+                EventPromptLauncher.open(context, EventPromptActivity.KIND_CHARGE_IN);
+                return;
+            }
+            if (Intent.ACTION_POWER_DISCONNECTED.equals(action)) {
+                EventPromptLauncher.open(context, EventPromptActivity.KIND_CHARGE_OUT);
+                return;
+            }
+            boolean installed = Intent.ACTION_PACKAGE_ADDED.equals(action);
+            if (!installed && !Intent.ACTION_PACKAGE_REMOVED.equals(action)) {
+                return;
+            }
+            if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false) || intent.getData() == null) {
+                return;
+            }
+            String packageName = intent.getData().getSchemeSpecificPart();
+            if (packageName == null || packageName.equals(context.getPackageName())) {
+                return;
+            }
+            EventPromptLauncher.open(context, installed ? EventPromptActivity.KIND_INSTALL : EventPromptActivity.KIND_UNINSTALL);
+        }
+    };
+
+    private EventPromptWatch() {
+    }
+
+    public static void register(Application application) {
+        if (application == null || registered) {
+            return;
+        }
+        IntentFilter power = new IntentFilter();
+        power.addAction(Intent.ACTION_POWER_CONNECTED);
+        power.addAction(Intent.ACTION_POWER_DISCONNECTED);
+        IntentFilter packages = new IntentFilter();
+        packages.addAction(Intent.ACTION_PACKAGE_ADDED);
+        packages.addAction(Intent.ACTION_PACKAGE_REMOVED);
+        packages.addDataScheme("package");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            application.registerReceiver(RECEIVER, power, Context.RECEIVER_EXPORTED);
+            application.registerReceiver(RECEIVER, packages, Context.RECEIVER_EXPORTED);
+        } else {
+            application.registerReceiver(RECEIVER, power);
+            application.registerReceiver(RECEIVER, packages);
+        }
+        registered = true;
+    }
+}

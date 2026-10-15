@@ -1,0 +1,13 @@
+{
+  "_comment": "Keys of the Right Swipe ad and the Default Home popup. Right_Swipe_* are inside the \"Screen\" -> \"MainScreen\" object; Default_App_Popup_* are at the profile root; inter id is inter_ads.",
+  "Default_App_Popup_Show": true,
+  "Default_App_Popup_Count": 3,
+  "inter_ads": { "_note": "RemoteConfigValues.getInterAdsId() is the interstitial unit id used by the Right Swipe ad (see applyInterAds)" },
+  "Screen": {
+    "MainScreen": {
+      "Right_Swipe_Interstitial_Ad_Show": true,
+      "Right_Swipe_Interstitial": 2,
+      "Right_Swipe_Ads_type": "preload"
+    }
+  }
+}

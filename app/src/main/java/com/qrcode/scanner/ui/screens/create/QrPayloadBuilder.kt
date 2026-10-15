@@ -2,7 +2,7 @@ package com.qrcode.scanner.ui.screens.create
 
 import android.content.Context
 import androidx.annotation.StringRes
-import com.qrcode.scanner.app.R
+import com.qrcode.scanner.spapp.R
 import com.qrcode.scanner.data.history.ScanPayloadMapper
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.APP_LINK
 import com.qrcode.scanner.ui.screens.create.QrCategoryType.AZTEC

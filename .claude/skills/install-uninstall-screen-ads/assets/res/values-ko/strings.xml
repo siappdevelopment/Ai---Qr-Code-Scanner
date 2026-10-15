@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">삭제하셨나요?</string>
+    <string name="event_uninstall_success">정리 완료</string>
+    <string name="event_uninstall_sub">앱이 성공적으로 삭제되었습니다</string>
+    <string name="event_uninstall_body">캐시된 스캔 파일과 임시 데이터가 기기에서 삭제되었습니다.</string>
+    <string name="event_uninstall_chip">안전 &amp; 완료</string>
+    <string name="event_charge_in_title">전원 연결됨</string>
+    <string name="event_charge_out_title">충전기 분리됨</string>
+    <string name="event_optimized_speed">최적화된 속도</string>
+    <string name="event_fast">고속</string>
+    <string name="event_optimized_sub">원활하게 실행되고 있습니다.</string>
+    <string name="event_done">완료</string>
+</resources>

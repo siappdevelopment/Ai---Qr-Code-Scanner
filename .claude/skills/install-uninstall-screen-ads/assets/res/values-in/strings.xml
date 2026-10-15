@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">Dihapus?</string>
+    <string name="event_uninstall_success">Pembersihan selesai</string>
+    <string name="event_uninstall_sub">Aplikasi berhasil dihapus</string>
+    <string name="event_uninstall_body">File pindaian yang di-cache dan data sementara telah dibersihkan dari perangkat Anda.</string>
+    <string name="event_uninstall_chip">Aman &amp; Lengkap</string>
+    <string name="event_charge_in_title">Daya Terpasang</string>
+    <string name="event_charge_out_title">Pengisi Daya Dicabut</string>
+    <string name="event_optimized_speed">Kecepatan dioptimalkan</string>
+    <string name="event_fast">CEPAT</string>
+    <string name="event_optimized_sub">Semuanya berjalan lancar.</string>
+    <string name="event_done">Selesai</string>
+</resources>

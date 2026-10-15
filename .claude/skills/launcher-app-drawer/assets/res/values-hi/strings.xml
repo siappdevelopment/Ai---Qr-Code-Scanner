@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="set_as_default">डिफ़ॉल्ट के रूप में सेट करें</string>
+    <string name="launcher_default_set_now">अभी सेट करें</string>
+</resources>

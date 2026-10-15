@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Настройки лаунчера</string>
+    <string name="serialize">Сортировать</string>
+    <string name="by_name_asc_a_to_z">По имени ASC (A–Z)</string>
+    <string name="by_name_desc_z_to_a">По имени DESC (Z–A)</string>
+    <string name="by_installed_date">По дате установки</string>
+    <string name="preview">Предпросмотр</string>
+    <string name="label_visibility">Видимость подписей</string>
+    <string name="hide_app_name">Скрыть имя приложения</string>
+    <string name="app_icon_size">Размер иконки приложения</string>
+    <string name="app_label_size">Размер подписи приложения</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Виджеты приложений</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Выберите виджет для быстрого доступа к инструментам QR прямо с главного экрана.</string>
+    <string name="quick_access">Быстрый доступ</string>
+    <string name="app_icon_1x1">Иконка приложения 1 x 1</string>
+    <string name="qr_scanner_generator">QR-сканер и генератор</string>
+    <string name="create_1_x_1">Создать 1 x 1</string>
+    <string name="style_a">Стиль A</string>
+    <string name="style_b">Стиль B</string>
+    <string name="style_c">Стиль C</string>
+    <string name="scan_qr">Сканировать QR</string>
+    <string name="create_qr">Создать QR</string>
+    <string name="widget_pin_not_supported">Закрепление виджетов не поддерживается на этом устройстве</string>
+    <string name="widget_pin_failed">Не удалось добавить виджет. Повторите попытку.</string>
+</resources>

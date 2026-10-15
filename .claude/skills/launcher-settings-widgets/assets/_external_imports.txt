@@ -1,0 +1,8 @@
+com.qrcode.scanner.MainActivity
+com.qrcode.scanner.spapp.R
+com.qrcode.scanner.launcher.common.AdPlacement
+com.qrcode.scanner.launcher.common.AppUtils
+com.qrcode.scanner.launcher.common.ScreenInterAds
+com.qrcode.scanner.launcher.remote.RemoteConfigValues
+com.qrcode.scanner.ui.screens.create.CreateQrIntents
+com.qrcode.scanner.ui.screens.scan.ScanIntents

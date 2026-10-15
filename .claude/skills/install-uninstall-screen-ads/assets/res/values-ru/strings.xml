@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">Удалено?</string>
+    <string name="event_uninstall_success">Очистка выполнена</string>
+    <string name="event_uninstall_sub">Приложение успешно удалено</string>
+    <string name="event_uninstall_body">Кэшированные файлы сканирования и временные данные были удалены с вашего устройства.</string>
+    <string name="event_uninstall_chip">Безопасно и полностью</string>
+    <string name="event_charge_in_title">Питание подключено</string>
+    <string name="event_charge_out_title">Зарядное устройство отключено</string>
+    <string name="event_optimized_speed">Оптимизированная скорость</string>
+    <string name="event_fast">БЫСТРО</string>
+    <string name="event_optimized_sub">Всё работает плавно.</string>
+    <string name="event_done">Готово</string>
+</resources>

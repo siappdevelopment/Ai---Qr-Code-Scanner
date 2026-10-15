@@ -1,0 +1,26 @@
+{
+  "_comment": "Inside the profile's \"Screen\" object (or at the JSON root if Screen has no charging_screen). Prefix of every ad key = install_uninstall_screen_. The four *_screen_show flags are NOT prefixed. Back sequence: [[type, times in a row], ...] with Google_Inter | Google_App_Open | Google_Native (Quiz_* types are not used on this screen: Google only). ad_load_type: Load = request when the screen opens, PreLoad = request ahead (app start, and again after each screen) so the ad is ready at once.",
+  "Screen": {
+    "install_uninstall_screen": {
+      "install_screen_show": true,
+      "uninstall_screen_show": true,
+      "charge_in_screen_show": false,
+      "charge_out_screen_show": false,
+
+      "install_uninstall_screen_bottom_ad_show": true,
+      "install_uninstall_screen_ad_load_type": "PreLoad",
+      "install_uninstall_screen_bottom_ad_type": "native",
+      "install_uninstall_screen_native_id": "ca-app-pub-3940256099942544/2247696110",
+      "install_uninstall_screen_banner_id": "ca-app-pub-3940256099942544/9214589741",
+      "install_uninstall_screen_button_show_sec": 6,
+
+      "install_uninstall_screen_back_ad_show": true,
+      "install_uninstall_screen_back_ad_sequence": [["Google_Inter", 2], ["Google_Native", 1], ["Google_App_Open", 1]],
+      "install_uninstall_screen_inter_id": "ca-app-pub-3940256099942544/1033173712",
+      "install_uninstall_screen_full_native_id": "ca-app-pub-3940256099942544/2247696110",
+      "install_uninstall_screen_back_ad_day_count": 1,
+      "install_uninstall_screen_back_ad_total_show_count": 4,
+      "install_uninstall_screen_back_ads_show_country": []
+    }
+  }
+}

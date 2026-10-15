@@ -1,0 +1,5 @@
+com.qrcode.scanner.spapp.R
+com.qrcode.scanner.launcher.activities.ChargingScreenActivity
+com.qrcode.scanner.launcher.activities.ClEndActivity
+com.qrcode.scanner.launcher.common.AdPlacement
+com.qrcode.scanner.launcher.remote.RemoteConfigValues

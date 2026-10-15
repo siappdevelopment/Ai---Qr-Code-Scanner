@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">Gedeïnstalleer?</string>
+    <string name="event_uninstall_success">Opruiming gedoen</string>
+    <string name="event_uninstall_sub">Toep suksesvol gedeïnstalleer</string>
+    <string name="event_uninstall_body">Gekaste skandeerlêers en tydelike data is van jou toestel verwyder.</string>
+    <string name="event_uninstall_chip">Veilig en volledig</string>
+    <string name="event_charge_in_title">Krag ingeprop</string>
+    <string name="event_charge_out_title">Laer uitgeprop</string>
+    <string name="event_optimized_speed">Geoptimaliseerde spoed</string>
+    <string name="event_fast">VINNIG</string>
+    <string name="event_optimized_sub">Hou dinge glad aan die gang.</string>
+    <string name="event_done">Klaar</string>
+</resources>

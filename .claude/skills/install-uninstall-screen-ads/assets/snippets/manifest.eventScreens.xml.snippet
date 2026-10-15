@@ -1,0 +1,36 @@
+<!-- inside <application> -->
+<activity
+    android:name=".launcher.activities.InstallUninstallScreenActivity"
+    android:excludeFromRecents="true"
+    android:exported="false"
+    android:launchMode="singleTask"
+    android:screenOrientation="portrait"
+    android:showWhenLocked="true"
+    android:turnScreenOn="true"
+    android:theme="@style/Theme.EventPrompt" />
+
+<!-- Manifest receiver for install / uninstall. Charger events cannot be received this way on current Android:
+     EventPromptWatch registers them at runtime (EventPromptWatch.register(application) in Application.onCreate). -->
+<receiver
+    android:name=".launcher.receivers.EventPromptReceiver"
+    android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.PACKAGE_ADDED" />
+        <action android:name="android.intent.action.PACKAGE_REMOVED" />
+        <data android:scheme="package" />
+    </intent-filter>
+</receiver>
+
+<!-- values/themes.xml -->
+<style name="Theme.EventPrompt" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:statusBarColor">@color/event_header</item>
+    <item name="android:windowLightStatusBar">true</item>
+    <item name="android:navigationBarColor">@color/event_sheet</item>
+    <item name="android:windowBackground">@color/event_header</item>
+</style>
+
+<!-- permissions (overlay is what lets the screen start from a background broadcast; see overlay-permission-flow) -->
+<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+<uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="set_as_default">デフォルトに設定</string>
+    <string name="launcher_default_set_now">今すぐ設定</string>
+</resources>

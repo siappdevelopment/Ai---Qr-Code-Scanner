@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">已卸载？</string>
+    <string name="event_uninstall_success">清理完成</string>
+    <string name="event_uninstall_sub">应用已成功卸载</string>
+    <string name="event_uninstall_body">缓存的扫描文件和临时数据已从您的设备中清除。</string>
+    <string name="event_uninstall_chip">安全且完整</string>
+    <string name="event_charge_in_title">电源已接入</string>
+    <string name="event_charge_out_title">充电器已拔出</string>
+    <string name="event_optimized_speed">优化速度</string>
+    <string name="event_fast">快速</string>
+    <string name="event_optimized_sub">保持流畅运行。</string>
+    <string name="event_done">完成</string>
+</resources>

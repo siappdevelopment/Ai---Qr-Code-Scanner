@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M5,9V6.8C5,5.8 5.8,5 6.8,5H9"
+        android:strokeWidth="1.7"
+        android:strokeColor="@color/home_action_icon"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M15,5H17.2C18.2,5 19,5.8 19,6.8V9"
+        android:strokeWidth="1.7"
+        android:strokeColor="@color/home_action_icon"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M19,15V17.2C19,18.2 18.2,19 17.2,19H15"
+        android:strokeWidth="1.7"
+        android:strokeColor="@color/home_action_icon"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:pathData="M9,19H6.8C5.8,19 5,18.2 5,17.2V15"
+        android:strokeWidth="1.7"
+        android:strokeColor="@color/home_action_icon"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="@color/home_action_icon"
+        android:pathData="M8.2,8.2h2.4v2.4h-2.4zM13.4,8.2h2.4v2.4h-2.4zM8.2,13.4h2.4v2.4h-2.4zM13.4,13.4h1.5v1.5h-1.5zM15.4,14.6h1.2v1.2h-1.2z" />
+</vector>

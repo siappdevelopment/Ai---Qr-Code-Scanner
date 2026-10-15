@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Impostazioni launcher</string>
+    <string name="serialize">Ordina</string>
+    <string name="by_name_asc_a_to_z">Per nome ASC (A-Z)</string>
+    <string name="by_name_desc_z_to_a">Per nome DESC (Z-A)</string>
+    <string name="by_installed_date">Per data di installazione</string>
+    <string name="preview">Anteprima</string>
+    <string name="label_visibility">Visibilità etichette</string>
+    <string name="hide_app_name">Nascondi nome app</string>
+    <string name="app_icon_size">Dimensione icona app</string>
+    <string name="app_label_size">Dimensione etichetta app</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Widget app</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Scegli un widget per accedere rapidamente ai tuoi strumenti QR direttamente dalla schermata Home.</string>
+    <string name="quick_access">Accesso rapido</string>
+    <string name="app_icon_1x1">Icona app 1 x 1</string>
+    <string name="qr_scanner_generator">Scanner e generatore QR</string>
+    <string name="create_1_x_1">Crea 1 x 1</string>
+    <string name="style_a">Stile A</string>
+    <string name="style_b">Stile B</string>
+    <string name="style_c">Stile C</string>
+    <string name="scan_qr">Scansiona QR</string>
+    <string name="create_qr">Crea QR</string>
+    <string name="widget_pin_not_supported">Il pinning dei widget non è supportato su questo dispositivo</string>
+    <string name="widget_pin_failed">Impossibile aggiungere il widget. Riprova.</string>
+</resources>

@@ -5,7 +5,7 @@ import android.content.Intent;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 /** App install / uninstall screen, driven by the "install_uninstall_screen" config. */

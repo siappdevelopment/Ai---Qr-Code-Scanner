@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Paramètres du lanceur</string>
+    <string name="serialize">Trier</string>
+    <string name="by_name_asc_a_to_z">Par nom ASC (A à Z)</string>
+    <string name="by_name_desc_z_to_a">Par nom DESC (Z à A)</string>
+    <string name="by_installed_date">Par date d\'installation</string>
+    <string name="preview">Aperçu</string>
+    <string name="label_visibility">Visibilité des étiquettes</string>
+    <string name="hide_app_name">Masquer le nom de l\'app</string>
+    <string name="app_icon_size">Taille de l\'icône d\'app</string>
+    <string name="app_label_size">Taille de l\'étiquette d\'app</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Widgets d\'app</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Choisissez un widget pour accéder rapidement à vos outils QR directement depuis l\'écran d\'accueil.</string>
+    <string name="quick_access">Accès rapide</string>
+    <string name="app_icon_1x1">Icône d\'app 1 x 1</string>
+    <string name="qr_scanner_generator">Scanner et générateur QR</string>
+    <string name="create_1_x_1">Créer 1 x 1</string>
+    <string name="style_a">Style A</string>
+    <string name="style_b">Style B</string>
+    <string name="style_c">Style C</string>
+    <string name="scan_qr">Scanner un QR</string>
+    <string name="create_qr">Créer un QR</string>
+    <string name="widget_pin_not_supported">L\'épinglage de widgets n\'est pas pris en charge sur cet appareil</string>
+    <string name="widget_pin_failed">Impossible d\'ajouter le widget. Veuillez réessayer.</string>
+</resources>

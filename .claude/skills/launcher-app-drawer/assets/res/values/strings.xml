@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">QR Code &amp; Scanner</string>
+    <string name="set_as_default">Set as Default</string>
+    <string name="launcher_default_set_now">Set Now</string>
+</resources>

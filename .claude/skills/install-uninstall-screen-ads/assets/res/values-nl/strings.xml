@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">Verwijderd?</string>
+    <string name="event_uninstall_success">Opschonen voltooid</string>
+    <string name="event_uninstall_sub">App succesvol verwijderd</string>
+    <string name="event_uninstall_body">In cache opgeslagen scanbestanden en tijdelijke gegevens zijn van je apparaat gewist.</string>
+    <string name="event_uninstall_chip">Veilig en volledig</string>
+    <string name="event_charge_in_title">Stroom aangesloten</string>
+    <string name="event_charge_out_title">Oplader losgekoppeld</string>
+    <string name="event_optimized_speed">Geoptimaliseerde snelheid</string>
+    <string name="event_fast">SNEL</string>
+    <string name="event_optimized_sub">Alles werkt soepel.</string>
+    <string name="event_done">Klaar</string>
+</resources>

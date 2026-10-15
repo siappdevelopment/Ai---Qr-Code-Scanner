@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Mga Setting ng Launcher</string>
+    <string name="serialize">Ayusin</string>
+    <string name="by_name_asc_a_to_z">Ayon sa Pangalan ASC (A hanggang Z)</string>
+    <string name="by_name_desc_z_to_a">Ayon sa Pangalan DESC (Z hanggang A)</string>
+    <string name="by_installed_date">Ayon sa Petsa ng Pag-install</string>
+    <string name="preview">Preview</string>
+    <string name="label_visibility">Visibility ng Label</string>
+    <string name="hide_app_name">Itago ang pangalan ng app</string>
+    <string name="app_icon_size">Laki ng App Icon</string>
+    <string name="app_label_size">Laki ng App Label</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Mga App Widget</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Pumili ng widget upang mabilis na ma-access ang iyong mga QR tool mula mismo sa iyong home screen.</string>
+    <string name="quick_access">Mabilisang Access</string>
+    <string name="app_icon_1x1">App Icon 1 x 1</string>
+    <string name="qr_scanner_generator">QR Scanner at Generator</string>
+    <string name="create_1_x_1">Gumawa ng 1 x 1</string>
+    <string name="style_a">Estilo A</string>
+    <string name="style_b">Estilo B</string>
+    <string name="style_c">Estilo C</string>
+    <string name="scan_qr">I-scan ang QR</string>
+    <string name="create_qr">Gumawa ng QR</string>
+    <string name="widget_pin_not_supported">Hindi sinusuportahan ang widget pinning sa device na ito</string>
+    <string name="widget_pin_failed">Hindi maidagdag ang widget. Pakisubukan muli.</string>
+</resources>

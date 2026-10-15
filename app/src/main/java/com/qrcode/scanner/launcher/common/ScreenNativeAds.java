@@ -11,7 +11,7 @@ import androidx.core.content.ContextCompat;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.gms.ads.nativead.NativeAd;
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 import java.lang.ref.WeakReference;

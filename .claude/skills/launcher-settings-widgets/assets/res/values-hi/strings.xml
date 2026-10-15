@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">लॉन्चर सेटिंग्स</string>
+    <string name="serialize">क्रमबद्ध करें</string>
+    <string name="by_name_asc_a_to_z">नाम से ASC (A से Z)</string>
+    <string name="by_name_desc_z_to_a">नाम से DESC (Z से A)</string>
+    <string name="by_installed_date">इंस्टॉल तिथि से</string>
+    <string name="preview">पूर्वावलोकन</string>
+    <string name="label_visibility">लेबल दृश्यता</string>
+    <string name="hide_app_name">ऐप नाम छिपाएँ</string>
+    <string name="app_icon_size">ऐप आइकन आकार</string>
+    <string name="app_label_size">ऐप लेबल आकार</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">ऐप विजेट</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">अपने होम स्क्रीन से सीधे QR टूल तक त्वरित पहुँच के लिए विजेट चुनें।</string>
+    <string name="quick_access">त्वरित पहुँच</string>
+    <string name="app_icon_1x1">ऐप आइकन 1 x 1</string>
+    <string name="qr_scanner_generator">QR स्कैनर और जेनरेटर</string>
+    <string name="create_1_x_1">1 x 1 बनाएँ</string>
+    <string name="style_a">शैली A</string>
+    <string name="style_b">शैली B</string>
+    <string name="style_c">शैली C</string>
+    <string name="scan_qr">QR स्कैन करें</string>
+    <string name="create_qr">QR बनाएँ</string>
+    <string name="widget_pin_not_supported">इस डिवाइस पर विजेट पिनिंग समर्थित नहीं है</string>
+    <string name="widget_pin_failed">विजेट जोड़ने में असमर्थ। कृपया पुनः प्रयास करें।</string>
+</resources>

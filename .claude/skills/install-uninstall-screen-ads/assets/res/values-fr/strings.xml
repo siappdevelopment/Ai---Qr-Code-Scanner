@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">Désinstallée ?</string>
+    <string name="event_uninstall_success">Nettoyage effectué</string>
+    <string name="event_uninstall_sub">Application désinstallée avec succès</string>
+    <string name="event_uninstall_body">Les fichiers de scan en cache et les données temporaires ont été effacés de votre appareil.</string>
+    <string name="event_uninstall_chip">Sûr et complet</string>
+    <string name="event_charge_in_title">Alimentation branchée</string>
+    <string name="event_charge_out_title">Chargeur débranché</string>
+    <string name="event_optimized_speed">Vitesse optimisée</string>
+    <string name="event_fast">RAPIDE</string>
+    <string name="event_optimized_sub">Tout fonctionne sans problème.</string>
+    <string name="event_done">Terminé</string>
+</resources>

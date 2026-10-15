@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Ρυθμίσεις εκκινητή</string>
+    <string name="serialize">Ταξινόμηση</string>
+    <string name="by_name_asc_a_to_z">Κατά όνομα ASC (A έως Z)</string>
+    <string name="by_name_desc_z_to_a">Κατά όνομα DESC (Z έως A)</string>
+    <string name="by_installed_date">Κατά ημερομηνία εγκατάστασης</string>
+    <string name="preview">Προεπισκόπηση</string>
+    <string name="label_visibility">Ορατότητα ετικέτας</string>
+    <string name="hide_app_name">Απόκρυψη ονόματος εφαρμογής</string>
+    <string name="app_icon_size">Μέγεθος εικονιδίου εφαρμογής</string>
+    <string name="app_label_size">Μέγεθος ετικέτας εφαρμογής</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">Widget εφαρμογών</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Επιλέξτε ένα widget για γρήγορη πρόσβαση στα εργαλεία QR απευθείας από την αρχική οθόνη.</string>
+    <string name="quick_access">Γρήγορη πρόσβαση</string>
+    <string name="app_icon_1x1">Εικονίδιο εφαρμογής 1 x 1</string>
+    <string name="qr_scanner_generator">Σαρωτής &amp; δημιουργός QR</string>
+    <string name="create_1_x_1">Δημιουργία 1 x 1</string>
+    <string name="style_a">Στυλ A</string>
+    <string name="style_b">Στυλ B</string>
+    <string name="style_c">Στυλ C</string>
+    <string name="scan_qr">Σάρωση QR</string>
+    <string name="create_qr">Δημιουργία QR</string>
+    <string name="widget_pin_not_supported">Η καρφίτσωση widget δεν υποστηρίζεται σε αυτή τη συσκευή</string>
+    <string name="widget_pin_failed">Δεν είναι δυνατή η προσθήκη widget. Δοκιμάστε ξανά.</string>
+</resources>

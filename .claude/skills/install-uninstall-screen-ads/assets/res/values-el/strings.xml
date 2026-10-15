@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">Απεγκαταστάθηκε;</string>
+    <string name="event_uninstall_success">Ο καθαρισμός ολοκληρώθηκε</string>
+    <string name="event_uninstall_sub">Η εφαρμογή απεγκαταστάθηκε με επιτυχία</string>
+    <string name="event_uninstall_body">Τα προσωρινά αρχεία σάρωσης και τα δεδομένα διαγράφηκαν από τη συσκευή σας.</string>
+    <string name="event_uninstall_chip">Ασφαλές &amp; πλήρες</string>
+    <string name="event_charge_in_title">Σύνδεση τροφοδοσίας</string>
+    <string name="event_charge_out_title">Αποσύνδεση φορτιστή</string>
+    <string name="event_optimized_speed">Βελτιστοποιημένη ταχύτητα</string>
+    <string name="event_fast">ΓΡΗΓΟΡΟ</string>
+    <string name="event_optimized_sub">Όλα λειτουργούν ομαλά.</string>
+    <string name="event_done">Έτοιμο</string>
+</resources>

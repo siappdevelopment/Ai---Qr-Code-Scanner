@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_settings">Launcher-instellingen</string>
+    <string name="serialize">Sorteren</string>
+    <string name="by_name_asc_a_to_z">Op naam ASC (A tot Z)</string>
+    <string name="by_name_desc_z_to_a">Op naam DESC (Z tot A)</string>
+    <string name="by_installed_date">Op installatiedatum</string>
+    <string name="preview">Voorbeeld</string>
+    <string name="label_visibility">Labelzichtbaarheid</string>
+    <string name="hide_app_name">App-naam verbergen</string>
+    <string name="app_icon_size">App-pictogramgrootte</string>
+    <string name="app_label_size">App-labelgrootte</string>
+    <string name="_91">+91</string>
+    <string name="app_widgets">App-widgets</string>
+    <string name="choose_a_widget_to_quickly_access_your_qr_tools_directly_from_your_home_screen">Kies een widget om snel toegang te krijgen tot je QR-hulpmiddelen direct vanaf je startscherm.</string>
+    <string name="quick_access">Snelle toegang</string>
+    <string name="app_icon_1x1">App-pictogram 1 x 1</string>
+    <string name="qr_scanner_generator">QR-scanner en -generator</string>
+    <string name="create_1_x_1">1 x 1 maken</string>
+    <string name="style_a">Stijl A</string>
+    <string name="style_b">Stijl B</string>
+    <string name="style_c">Stijl C</string>
+    <string name="scan_qr">QR scannen</string>
+    <string name="create_qr">QR maken</string>
+    <string name="widget_pin_not_supported">Widget vastmaken wordt niet ondersteund op dit apparaat</string>
+    <string name="widget_pin_failed">Kan widget niet toevoegen. Probeer het opnieuw.</string>
+</resources>

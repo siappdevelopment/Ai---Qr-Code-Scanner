@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_default_title">Maak ons je standaard</string>
+    <string name="launcher_default_subtitle">Stel dit in als je standaard QR Code-launcher-app.</string>
+</resources>

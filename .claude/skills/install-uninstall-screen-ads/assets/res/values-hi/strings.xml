@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">अनइंस्टॉल किया?</string>
+    <string name="event_uninstall_success">सफ़ाई पूरी</string>
+    <string name="event_uninstall_sub">ऐप सफलतापूर्वक अनइंस्टॉल हो गया</string>
+    <string name="event_uninstall_body">कैश किए गए स्कैन फ़ाइलें और अस्थायी डेटा आपके डिवाइस से साफ़ कर दिए गए हैं।</string>
+    <string name="event_uninstall_chip">सुरक्षित और पूर्ण</string>
+    <string name="event_charge_in_title">पावर प्लग इन</string>
+    <string name="event_charge_out_title">चार्जर अनप्लग</string>
+    <string name="event_optimized_speed">अनुकूलित गति</string>
+    <string name="event_fast">तेज़</string>
+    <string name="event_optimized_sub">सब कुछ सुचारू रूप से चल रहा है।</string>
+    <string name="event_done">हो गया</string>
+</resources>

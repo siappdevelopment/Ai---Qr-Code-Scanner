@@ -1,7 +1,7 @@
 package com.qrcode.scanner.ui.screens.create
 
 import androidx.annotation.StringRes
-import com.qrcode.scanner.app.R
+import com.qrcode.scanner.spapp.R
 import java.io.Serializable
 
 /**

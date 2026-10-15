@@ -1,0 +1,19 @@
+{
+  "_comment": "Inside the profile \"Screen\" object. *_Ad_Type = a single string or an array; items: Google_Inter | Google_App_Open | Google_Native | Quiz_Inter | Quiz_App_Open | Quiz_Native | Quiz_Browser. Each ad takes the next item of the list (round robin).",
+  "Screen": {
+    "LauncherAppScreen": {
+      "LauncherApp_Click_Ad_Show": true,
+      "LauncherApp_Count": 3,
+      "LauncherApp_Ad_Type": ["Google_Inter", "Google_Native", "Quiz_Inter"],
+      "LauncherApp_Interstitial_Id": "ca-app-pub-3940256099942544/1033173712",
+      "LauncherApp_Native_Id": "ca-app-pub-3940256099942544/2247696110",
+
+      "LauncherApp_Back_Click_Ad_Show": true,
+      "LauncherApp_Back_Count": 2,
+      "LauncherApp_Back_Ad_Type": ["Google_Inter", "Google_App_Open"],
+      "LauncherApp_Back_Interstitial_Id": "ca-app-pub-3940256099942544/1033173712",
+
+      "Google_Ad_Failed_Show_Quiz": true
+    }
+  }
+}

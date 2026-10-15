@@ -1,0 +1,23 @@
+<activity
+    android:name=".launcher.activities.LauncherSettingsActivity"
+    android:exported="false"
+    android:screenOrientation="portrait"
+    android:theme="@style/Theme.LauncherSettings" />
+<activity
+    android:name=".launcher.activities.AppWidgetsActivity"
+    android:exported="false"
+    android:screenOrientation="portrait"
+    android:theme="@style/Theme.LauncherSettings" />
+
+<!-- One <receiver> per widget provider. Repeat for CreateQrA/B/C, ScanQrA/B (info files are in res/xml). -->
+<receiver
+    android:name=".launcher.widgets.AppIconWidgetProvider"
+    android:exported="true"
+    android:label="@string/app_icon_1x1">
+    <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+    </intent-filter>
+    <meta-data
+        android:name="android.appwidget.provider"
+        android:resource="@xml/app_widget_app_icon_info" />
+</receiver>

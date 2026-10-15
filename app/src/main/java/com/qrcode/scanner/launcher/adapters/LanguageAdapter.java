@@ -11,7 +11,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.qrcode.scanner.app.R;
+import com.qrcode.scanner.spapp.R;
 
 import java.util.ArrayList;
 

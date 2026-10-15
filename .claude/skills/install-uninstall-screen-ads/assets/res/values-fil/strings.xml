@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">Na-uninstall?</string>
+    <string name="event_uninstall_success">Tapos na ang cleanup</string>
+    <string name="event_uninstall_sub">Matagumpay na na-uninstall ang app</string>
+    <string name="event_uninstall_body">Na-clear na ang mga naka-cache na scan file at temporary data mula sa iyong device.</string>
+    <string name="event_uninstall_chip">Ligtas at Kumpleto</string>
+    <string name="event_charge_in_title">Nakasaksak ang Power</string>
+    <string name="event_charge_out_title">Natanggal ang Charger</string>
+    <string name="event_optimized_speed">Na-optimize na bilis</string>
+    <string name="event_fast">MABILIS</string>
+    <string name="event_optimized_sub">Maayos ang takbo ng lahat.</string>
+    <string name="event_done">Tapos</string>
+</resources>

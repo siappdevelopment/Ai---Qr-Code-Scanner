@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_default_title">ตั้งเราเป็นค่าเริ่มต้นของคุณ</string>
+    <string name="launcher_default_subtitle">ตั้งเป็นแอปตัวเรียกใช้ QR Code เริ่มต้นของคุณ</string>
+</resources>

@@ -1,0 +1,10 @@
+com.qrcode.scanner.spapp.R
+com.qrcode.scanner.launcher.activities.LauncherHomeActivity
+com.qrcode.scanner.launcher.activities.LauncherSettingsActivity
+com.qrcode.scanner.launcher.common.AdPlacement
+com.qrcode.scanner.launcher.common.AppUtils
+com.qrcode.scanner.launcher.fragments.LauncherHomeFragment
+com.qrcode.scanner.launcher.helpers.DefaultHomePromptHelper
+com.qrcode.scanner.launcher.helpers.LauncherQuizGames
+com.qrcode.scanner.launcher.helpers.LauncherSettingsHelper
+com.qrcode.scanner.launcher.models.QuizGameItem

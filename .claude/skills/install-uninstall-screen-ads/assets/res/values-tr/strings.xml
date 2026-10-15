@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">Kaldırıldı mı?</string>
+    <string name="event_uninstall_success">Temizlik tamamlandı</string>
+    <string name="event_uninstall_sub">Uygulama başarıyla kaldırıldı</string>
+    <string name="event_uninstall_body">Önbelleğe alınan tarama dosyaları ve geçici veriler cihazınızdan temizlendi.</string>
+    <string name="event_uninstall_chip">Güvenli ve Eksiksiz</string>
+    <string name="event_charge_in_title">Güç Takıldı</string>
+    <string name="event_charge_out_title">Şarj Cihazı Çıkarıldı</string>
+    <string name="event_optimized_speed">Optimize edilmiş hız</string>
+    <string name="event_fast">HIZLI</string>
+    <string name="event_optimized_sub">Her şey sorunsuz çalışıyor.</string>
+    <string name="event_done">Tamam</string>
+</resources>

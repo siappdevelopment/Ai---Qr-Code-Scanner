@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">¿Desinstalada?</string>
+    <string name="event_uninstall_success">Limpieza realizada</string>
+    <string name="event_uninstall_sub">App desinstalada correctamente</string>
+    <string name="event_uninstall_body">Los archivos de escaneo en caché y los datos temporales se han borrado de tu dispositivo.</string>
+    <string name="event_uninstall_chip">Seguro y completo</string>
+    <string name="event_charge_in_title">Alimentación conectada</string>
+    <string name="event_charge_out_title">Cargador desconectado</string>
+    <string name="event_optimized_speed">Velocidad optimizada</string>
+    <string name="event_fast">RÁPIDO</string>
+    <string name="event_optimized_sub">Todo funciona sin problemas.</string>
+    <string name="event_done">Hecho</string>
+</resources>

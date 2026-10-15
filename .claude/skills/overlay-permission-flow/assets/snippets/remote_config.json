@@ -1,0 +1,12 @@
+{
+  "_comment": "The overlay step has no Remote Config key of its own: it runs inside the Permission step of Show_Screen_Flow, and is skipped when the app is the default Home app or the permission is already granted.",
+  "Show_Screen_Flow": ["Language", "Collection", "Permission", "DefaultHome", "Intro"],
+  "Screen": {
+    "PermissionDefaultScreen": {
+      "PermissionDefault_Ad_Show": true,
+      "PermissionDefault_Ad_Type": "native",
+      "PermissionDefault_Banner_Id": "ca-app-pub-3940256099942544/9214589741",
+      "PermissionDefault_Native_Id": "ca-app-pub-3940256099942544/2247696110"
+    }
+  }
+}

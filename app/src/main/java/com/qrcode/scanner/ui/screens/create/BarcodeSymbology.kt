@@ -6,7 +6,7 @@ import com.google.zxing.BarcodeFormat
 import com.google.zxing.FormatException
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.oned.UPCEReader
-import com.qrcode.scanner.app.R
+import com.qrcode.scanner.spapp.R
 
 /**
  * Input rules for Create barcode formats, aligned with ZXing core 3.5.3 writers.

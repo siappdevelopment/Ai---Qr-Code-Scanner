@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">アンインストールしましたか？</string>
+    <string name="event_uninstall_success">クリーンアップ完了</string>
+    <string name="event_uninstall_sub">アプリのアンインストールに成功しました</string>
+    <string name="event_uninstall_body">キャッシュされたスキャンファイルと一時データがデバイスから削除されました。</string>
+    <string name="event_uninstall_chip">安全 &amp; 完了</string>
+    <string name="event_charge_in_title">電源が接続されました</string>
+    <string name="event_charge_out_title">充電器が外れました</string>
+    <string name="event_optimized_speed">最適化された速度</string>
+    <string name="event_fast">高速</string>
+    <string name="event_optimized_sub">快適に動作しています。</string>
+    <string name="event_done">完了</string>
+</resources>

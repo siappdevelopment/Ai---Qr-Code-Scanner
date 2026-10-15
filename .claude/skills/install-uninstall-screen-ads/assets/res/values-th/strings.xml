@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="event_uninstall_title">ถอนการติดตั้งแล้ว?</string>
+    <string name="event_uninstall_success">การล้างเสร็จสิ้น</string>
+    <string name="event_uninstall_sub">ถอนการติดตั้งแอปสำเร็จแล้ว</string>
+    <string name="event_uninstall_body">ไฟล์สแกนที่แคชไว้และข้อมูลชั่วคราวถูกล้างออกจากอุปกรณ์ของคุณแล้ว</string>
+    <string name="event_uninstall_chip">ปลอดภัย &amp; ครบถ้วน</string>
+    <string name="event_charge_in_title">เสียบปลั๊กไฟแล้ว</string>
+    <string name="event_charge_out_title">ถอดที่ชาร์จแล้ว</string>
+    <string name="event_optimized_speed">ความเร็วที่ปรับให้เหมาะสม</string>
+    <string name="event_fast">เร็ว</string>
+    <string name="event_optimized_sub">ทุกอย่างทำงานราบรื่น</string>
+    <string name="event_done">เสร็จสิ้น</string>
+</resources>

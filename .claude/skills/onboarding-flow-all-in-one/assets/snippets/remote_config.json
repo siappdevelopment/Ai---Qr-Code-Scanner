@@ -1,0 +1,61 @@
+{
+  "_comment": "Remote Config parameter name: QRScanner_<versionCode><RC_KEY_SUFFIX> (RC_KEY_SUFFIX is '' in release, '_qa' in the QA build). The value is this JSON. Optional profile keys 'paid_user' / 'normal_user' replace the root by referrer. Names below are the ones THIS app reads; PolicyScreen/OnBoarding from older apps map to Collection/Intro.",
+  "Show_Screen_Flow": ["Language", "Collection", "Permission", "DefultSettingHome", "Intro"],
+  "Privacy_Policy": "https://example.com/privacy",
+  "Redirect_Home_Launcher": false,
+  "Ad_Priority": "",
+  "Google_Ad_Failed_Show_Quiz": false,
+  "App_Open_Id": "ca-app-pub-xxx/app-open",
+  "Native_Ad_Label_Color": "",
+  "Native_Ad_Button_Color_light": "",
+  "Native_Ad_Button_Color_dark": "",
+  "inter_ads": { "inter_ads_id": "ca-app-pub-xxx/inter" },
+  "Screen": {
+    "SplashScreen": {
+      "Splash_Duration": 3,
+      "Splash_Ad_Show": true,
+      "Splash_Ad_Type": "native",
+      "Splash_Banner_Id": "",
+      "Splash_Native_Id": "ca-app-pub-xxx/native",
+      "After_Splash_Ad_Show": true,
+      "After_Splash_Ad_Type": "inter",
+      "After_Splash_Interstitial_Id": "ca-app-pub-xxx/inter"
+    },
+    "LanguageScreen": {
+      "Language_Ad_Show": true,
+      "Language_Ad_Type": "native",
+      "Language_Banner_Id": "",
+      "Language_Native_Id": "ca-app-pub-xxx/native",
+      "Language_Interstitial_Ad_Show": false
+    },
+    "PermissionDefaultScreen": {
+      "PermissionDefault_Ad_Show": true,
+      "PermissionDefault_Ad_Type": "banner",
+      "PermissionDefault_Banner_Id": "ca-app-pub-xxx/banner",
+      "PermissionDefault_Native_Id": "",
+      "After_Default_Ad_Show": true,
+      "After_Default_Ad_Type": "inter"
+    },
+    "IntroScreen": {
+      "Intro_Screen_Count": 3,
+      "Intro_Ad_Show": true,
+      "Intro_Ad_Type": "native",
+      "Intro_Banner_Id": "",
+      "Intro_Native_Id": "ca-app-pub-xxx/native",
+      "Intro_Interstitial_Ad_Show": false
+    },
+    "OtherScreen": {
+      "Other_Ad_Show": true,
+      "Other_Ad_Type": "native",
+      "Other_Banner_Id": "",
+      "Other_Native_Id": "",
+      "Other_Interstitial_Id": "ca-app-pub-xxx/inter"
+    }
+  },
+  "launcher_home_screen": {
+    "launcher_notification_push_show": false,
+    "launcher_notification_push_time": 24,
+    "launcher_notification_push_title": "",
+    "launcher_notification_push_description": ""
+  }
+}

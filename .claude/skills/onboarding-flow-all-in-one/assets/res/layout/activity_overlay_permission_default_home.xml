@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- Default Home guide card shown centered over the system "Default home app" screen. -->
+    <LinearLayout
+        android:id="@+id/overlay_root"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_dialog"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="20dp">
+
+        <ImageView
+            android:id="@+id/ivGuideIcon"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:contentDescription="@null"
+            android:src="@mipmap/ic_launcher" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvGuideName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/default_home_guide_message"
+                android:textColor="#6B7280"
+                android:textSize="@dimen/_10sdp" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/hand_click"
+            android:layout_width="76dp"
+            android:layout_height="138dp"
+            android:clipChildren="false"
+            android:clipToPadding="false">
+
+            <View
+                android:id="@+id/homeGuideRipple"
+                android:layout_width="58dp"
+                android:layout_height="58dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_home_guide_radio_ripple" />
+
+            <FrameLayout
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_home_guide_radio_on">
+
+                <View
+                    android:id="@+id/homeGuideRadioDot"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_home_guide_radio_dot" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/homeGuideHand"
+                android:layout_width="60dp"
+                android:layout_height="69dp"
+                android:layout_gravity="top|center_horizontal"
+                android:layout_marginTop="69dp"
+                android:fontFamily="sans"
+                android:gravity="top|center_horizontal"
+                android:includeFontPadding="false"
+                android:text="@string/home_selection_tap_hand"
+                android:textSize="52sp" />
+        </FrameLayout>
+    </LinearLayout>
+</FrameLayout>

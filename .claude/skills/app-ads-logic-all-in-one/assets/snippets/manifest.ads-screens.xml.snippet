@@ -1,0 +1,65 @@
+<!-- Components the ads / event / call-end / reminder features need (reference app, package com.qrcode.scanner).
+     Permissions: INTERNET, ACCESS_NETWORK_STATE, POST_NOTIFICATIONS, READ_PHONE_STATE, SYSTEM_ALERT_WINDOW,
+     USE_FULL_SCREEN_INTENT, WAKE_LOCK, RECEIVE_BOOT_COMPLETED, com.google.android.gms.permission.AD_ID.
+     Also required: <meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-...~..."/>
+     (no app id = AdPlacement.canRequestAds() is always false = no ad ever loads). -->
+
+<!-- Charging in/out and Install/Uninstall prompt screens (shown over the lock screen) -->
+<activity android:name="com.qrcode.scanner.launcher.activities.ChargingScreenActivity"
+    android:excludeFromRecents="true" android:exported="false" android:launchMode="singleTask"
+    android:screenOrientation="portrait" android:showWhenLocked="true" android:turnScreenOn="true"
+    android:theme="@style/Theme.EventPrompt" />
+<activity android:name="com.qrcode.scanner.launcher.activities.InstallUninstallScreenActivity"
+    android:excludeFromRecents="true" android:exported="false" android:launchMode="singleTask"
+    android:screenOrientation="portrait" android:showWhenLocked="true" android:turnScreenOn="true"
+    android:theme="@style/Theme.EventPrompt" />
+
+<!-- Call End screen -->
+<activity android:name="com.qrcode.scanner.launcher.activities.ClEndActivity"
+    android:excludeFromRecents="true" android:exported="true" android:launchMode="singleTask"
+    android:screenOrientation="portrait" android:showOnLockScreen="false" android:taskAffinity=""
+    android:theme="@style/Theme.ClEnd" android:turnScreenOn="false" android:windowSoftInputMode="adjustPan" />
+
+<!-- Despite its name PhoneCallStateService is a BroadcastReceiver: boot/update, power connected/disconnected, call state -->
+<receiver android:name="com.qrcode.scanner.launcher.services.PhoneCallStateService" android:enabled="true" android:exported="true">
+    <intent-filter android:priority="998">
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+        <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+        <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
+        <action android:name="android.intent.action.PHONE_STATE" />
+        <action android:name="android.intent.action.NEW_OUTGOING_CALL" />
+        <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+        <action android:name="com.example.autostart.ACTION_IMPLICIT_BROADCAST" />
+        <action android:name="com.example.autostart.ACTION_EXPLICIT_BROADCAST" />
+        <category android:name="com.example.autostart.CATEGORY_AUTOSTART" />
+    </intent-filter>
+</receiver>
+
+<!-- Call screening service (call-end detection helper) -->
+<service android:name="com.qrcode.scanner.launcher.receivers.CallEndReceiver" android:exported="true"
+    android:permission="android.permission.BIND_SCREENING_SERVICE">
+    <intent-filter><action android:name="android.telecom.CallScreeningService" /></intent-filter>
+</service>
+
+<!-- App installed / uninstalled -->
+<receiver android:name="com.qrcode.scanner.launcher.receivers.EventPromptReceiver" android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.PACKAGE_ADDED" />
+        <action android:name="android.intent.action.PACKAGE_REMOVED" />
+        <data android:scheme="package" />
+    </intent-filter>
+</receiver>
+
+<!-- Reboot: re-arm the default-launcher reminder and other schedules -->
+<receiver android:name="com.qrcode.scanner.launcher.receivers.BootReceiver" android:enabled="true" android:exported="true">
+    <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
+        <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED" />
+    </intent-filter>
+</receiver>
+
+<!-- Firebase push: call-end screen on a locked phone -->
+<service android:name="com.qrcode.scanner.launcher.services.MyFirebaseMessagingService" android:exported="false">
+    <intent-filter><action android:name="com.google.firebase.MESSAGING_EVENT" /></intent-filter>
+</service>

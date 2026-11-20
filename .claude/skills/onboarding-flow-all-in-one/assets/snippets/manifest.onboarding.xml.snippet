@@ -1,0 +1,44 @@
+<!-- permissions used by the flow -->
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+<uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+<!-- Splash = MainActivity (LAUNCHER). Home = LauncherHomeActivity (HOME category, needed for the Default Home role) -->
+<activity android:name="com.qrcode.scanner.MainActivity" android:exported="true" android:screenOrientation="portrait">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.LAUNCHER" />
+    </intent-filter>
+</activity>
+<activity android:name=".launcher.activities.LauncherHomeActivity"
+    android:clearTaskOnLaunch="true" android:excludeFromRecents="true" android:exported="true"
+    android:launchMode="singleTask" android:screenOrientation="portrait" android:stateNotNeeded="true"
+    android:taskAffinity="" android:theme="@style/Theme.Home">
+    <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
+        <category android:name="android.intent.category.HOME" />
+        <category android:name="android.intent.category.DEFAULT" />
+    </intent-filter>
+</activity>
+
+<!-- flow screens -->
+<activity android:name=".launcher.activities.LanguageActivity" android:configChanges="locale|layoutDirection" android:exported="false" android:screenOrientation="portrait" android:theme="@style/Theme.LauncherSettings" />
+<activity android:name=".launcher.activities.CollectionActivity" android:exported="false" android:screenOrientation="portrait" android:theme="@style/Theme.LauncherSettings" />
+<activity android:name=".launcher.activities.PermissionActivity" android:exported="false" android:screenOrientation="portrait" android:theme="@style/Theme.LauncherSettings" />
+<activity android:name=".launcher.activities.DefaultActivity" android:exported="false" android:screenOrientation="portrait" android:theme="@style/Theme.LauncherSettings" />
+<activity android:name=".launcher.activities.DefaultSettingHomeActivity" android:exported="false" android:screenOrientation="portrait" android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+<activity android:name=".launcher.activities.DefaultHomeGuideActivity" android:excludeFromRecents="true" android:exported="false" android:screenOrientation="portrait" android:taskAffinity="" android:theme="@style/Theme.ClEnd" />
+<activity android:name=".launcher.activities.OverlayPermissionGuideActivity" android:excludeFromRecents="true" android:exported="false" android:screenOrientation="portrait" android:taskAffinity="" android:theme="@style/Theme.ClEnd" />
+<activity android:name=".launcher.activities.Intro1Activity" android:exported="false" android:screenOrientation="portrait" android:theme="@style/Theme.LauncherSettings" />
+<activity android:name=".launcher.activities.Intro2Activity" android:exported="false" android:screenOrientation="portrait" android:theme="@style/Theme.LauncherSettings" />
+<activity android:name=".launcher.activities.Intro3Activity" android:exported="false" android:screenOrientation="portrait" android:theme="@style/Theme.LauncherSettings" />
+
+<!-- Firebase -->
+<service android:name=".launcher.services.MyFirebaseMessagingService" android:exported="false">
+    <intent-filter><action android:name="com.google.firebase.MESSAGING_EVENT" /></intent-filter>
+</service>
+<meta-data android:name="com.google.android.gms.ads.APPLICATION_ID" android:value="ca-app-pub-xxx~yyy" />

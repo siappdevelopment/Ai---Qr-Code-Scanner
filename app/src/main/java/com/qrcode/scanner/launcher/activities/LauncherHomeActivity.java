@@ -30,6 +30,7 @@ import com.qrcode.scanner.launcher.helpers.LauncherSettingsHelper;
 import com.qrcode.scanner.launcher.common.AdPlacement;
 import com.qrcode.scanner.launcher.common.AppUtils;
 import com.qrcode.scanner.launcher.common.InstallReferrerStartup;
+import com.qrcode.scanner.launcher.common.SwipeAds;
 import com.qrcode.scanner.launcher.common.WidgetNavigation;
 import com.qrcode.scanner.launcher.helpers.ThemeHelper;
 import com.qrcode.scanner.launcher.remote.RemoteConfigHelper;
@@ -191,6 +192,8 @@ public class LauncherHomeActivity extends AppCompatActivity {
         super.onResume();
         com.qrcode.scanner.launcher.helpers.DefaultHomePromptHelper.reportDefaultSetIfRequested(this);
         AdPlacement.prepareRightSwipePreload(this);
+        // An unlock that just happened shows its App Open ad now (the QR page is left to ProcessAppOpen).
+        com.qrcode.scanner.launcher.common.UnlockAppOpenAds.get().onHomeResumed(this);
         hideLauncherFromRecents();
         if (shouldHandleAfterDefaultSetup()) {
             completeAfterDefaultSetup();
@@ -223,6 +226,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         hideLauncherFromRecents();
+        com.qrcode.scanner.launcher.common.UnlockAppOpenAds.get().onHomePaused(this);
         super.onPause();
     }
 
@@ -321,7 +325,8 @@ public class LauncherHomeActivity extends AppCompatActivity {
         if (vpLauncher == null) {
             return;
         }
-        vpLauncher.setUserInputEnabled(launcherPagerSwipeAllowed);
+        // Swiping only LEAVES Home: on an edge page Back is the way home (so its Back ad cannot be skipped by a swipe).
+        vpLauncher.setUserInputEnabled(launcherPagerSwipeAllowed && vpLauncher.getCurrentItem() == LauncherPagerAdapter.PAGE_HOME);
     }
 
     public boolean isLauncherPagerScrolling() {
@@ -507,8 +512,35 @@ public class LauncherHomeActivity extends AppCompatActivity {
         if (navigatingToHome) {
             return;
         }
+        // Back from an edge page: the Back ad of that side (same ad management as its swipe), then Home.
+        int page = vpLauncher.getCurrentItem();
+        if (page == LauncherPagerAdapter.PAGE_RIGHT || page == LauncherPagerAdapter.PAGE_SUB) {
+            SwipeAds.onBack(this, page == LauncherPagerAdapter.PAGE_RIGHT ? SwipeAds.Side.RIGHT : SwipeAds.Side.LEFT, () -> {
+                if (!isFinishing() && !isDestroyed()) {
+                    returnToLauncherHome(true);
+                }
+            });
+            return;
+        }
         returnToLauncherHome(true);
     }
+
+    /** The Default Home popup of the home fragment, used by the right swipe (the popup wins over the ad). */
+    private final SwipeAds.PopupHost defaultHomePopupHost = new SwipeAds.PopupHost() {
+        @Override
+        public boolean canShowPopup() {
+            LauncherHomeFragment fragment = findLauncherHomeFragment();
+            return fragment != null && fragment.canShowDefaultHomePopup();
+        }
+
+        @Override
+        public void showPopup() {
+            LauncherHomeFragment fragment = findLauncherHomeFragment();
+            if (fragment != null) {
+                fragment.maybeShowDefaultHomePopup();
+            }
+        }
+    };
 
     private void returnToLauncherHome(boolean smoothScroll) {
         if (vpLauncher == null) {
@@ -551,6 +583,7 @@ public class LauncherHomeActivity extends AppCompatActivity {
         vpLauncher.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             private int lastSelectedPage = initialPage;
             private boolean pendingRightSwipeOpen;
+            private boolean pendingLeftSwipeOpen;
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -579,7 +612,16 @@ public class LauncherHomeActivity extends AppCompatActivity {
                     pendingRightSwipeOpen = true;
                     notifyRightSwipeTutorialCompleted();
                 }
+                // A swipe ad only follows a move that LEAVES Home; coming back from an edge page is the Back ad's job.
+                if (lastSelectedPage == LauncherPagerAdapter.PAGE_HOME && position == LauncherPagerAdapter.PAGE_SUB) {
+                    pendingLeftSwipeOpen = true;
+                }
+                if (position == LauncherPagerAdapter.PAGE_HOME) {
+                    pendingRightSwipeOpen = false;
+                    pendingLeftSwipeOpen = false;
+                }
                 lastSelectedPage = position;
+                applyLauncherPagerInputPolicy();
             }
 
             @Override
@@ -591,22 +633,14 @@ public class LauncherHomeActivity extends AppCompatActivity {
                     }
                     if (pendingRightSwipeOpen && vpLauncher.getCurrentItem() == LauncherPagerAdapter.PAGE_RIGHT) {
                         pendingRightSwipeOpen = false;
-                        LauncherHomeFragment popupFragment = findLauncherHomeFragment();
-                        if (popupFragment != null && popupFragment.canShowDefaultHomePopup()) {
-                            // The Default Home permission screen is due: no Right Swipe ad, show the permission screen.
-                            popupFragment.maybeShowDefaultHomePopup();
-                            return;
-                        }
-                        AdPlacement.loadRightSwipeInterstitialAd(LauncherHomeActivity.this, () -> {
-                            if (isFinishing() || isDestroyed()) {
-                                return;
-                            }
-                            LauncherHomeFragment homeFragment = findLauncherHomeFragment();
-                            if (homeFragment != null) {
-                                homeFragment.maybeShowDefaultHomePopup();
-                            }
-                        });
+                        // Default Home popup first (no ad), then permissions (no ad), then the right-swipe ad.
+                        SwipeAds.onRightSwipe(LauncherHomeActivity.this, defaultHomePopupHost);
                     }
+                    if (pendingLeftSwipeOpen && vpLauncher.getCurrentItem() == LauncherPagerAdapter.PAGE_SUB) {
+                        pendingLeftSwipeOpen = false;
+                        SwipeAds.onLeftSwipe(LauncherHomeActivity.this);
+                    }
+                    applyLauncherPagerInputPolicy();
                 }
             }
         });

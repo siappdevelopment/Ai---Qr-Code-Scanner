@@ -99,6 +99,13 @@
         <item name="android:windowLightNavigationBar">true</item>
     </style>
 
+    <!-- Recent screen: no window animation (the overlay / system overview is already on screen), page-coloured background. -->
+    <style name="Theme.RecentScreen" parent="Theme.LauncherSettings">
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowBackground">@color/surface_primary</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
     <style name="Theme.ClEnd" parent="Theme.LauncherSettings">
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>

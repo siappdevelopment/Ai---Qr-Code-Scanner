@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.qrcode.scanner.data.settings.SettingsRepositoryKt;
 import com.qrcode.scanner.launcher.activities.EventPromptActivity;
+import com.qrcode.scanner.launcher.common.AdGates;
 import com.qrcode.scanner.launcher.common.AdPlacement;
 import com.qrcode.scanner.launcher.common.AppUtils;
 import com.qrcode.scanner.launcher.common.EventPromptWatch;
@@ -26,6 +27,12 @@ public class QrScannerApplication extends Application {
         AppUtils.restoreSavedLanguage(this);
         SettingsRepositoryKt.applyStoredAppNightMode(this);
         RemoteConfigValues.ensureLoaded(this);
+        AdPlacement.loadRecentConfig(this);
+        com.qrcode.scanner.launcher.common.RecentsKey.install(this);
+        registerActivityLifecycleCallbacks(new com.qrcode.scanner.launcher.common.RecentsVisibilitySync());
+        AdGates.init(this);
+        com.qrcode.scanner.launcher.common.UnlockAppOpenAds.get().start(this);
+        AdGates.requestIpCountryIfNeeded(this);
         EventPromptWatch.register(this);
         AdPlacement.initializeIfConfigured(this);
         new com.qrcode.scanner.launcher.common.ProcessAppOpen(this).register();

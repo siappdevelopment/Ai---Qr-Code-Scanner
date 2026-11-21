@@ -628,5 +628,9 @@
     <string name="next">Next</string>
     <string name="loading_ads_title">Loading Ads</string>
     <string name="loading_ads_desc">Please wait Ads will appear...</string>
+    <string name="recent_title">Recently Used Apps</string>
+    <string name="recent_empty">No Recent Apps</string>
+    <string name="recent_clear_all">Clear all</string>
+    <string name="recent_features_title">Quick Actions</string>
 
 </resources>

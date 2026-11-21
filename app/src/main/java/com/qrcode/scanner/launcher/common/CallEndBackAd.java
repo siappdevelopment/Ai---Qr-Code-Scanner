@@ -332,7 +332,7 @@ public class CallEndBackAd {
     }
 
     public static void admobAppOpenAdLoad(Activity context) {
-        if (!isTypeConfigured(TYPE_APP_OPEN) || context == null || appOpenAd != null || appOpenLoading) {
+        if (AdPlacement.shouldUseQuizPriority() || !isTypeConfigured(TYPE_APP_OPEN) || context == null || appOpenAd != null || appOpenLoading) {
             return;
         }
 
@@ -408,7 +408,8 @@ public class CallEndBackAd {
     }
 
     public static void loadAd(Activity context) {
-        if (context == null) {
+        // Ad_Priority QUIZ: no Google ad request at all (the Quiz ad is shown at close time instead).
+        if (context == null || AdPlacement.shouldUseQuizPriority()) {
             return;
         }
         dropUnconfiguredAds();
@@ -425,7 +426,7 @@ public class CallEndBackAd {
     }
 
     private static void admobFullScreenAdLoad(Activity context) {
-        if (!isTypeConfigured(TYPE_INTER) || context == null || fullScreenAds != null || interstitialLoading) {
+        if (AdPlacement.shouldUseQuizPriority() || !isTypeConfigured(TYPE_INTER) || context == null || fullScreenAds != null || interstitialLoading) {
             return;
         }
 
@@ -461,7 +462,7 @@ public class CallEndBackAd {
     }
 
     private static void admobNativeAdLoad(Activity context) {
-        if (!isTypeConfigured(TYPE_NATIVE) || context == null || nativeAd != null || nativeLoading) {
+        if (AdPlacement.shouldUseQuizPriority() || !isTypeConfigured(TYPE_NATIVE) || context == null || nativeAd != null || nativeLoading) {
             return;
         }
 
@@ -571,6 +572,9 @@ public class CallEndBackAd {
     @NonNull
     private static Set<String> configuredTypes() {
         Set<String> types = new LinkedHashSet<>();
+        if (!AdGates.adsLocationAllowed()) {
+            return types;
+        }
         String mode = normalizeAdType(AdPlacement.getClEndBackAdType());
         if (TYPE_INTER.equals(mode) || TYPE_APP_OPEN.equals(mode) || TYPE_NATIVE.equals(mode)) {
             if (hasUnitId(mode)) {

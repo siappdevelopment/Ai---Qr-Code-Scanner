@@ -11,7 +11,7 @@ import com.qrcode.scanner.MainActivity;
 import com.qrcode.scanner.launcher.activities.CollectionActivity;
 import com.qrcode.scanner.launcher.activities.DefaultActivity;
 import com.qrcode.scanner.launcher.activities.DefaultSettingHomeActivity;
-import com.qrcode.scanner.launcher.activities.Intro1Activity;
+import com.qrcode.scanner.launcher.activities.IntroActivity;
 import com.qrcode.scanner.launcher.activities.LanguageActivity;
 import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
 import com.qrcode.scanner.launcher.activities.PermissionActivity;
@@ -133,16 +133,18 @@ public final class ScreenFlowNavigation {
             return AppUtils.isCollectionScreenCompleted(context);
         }
         if (ScreenFlowConfig.SCREEN_PERMISSION.equalsIgnoreCase(screenName)) {
-            return AppUtils.isPermissionScreenCompleted(context);
+            // Shown again whenever a permission is missing; skipped only when everything is already allowed.
+            return AppUtils.areOnboardingPermissionsAllowed(context);
         }
         if (ScreenFlowConfig.SCREEN_DEFAULT_HOME.equalsIgnoreCase(screenName)) {
+            // Shown again until this app really is the default Home app (the saved flag does not skip it).
             if (AppUtils.isDefaultHomeApp(context) && !AppUtils.isDefaultHomeScreenCompleted(context)) {
                 AppUtils.setDefaultHomeScreenCompleted(context, true);
             }
-            return AppUtils.isDefaultHomeScreenCompleted(context) || AppUtils.isDefaultHomeApp(context);
+            return AppUtils.isDefaultHomeApp(context);
         }
         if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screenName)) {
-            return AppUtils.isDefaultHomeApp(context) || AppUtils.isDefaultSettingHomeScreenCompleted(context);
+            return AppUtils.isDefaultHomeApp(context);
         }
         if (ScreenFlowConfig.SCREEN_INTRO.equalsIgnoreCase(screenName)) {
             return AppUtils.getIntroCompleted(context);
@@ -271,7 +273,7 @@ public final class ScreenFlowNavigation {
             return new Intent(context, DefaultSettingHomeActivity.class);
         }
         if (ScreenFlowConfig.SCREEN_INTRO.equalsIgnoreCase(screen)) {
-            return new Intent(context, Intro1Activity.class);
+            return new Intent(context, IntroActivity.class);
         }
         return null;
     }
@@ -303,7 +305,7 @@ public final class ScreenFlowNavigation {
                 openMain(context);
                 return;
             }
-            Intent introIntent = new Intent(context, Intro1Activity.class);
+            Intent introIntent = new Intent(context, IntroActivity.class);
             introIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             context.startActivity(introIntent);
             return;

@@ -523,6 +523,20 @@ public final class AppUtils {
         dialog.getWindow().getDecorView().setPadding(padding, 0, padding, 0);
     }
 
+    /**
+     * Everything the Permission screen asks for is already allowed: phone state, camera, notifications (Android 13+)
+     * and Display over other apps (or this app is the default Home app, which needs no overlay). Used to skip that
+     * screen when the flow runs again.
+     */
+    public static boolean areOnboardingPermissionsAllowed(Context context) {
+        if (context == null) {
+            return false;
+        }
+        boolean notification = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || AdPlacement.isNotificationGranted(context);
+        return hasPhoneStatePermission(context) && hasCameraPermission(context) && notification
+                && (hasOverlayPermission(context) || isDefaultHomeApp(context));
+    }
+
     public static boolean hasPhoneStatePermission(Context context) {
         if (context == null) {
             return false;

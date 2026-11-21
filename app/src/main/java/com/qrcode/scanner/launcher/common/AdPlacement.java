@@ -94,13 +94,6 @@ public final class AdPlacement {
     private static final String LAUNCHER_APP_AD_TYPE_QUIZ_NATIVE = "quiz_native";
     private static final String LAUNCHER_APP_AD_TYPE_QUIZ_BROWSER = "quiz_browser";
 
-    private static int rightSwipeInterstitialCount = 1;
-    private static int rightSwipePreloadToken;
-    private static boolean rightSwipePreloadInFlight;
-    @Nullable
-    private static InterstitialAd preloadedRightSwipeAd;
-    @Nullable
-    private static WeakReference<Activity> rightSwipeHost;
 
     private static boolean adsSdkStarted;
     private static String adPriority = "";
@@ -202,8 +195,12 @@ public final class AdPlacement {
         }
     }
 
+    /**
+     * A Google ad may be requested. When Ad_Priority is QUIZ this is always false: no Google ad request of any kind is
+     * sent (Quiz ads are shown instead), so every loader that checks this gate stays silent.
+     */
     public static boolean canRequestAds(@Nullable Context context) {
-        return adsSdkStarted && hasAdMobAppId(context);
+        return !shouldUseQuizPriority() && adsSdkStarted && hasAdMobAppId(context) && AdGates.adsLocationAllowed(context);
     }
 
     public static boolean shouldUseQuizPriority() {
@@ -308,123 +305,11 @@ public final class AdPlacement {
         QuizAds.openLink(activity, url);
     }
 
+    /** Kept for existing callers: the swipe ads (right and left) now live in {@link SwipeAds}. */
     public static void prepareRightSwipePreload(@Nullable Context context) {
-        if (context instanceof Activity) {
-            rightSwipeHost = new WeakReference<>((Activity) context);
-        }
-        Activity host = rightSwipeHost == null ? null : rightSwipeHost.get();
-        if (!isRightSwipePreloadType()) {
-            clearRightSwipePreload();
-            return;
-        }
-        preloadRightSwipeAd(host);
+        SwipeAds.preparePreload(context instanceof Activity ? (Activity) context : null);
     }
 
-    public static void loadRightSwipeInterstitialAd(Activity activity, @Nullable OnInterstitialAdListener onFinished) {
-        if (!RemoteConfigValues.getRightSwipeInterstitialAdShow()) {
-            notifyComplete(onFinished);
-            return;
-        }
-        int threshold = RemoteConfigValues.getRightSwipeInterstitial();
-        if (threshold > 0) {
-            if (threshold == rightSwipeInterstitialCount) {
-                rightSwipeInterstitialCount = 1;
-            } else {
-                rightSwipeInterstitialCount++;
-                notifyComplete(onFinished);
-                return;
-            }
-        }
-        if (isRightSwipePreloadType() && preloadedRightSwipeAd != null && !shouldUseQuizPriority()) {
-            InterstitialAd ready = preloadedRightSwipeAd;
-            preloadedRightSwipeAd = null;
-            showReadyRightSwipeAd(activity, ready, onFinished);
-            return;
-        }
-        loadRightSwipeNow(activity, onFinished);
-    }
-
-    private static boolean isRightSwipePreloadType() {
-        return RemoteConfigValues.getRightSwipeInterstitialAdShow()
-                && "preload".equalsIgnoreCase(RemoteConfigValues.getRightSwipeAdsType().trim());
-    }
-
-    private static void loadRightSwipeNow(Activity activity, @Nullable OnInterstitialAdListener onFinished) {
-        loadInterstitialAdInternal(activity, RemoteConfigValues.getInterAdsId(), () -> {
-            if (isRightSwipePreloadType()) {
-                preloadRightSwipeAd(activity);
-            }
-            notifyComplete(onFinished);
-        }, true);
-    }
-
-    private static void preloadRightSwipeAd(@Nullable Activity activity) {
-        if (activity == null || activity.isFinishing() || activity.isDestroyed() || !isRightSwipePreloadType() || preloadedRightSwipeAd != null || rightSwipePreloadInFlight || shouldUseQuizPriority()) {
-            return;
-        }
-        initializeIfConfigured(activity);
-        String unitId = RemoteConfigValues.getInterAdsId().trim();
-        if (!canLoad(activity, unitId)) {
-            return;
-        }
-        int token = ++rightSwipePreloadToken;
-        rightSwipePreloadInFlight = true;
-        AnalyticsEvents.ad(activity, AnalyticsEvents.INTERSTITIAL_PRELOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
-        InterstitialAd.load(activity, unitId, new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
-            @Override
-            public void onAdLoaded(@NonNull InterstitialAd ad) {
-                AnalyticsEvents.ad(activity, AnalyticsEvents.INTERSTITIAL_LOAD, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
-                if (token != rightSwipePreloadToken || !isRightSwipePreloadType()) {
-                    rightSwipePreloadInFlight = false;
-                    return;
-                }
-                rightSwipePreloadInFlight = false;
-                preloadedRightSwipeAd = ad;
-            }
-
-            @Override
-            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                AnalyticsEvents.ad(activity, AnalyticsEvents.INTERSTITIAL_FAIL, AnalyticsEvents.FORMAT_INTERSTITIAL, unitId);
-                if (token == rightSwipePreloadToken) {
-                    rightSwipePreloadInFlight = false;
-                }
-            }
-        });
-    }
-
-    private static void clearRightSwipePreload() {
-        rightSwipePreloadToken++;
-        rightSwipePreloadInFlight = false;
-        preloadedRightSwipeAd = null;
-    }
-
-    private static void showReadyRightSwipeAd(Activity activity, InterstitialAd ad, @Nullable OnInterstitialAdListener listener) {
-        AtomicBoolean completed = new AtomicBoolean(false);
-        ad.setOnPaidEventListener(adValue -> logAdRevenue(activity, adValue));
-        ad.setFullScreenContentCallback(new FullScreenContentCallback() {
-            @Override
-            public void onAdDismissedFullScreenContent() {
-                preloadRightSwipeAd(activity);
-                notifyComplete(listener, completed);
-            }
-
-            @Override
-            public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
-                loadRightSwipeNow(activity, listener);
-            }
-        });
-        activity.getWindow().getDecorView().post(() -> {
-            if (activity.isFinishing() || activity.isDestroyed()) {
-                notifyComplete(listener, completed);
-                return;
-            }
-            try {
-                ad.show(activity);
-            } catch (Exception ignored) {
-                loadRightSwipeNow(activity, listener);
-            }
-        });
-    }
 
     public static void setNativeAdLabelColor(String value) {
         nativeAdLabelColor = value == null ? "" : value;
@@ -648,6 +533,17 @@ public final class AdPlacement {
 
     public static void setLanguageNativeId(String value) {
         languageNativeId = value == null ? "" : value;
+    }
+
+    private static boolean languageSelectRefreshAds = true;
+
+    /** Language_Select_Refresh_Ads: the Language ad starts with a gray button and is replaced once (blue button) when a language is picked. */
+    public static boolean getLanguageSelectRefreshAds() {
+        return languageSelectRefreshAds;
+    }
+
+    public static void setLanguageSelectRefreshAds(boolean value) {
+        languageSelectRefreshAds = value;
     }
 
     public static boolean getLanguageInterstitialAdShow() {
@@ -1032,6 +928,13 @@ public final class AdPlacement {
      * @param onGoogleFailedQuiz when set, replaces the default small Quiz banner fallback after a Google load failure
      */
     public static void loadAdaptiveBannerAd(Activity activity, String bannerId, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd, boolean googleOnly, boolean largeInline, @Nullable Runnable onGoogleFailedQuiz) {
+        loadAdaptiveBannerAd(activity, bannerId, rlBannerAdView, slBannerShimmer, llBannerAd, googleOnly, largeInline, onGoogleFailedQuiz, 0);
+    }
+
+    /**
+     * @param inlineMaxHeightDp with largeInline: the tallest the inline adaptive banner may be (0 = the screen height)
+     */
+    public static void loadAdaptiveBannerAd(Activity activity, String bannerId, RelativeLayout rlBannerAdView, ShimmerFrameLayout slBannerShimmer, LinearLayout llBannerAd, boolean googleOnly, boolean largeInline, @Nullable Runnable onGoogleFailedQuiz, int inlineMaxHeightDp) {
         if (activity != null) {
             initializeIfConfigured(activity);
         }
@@ -1048,7 +951,9 @@ public final class AdPlacement {
         }
         prepareBannerLoading(slBannerShimmer, llBannerAd);
         AdView adView = new AdView(activity);
-        adView.setAdSize(getAdaptiveAdSize(activity, -1, largeInline));
+        adView.setAdSize(largeInline && inlineMaxHeightDp > 0
+                ? AdSize.getInlineAdaptiveBannerAdSize(bannerWidthDp(activity), inlineMaxHeightDp)
+                : getAdaptiveAdSize(activity, -1, largeInline));
         adView.setAdUnitId(unitId);
         llBannerAd.addView(adView);
         adView.setAdListener(new AdListener() {
@@ -1194,12 +1099,17 @@ public final class AdPlacement {
      * opened again before a new one is due). The ad must not have been destroyed.
      */
     public static void bindLoadedNative(Activity activity, FrameLayout flNativeAd, NativeAd nativeAd, String type) {
+        bindLoadedNative(activity, flNativeAd, nativeAd, type, null);
+    }
+
+    /** As above, with the call-to-action button in {@code ctaColorHex} (e.g. gray first, blue after a Language pick). */
+    public static void bindLoadedNative(Activity activity, FrameLayout flNativeAd, NativeAd nativeAd, String type, @Nullable String ctaColorHex) {
         if (activity == null || activity.isFinishing() || flNativeAd == null || nativeAd == null) {
             return;
         }
         Context adContext = AdTheme.forAds(activity, false);
         NativeAdView adView = (NativeAdView) LayoutInflater.from(adContext).inflate(resolveGoogleNativeLayout(type), flNativeAd, false);
-        populateNativeAdView(nativeAd, adView, type);
+        populateNativeAdView(nativeAd, adView, type, ctaColorHex);
         flNativeAd.removeAllViews();
         flNativeAd.addView(GestureSafeNativeAdView.wrap(adView));
         flNativeAd.setVisibility(View.VISIBLE);
@@ -1502,6 +1412,7 @@ public final class AdPlacement {
         if (context == null) {
             return;
         }
+        RecentAppsStore.record(context, packageName);
         String launched = packageName == null ? "" : packageName.trim();
         context.getApplicationContext().getSharedPreferences(LAUNCHER_APP_BACK_PREFS, Context.MODE_PRIVATE).edit().putBoolean("waitingForLauncherAppReturn", true).putString("lastLaunchedPackage", launched).apply();
     }
@@ -1601,7 +1512,7 @@ public final class AdPlacement {
             done.run();
             return;
         }
-        if (!isCountryAllowed(activity, config.backAdCountryList)) {
+        if (!isCountryAllowed(activity, config.backAdCountryList, config.backAdExcludeList)) {
             done.run();
             return;
         }
@@ -1690,7 +1601,7 @@ public final class AdPlacement {
         }
         if (shouldUseQuizPriority() || !canRequestAds(app) || !isNetworkAvailable(app)
                 || getDaysSinceInstall(app) < config.backAdDayCount
-                || !isCountryAllowed(app, config.backAdCountryList)) {
+                || !isCountryAllowed(app, config.backAdCountryList, config.backAdExcludeList)) {
             return;
         }
         SharedPreferences prefs = app.getSharedPreferences(EVENT_SCREEN_AD_PREFS, Context.MODE_PRIVATE);
@@ -1894,17 +1805,10 @@ public final class AdPlacement {
         return "";
     }
 
-    private static boolean isCountryAllowed(Context context, @Nullable List<String> allowedCountries) {
-        if (allowedCountries == null || allowedCountries.isEmpty()) {
-            return true;
-        }
-        String currentCountry = getDeviceCountry(context);
-        for (String country : allowedCountries) {
-            if (country != null && country.equalsIgnoreCase(currentCountry)) {
-                return true;
-            }
-        }
-        return false;
+    private static boolean isCountryAllowed(Context context, @Nullable List<String> allowedCountries, @Nullable List<String> excludedPlaces) {
+        // Screen's own include list (country name / ISO code / state / city of the device: SIM, network, locale, IP),
+        // and the screen's own exclude list: a place in it never shows the ad.
+        return AdGates.matchesAnyPlace(context, allowedCountries) && AdGates.isLocationAllowed(context, null, excludedPlaces);
     }
 
     public static boolean canShowLauncherAppNativeListAd(Context context) {
@@ -2069,7 +1973,59 @@ public final class AdPlacement {
         loader.loadAd(new AdRequest.Builder().build());
     }
 
-    private static void presentNativeFullAd(Activity activity, NativeAd nativeAd, OnInterstitialAdListener listener, AtomicBoolean completed) {
+    /**
+     * Preloads a full-screen native ad (no loading dialog). {@code onFailed} runs when ads cannot be requested here
+     * (consent, location rule, no network, no id, Quiz priority) or when the load fails.
+     */
+    public static void preloadFullNativeAd(@Nullable Context context, @Nullable String adUnitId, @NonNull java.util.function.Consumer<NativeAd> onLoaded, @NonNull Runnable onFailed) {
+        String nativeId = adUnitId == null ? "" : adUnitId.trim();
+        if (context == null || nativeId.isEmpty() || shouldUseQuizPriority() || !canRequestAds(context) || !isNetworkAvailable(context)) {
+            onFailed.run();
+            return;
+        }
+        final Context app = context.getApplicationContext();
+        new AdLoader.Builder(app, nativeId).forNativeAd(nativeAd -> {
+            AnalyticsEvents.ad(app, AnalyticsEvents.NATIVE_LOAD, AnalyticsEvents.FORMAT_NATIVE, nativeId);
+            onLoaded.accept(nativeAd);
+        }).withAdListener(new AdListener() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+                AnalyticsEvents.ad(app, AnalyticsEvents.NATIVE_FAIL, AnalyticsEvents.FORMAT_NATIVE, nativeId);
+                onFailed.run();
+            }
+        }).build().loadAd(new AdRequest.Builder().build());
+    }
+
+    /** "google_inter" / "google_app_open" / "google_native" / "quiz_inter" / "quiz_app_open" / "quiz_native" / "quiz_browser", or "" when unknown. */
+    @NonNull
+    public static String normalizeSequenceAdType(@Nullable String adType) {
+        return normalizeLauncherAppAdType(adType);
+    }
+
+    /** One sequence step shown on demand (Google loads with the loading dialog; Quiz steps are Quiz ads). */
+    public static void executeSwipeSequenceAd(@NonNull Activity activity, @NonNull Runnable continueAction, @NonNull String adType,
+                                              @Nullable String interstitialId, @Nullable String fullNativeId, boolean quizOnFail) {
+        executeSequencedAd(activity, continueAction, adType, interstitialId, fullNativeId, quizOnFail);
+    }
+
+    /** One App Open request and show, no loading dialog (the unlock ad). A failure falls back to Quiz when {@code quizOnFail}. */
+    public static void loadAppOpenNoDialog(@NonNull Activity activity, @Nullable String appOpenUnitId, boolean quizOnFail, @NonNull Runnable onComplete) {
+        loadAppOpenAdInternal(activity, appOpenUnitId, onComplete::run, false, quizOnFail, false);
+    }
+
+    /** Single interstitial loaded on demand: loading dialog, Quiz priority and the Quiz fallback are honoured. */
+    public static void loadSwipeInterstitial(@NonNull Activity activity, @Nullable String interstitialId, boolean quizOnFail, @NonNull Runnable onComplete) {
+        loadInterstitialAdInternal(activity, interstitialId, onComplete::run, true, true, quizOnFail);
+    }
+
+    /** Shows an already loaded native ad full screen. {@code onClosed} runs once when it closes (or cannot show). */
+    @Nullable
+    public static Dialog presentFullNativeAd(@NonNull Activity activity, @NonNull NativeAd nativeAd, @NonNull Runnable onClosed) {
+        return presentNativeFullAd(activity, nativeAd, onClosed::run, new AtomicBoolean(false));
+    }
+
+    @Nullable
+    private static Dialog presentNativeFullAd(Activity activity, NativeAd nativeAd, OnInterstitialAdListener listener, AtomicBoolean completed) {
         Dialog full = new Dialog(activity, R.style.Theme_NativeFullAd);
         full.setCancelable(true);
         NativeAdView adView = (NativeAdView) LayoutInflater.from(AdTheme.forLauncher(activity)).inflate(R.layout.native_full_ad_layout, null);
@@ -2114,9 +2070,11 @@ public final class AdPlacement {
             if (close != null) {
                 close.bringToFront();
             }
+            return full;
         } catch (Exception e) {
             nativeAd.destroy();
             notifyComplete(listener, completed);
+            return null;
         }
     }
 
@@ -2471,6 +2429,11 @@ public final class AdPlacement {
     }
 
     public static void populateNativeAdView(NativeAd nativeAd, NativeAdView adView, String type) {
+        populateNativeAdView(nativeAd, adView, type, null);
+    }
+
+    /** @param ctaColorHex when set, the call-to-action button uses this colour instead of Native_Ad_Button_Color. */
+    public static void populateNativeAdView(NativeAd nativeAd, NativeAdView adView, String type, @Nullable String ctaColorHex) {
         boolean hasMedia = "large".equalsIgnoreCase(type) || "medium".equalsIgnoreCase(type) || "full".equalsIgnoreCase(type);
         if (hasMedia) {
             adView.setMediaView(adView.findViewById(R.id.ad_media));
@@ -2495,7 +2458,7 @@ public final class AdPlacement {
         if (adView.getCallToActionView() instanceof AppCompatTextView) {
             AppCompatTextView button = (AppCompatTextView) adView.getCallToActionView();
             applyCallToAction(button, nativeAd.getCallToAction());
-            applyBackgroundColor(button, getNativeAdButtonColor(adView.getContext()), R.color.primary);
+            applyBackgroundColor(button, ctaColorHex != null && !ctaColorHex.trim().isEmpty() ? ctaColorHex : getNativeAdButtonColor(adView.getContext()), R.color.primary);
         }
         View attribution = adView.findViewById(R.id.ad_attribution);
         applyBackgroundColor(attribution, nativeAdLabelColor, 0);
@@ -2683,7 +2646,7 @@ public final class AdPlacement {
     }
 
     @Nullable
-    private static Dialog showInterstitialLoadingDialog(Activity activity) {
+    public static Dialog showInterstitialLoadingDialog(Activity activity) {
         if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
             return null;
         }
@@ -2702,7 +2665,7 @@ public final class AdPlacement {
         }
     }
 
-    private static void dismissInterstitialLoadingDialog(@Nullable Dialog dialog) {
+    public static void dismissInterstitialLoadingDialog(@Nullable Dialog dialog) {
         if (dialog == null || !dialog.isShowing()) {
             return;
         }
@@ -2723,7 +2686,6 @@ public final class AdPlacement {
         listener.onInterstitialAdListener();
     }
 
-    private static boolean callEndIpLookupStarted;
     public static final String IP_COUNTRY_NAME_KEY = "ip_country_name";
 
     public static void ensureClEndConfig(@Nullable Context context) {
@@ -2838,26 +2800,7 @@ public final class AdPlacement {
             return;
         }
         ensureClEndConfig(context);
-        if (!getClEndBackAdCountryIP() || callEndIpLookupStarted || !getIpCountryName(context).isEmpty()) {
-            return;
-        }
-        callEndIpLookupStarted = true;
-        Context appContext = context.getApplicationContext();
-        IPAddressHelper.getCountryName(new IPAddressHelper.IPCallback() {
-            @Override
-            public void onResponse(String countryName) {
-                if (countryName != null && !countryName.isEmpty()) {
-                    setIpCountryName(appContext, countryName);
-                } else {
-                    callEndIpLookupStarted = false;
-                }
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                callEndIpLookupStarted = false;
-            }
-        });
+        AdGates.requestIpCountryIfNeeded(context);
     }
 
     public static boolean canShowClEndBackAdOnPress(Context context, boolean notificationFlow, boolean fullAdVisible) {
@@ -2905,11 +2848,11 @@ public final class AdPlacement {
             if (!getAllAllowPermissionShowNotification()) {
                 return false;
             }
-            return checkDaysAndCountry(installDays, getNotificationCallOverlayInstallDays(), currentCountry, getNotificationCallOverlayCountryList(), true);
+            return checkDaysAndCountry(installDays, getNotificationCallOverlayInstallDays(), currentCountry, getNotificationCallOverlayCountryList(), RemoteConfigValues.getNotificationCallOverlayExcludeList(), true);
         } else if (notification && call) {
-            return checkDaysAndCountry(installDays, getNotificationCallInstallDays(), currentCountry, getNotificationCallCountryList(), true);
+            return checkDaysAndCountry(installDays, getNotificationCallInstallDays(), currentCountry, getNotificationCallCountryList(), RemoteConfigValues.getNotificationCallExcludeList(), true);
         } else if (notification) {
-            return checkDaysAndCountry(installDays, getNotificationInstallDays(), currentCountry, getNotificationCountryList(), true);
+            return checkDaysAndCountry(installDays, getNotificationInstallDays(), currentCountry, getNotificationCountryList(), RemoteConfigValues.getNotificationExcludeList(), true);
         }
         return false;
     }
@@ -2935,17 +2878,8 @@ public final class AdPlacement {
     }
 
     public static boolean isCountryAllowedForCallEnd(Context context) {
-        List<String> allowedCountries = getClEndBackAdShowCountryList();
-        if (allowedCountries == null || allowedCountries.isEmpty()) {
-            return true;
-        }
-        String currentCountry = getDeviceCountry(context);
-        for (String country : allowedCountries) {
-            if (country.equalsIgnoreCase(currentCountry)) {
-                return true;
-            }
-        }
-        return false;
+        return AdGates.matchesAnyPlace(context, getClEndBackAdShowCountryList())
+                && AdGates.isLocationAllowed(context, null, RemoteConfigValues.getClEndBackAdShowExcludeList());
     }
 
     public static long getClEndLastShowTime(Context context) {
@@ -3031,14 +2965,14 @@ public final class AdPlacement {
             if (isFcmTrigger && !getAllAllowPermissionShowNotification()) {
                 return false;
             }
-            return checkDaysAndCountry(installDays, getNotificationCallOverlayInstallDays(), currentCountry, getNotificationCallOverlayCountryList(), isFcmTrigger);
+            return checkDaysAndCountry(installDays, getNotificationCallOverlayInstallDays(), currentCountry, getNotificationCallOverlayCountryList(), RemoteConfigValues.getNotificationCallOverlayExcludeList(), isFcmTrigger);
         } else if (notification && call) {
-            return checkDaysAndCountry(installDays, getNotificationCallInstallDays(), currentCountry, getNotificationCallCountryList(), isFcmTrigger);
+            return checkDaysAndCountry(installDays, getNotificationCallInstallDays(), currentCountry, getNotificationCallCountryList(), RemoteConfigValues.getNotificationCallExcludeList(), isFcmTrigger);
         } else if (notification) {
             if (!isFcmTrigger) {
                 return false;
             }
-            return checkDaysAndCountry(installDays, getNotificationInstallDays(), currentCountry, getNotificationCountryList(), isFcmTrigger);
+            return checkDaysAndCountry(installDays, getNotificationInstallDays(), currentCountry, getNotificationCountryList(), RemoteConfigValues.getNotificationExcludeList(), isFcmTrigger);
         }
         return false;
     }
@@ -3050,21 +2984,427 @@ public final class AdPlacement {
         return intent.getBooleanExtra("is_from_fcm", false) || "Notification".equalsIgnoreCase(callType) || "call_end".equalsIgnoreCase(callType);
     }
 
-    private static boolean checkDaysAndCountry(long currentDays, int requiredDays, String currentCountry, List<String> allowedCountries, boolean isFcmTrigger) {
+    private static boolean checkDaysAndCountry(long currentDays, int requiredDays, String currentCountry, List<String> allowedCountries, List<String> excludedPlaces, boolean isFcmTrigger) {
         if (!isFcmTrigger) {
             return true;
         }
         if (requiredDays > 0 && currentDays < requiredDays) {
             return false;
         }
-        if (allowedCountries == null || allowedCountries.isEmpty()) {
+        // Include list (empty = every place) AND not in the exclude list.
+        return AdGates.matchesAnyPlace(null, allowedCountries) && AdGates.isLocationAllowed(null, null, excludedPlaces);
+    }
+
+    // ===================================================================== Recent screen
+
+    public static final String BACK_AD_INTER = "inter";
+    public static final String BACK_AD_APP_OPEN = "appopen";
+    public static final String BACK_AD_NATIVE = "native";
+    public static final String BACK_AD_QUIZ_INTER = "quiz_inter";
+    public static final String BACK_AD_QUIZ_APP_OPEN = "quiz_appopen";
+    public static final String BACK_AD_QUIZ_NATIVE = "quiz_native";
+    public static final String BACK_AD_QUIZ_BROWSER = "quiz_browser";
+    private static final String RECENT_CONFIG_PREFS = "recent_config_preferences";
+    private static final String RECENT_AD_PREFS = "recent_ad_preferences";
+    private static final String BACK_AD_SEQUENCE_POSITION = "back_ad_sequence_position";
+    private static final long DAY_MILLIS = 24L * 60L * 60L * 1000L;
+
+    private static boolean recentScreenShow = false;
+    private static boolean recentAdShow = false;
+    private static String recentAdType = "";
+    private static String recentBannerId = "";
+    private static String recentNativeId = "";
+    /** Recent_Ad_Load_Type: PreLoad = a cached inline ad shows at once; Load (default) = loaded when the screen opens. */
+    private static boolean recentAdPreload = false;
+    /** Recent_Back_Ad_Load_Type: PreLoad (default) = loaded ahead; Load = loaded when the close button is pressed. */
+    private static boolean recentBackAdPreload = true;
+    private static boolean recentBackAdShow = false;
+    private static final List<BackAdStep> recentBackAdSequence = new ArrayList<>();
+    private static int recentBackAdShowAfterDay;
+    private static int recentBackAdShowPerDay;
+    private static String recentBackAdInterstitialId = "";
+    private static boolean recentBackAdCountryIP = false;
+    private static ArrayList<String> recentBackAdShowCountryList = new ArrayList<>();
+    private static ArrayList<String> recentBackAdShowExcludeLocationList = new ArrayList<>();
+    private static boolean recentConfigLoadedFromPrefs = false;
+
+    private static final class BackAdStep {
+        private final String type;
+        private final int count;
+
+        private BackAdStep(String type, int count) {
+            this.type = type;
+            this.count = count;
+        }
+    }
+
+    public static boolean getRecentScreenShow() {
+        return recentScreenShow;
+    }
+
+    public static void setRecentScreenShow(boolean value) {
+        recentScreenShow = value;
+    }
+
+    public static boolean getRecentAdShow() {
+        return recentAdShow;
+    }
+
+    public static void setRecentAdShow(boolean value) {
+        recentAdShow = value;
+    }
+
+    public static String getRecentAdType() {
+        return recentAdType;
+    }
+
+    public static void setRecentAdType(@Nullable String value) {
+        recentAdType = value == null ? "" : value;
+    }
+
+    public static String getRecentBannerId() {
+        return recentBannerId;
+    }
+
+    public static void setRecentBannerId(@Nullable String value) {
+        recentBannerId = value == null ? "" : value;
+    }
+
+    public static String getRecentNativeId() {
+        return recentNativeId;
+    }
+
+    public static void setRecentNativeId(@Nullable String value) {
+        recentNativeId = value == null ? "" : value;
+    }
+
+    public static boolean isRecentAdPreload() {
+        return recentAdPreload;
+    }
+
+    public static boolean isRecentBackAdPreload() {
+        return recentBackAdPreload;
+    }
+
+    /** {@code PreLoad} / {@code Load} (case, "_" and "-" tolerant); anything else keeps {@code fallback}. */
+    public static void setRecentLoadTypes(@Nullable String adLoadType, @Nullable String backLoadType) {
+        recentAdPreload = parsePreload(adLoadType, false);
+        recentBackAdPreload = parsePreload(backLoadType, true);
+    }
+
+    private static boolean parsePreload(@Nullable String raw, boolean fallback) {
+        String value = raw == null ? "" : raw.trim().toLowerCase(Locale.ROOT).replace("_", "").replace("-", "");
+        if (value.equals("preload")) {
             return true;
         }
-        for (String country : allowedCountries) {
-            if (country != null && country.equalsIgnoreCase(currentCountry)) {
+        return value.equals("load") ? false : fallback;
+    }
+
+    public static boolean getRecentBackAdShow() {
+        return recentBackAdShow;
+    }
+
+    public static void setRecentBackAdShow(boolean value) {
+        recentBackAdShow = value;
+    }
+
+    public static void setRecentBackAdSequence(@Nullable org.json.JSONArray sequence) {
+        parseBackAdSequence(sequence, recentBackAdSequence);
+    }
+
+    public static String getRecentBackAdResolvedType(Context context) {
+        return resolveBackAdType(recentBackAdSequence, context, RECENT_AD_PREFS);
+    }
+
+    public static boolean isRecentBackAdSequenceMixed() {
+        return hasMixedBackAdTypes(recentBackAdSequence);
+    }
+
+    public static int getRecentBackAdShowAfterDay() {
+        return recentBackAdShowAfterDay;
+    }
+
+    public static void setRecentBackAdShowAfterDay(int value) {
+        recentBackAdShowAfterDay = value;
+    }
+
+    public static int getRecentBackAdShowPerDay() {
+        return recentBackAdShowPerDay;
+    }
+
+    public static void setRecentBackAdShowPerDay(int value) {
+        recentBackAdShowPerDay = value;
+    }
+
+    public static String getRecentBackAdInterstitialId() {
+        return recentBackAdInterstitialId;
+    }
+
+    public static void setRecentBackAdInterstitialId(@Nullable String value) {
+        recentBackAdInterstitialId = value == null ? "" : value;
+    }
+
+    public static boolean getRecentBackAdCountryIP() {
+        return recentBackAdCountryIP;
+    }
+
+    public static void setRecentBackAdCountryIP(boolean value) {
+        recentBackAdCountryIP = value;
+    }
+
+    public static ArrayList<String> getRecentBackAdShowCountryList() {
+        return recentBackAdShowCountryList;
+    }
+
+    public static void setRecentBackAdShowCountryList(@Nullable ArrayList<String> list) {
+        recentBackAdShowCountryList = list == null ? new ArrayList<>() : list;
+    }
+
+    public static ArrayList<String> getRecentBackAdShowExcludeLocationList() {
+        return recentBackAdShowExcludeLocationList;
+    }
+
+    public static void setRecentBackAdShowExcludeLocationList(@Nullable ArrayList<String> list) {
+        recentBackAdShowExcludeLocationList = list == null ? new ArrayList<>() : list;
+    }
+
+    /** Saved after every Remote Config apply, so a Recents key press on a cold start already works. */
+    public static void saveRecentConfig(@Nullable Context context) {
+        if (context == null) {
+            return;
+        }
+        context.getApplicationContext().getSharedPreferences(RECENT_CONFIG_PREFS, Context.MODE_PRIVATE).edit()
+                .putBoolean("recentConfigSaved", true)
+                .putBoolean("recentScreenShow", recentScreenShow)
+                .putBoolean("recentAdShow", recentAdShow)
+                .putString("recentAdType", recentAdType)
+                .putString("recentBannerId", recentBannerId)
+                .putString("recentNativeId", recentNativeId)
+                .putBoolean("recentBackAdShow", recentBackAdShow)
+                .putBoolean("recentAdPreload", recentAdPreload)
+                .putBoolean("recentBackAdPreload", recentBackAdPreload)
+                .putString("recentBackAdSequence", sequenceToJson(recentBackAdSequence))
+                .putInt("recentBackAdShowAfterDay", recentBackAdShowAfterDay)
+                .putInt("recentBackAdShowPerDay", recentBackAdShowPerDay)
+                .putString("recentBackAdInterstitialId", recentBackAdInterstitialId)
+                .putBoolean("recentBackAdCountryIP", recentBackAdCountryIP)
+                .putString("recentBackAdShowCountryList", String.join(",", recentBackAdShowCountryList))
+                .putString("recentBackAdShowExcludeLocationList", String.join(",", recentBackAdShowExcludeLocationList))
+                .apply();
+        recentConfigLoadedFromPrefs = true;
+    }
+
+    /** Restores the saved Recent config once per process (before Remote Config has returned). */
+    public static void loadRecentConfig(@Nullable Context context) {
+        if (context == null || recentConfigLoadedFromPrefs) {
+            return;
+        }
+        SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(RECENT_CONFIG_PREFS, Context.MODE_PRIVATE);
+        if (!preferences.getBoolean("recentConfigSaved", false)) {
+            return;
+        }
+        recentScreenShow = preferences.getBoolean("recentScreenShow", false);
+        recentAdShow = preferences.getBoolean("recentAdShow", false);
+        recentAdType = preferences.getString("recentAdType", "");
+        recentBannerId = preferences.getString("recentBannerId", "");
+        recentNativeId = preferences.getString("recentNativeId", "");
+        recentBackAdShow = preferences.getBoolean("recentBackAdShow", false);
+        recentAdPreload = preferences.getBoolean("recentAdPreload", false);
+        recentBackAdPreload = preferences.getBoolean("recentBackAdPreload", true);
+        try {
+            setRecentBackAdSequence(new org.json.JSONArray(preferences.getString("recentBackAdSequence", "[]")));
+        } catch (Exception e) {
+            setRecentBackAdSequence(null);
+        }
+        recentBackAdShowAfterDay = preferences.getInt("recentBackAdShowAfterDay", 0);
+        recentBackAdShowPerDay = preferences.getInt("recentBackAdShowPerDay", 0);
+        recentBackAdInterstitialId = preferences.getString("recentBackAdInterstitialId", "");
+        recentBackAdCountryIP = preferences.getBoolean("recentBackAdCountryIP", false);
+        recentBackAdShowCountryList = parseCountryListString(preferences.getString("recentBackAdShowCountryList", ""));
+        recentBackAdShowExcludeLocationList = parseCountryListString(preferences.getString("recentBackAdShowExcludeLocationList", ""));
+        recentConfigLoadedFromPrefs = true;
+    }
+
+    /**
+     * Back ad eligibility: sequence not empty, switch on, install day >= After_Day (0 disables), Per_Day > 0 and the
+     * spacing 24h / Per_Day passed, place allowed (include list), place not excluded (exclude list).
+     */
+    public static boolean showRecentBackAd(@Nullable Context context) {
+        loadRecentConfig(context);
+        return context != null && !recentBackAdSequence.isEmpty()
+                && recentBackAdShow && recentBackAdShowAfterDay > 0 && recentBackAdShowPerDay > 0
+                && getDaysSinceInstall(context) >= recentBackAdShowAfterDay
+                && AdGates.matchesAnyPlace(context, recentBackAdShowCountryList)
+                && AdGates.isLocationAllowed(context, null, recentBackAdShowExcludeLocationList)
+                && System.currentTimeMillis() - getRecentLastShowTime(context) >= DAY_MILLIS / recentBackAdShowPerDay;
+    }
+
+    public static long getRecentLastShowTime(@Nullable Context context) {
+        return context == null ? 0L : context.getApplicationContext().getSharedPreferences(RECENT_AD_PREFS, Context.MODE_PRIVATE).getLong("last_show_time", 0L);
+    }
+
+    /** Call only when the back ad was really shown: stamps the interval and moves the sequence one step on. */
+    public static void setRecentLastShowTime(@Nullable Context context, long time) {
+        if (context == null) {
+            return;
+        }
+        SharedPreferences preferences = context.getApplicationContext().getSharedPreferences(RECENT_AD_PREFS, Context.MODE_PRIVATE);
+        preferences.edit().putLong("last_show_time", time)
+                .putLong(BACK_AD_SEQUENCE_POSITION, Math.max(0L, preferences.getLong(BACK_AD_SEQUENCE_POSITION, 0L)) + 1L)
+                .apply();
+    }
+
+    /** Full-screen native back ad from an already loaded NativeAd. {@code onComplete} gets true when it was shown. */
+    public static void showBackNativeAd(@NonNull Activity activity, @NonNull NativeAd preloadedNative, @Nullable String nativeId, @NonNull java.util.function.Consumer<Boolean> onComplete) {
+        final AtomicBoolean shown = new AtomicBoolean(false);
+        Dialog dialog = presentNativeFullAd(activity, preloadedNative, () -> onComplete.accept(shown.get()), new AtomicBoolean(false));
+        shown.set(dialog != null);
+    }
+
+    @Nullable
+    private static String normalizeBackAdType(@Nullable String type) {
+        String value = type == null ? "" : type.trim().toLowerCase(Locale.US).replace("-", "_").replace(" ", "_");
+        switch (value) {
+            case "inter":
+            case "interstitial":
+            case "google_inter":
+                return BACK_AD_INTER;
+            case "appopen":
+            case "app_open":
+            case "google_appopen":
+            case "google_app_open":
+                return BACK_AD_APP_OPEN;
+            case "native":
+            case "google_native":
+                return BACK_AD_NATIVE;
+            case BACK_AD_QUIZ_INTER:
+            case BACK_AD_QUIZ_NATIVE:
+            case BACK_AD_QUIZ_BROWSER:
+                return value;
+            case "quiz_appopen":
+            case "quiz_app_open":
+                return BACK_AD_QUIZ_APP_OPEN;
+            default:
+                return null;
+        }
+    }
+
+    /** True for an explicit {@code quiz_*} step of the Recent back-ad sequence. */
+    public static boolean isRecentQuizStep(@Nullable String type) {
+        return type != null && type.startsWith("quiz_");
+    }
+
+    /**
+     * A back ad of {@code type} could not be loaded / shown: the interval is stamped (no new request before the next
+     * Per_Day slot) and the sequence moves on by one. Ignored when the sequence no longer points at {@code type}.
+     */
+    public static void skipRecentBackAdStep(@Nullable Context context, @NonNull String type) {
+        if (context == null || !type.equals(getRecentBackAdResolvedType(context))) {
+            return;
+        }
+        setRecentLastShowTime(context, System.currentTimeMillis());
+    }
+
+    /** An explicit quiz_* step: the only way a Quiz ad appears on the Recent screen. {@code onDone(true)} = it was shown. */
+    public static void showRecentQuizStep(@NonNull Activity activity, @NonNull String type, @NonNull java.util.function.Consumer<Boolean> onDone) {
+        final AtomicBoolean finished = new AtomicBoolean(false);
+        final Runnable shown = () -> {
+            if (finished.compareAndSet(false, true)) {
+                onDone.accept(true);
+            }
+        };
+        boolean started;
+        switch (type) {
+            case BACK_AD_QUIZ_INTER:
+                started = QuizAds.showInterstitial(activity, shown);
+                break;
+            case BACK_AD_QUIZ_APP_OPEN:
+                started = QuizAds.showAppOpen(activity, shown);
+                break;
+            case BACK_AD_QUIZ_NATIVE:
+                started = QuizAds.showNativeFull(activity, shown);
+                break;
+            case BACK_AD_QUIZ_BROWSER:
+                QuizAds.openBrowserThenContinue(activity, shown);
+                started = true;
+                break;
+            default:
+                started = false;
+        }
+        if (!started && finished.compareAndSet(false, true)) {
+            onDone.accept(false);
+        }
+    }
+
+    private static String sequenceToJson(List<BackAdStep> steps) {
+        org.json.JSONArray sequence = new org.json.JSONArray();
+        for (BackAdStep step : steps) {
+            org.json.JSONArray entry = new org.json.JSONArray();
+            entry.put(step.type);
+            entry.put(step.count);
+            sequence.put(entry);
+        }
+        return sequence.toString();
+    }
+
+    private static ArrayList<String> parseCountryListString(@Nullable String countries) {
+        ArrayList<String> countryList = new ArrayList<>();
+        if (countries == null || countries.isEmpty()) {
+            return countryList;
+        }
+        for (String part : countries.split(",")) {
+            if (part != null && !part.trim().isEmpty()) {
+                countryList.add(part.trim().toLowerCase(Locale.ROOT));
+            }
+        }
+        return countryList;
+    }
+
+    private static void parseBackAdSequence(@Nullable org.json.JSONArray sequence, List<BackAdStep> target) {
+        target.clear();
+        if (sequence == null) {
+            return;
+        }
+        for (int i = 0; i < sequence.length(); i++) {
+            org.json.JSONArray entry = sequence.optJSONArray(i);
+            if (entry == null) {
+                continue;
+            }
+            String type = normalizeBackAdType(entry.optString(0, ""));
+            if (type == null) {
+                continue;
+            }
+            int count = entry.optInt(1, 0);
+            if (count > 0) {
+                target.add(new BackAdStep(type, count));
+            }
+        }
+    }
+
+    private static boolean hasMixedBackAdTypes(List<BackAdStep> steps) {
+        for (BackAdStep step : steps) {
+            if (!step.type.equals(steps.get(0).type)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private static String resolveBackAdType(List<BackAdStep> steps, @Nullable Context context, String prefsName) {
+        if (steps.isEmpty() || context == null) {
+            return BACK_AD_INTER;
+        }
+        long cycleLength = 0;
+        for (BackAdStep step : steps) {
+            cycleLength += step.count;
+        }
+        long index = context.getApplicationContext().getSharedPreferences(prefsName, Context.MODE_PRIVATE).getLong(BACK_AD_SEQUENCE_POSITION, 0L) % cycleLength;
+        for (BackAdStep step : steps) {
+            if (index < step.count) {
+                return step.type;
+            }
+            index -= step.count;
+        }
+        return BACK_AD_INTER;
     }
 }

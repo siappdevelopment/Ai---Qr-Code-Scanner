@@ -158,7 +158,13 @@ public final class StartupFlow {
             if (token != generation || activity != boundActivity.get() || activity.isFinishing() || activity.isDestroyed()) {
                 return;
             }
-            showSplashAd(activity);
+            // Only the Splash ad slot waits (max 2 s) for the IP location; navigation never waits.
+            AdGates.awaitIpLocation(activity, AdGates.SPLASH_IP_WAIT_MILLIS, () -> {
+                if (token != generation || activity != boundActivity.get() || activity.isFinishing() || activity.isDestroyed()) {
+                    return;
+                }
+                showSplashAd(activity);
+            });
             AdPlacement.saveInstallDate(activity);
             checkNotificationPermission(activity);
         });
@@ -179,7 +185,7 @@ public final class StartupFlow {
         if (rlAdView == null) {
             return;
         }
-        if (!AdPlacement.isNetworkAvailable(activity) || !AdPlacement.getSplashAdShow()) {
+        if (!AdPlacement.isNetworkAvailable(activity) || !AdPlacement.getSplashAdShow() || !AdGates.adsLocationAllowed(activity)) {
             rlAdView.setVisibility(GONE);
             return;
         }

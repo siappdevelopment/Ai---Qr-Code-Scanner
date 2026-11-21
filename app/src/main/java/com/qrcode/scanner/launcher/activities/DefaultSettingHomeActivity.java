@@ -103,7 +103,9 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
         }
         if (setupFlagSet) {
             // LauncherHomeActivity clears the flag when it has already continued the flow; do not repeat it.
-            if (!AppUtils.isCompletingDefaultAppSetup(this)) {
+            // The flag is gone: when this app became the default Home, LauncherHomeActivity already continued the flow.
+            // When it did not (the user left without choosing us), the flow must go on here, to the DefaultHome screen.
+            if (!AppUtils.isCompletingDefaultAppSetup(this) && AppUtils.isDefaultHomeApp(this)) {
                 finish();
                 return;
             }
@@ -111,6 +113,9 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
                 finish();
                 return;
             }
+            // Settings was opened: report whether the user made this app the default Home (once, deduplicated).
+            com.qrcode.scanner.launcher.common.TrackOnce.trackScreenOnce(this,
+                    AppUtils.isDefaultHomeApp(this) ? "DEFAULT_HOME_APP_SET" : "DEFAULT_HOME_APP_CANCEL");
             clearSetupFlags();
         }
         flowContinued = true;

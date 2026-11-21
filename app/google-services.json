@@ -28,7 +28,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:849666101323:android:9dc158929ba62f92b73dce",
         "android_client_info": {
-          "package_name": "com.qrcode.scanner.spapp"
+          "package_name": "com.qrcode.scanner.app"
         }
       },
       "oauth_client": [],

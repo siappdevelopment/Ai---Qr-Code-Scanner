@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Loading placeholder of the intro bottom banner: same height as the ad (inline adaptive banner capped at 160 dp). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ad_background"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <View
+        android:layout_width="160dp"
+        android:layout_height="18dp"
+        android:background="@color/ad_shimmer" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/ad_shimmer" />
+
+    <View
+        android:layout_width="120dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/ad_shimmer" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@drawable/custom_radius_12"
+        android:backgroundTint="@color/ad_shimmer" />
+
+</LinearLayout>

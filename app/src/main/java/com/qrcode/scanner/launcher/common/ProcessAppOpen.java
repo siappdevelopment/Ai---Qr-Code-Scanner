@@ -46,6 +46,13 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
     private static boolean appInForeground;
     private static volatile long foregroundSinceMs;
 
+    private static volatile long blockedUntilMs;
+
+    /** The foreground App Open ad must not stack on another full-screen ad (the unlock ad blocks it for a few seconds). */
+    public static void blockFor(long millis) {
+        blockedUntilMs = android.os.SystemClock.elapsedRealtime() + millis;
+    }
+
     public ProcessAppOpen(@NonNull Application application) {
         this.application = application;
     }
@@ -91,6 +98,9 @@ public final class ProcessAppOpen implements DefaultLifecycleObserver, Applicati
      * show after another launcher has become the default.
      */
     private boolean shouldSkipAppOpenAd() {
+        if (android.os.SystemClock.elapsedRealtime() < blockedUntilMs) {
+            return true;
+        }
         if (!AppUtils.isDefaultHomeApp(application)) {
             clearLoadedAd();
             return true;

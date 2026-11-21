@@ -51,6 +51,18 @@ public final class DefaultHomePromptHelper {
     private boolean homeSettingsOpened;
     @Nullable
     private RoleFlowListener roleFlowListener;
+    /** Force_Default_Launcher_Show: Home settings list instead of the role dialog; the screen cannot be left until default. */
+    private boolean forced;
+    /** Forced mode could not launch any request (no settings, chooser or role screen): the screen must not trap the user. */
+    private boolean requestUnavailable;
+
+    public void setForced(boolean forced) {
+        this.forced = forced;
+    }
+
+    public boolean wasRequestUnavailable() {
+        return requestUnavailable;
+    }
 
     public interface RoleFlowListener {
         void onRoleFlowFinished();
@@ -178,6 +190,27 @@ public final class DefaultHomePromptHelper {
         }
         waitingForDefaultHome = true;
         defaultHomeSelectionStarted = true;
+        requestUnavailable = false;
+        if (forced) {
+            markRoleRequestPending(getContext());
+            roleRequestFromClick = false;
+            // Forced: system Home settings list + guide card first, the role dialog only as a fallback.
+            if (openHomeSettingsFallback()) {
+                startPolling();
+                return;
+            }
+            Intent forcedRoleIntent = AppUtils.createDefaultHomeRoleRequestIntent(getContext());
+            if (forcedRoleIntent != null && roleLauncher != null) {
+                roleRequestFromClick = true;
+                roleRequestLaunchedAt = android.os.SystemClock.elapsedRealtime();
+                roleLauncher.launch(forcedRoleIntent);
+                startPolling();
+                return;
+            }
+            requestUnavailable = true;
+            completeCancelled();
+            return;
+        }
         Intent roleIntent = AppUtils.createDefaultHomeRoleRequestIntent(getContext());
         roleRequestFromClick = true;
         roleRequestLaunchedAt = android.os.SystemClock.elapsedRealtime();
@@ -315,12 +348,30 @@ public final class DefaultHomePromptHelper {
                 return;
             }
             if (AppUtils.isDefaultHomeApp(getContext())) {
+                if (forced) {
+                    bringHostToFront(hostActivity);
+                }
                 completeSuccess();
                 return;
             }
             handler.postDelayed(this, POLL_INTERVAL_MS);
         }
     };
+
+    /**
+     * Some Settings screens stay open after the pick. Bring the asking screen back in front (same instance), so it
+     * can finish its step. Best effort: Android may refuse a background start.
+     */
+    private void bringHostToFront(@NonNull Activity host) {
+        if (activity == null) {
+            return;
+        }
+        try {
+            host.startActivity(new Intent(host, host.getClass())
+                    .addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+        } catch (Exception ignored) {
+        }
+    }
 
     private boolean isActive() {
         if (fragment != null) {

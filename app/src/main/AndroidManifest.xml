@@ -115,6 +115,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.qrcode.scanner.launcher.activities.RecentActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/Theme.RecentScreen" />
+        <activity
             android:name="com.qrcode.scanner.launcher.activities.LanguageActivity"
             android:configChanges="locale|layoutDirection"
             android:exported="false"
@@ -155,17 +163,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name="com.qrcode.scanner.launcher.activities.Intro1Activity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.LauncherSettings" />
-        <activity
-            android:name="com.qrcode.scanner.launcher.activities.Intro2Activity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.LauncherSettings" />
-        <activity
-            android:name="com.qrcode.scanner.launcher.activities.Intro3Activity"
+            android:name="com.qrcode.scanner.launcher.activities.IntroActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LauncherSettings" />

@@ -18,11 +18,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.qrcode.scanner.spapp"
+        applicationId = "com.qrcode.scanner.app"
         minSdk = 24
         targetSdk = 36
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "2.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -34,18 +34,18 @@ android {
     }
 
 
-    flavorDimensions += "env"
-    productFlavors {
-        create("prod") {
-            dimension = "env"
-            buildConfigField("String", "RC_KEY_SUFFIX", "\"\"")
-        }
-        create("qa") {
-            dimension = "env"
-            versionNameSuffix = "_qa"
-            buildConfigField("String", "RC_KEY_SUFFIX", "\"_qa\"")
-        }
-    }
+//    flavorDimensions += "env"
+//    productFlavors {
+//        create("prod") {
+//            dimension = "env"
+//            buildConfigField("String", "RC_KEY_SUFFIX", "\"\"")
+//        }
+//        create("qa") {
+//            dimension = "env"
+//            versionNameSuffix = "_qa"
+//            buildConfigField("String", "RC_KEY_SUFFIX", "\"_qa\"")
+//        }
+//    }
 
     buildTypes {
         release {

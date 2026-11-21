@@ -24,6 +24,7 @@ import com.qrcode.scanner.spapp.R;
 import com.qrcode.scanner.launcher.adapters.LanguageAdapter;
 import com.qrcode.scanner.launcher.common.AdPlacement;
 import com.qrcode.scanner.launcher.common.AppUtils;
+import com.qrcode.scanner.launcher.common.LanguageAdsManager;
 import com.qrcode.scanner.launcher.common.ScreenFlowNavigation;
 import com.qrcode.scanner.launcher.remote.ScreenFlowConfig;
 import com.qrcode.scanner.ui.navigation.ThemeNavigation;
@@ -37,6 +38,13 @@ public class LanguageActivity extends AppCompatActivity {
     private LanguageAdapter languageAdapter;
     private int selectedIndex;
     private boolean languageFlowInProgress;
+    /** Language ad in refresh mode (gray button first, blue after a language is picked). */
+    private boolean adsRefreshMode;
+    private AppCompatImageView ivDone;
+    private android.widget.ProgressBar progressNext;
+    private final android.os.Handler doneHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+    private boolean doneRevealStarted;
+    private static final long DONE_PROGRESS_MS = 1500L;
     private final ArrayList<Integer> arrayListIcon = new ArrayList<>();
     private final ArrayList<String> arrayListName = new ArrayList<>();
     private final ArrayList<String> arrayListSubName = new ArrayList<>();
@@ -68,6 +76,15 @@ public class LanguageActivity extends AppCompatActivity {
         hideNavigationBar();
     }
 
+    @Override
+    protected void onDestroy() {
+        doneHandler.removeCallbacksAndMessages(null);
+        if (adsRefreshMode) {
+            LanguageAdsManager.release();
+        }
+        super.onDestroy();
+    }
+
     private void hideNavigationBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowInsetsController controller = getWindow().getInsetsController();
@@ -92,7 +109,12 @@ public class LanguageActivity extends AppCompatActivity {
     private void findIDs() {
         tvTitle = findViewById(R.id.tvTitle);
         AppCompatImageView ivBack = findViewById(R.id.ivBack);
-        AppCompatImageView ivDone = findViewById(R.id.ivDone);
+        ivDone = findViewById(R.id.ivDone);
+        progressNext = findViewById(R.id.progressNext);
+        if (!isOpenedFromSettings()) {
+            // Onboarding: no language is selected and Done stays hidden until the first language is tapped.
+            ivDone.setVisibility(View.INVISIBLE);
+        }
         if (isOpenedFromSettings()) {
             ivBack.setVisibility(View.VISIBLE);
             ivBack.setOnClickListener(view -> {
@@ -120,6 +142,36 @@ public class LanguageActivity extends AppCompatActivity {
             return;
         }
         rlAdView.setVisibility(View.VISIBLE);
+        if (!isOpenedFromSettings() && LanguageAdsManager.isRefreshEnabled(this)) {
+            // Refresh mode: the first ad has a gray button; picking a different language replaces it once (blue button).
+            adsRefreshMode = true;
+            rlBannerAdView.setVisibility(View.GONE);
+            rlNativeAdView.setVisibility(View.VISIBLE);
+            LanguageAdsManager.start(this, new LanguageAdsManager.Host() {
+                @Override
+                public void showAd(@androidx.annotation.NonNull com.google.android.gms.ads.nativead.NativeAd ad, boolean second) {
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+                    AdPlacement.bindLoadedNative(LanguageActivity.this, flNativeAd, ad, "large",
+                            second ? LanguageAdsManager.CTA_BLUE : LanguageAdsManager.CTA_GRAY);
+                    slNativeShimmer.stopShimmer();
+                    slNativeShimmer.setVisibility(View.GONE);
+                    rlNativeAdView.setVisibility(View.VISIBLE);
+                    com.qrcode.scanner.launcher.common.AnalyticsEvents.log(LanguageActivity.this, "LanguageNative_Load");
+                }
+
+                @Override
+                public void noAd() {
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+                    rlAdView.setVisibility(View.GONE);
+                    com.qrcode.scanner.launcher.common.AnalyticsEvents.log(LanguageActivity.this, "LanguageNative_Fail");
+                }
+            });
+            return;
+        }
         // Quiz priority always shows the big Quiz native here, even when the Language ad type is banner.
         if ("banner".equalsIgnoreCase(AdPlacement.getLanguageAdType()) && !AdPlacement.shouldUseQuizPriority()) {
             rlBannerAdView.setVisibility(View.VISIBLE);
@@ -228,18 +280,42 @@ public class LanguageActivity extends AppCompatActivity {
         arrayListCode.add("id");
         arrayListCode.add("af");
 
-        selectedIndex = getAppliedLanguageIndex();
-//        updateTitleForSelection(selectedIndex);
+        // Onboarding: nothing is pre-selected (English is not ticked); from Settings the current language is selected.
+        selectedIndex = isOpenedFromSettings() ? getAppliedLanguageIndex() : -1;
 
         languageAdapter = new LanguageAdapter(this, arrayListIcon, arrayListName, arrayListSubName, arrayListCode);
         rvLanguage.setLayoutManager(new LinearLayoutManager(this));
         rvLanguage.setAdapter(languageAdapter);
         languageAdapter.setSelectedPosition(selectedIndex);
         languageAdapter.setOnLanguageClickListener(position -> {
+            boolean changed = position != selectedIndex;
             selectedIndex = position;
-//            updateTitleForSelection(position);
             languageAdapter.setSelectedPosition(position);
+            revealDoneAfterProgress();
+            if (changed && adsRefreshMode) {
+                // A different language was picked: the gray-button ad is replaced once by the next ad (blue button).
+                LanguageAdsManager.onLanguagePicked();
+            }
         });
+    }
+
+    /**
+     * The first tap on a language (onboarding): the Done check is hidden, so a progress bar shows for 1.5 s in its
+     * place, then Done appears and stays. Later taps only change the selection.
+     */
+    private void revealDoneAfterProgress() {
+        if (doneRevealStarted || ivDone == null || ivDone.getVisibility() == View.VISIBLE) {
+            return;
+        }
+        doneRevealStarted = true;
+        progressNext.setVisibility(View.VISIBLE);
+        doneHandler.postDelayed(() -> {
+            if (isFinishing() || isDestroyed()) {
+                return;
+            }
+            progressNext.setVisibility(View.GONE);
+            ivDone.setVisibility(View.VISIBLE);
+        }, DONE_PROGRESS_MS);
     }
 
     private int getAppliedLanguageIndex() {
@@ -259,6 +335,10 @@ public class LanguageActivity extends AppCompatActivity {
     private void applySelectedLanguageAndContinue() {
         if (languageFlowInProgress) {
             return;
+        }
+        if (selectedIndex < 0) {
+            // Back with nothing picked: keep the current language and go on.
+            selectedIndex = getAppliedLanguageIndex();
         }
         languageFlowInProgress = true;
         String selectedCode = arrayListCode.get(selectedIndex);

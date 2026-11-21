@@ -20,7 +20,7 @@ public class ADSNativeFullDisplay {
     }
 
     public static void preloadNativeAd(final Context context, String adsId, PreloadCallback callback) {
-        if (adsId == null || adsId.isEmpty()) {
+        if (adsId == null || adsId.isEmpty() || AdPlacement.shouldUseQuizPriority() || !AdGates.adsLocationAllowed(context)) {
             if (callback != null) callback.onAdFailed();
             return;
         }

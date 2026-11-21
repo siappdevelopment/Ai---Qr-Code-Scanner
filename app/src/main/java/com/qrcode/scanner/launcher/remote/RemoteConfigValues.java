@@ -38,9 +38,6 @@ public final class RemoteConfigValues {
     private static String bottomNavInterAdsType = "load";
     private static String bottomNavInterAdsId = "";
     private static int bottomNavInterClick;
-    private static boolean rightSwipeInterstitialAdShow;
-    private static int rightSwipeInterstitial;
-    private static String rightSwipeAdsType ;
     private static boolean clEndConfigLoaded;
     private static boolean clEndScreenShow;
     private static boolean defaultAppPopupShow;
@@ -93,6 +90,8 @@ public final class RemoteConfigValues {
         public int backAdDayCount;
         public int backAdTotalShowCount;
         public ArrayList<String> backAdCountryList = new ArrayList<>();
+        /** {@code <prefix>_back_ads_show_exclude_location}: places where the back ad never shows. */
+        public ArrayList<String> backAdExcludeList = new ArrayList<>();
     }
 
     private static final EventScreenConfig chargingScreenConfig = new EventScreenConfig();
@@ -120,6 +119,11 @@ public final class RemoteConfigValues {
     private static ArrayList<String> notificationCountryList = new ArrayList<>();
     private static ArrayList<String> notificationCallCountryList = new ArrayList<>();
     private static ArrayList<String> notificationCallOverlayCountryList = new ArrayList<>();
+    // Exclude lists (place where the ad / notification is blocked), next to each country (include) list.
+    private static ArrayList<String> clEndBackAdShowExcludeList = new ArrayList<>();
+    private static ArrayList<String> notificationExcludeList = new ArrayList<>();
+    private static ArrayList<String> notificationCallExcludeList = new ArrayList<>();
+    private static ArrayList<String> notificationCallOverlayExcludeList = new ArrayList<>();
 
     private static final List<String> quizAppIconList = new ArrayList<>();
     private static final List<String> quizNativeMediaList = new ArrayList<>();
@@ -172,9 +176,8 @@ public final class RemoteConfigValues {
         bottomNavInterAdsType = mainScreen.optString("bottom_nav_inter_ads_type", "load");
         bottomNavInterAdsId = mainScreen.optString("bottom_nav_inter_ads_id", "");
         bottomNavInterClick = mainScreen.optInt("bottom_nav_inter_click", 0);
-        rightSwipeInterstitialAdShow = mainScreen.optBoolean("Right_Swipe_Interstitial_Ad_Show", false);
-        rightSwipeInterstitial = mainScreen.optInt("Right_Swipe_Interstitial", 0);
-        rightSwipeAdsType = optStringIgnoreCase(mainScreen, "Right_Swipe_Ads_type", "load");
+        // Right / Left swipe ads (and their Back ads): all keys are read by SwipeAds.
+        com.qrcode.scanner.launcher.common.SwipeAds.applyConfig(context, mainScreen);
 
 
         applyScreenAds(screenObject);
@@ -202,6 +205,9 @@ public final class RemoteConfigValues {
         launcherAppNativeId = launcherAppScreen.optString("LauncherApp_Native_Id", "");
         launcherAppQuizIconShow = launcherAppScreen.optBoolean("LauncherApp_Quiz_Icon_Show", false);
         launcherAppQuizIconCount = launcherAppScreen.optInt("LauncherApp_Quiz_Icon_Count", 0);
+        // Unlock App Open ad (Unlock_App_Open_*): Screen.unlock_screen block, profile root as the fallback per key.
+        com.qrcode.scanner.launcher.common.SwipeAds.applyUnlockConfig(context, root, child(screenObject, "unlock_screen"));
+        com.qrcode.scanner.launcher.common.UnlockAppOpenAds.get().onConfigApplied();
 
         JSONObject clEndScreen = child(screenObject, "ClEndScreen");
         clEndAdShow = clEndScreen.optBoolean("ClEnd_Ad_Show", false);
@@ -226,6 +232,7 @@ public final class RemoteConfigValues {
                     .apply();
         }
         clEndBackAdShowCountryList = parseCountryArray(clEndScreen.optJSONArray("ClEnd_Back_Ad_Show_Country"));
+        clEndBackAdShowExcludeList = parseCountryArray(clEndScreen.optJSONArray("ClEnd_Back_Ad_Show_Exclude_Location"));
         notificationInstallDays = clEndScreen.optInt("Notification_Install_Days", 0);
         notificationCallInstallDays = clEndScreen.optInt("Notification_Call_Install_Days", 0);
         notificationCallOverlayInstallDays = clEndScreen.optInt("Notification_Call_Overlay_Install_Days", 0);
@@ -235,6 +242,9 @@ public final class RemoteConfigValues {
         notificationCountryList = parseCountryArray(clEndScreen.optJSONArray("Notification_Country"));
         notificationCallCountryList = parseCountryArray(clEndScreen.optJSONArray("Notification_Call_Country"));
         notificationCallOverlayCountryList = parseCountryArray(clEndScreen.optJSONArray("Notification_Call_Overlay_Country"));
+        notificationExcludeList = parseCountryArray(clEndScreen.optJSONArray("Notification_Exclude_Location"));
+        notificationCallExcludeList = parseCountryArray(clEndScreen.optJSONArray("Notification_Call_Exclude_Location"));
+        notificationCallOverlayExcludeList = parseCountryArray(clEndScreen.optJSONArray("Notification_Call_Overlay_Exclude_Location"));
 
         JSONObject quizAdsDesign = screenObject.optJSONObject("QuizAdsDesign");
         if (quizAdsDesign != null) {
@@ -281,7 +291,25 @@ public final class RemoteConfigValues {
         com.qrcode.scanner.launcher.common.AdPlacement.prepareRightSwipePreload(context);
         com.qrcode.scanner.launcher.common.EventBottomAds.prepare(context);
         com.qrcode.scanner.launcher.helpers.AppProxyLookup.refreshActiveQuizLinks();
-        AdPlacement.requestCallEndIpCountryIfNeeded(context);
+        // Common ads location rule. A missing key means an empty list, so removing it in Firebase clears the rule.
+        com.qrcode.scanner.launcher.common.AdGates.onConfigApplied(
+                context,
+                readLocationList(root, screenObject, "Ads_Show_countryList"),
+                readLocationList(root, screenObject, "Ads_show_List_Exclude"));
+    }
+
+    /** Reads a JSON array of strings, or one string with "|" separators, from the profile root (then the screen block). */
+    @NonNull
+    private static List<String> readLocationList(@NonNull JSONObject root, @NonNull JSONObject screen, @NonNull String key) {
+        JSONObject source = root.has(key) ? root : screen;
+        List<String> items = new ArrayList<>();
+        for (String item : parseStringList(source, key)) {
+            String cleaned = item == null ? "" : item.trim().toLowerCase(Locale.ROOT);
+            if (!cleaned.isEmpty() && !items.contains(cleaned)) {
+                items.add(cleaned);
+            }
+        }
+        return items;
     }
 
     public static void ensureLoaded(@Nullable Context context) {
@@ -306,6 +334,7 @@ public final class RemoteConfigValues {
         clEndBackAdNativeId = preferences.getString("clEndBackAdNativeId", "");
         clEndBackAdCountryIP = preferences.getBoolean("clEndBackAdCountryIP", false);
         clEndBackAdShowCountryList = parseStoredCountryList(preferences.getString("clEndBackAdShowCountryList", ""));
+        clEndBackAdShowExcludeList = parseStoredCountryList(preferences.getString("clEndBackAdShowExcludeList", ""));
         notificationInstallDays = preferences.getInt("notificationInstallDays", 0);
         notificationCallInstallDays = preferences.getInt("notificationCallInstallDays", 0);
         notificationCallOverlayInstallDays = preferences.getInt("notificationCallOverlayInstallDays", 0);
@@ -315,11 +344,11 @@ public final class RemoteConfigValues {
         notificationCountryList = parseStoredCountryList(preferences.getString("notificationCountryList", ""));
         notificationCallCountryList = parseStoredCountryList(preferences.getString("notificationCallCountryList", ""));
         notificationCallOverlayCountryList = parseStoredCountryList(preferences.getString("notificationCallOverlayCountryList", ""));
+        notificationExcludeList = parseStoredCountryList(preferences.getString("notificationExcludeList", ""));
+        notificationCallExcludeList = parseStoredCountryList(preferences.getString("notificationCallExcludeList", ""));
+        notificationCallOverlayExcludeList = parseStoredCountryList(preferences.getString("notificationCallOverlayExcludeList", ""));
         restoreEventScreenConfig(preferences, chargingScreenConfig, "eventCharging");
         restoreEventScreenConfig(preferences, installUninstallScreenConfig, "eventInstallUninstall");
-        rightSwipeInterstitialAdShow = preferences.getBoolean("rightSwipeInterstitialAdShow", false);
-        rightSwipeInterstitial = preferences.getInt("rightSwipeInterstitial", 0);
-        rightSwipeAdsType = preferences.getString("rightSwipeAdsType", "load");
         clEndConfigLoaded = true;
         com.qrcode.scanner.launcher.common.EventBottomAds.prepare(context);
         com.qrcode.scanner.launcher.common.AdPlacement.prepareRightSwipePreload(context);
@@ -455,19 +484,6 @@ public final class RemoteConfigValues {
         return false;
     }
 
-    public static boolean getRightSwipeInterstitialAdShow() {
-        return rightSwipeInterstitialAdShow;
-    }
-
-    public static int getRightSwipeInterstitial() {
-        return rightSwipeInterstitial;
-    }
-
-    @NonNull
-    public static String getRightSwipeAdsType() {
-        return rightSwipeAdsType == null || rightSwipeAdsType.trim().isEmpty() ? "load" : rightSwipeAdsType;
-    }
-
     public static boolean isEventScreenEnabled(@Nullable String kind) {
         if ("charge_in".equals(kind)) {
             return chargingScreenConfig.chargeInShow;
@@ -576,6 +592,26 @@ public final class RemoteConfigValues {
     @NonNull
     public static ArrayList<String> getClEndBackAdShowCountryList() {
         return clEndBackAdShowCountryList == null ? new ArrayList<>() : clEndBackAdShowCountryList;
+    }
+
+    @NonNull
+    public static ArrayList<String> getClEndBackAdShowExcludeList() {
+        return clEndBackAdShowExcludeList == null ? new ArrayList<>() : clEndBackAdShowExcludeList;
+    }
+
+    @NonNull
+    public static ArrayList<String> getNotificationExcludeList() {
+        return notificationExcludeList == null ? new ArrayList<>() : notificationExcludeList;
+    }
+
+    @NonNull
+    public static ArrayList<String> getNotificationCallExcludeList() {
+        return notificationCallExcludeList == null ? new ArrayList<>() : notificationCallExcludeList;
+    }
+
+    @NonNull
+    public static ArrayList<String> getNotificationCallOverlayExcludeList() {
+        return notificationCallOverlayExcludeList == null ? new ArrayList<>() : notificationCallOverlayExcludeList;
     }
 
     public static int getNotificationInstallDays() {
@@ -799,6 +835,10 @@ public final class RemoteConfigValues {
         editor.putString("nativeAdButtonColor", AdPlacement.getNativeAdButtonColor() == null ? "" : AdPlacement.getNativeAdButtonColor());
         editor.putString("nativeAdButtonColorDark", AdPlacement.getNativeAdButtonColorDark() == null ? "" : AdPlacement.getNativeAdButtonColorDark());
         editor.putString("clEndBackAdShowCountryList", formatCountryList(clEndBackAdShowCountryList));
+        editor.putString("clEndBackAdShowExcludeList", formatCountryList(clEndBackAdShowExcludeList));
+        editor.putString("notificationExcludeList", formatCountryList(notificationExcludeList));
+        editor.putString("notificationCallExcludeList", formatCountryList(notificationCallExcludeList));
+        editor.putString("notificationCallOverlayExcludeList", formatCountryList(notificationCallOverlayExcludeList));
         editor.putInt("notificationInstallDays", notificationInstallDays);
         editor.putInt("notificationCallInstallDays", notificationCallInstallDays);
         editor.putInt("notificationCallOverlayInstallDays", notificationCallOverlayInstallDays);
@@ -807,9 +847,6 @@ public final class RemoteConfigValues {
         editor.putBoolean("notificationCloseButtonShow", notificationCloseButtonShow);
         saveEventScreenConfig(editor, chargingScreenConfig, "eventCharging");
         saveEventScreenConfig(editor, installUninstallScreenConfig, "eventInstallUninstall");
-        editor.putBoolean("rightSwipeInterstitialAdShow", rightSwipeInterstitialAdShow);
-        editor.putInt("rightSwipeInterstitial", rightSwipeInterstitial);
-        editor.putString("rightSwipeAdsType", rightSwipeAdsType == null ? "load" : rightSwipeAdsType);
         editor.putString("notificationCountryList", formatCountryList(notificationCountryList));
         editor.putString("notificationCallCountryList", formatCountryList(notificationCallCountryList));
         editor.putString("notificationCallOverlayCountryList", formatCountryList(notificationCallOverlayCountryList));
@@ -834,6 +871,7 @@ public final class RemoteConfigValues {
         editor.putInt(prefix + "BackAdDayCount", config.backAdDayCount);
         editor.putInt(prefix + "BackAdTotalShowCount", config.backAdTotalShowCount);
         editor.putString(prefix + "BackAdCountryList", formatCountryList(config.backAdCountryList));
+        editor.putString(prefix + "BackAdExcludeList", formatCountryList(config.backAdExcludeList));
     }
 
     private static void restoreEventScreenConfig(@NonNull SharedPreferences preferences, @NonNull EventScreenConfig config, @NonNull String prefix) {
@@ -854,6 +892,7 @@ public final class RemoteConfigValues {
         config.backAdDayCount = preferences.getInt(prefix + "BackAdDayCount", 0);
         config.backAdTotalShowCount = preferences.getInt(prefix + "BackAdTotalShowCount", 0);
         config.backAdCountryList = parseStoredCountryList(preferences.getString(prefix + "BackAdCountryList", ""));
+        config.backAdExcludeList = parseStoredCountryList(preferences.getString(prefix + "BackAdExcludeList", ""));
     }
 
     public static final class ScreenAdConfig {
@@ -1088,6 +1127,7 @@ public final class RemoteConfigValues {
         config.backAdDayCount = json.optInt(prefix + "_back_ad_day_count", 0);
         config.backAdTotalShowCount = json.optInt(prefix + "_back_ad_total_show_count", 0);
         config.backAdCountryList = parseCountryArray(json.optJSONArray(prefix + "_back_ads_show_country"));
+        config.backAdExcludeList = parseCountryArray(json.optJSONArray(prefix + "_back_ads_show_exclude_location"));
         if (context != null && !previousSequence.equals(formatBackAdSequence(config.backAdSequence))) {
             context.getApplicationContext()
                     .getSharedPreferences(EVENT_SCREEN_AD_PREFS, Context.MODE_PRIVATE)

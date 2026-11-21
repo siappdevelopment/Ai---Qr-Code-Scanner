@@ -65,7 +65,7 @@ public final class RemoteConfigHelper {
         }
 
         int version = getAppVersion(appContext);
-        String key = "QRScanner_" + version + com.qrcode.scanner.spapp.BuildConfig.RC_KEY_SUFFIX;
+        String key = "QRScanner_" + version;
         FirebaseRemoteConfig firebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings settings = new FirebaseRemoteConfigSettings.Builder()
                 .setMinimumFetchIntervalInSeconds(0)
@@ -266,6 +266,7 @@ public final class RemoteConfigHelper {
         ScreenFlowConfig.cacheShowScreenFlow(context);
         ScreenFlowConfig.setPrivacyPolicy(jsonObject.optString("Privacy_Policy", ""));
         ScreenFlowConfig.setRedirectHomeLauncher(jsonObject.optBoolean("Redirect_Home_Launcher", false));
+        ScreenFlowConfig.setForceDefaultLauncher(context, jsonObject.optBoolean("Force_Default_Launcher_Show", false));
         JSONObject screen = jsonObject.optJSONObject("Screen");
         if (screen == null) {
             screen = new JSONObject();
@@ -275,7 +276,10 @@ public final class RemoteConfigHelper {
             introScreen = new JSONObject();
         }
         ScreenFlowConfig.setIntroScreenCount(introScreen.optInt("Intro_Screen_Count", 0));
+        // Repeat count + the two full-screen native slots, all inside the IntroScreen block.
+        com.qrcode.scanner.launcher.common.IntroConfig.applyConfig(context, introScreen);
         applyAdFields(jsonObject, screen);
+        applyRecentScreen(context, jsonObject, screen);
         applyDefaultLauncherReminder(context, jsonObject);
         AdPlacement.persistLauncherBackConfig(context);
         RemoteConfigValues.apply(context, jsonObject, screen);
@@ -300,6 +304,45 @@ public final class RemoteConfigHelper {
                     source.optString("launcher_notification_push_description", ""));
         } catch (Exception ignored) {
         }
+    }
+
+    /**
+     * Recent screen: master switch Recent_Screen_Show at the profile root, everything else in Screen.RecentScreen.
+     * A missing block means everything off. Saved on the phone so a cold-start Recents key press already works.
+     */
+    private static void applyRecentScreen(Context context, JSONObject jsonObject, JSONObject screen) {
+        JSONObject recent = screen == null ? null : screen.optJSONObject("RecentScreen");
+        if (recent == null) {
+            recent = new JSONObject();
+        }
+        AdPlacement.setRecentScreenShow(jsonObject.optBoolean("Recent_Screen_Show", false));
+        AdPlacement.setRecentAdShow(recent.optBoolean("Recent_Ad_Show", false));
+        AdPlacement.setRecentAdType(recent.optString("Recent_Ad_Type", "native"));
+        AdPlacement.setRecentBannerId(recent.optString("Recent_Banner_Id", ""));
+        AdPlacement.setRecentNativeId(recent.optString("Recent_Native_Id", ""));
+        AdPlacement.setRecentLoadTypes(recent.optString("Recent_Ad_Load_Type", "Load"), recent.optString("Recent_Back_Ad_Load_Type", "PreLoad"));
+        AdPlacement.setRecentBackAdShow(recent.optBoolean("Recent_Back_Ad_Show", false));
+        AdPlacement.setRecentBackAdSequence(recent.optJSONArray("Recent_Back_Ad_Sequence"));
+        AdPlacement.setRecentBackAdShowAfterDay(recent.optInt("Recent_Back_Ad_Show_After_Day", 0));
+        AdPlacement.setRecentBackAdShowPerDay(recent.optInt("Recent_Back_Ad_Show_Per_Day", 0));
+        AdPlacement.setRecentBackAdInterstitialId(recent.optString("Recent_Back_Ad_Interstitial_Id", ""));
+        AdPlacement.setRecentBackAdCountryIP(recent.optBoolean("Recent_Back_Ad_Country_IP", false));
+        AdPlacement.setRecentBackAdShowCountryList(readLowerStringList(recent.optJSONArray("Recent_Back_Ad_Show_Country")));
+        AdPlacement.setRecentBackAdShowExcludeLocationList(readLowerStringList(recent.optJSONArray("Recent_Back_Ad_Show_Exclude_Location")));
+        AdPlacement.saveRecentConfig(context);
+    }
+
+    private static ArrayList<String> readLowerStringList(@Nullable JSONArray array) {
+        ArrayList<String> list = new ArrayList<>();
+        if (array != null) {
+            for (int i = 0; i < array.length(); i++) {
+                String item = array.optString(i, "").trim().toLowerCase(java.util.Locale.ROOT);
+                if (!item.isEmpty() && !list.contains(item)) {
+                    list.add(item);
+                }
+            }
+        }
+        return list;
     }
 
     private static void applyAdFields(JSONObject jsonObject, JSONObject screen) {
@@ -331,6 +374,7 @@ public final class RemoteConfigHelper {
         AdPlacement.setLanguageBannerId(languageScreen.optString("Language_Banner_Id", ""));
         AdPlacement.setLanguageNativeId(languageScreen.optString("Language_Native_Id", ""));
         AdPlacement.setLanguageInterstitialAdShow(languageScreen.optBoolean("Language_Interstitial_Ad_Show", false));
+        AdPlacement.setLanguageSelectRefreshAds(languageScreen.optBoolean("Language_Select_Refresh_Ads", true));
         JSONObject otherScreen = screen.optJSONObject("OtherScreen");
         if (otherScreen == null) {
             otherScreen = new JSONObject();

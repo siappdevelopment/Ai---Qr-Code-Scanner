@@ -39,6 +39,8 @@ public class DefaultActivity extends AppCompatActivity {
     /** Opened from the "make this app your default launcher" reminder notification (onboarding already done). */
     public static final String EXTRA_FROM_REMINDER = com.qrcode.scanner.launcher.common.DefaultLauncherReminder.EXTRA_FROM_REMINDER;
     private boolean reminderEntry;
+    /** Forced mode: the screen cannot be left until the app is the default Home app. */
+    private boolean forceDefault;
 
     private final ActivityResultLauncher<String> phonePermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
         waitingForPhoneStatePermission = false;
@@ -60,6 +62,10 @@ public class DefaultActivity extends AppCompatActivity {
         defaultHomePromptHelper.registerRoleLauncher();
         defaultHomePromptHelper.setRoleFlowListener(this::onDefaultRoleFlowFinished);
         reminderEntry = getIntent().getBooleanExtra(EXTRA_FROM_REMINDER, false);
+        // Force_Default_Launcher_Show (and an allowed place): this step is done only when the app really is the Home app.
+        // The reminder notification is never forced.
+        forceDefault = !reminderEntry && ScreenFlowConfig.isForceDefaultActive(this);
+        defaultHomePromptHelper.setForced(forceDefault);
         if (reminderEntry && AppUtils.isDefaultHomeApp(this)) {
             // Already the default: nothing to ask, clear the reminder and go to the launcher.
             com.qrcode.scanner.launcher.common.DefaultLauncherReminder.cancelIfDefault(this);
@@ -67,12 +73,15 @@ public class DefaultActivity extends AppCompatActivity {
             finish();
             return;
         }
-        if (!reminderEntry && AppUtils.hasCompletedOnboarding(this)) {
+        // "Onboarding completed" means the Intro was finished. DefaultHome may come AFTER the Intro in Show_Screen_Flow, so a
+        // finished Intro must not skip it: leave only when this step is not part of the flow at all.
+        if (!reminderEntry && AppUtils.hasCompletedOnboarding(this)
+                && !ScreenFlowConfig.getShowScreenFlow().contains(ScreenFlowConfig.SCREEN_DEFAULT_HOME)) {
             ScreenFlowNavigation.openMain(this);
             finish();
             return;
         }
-        if (!reminderEntry && AppUtils.isDefaultHomeScreenCompleted(this)) {
+        if (!reminderEntry && AppUtils.isDefaultHomeApp(this)) {
             if (!hasNavigated) {
                 ScreenFlowNavigation.continueAfter(this, ScreenFlowConfig.SCREEN_DEFAULT_HOME);
             } else {
@@ -152,6 +161,17 @@ public class DefaultActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        // Forced: the screen was brought back in front after the user picked this app in Settings.
+        if (hasFocus && forceDefault && !hasNavigated && !initialRoleRequestPending
+                && AppUtils.isCompletingDefaultAppSetup(this) && AppUtils.isAwaitingDefaultRoleResult(this)
+                && AppUtils.isDefaultHomeApp(this)) {
+            onDefaultRoleFlowFinished();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         defaultHomePromptHelper.release();
         if (!hasNavigated) {
@@ -210,6 +230,13 @@ public class DefaultActivity extends AppCompatActivity {
             return;
         }
         if (!AppUtils.isCompletingDefaultAppSetup(this)) {
+            return;
+        }
+        if (forceDefault && !AppUtils.isDefaultHomeApp(this) && !defaultHomePromptHelper.wasRequestUnavailable()) {
+            // Forced and the user came back without choosing this app: stay here, the button / Back tries again.
+            AppUtils.setAwaitingDefaultRoleResult(this, false);
+            AppUtils.setCompletingDefaultAppSetup(this, false);
+            defaultHomePromptHelper.setRoleFlowListener(this::onDefaultRoleFlowFinished);
             return;
         }
         if (AppUtils.isDefaultHomeApp(this) && !hasWindowFocus()) {

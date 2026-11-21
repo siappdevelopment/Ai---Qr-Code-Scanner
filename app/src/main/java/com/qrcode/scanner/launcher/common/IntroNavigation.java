@@ -10,15 +10,13 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
 import com.qrcode.scanner.spapp.R;
-import com.qrcode.scanner.launcher.activities.Intro1Activity;
-import com.qrcode.scanner.launcher.activities.Intro2Activity;
-import com.qrcode.scanner.launcher.activities.Intro3Activity;
-import com.qrcode.scanner.launcher.common.AdPlacement;
+import com.qrcode.scanner.launcher.activities.IntroActivity;
 import com.qrcode.scanner.launcher.remote.ScreenFlowConfig;
 
 public class IntroNavigation {
     private static final int MAX_INTRO_BUTTON_SCREENS = 3;
 
+    /** Number of intro pages (Intro_Screen_Count, 0 = no intro, at most 3). */
     public static int getEffectiveIntroButtonScreenCount() {
         int count = ScreenFlowConfig.getIntroScreenCount();
         if (count <= 0) {
@@ -52,76 +50,23 @@ public class IntroNavigation {
         }
     }
 
-    /**
-     * With 2 or 3 intro screens the LAST one shows its Next button at the top (right side, wrap size) instead of
-     * at the bottom. With a single intro screen, and on the earlier screens, the layout stays as it is.
-     */
-    public static void moveNextButtonToTopIfLast(Context context, View btnNext, int currentScreen) {
-        int count = getEffectiveIntroButtonScreenCount();
-        if (count < 2 || currentScreen != count || btnNext == null || !(btnNext.getParent() instanceof android.view.ViewGroup)) {
-            return;
-        }
-        android.view.ViewGroup parent = (android.view.ViewGroup) btnNext.getParent();
-        parent.removeView(btnNext);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        params.gravity = android.view.Gravity.END;
-        params.setMargins(0, AppUtils.dpToPx(context, 10), AppUtils.dpToPx(context, 14), 0);
-        btnNext.setLayoutParams(params);
-        btnNext.setPadding(AppUtils.dpToPx(context, 24), AppUtils.dpToPx(context, 10), AppUtils.dpToPx(context, 24), AppUtils.dpToPx(context, 10));
-        parent.addView(btnNext, 0);
-    }
-
+    /** Opens the single Intro screen (a ViewPager2 with all intro pages). With no intro pages the intro is skipped. */
     public static void openIntroButtonFlow(Activity activity) {
         if (getEffectiveIntroButtonScreenCount() == 0) {
-            completeIntroAndOpenDefaultApp(activity);
+            ScreenFlowNavigation.continueAfter(activity, ScreenFlowConfig.SCREEN_INTRO);
             return;
         }
-        activity.startActivity(new Intent(activity, Intro1Activity.class));
+        activity.startActivity(new Intent(activity, IntroActivity.class));
         activity.finish();
     }
 
     /**
-     * Onboarding Back: no going back to the previous screen. It does exactly what the Next button does.
+     * The user finished the intro: the repeat count (Intro_Show_Every_Launch) starts again from here, the unused
+     * full-screen natives are released, the intro interstitial (if on) runs, and the flow moves on.
      */
-    public static void bindBackAsNext(androidx.appcompat.app.AppCompatActivity activity, int currentScreen) {
-        activity.getOnBackPressedDispatcher().addCallback(activity, new androidx.activity.OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (activity.isFinishing()) {
-                    return;
-                }
-                goToNextIntroButtonScreen(activity, currentScreen);
-            }
-        });
-    }
-
-    public static void goToNextIntroButtonScreen(Activity activity, int currentScreen) {
-        if (currentScreen >= getEffectiveIntroButtonScreenCount()) {
-            moveToNextScreen(activity);
-            return;
-        }
-        Class<?> nextClass;
-        switch (currentScreen + 1) {
-            case 2:
-                nextClass = Intro2Activity.class;
-                break;
-            case 3:
-                nextClass = Intro3Activity.class;
-                break;
-            default:
-                moveToNextScreen(activity);
-                return;
-        }
-        activity.startActivity(new Intent(activity, nextClass));
-        activity.finish();
-    }
-
-    private static void moveToNextScreen(Activity activity) {
+    public static void finishIntro(Activity activity) {
+        IntroConfig.markShown(activity);
+        IntroFullNativeAds.release();
         AdPlacement.loadIntroInterstitialAd(activity, () -> ScreenFlowNavigation.continueAfter(activity, ScreenFlowConfig.SCREEN_INTRO));
-    }
-
-    private static void completeIntroAndOpenDefaultApp(Activity activity) {
-        ScreenFlowNavigation.continueAfter(activity, ScreenFlowConfig.SCREEN_INTRO);
     }
 }

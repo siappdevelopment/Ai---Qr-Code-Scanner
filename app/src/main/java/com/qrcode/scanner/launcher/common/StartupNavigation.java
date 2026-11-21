@@ -23,6 +23,8 @@ public final class StartupNavigation {
             return false;
         }
         ScreenFlowConfig.ensureShowScreenFlow(activity);
+        // Repeat count: decides once per launch if Language + Intro are due again (intro_show_every_launch).
+        IntroConfig.prepareLaunch(activity);
         if (!AppUtils.hasCompletedOnboarding(activity)) {
             ScreenFlowNavigation.openFirstScreen(activity);
             return false;

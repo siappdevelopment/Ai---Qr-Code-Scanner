@@ -21,6 +21,9 @@ public final class AppProxyLookup {
     }
 
     public static void refreshActiveQuizLinks() {
+        android.util.Log.i("QuizAds", "Quiz_Link_List size=" + RemoteConfigValues.getQuizLinkList().size()
+                + ", exclude list size=" + RemoteConfigValues.getQuizLinkExcludeList().size()
+                + ", App_Proxy_Check_Ip=" + RemoteConfigValues.isAppProxyCheckIp());
         if (!RemoteConfigValues.isAppProxyCheckIp()) {
             RemoteConfigValues.setActiveQuizLinkList(RemoteConfigValues.getQuizLinkList());
             return;

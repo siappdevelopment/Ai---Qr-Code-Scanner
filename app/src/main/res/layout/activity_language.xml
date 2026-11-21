@@ -34,12 +34,29 @@
             android:textColor="@color/text_primary"
             android:textSize="@dimen/_16sdp" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/ivDone"
+        <!-- Onboarding: Done is hidden until the first language is tapped; this progress bar shows for a moment first. -->
+        <FrameLayout
             android:layout_width="@dimen/_24sdp"
-            android:layout_height="@dimen/_24sdp"
-            android:padding="@dimen/_2sdp"
-            android:src="@drawable/ic_done" />
+            android:layout_height="@dimen/_24sdp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivDone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/_2sdp"
+                android:src="@drawable/ic_done" />
+
+            <ProgressBar
+                android:id="@+id/progressNext"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/primary"
+                android:padding="@dimen/_3sdp"
+                android:visibility="gone" />
+
+        </FrameLayout>
 
     </LinearLayout>
 

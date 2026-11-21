@@ -69,6 +69,9 @@ public final class QuizAds {
     }
 
     public static boolean showBanner(Activity activity, RelativeLayout container, ShimmerFrameLayout shimmer, LinearLayout content, boolean forceLightTheme) {
+        if (!AdGates.adsLocationAllowed(activity)) {
+            return false;
+        }
         try {
             int itemCount = RemoteConfigValues.getQuizSyncedItemCount();
             if (itemCount <= 0 || activity == null || container == null || content == null) {
@@ -108,6 +111,9 @@ public final class QuizAds {
      *                        (needed for sticky overlays where sync Quiz would otherwise cover apps).
      */
     public static boolean showNative(Activity activity, RelativeLayout container, ShimmerFrameLayout shimmer, FrameLayout content, @Nullable String type, boolean forceLightTheme, boolean revealContainer) {
+        if (!AdGates.adsLocationAllowed(activity)) {
+            return false;
+        }
         try {
             int itemCount = RemoteConfigValues.getQuizSyncedItemCount();
             if (itemCount <= 0 || activity == null || container == null || content == null) {
@@ -142,6 +148,9 @@ public final class QuizAds {
     }
 
     public static boolean showInterstitial(Activity activity, @Nullable Runnable onDismiss) {
+        if (!AdGates.adsLocationAllowed(activity)) {
+            return false;
+        }
         try {
             int itemCount = RemoteConfigValues.getQuizSyncedItemCount();
             if (itemCount <= 0 || activity == null || activity.isFinishing()) {
@@ -213,6 +222,9 @@ public final class QuizAds {
     }
 
     public static boolean showAppOpen(Activity activity, @Nullable Runnable onDismiss) {
+        if (!AdGates.adsLocationAllowed(activity)) {
+            return false;
+        }
         try {
             int itemCount = RemoteConfigValues.getQuizSyncedItemCount();
             if (itemCount <= 0 || activity == null || activity.isFinishing()) {
@@ -263,6 +275,9 @@ public final class QuizAds {
     }
 
     public static boolean showNativeFull(Activity activity, @Nullable Runnable onDismiss) {
+        if (!AdGates.adsLocationAllowed(activity)) {
+            return false;
+        }
         try {
             int itemCount = RemoteConfigValues.getQuizSyncedItemCount();
             if (itemCount <= 0 || activity == null || activity.isFinishing()) {
@@ -312,14 +327,45 @@ public final class QuizAds {
         }
     }
 
+    /**
+     * One full-screen Quiz web view. False = nothing shown ({@code onDismiss} is NOT called, the caller continues itself):
+     * finishing activity, blocked place, or no usable link.
+     */
+    public static boolean showBrowserAd(Activity activity, @Nullable Runnable onDismiss) {
+        if (activity == null || activity.isFinishing() || !AdGates.adsLocationAllowed(activity)) {
+            return false;
+        }
+        String link = RemoteConfigValues.pickQuizLink();
+        if (link.isEmpty()) {
+            return false;
+        }
+        return QuizBrowserAd.show(activity, link, () -> {
+            if (onDismiss != null) {
+                onDismiss.run();
+            }
+        });
+    }
+
     public static void openBrowserThenContinue(Activity activity, @Nullable Runnable onReturn) {
         String link = RemoteConfigValues.pickQuizLink();
-        if (activity == null || link.isEmpty()) {
+        if (activity == null || link.isEmpty() || !AdGates.adsLocationAllowed(activity)) {
+            android.util.Log.w("QuizAds", "Quiz browser ad skipped: " + (link.isEmpty()
+                    ? "no link (App_Proxy_Structure.Quiz_Link_List is empty)" : "blocked by Ads_Show_countryList / Ads_show_List_Exclude"));
             if (onReturn != null) {
                 onReturn.run();
             }
             return;
         }
+        // Whole-screen in-app web view (no buttons, Back closes); onReturn runs once when it is dismissed.
+        final AtomicBoolean viewDone = new AtomicBoolean(false);
+        if (QuizBrowserAd.show(activity, link, () -> {
+            if (viewDone.compareAndSet(false, true) && onReturn != null) {
+                onReturn.run();
+            }
+        })) {
+            return;
+        }
+        // Not a web page (or the view failed): the external browser, continue when this screen resumes.
         AtomicBoolean completed = new AtomicBoolean(false);
         Application application = activity.getApplication();
         Application.ActivityLifecycleCallbacks callbacks = new Application.ActivityLifecycleCallbacks() {
@@ -359,7 +405,9 @@ public final class QuizAds {
         };
         application.registerActivityLifecycleCallbacks(callbacks);
         try {
-            openLink(activity, link);
+            Intent external = new Intent(Intent.ACTION_VIEW, Uri.parse(link.trim()));
+            external.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            activity.startActivity(external);
         } catch (Exception ignored) {
             application.unregisterActivityLifecycleCallbacks(callbacks);
             if (onReturn != null && completed.compareAndSet(false, true)) {

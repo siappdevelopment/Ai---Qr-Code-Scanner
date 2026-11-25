@@ -279,6 +279,8 @@ public final class DefaultHomePromptHelper {
             return false;
         }
         Intent settings = new Intent(android.provider.Settings.ACTION_HOME_SETTINGS);
+        // Coming back from the system Home settings is not an app return: no Welcome screen / App Open ad.
+        com.qrcode.scanner.launcher.common.ProcessAppOpen.skipNextAppOpen();
         if (settings.resolveActivity(host.getPackageManager()) == null) {
             settings = new Intent(android.provider.Settings.ACTION_MANAGE_DEFAULT_APPS_SETTINGS);
             if (settings.resolveActivity(host.getPackageManager()) == null) {

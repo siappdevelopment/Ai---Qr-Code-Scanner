@@ -192,6 +192,8 @@ public class LauncherHomeActivity extends AppCompatActivity {
         super.onResume();
         com.qrcode.scanner.launcher.helpers.DefaultHomePromptHelper.reportDefaultSetIfRequested(this);
         AdPlacement.prepareRightSwipePreload(this);
+        // The default Home boots without the Splash: from here on a return from the background may show something.
+        com.qrcode.scanner.launcher.common.ProcessAppOpen.markHomeReached();
         // An unlock that just happened shows its App Open ad now (the QR page is left to ProcessAppOpen).
         com.qrcode.scanner.launcher.common.UnlockAppOpenAds.get().onHomeResumed(this);
         hideLauncherFromRecents();

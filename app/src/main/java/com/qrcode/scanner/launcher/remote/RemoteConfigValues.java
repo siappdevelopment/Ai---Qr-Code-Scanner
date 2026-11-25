@@ -208,6 +208,18 @@ public final class RemoteConfigValues {
         // Unlock App Open ad (Unlock_App_Open_*): Screen.unlock_screen block, profile root as the fallback per key.
         com.qrcode.scanner.launcher.common.SwipeAds.applyUnlockConfig(context, root, child(screenObject, "unlock_screen"));
         com.qrcode.scanner.launcher.common.UnlockAppOpenAds.get().onConfigApplied();
+        // Welcome back screen (instead of the App Open ad on return) + App_Open_Show_In_Background / Coming_Soon.
+        if (context != null) {
+            JSONObject welcomeBlock = screenObject.optJSONObject("welcome_back_screen");
+            if (welcomeBlock == null) {
+                welcomeBlock = screenObject.optJSONObject("WelcomeBackScreen");
+            }
+            if (welcomeBlock == null) {
+                // Also accepted at the profile root, next to "Screen".
+                welcomeBlock = root.optJSONObject("welcome_back_screen");
+            }
+            com.qrcode.scanner.launcher.common.WelcomeBackConfig.apply(context, welcomeBlock, root);
+        }
 
         JSONObject clEndScreen = child(screenObject, "ClEndScreen");
         clEndAdShow = clEndScreen.optBoolean("ClEnd_Ad_Show", false);

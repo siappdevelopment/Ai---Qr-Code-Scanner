@@ -149,7 +149,8 @@ public final class RecentsKey {
         return activity == null
                 || activity instanceof ClEndActivity
                 || activity instanceof EventPromptActivity
-                || activity instanceof ChargingScreenActivity                || activity instanceof LanguageActivity
+                || activity instanceof ChargingScreenActivity
+                || activity instanceof com.qrcode.scanner.launcher.activities.WelcomeBackActivity                || activity instanceof LanguageActivity
                 || activity instanceof IntroActivity
                 || activity instanceof CollectionActivity
                 || activity instanceof PermissionActivity

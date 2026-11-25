@@ -631,6 +631,9 @@
     <string name="recent_title">Recently Used Apps</string>
     <string name="recent_empty">No Recent Apps</string>
     <string name="recent_clear_all">Clear all</string>
+    <string name="welcome_back_title">Welcome back</string>
+    <string name="welcome_back_continue">Continue</string>
+    <string name="welcome_back_continue_in">Continue in %1$d</string>
     <string name="recent_features_title">Quick Actions</string>
 
 </resources>

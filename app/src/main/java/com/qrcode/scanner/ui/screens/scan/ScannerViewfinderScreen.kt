@@ -176,6 +176,8 @@ fun ScannerViewfinderScreen(
             Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
             Uri.fromParts("package", context.packageName, null)
         )
+        // Coming back from system Settings is not an app return: no Welcome screen / App Open ad.
+        com.qrcode.scanner.launcher.common.ProcessAppOpen.skipNextAppOpen()
         runCatching { appSettingsLauncher.launch(settingsIntent) }
             .onFailure {
                 context.startActivity(settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))

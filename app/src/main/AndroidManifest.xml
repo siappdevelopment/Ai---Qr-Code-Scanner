@@ -123,6 +123,13 @@
             android:taskAffinity=""
             android:theme="@style/Theme.RecentScreen" />
         <activity
+            android:name="com.qrcode.scanner.launcher.activities.WelcomeBackActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.LauncherSettings" />
+        <activity
             android:name="com.qrcode.scanner.launcher.activities.LanguageActivity"
             android:configChanges="locale|layoutDirection"
             android:exported="false"

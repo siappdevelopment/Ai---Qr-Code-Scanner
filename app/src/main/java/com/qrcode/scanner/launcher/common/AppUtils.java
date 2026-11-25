@@ -422,6 +422,8 @@ public final class AppUtils {
         try {
             Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
             intent.setData(Uri.parse("package:" + packageName));
+            // Coming back from a system Settings screen is not an app return: no Welcome screen / App Open ad.
+            ProcessAppOpen.skipNextAppOpen();
             if (!(context instanceof Activity)) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             }

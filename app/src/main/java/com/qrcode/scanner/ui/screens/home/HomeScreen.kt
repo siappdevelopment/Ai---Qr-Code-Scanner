@@ -701,6 +701,8 @@ private fun OverlayPermissionCard() {
                     indication = null
                 ) {
                     try {
+                        // Coming back from system Settings is not an app return: no Welcome screen / App Open ad.
+                        com.qrcode.scanner.launcher.common.ProcessAppOpen.skipNextAppOpen()
                         context.startActivity(
                             android.content.Intent(
                                 android.provider.Settings.ACTION_MANAGE_OVERLAY_PERMISSION,

@@ -149,6 +149,8 @@ public final class StartupFlow {
             return;
         }
         splashFlowStarted = true;
+        // Until the Splash hands over, returning from the background shows no Welcome screen / App Open ad.
+        ProcessAppOpen.markStartupBegan();
         try {
             InstallReferrerStartup.start(activity);
         } catch (Exception ignored) {
@@ -247,6 +249,8 @@ public final class StartupFlow {
             return;
         }
         navigationDelivered = true;
+        // Splash (and its own after-splash ad) is done: the app is handed over, and the very next start is not a return.
+        ProcessAppOpen.markStartupHandedOver();
         Runnable finished = onFinished;
         if (finished != null) {
             finished.run();

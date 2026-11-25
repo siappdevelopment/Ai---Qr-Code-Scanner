@@ -283,14 +283,36 @@ public final class AdPlacement {
         context.getSharedPreferences("default_app_popup_preferences", Context.MODE_PRIVATE).edit().putLong("last_show_time", time).apply();
     }
 
+    /**
+     * Daily limit of the App Open ad: {@code App_Open_Show_Per_Day} ads per calendar day (0 or less = none). Today's count
+     * is {@code ad_count_today} of the day {@code last_ad_date}; a new day starts again from 0. Only a really shown ad
+     * counts ({@link #incrementAppOpenAdCount}).
+     */
     public static boolean canShowAppOpenAd(Context context) {
-        int countPerDay = RemoteConfigValues.getAppOpenShowPerDay();
-        if (countPerDay <= 0) {
+        int limit = RemoteConfigValues.getAppOpenShowPerDay();
+        if (limit <= 0) {
+            return false;
+        }
+        SharedPreferences prefs = context.getApplicationContext().getSharedPreferences("app_open_ad_preferences", Context.MODE_PRIVATE);
+        if (!todayKey().equals(prefs.getString("last_ad_date", ""))) {
             return true;
         }
-        long intervalMillis = (24L * 60L * 60L * 1000L) / countPerDay;
-        long lastShowTime = getAppOpenLastShowTime(context);
-        return System.currentTimeMillis() - lastShowTime >= intervalMillis;
+        return prefs.getInt("ad_count_today", 0) < limit;
+    }
+
+    /** An App Open ad was really shown: counts for today (a new day resets the count first). */
+    public static void incrementAppOpenAdCount(Context context) {
+        SharedPreferences prefs = context.getApplicationContext().getSharedPreferences("app_open_ad_preferences", Context.MODE_PRIVATE);
+        String today = todayKey();
+        int count = prefs.getInt("ad_count_today", 0);
+        if (!today.equals(prefs.getString("last_ad_date", ""))) {
+            count = 0;
+        }
+        prefs.edit().putString("last_ad_date", today).putInt("ad_count_today", count + 1).apply();
+    }
+
+    private static String todayKey() {
+        return new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new java.util.Date());
     }
 
     public static long getAppOpenLastShowTime(Context context) {

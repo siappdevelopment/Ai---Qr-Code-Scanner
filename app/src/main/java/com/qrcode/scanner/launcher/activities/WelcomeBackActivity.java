@@ -62,12 +62,13 @@ public class WelcomeBackActivity extends AppCompatActivity {
                 onContinue();
             }
         });
-        // Back only works once Continue is active (before that it is swallowed), then it just closes.
+        // Back only works once Continue is active (before that it is swallowed), then it does the same as Continue: the
+        // interstitial when it is ready, then close.
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 if (button.isEnabled()) {
-                    closeWelcome();
+                    onContinue();
                 }
             }
         });
@@ -103,12 +104,17 @@ public class WelcomeBackActivity extends AppCompatActivity {
     private void preloadInter() {
         final Context app = getApplicationContext();
         if (!WelcomeBackConfig.interEnabled(app) || !AdPlacement.canRequestAds(app) || !AdPlacement.isNetworkAvailable(app)) {
+            Log.d(TAG, "Continue inter not requested: enabled=" + WelcomeBackConfig.interEnabled(app)
+                    + " (welcome_back_inter_show + welcome_back_inter_id) canRequestAds=" + AdPlacement.canRequestAds(app)
+                    + " online=" + AdPlacement.isNetworkAvailable(app));
             return;
         }
+        Log.d(TAG, "Continue inter requested: " + WelcomeBackConfig.interId(app));
         InterstitialAd.load(app, WelcomeBackConfig.interId(app), new AdRequest.Builder().build(), new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd ad) {
                 ad.setOnPaidEventListener(value -> AdPlacement.logAdRevenue(app, value));
+                Log.d(TAG, "Continue inter loaded");
                 if (!destroyed) {
                     interAd = ad;
                 }
@@ -116,15 +122,18 @@ public class WelcomeBackActivity extends AppCompatActivity {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError error) {
+                Log.w(TAG, "Continue inter failed to load: code=" + error.getCode() + " " + error.getMessage()
+                        + " (is welcome_back_inter_id an INTERSTITIAL ad unit?)");
                 interAd = null; // nothing to show, Continue just closes the screen
             }
         });
     }
 
-    /** Continue: show the interstitial if it is ready, otherwise just close. No waiting dialog. */
+    /** Continue and Back: show the interstitial if it is ready, otherwise just close. No waiting dialog. */
     private void onContinue() {
         InterstitialAd ad = interAd;
         if (ad == null || destroyed) {
+            Log.d(TAG, "Continue / Back: no inter ready, closing");
             closeWelcome();
             return;
         }

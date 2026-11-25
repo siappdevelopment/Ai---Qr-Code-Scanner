@@ -52,10 +52,13 @@ public class CollectionActivity extends AppCompatActivity {
         btnAgreeContinue = findViewById(R.id.btnAgreeContinue);
         setupFooterLinks(tvFooter);
         updateAgreeUI();
-        ivSelect.setOnClickListener(v -> {
+        // A tap on the box, on the "I agree to this data collection" text or anywhere on that row toggles the check.
+        android.view.View.OnClickListener toggle = v -> {
             isAgreed = !isAgreed;
             updateAgreeUI();
-        });
+        };
+        ivSelect.setOnClickListener(toggle);
+        findViewById(R.id.llAgree).setOnClickListener(toggle);
         // Back runs the same Agree & Continue action below.
         getOnBackPressedDispatcher().addCallback(this, new androidx.activity.OnBackPressedCallback(true) {
             @Override

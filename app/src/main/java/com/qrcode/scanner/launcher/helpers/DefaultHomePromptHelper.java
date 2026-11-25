@@ -290,8 +290,19 @@ public final class DefaultHomePromptHelper {
         try {
             host.startActivity(settings);
             homeSettingsOpened = true;
-            host.startActivity(new Intent(host, com.qrcode.scanner.launcher.activities.DefaultHomeGuideActivity.class)
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            // The guide goes on top of Settings, so it is shown only once Settings has taken the screen (starting it
+            // together with Settings put it on the previous screen on slow phones). Still on our own screen: no guide.
+            final Activity guideHost = host;
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                if (guideHost.isFinishing() || guideHost.isDestroyed() || guideHost.hasWindowFocus()) {
+                    return;
+                }
+                try {
+                    guideHost.startActivity(new Intent(guideHost, com.qrcode.scanner.launcher.activities.DefaultHomeGuideActivity.class)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                } catch (Exception ignored) {
+                }
+            }, 900L);
             return true;
         } catch (Exception e) {
             return false;

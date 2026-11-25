@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Lifecycle;
 
 import com.qrcode.scanner.launcher.common.AppUtils;
 import com.qrcode.scanner.launcher.common.ProcessAppOpen;
@@ -31,6 +32,11 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
             });
     private boolean guidePending;
     private final Handler watchHandler = new Handler(Looper.getMainLooper());
+    /** Small settle after Settings covered the screen. */
+    private static final long GUIDE_AFTER_COVERED_MS = 150L;
+    /** For a phone whose Settings never covers this screen completely (no onStop). */
+    private static final long GUIDE_FALLBACK_MS = 1500L;
+    private final Runnable showGuide = this::showGuideNow;
     private String homePackageAtStart;
     /** True once the flow moved on, so the background path and the Settings result never both advance it. */
     private boolean flowContinued;
@@ -81,16 +87,39 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
     }
 
     /**
-     * Runs when Settings is taking over the screen. Starting the guide here (not together with the
-     * Settings launch) puts it on top of Settings. Own task, so a flow change (CLEAR_TASK) or
-     * Settings' task cannot remove or hide it.
+     * The guide card must appear on top of the system Settings list, never on the screen before it. onPause comes while
+     * Settings is only starting (on slow phones, e.g. Samsung, the previous screen is still visible then), so it only
+     * arms a late fallback; the guide is shown once Settings really covers this screen ({@link #onStop()}).
      */
     @Override
     protected void onPause() {
         super.onPause();
         if (guidePending) {
-            guidePending = false;
+            watchHandler.removeCallbacks(showGuide);
+            watchHandler.postDelayed(showGuide, GUIDE_FALLBACK_MS);
+        }
+    }
+
+    /** Settings now covers this (translucent) screen completely. */
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (guidePending) {
+            watchHandler.removeCallbacks(showGuide);
+            watchHandler.postDelayed(showGuide, GUIDE_AFTER_COVERED_MS);
+        }
+    }
+
+    /** Own task, so a flow change (CLEAR_TASK) or Settings' task cannot remove or hide the guide. */
+    private void showGuideNow() {
+        if (!guidePending || isFinishing() || isDestroyed() || flowContinued
+                || getLifecycle().getCurrentState().isAtLeast(Lifecycle.State.RESUMED)) {
+            return;
+        }
+        guidePending = false;
+        try {
             startActivity(new Intent(this, DefaultHomeGuideActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+        } catch (Exception ignored) {
         }
     }
 
@@ -181,6 +210,7 @@ public class DefaultSettingHomeActivity extends ComponentActivity {
 
     @Override
     protected void onDestroy() {
+        watchHandler.removeCallbacks(showGuide);
         stopHomeWatch();
         super.onDestroy();
     }

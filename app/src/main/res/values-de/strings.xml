@@ -569,7 +569,6 @@
     <string name="event_fast">SCHNELL</string>
     <string name="event_optimized_sub">Alles läuft reibungslos.</string>
     <string name="event_done">Fertig</string>
-    <string name="launcher_settings">Launcher-Einstellungen</string>
     <string name="serialize">Sortieren</string>
     <string name="by_name_asc_a_to_z">Nach Name ASC (A bis Z)</string>
     <string name="by_name_desc_z_to_a">Nach Name DESC (Z bis A)</string>

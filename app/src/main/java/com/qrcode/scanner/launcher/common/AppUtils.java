@@ -26,13 +26,12 @@ import androidx.core.content.ContextCompat;
 import androidx.core.os.LocaleListCompat;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
 import com.qrcode.scanner.launcher.remote.ScreenFlowConfig;
 
 import java.util.Locale;
 
 /**
- * Launcher and onboarding helpers.
+ * App and onboarding helpers.
  * Language selection uses AppCompat locales. Onboarding completion uses the screen_flow file.
  * One-time analytics use a separate analytics_events file.
  */
@@ -47,14 +46,7 @@ public final class AppUtils {
     private static final String KEY_LANGUAGE_SELECTED = "language_selected";
     private static final String KEY_COLLECTION_COMPLETED = "collection_completed";
     private static final String KEY_PERMISSION_COMPLETED = "permission_completed";
-    private static final String KEY_DEFAULT_HOME_COMPLETED = "default_home_completed";
-    private static final String KEY_DEFAULT_SETTING_HOME_COMPLETED = "default_setting_home_completed";
     private static final String KEY_INTRO_COMPLETED = "intro_completed";
-    private static final String PREFS_DEFAULT_APP_FLOW = "default_app_flow";
-    private static final String KEY_COMPLETING_DEFAULT_APP_SETUP = "completing_default_app_setup";
-    private static final String KEY_AWAITING_DEFAULT_ROLE_RESULT = "awaiting_default_role_result";
-
-    private static boolean afterDefaultFlowClaimed;
 
     private AppUtils() {
     }
@@ -150,28 +142,6 @@ public final class AppUtils {
         screenFlowPrefs(context).edit().putBoolean(KEY_PERMISSION_COMPLETED, completed).apply();
     }
 
-    public static boolean isDefaultHomeScreenCompleted(Context context) {
-        return context != null && screenFlowPrefs(context).getBoolean(KEY_DEFAULT_HOME_COMPLETED, false);
-    }
-
-    public static void setDefaultHomeScreenCompleted(Context context, boolean completed) {
-        if (context == null) {
-            return;
-        }
-        screenFlowPrefs(context).edit().putBoolean(KEY_DEFAULT_HOME_COMPLETED, completed).apply();
-    }
-
-    public static boolean isDefaultSettingHomeScreenCompleted(Context context) {
-        return context != null && screenFlowPrefs(context).getBoolean(KEY_DEFAULT_SETTING_HOME_COMPLETED, false);
-    }
-
-    public static void setDefaultSettingHomeScreenCompleted(Context context, boolean completed) {
-        if (context == null) {
-            return;
-        }
-        screenFlowPrefs(context).edit().putBoolean(KEY_DEFAULT_SETTING_HOME_COMPLETED, completed).apply();
-    }
-
     public static boolean getIntroCompleted(Context context) {
         return context != null && screenFlowPrefs(context).getBoolean(KEY_INTRO_COMPLETED, false);
     }
@@ -195,106 +165,9 @@ public final class AppUtils {
                 .putBoolean(KEY_LANGUAGE_FLOW_COMPLETED, false)
                 .putBoolean(KEY_COLLECTION_COMPLETED, false)
                 .putBoolean(KEY_PERMISSION_COMPLETED, false)
-                .putBoolean(KEY_DEFAULT_HOME_COMPLETED, false)
-                .putBoolean(KEY_DEFAULT_SETTING_HOME_COMPLETED, false)
                 .putInt("flow_progress_index", 0)
                 .apply();
         setIntroCompleted(context, false);
-    }
-
-    public static void clearDefaultAppSetupState(Context context) {
-        if (context == null) {
-            return;
-        }
-        setCompletingDefaultAppSetup(context, false);
-        releaseAfterDefaultFlowClaim();
-    }
-
-    public static void setCompletingDefaultAppSetup(Context context, boolean value) {
-        if (context == null) {
-            return;
-        }
-        afterDefaultFlowClaimed = false;
-        SharedPreferences.Editor editor = context.getApplicationContext().getSharedPreferences(PREFS_DEFAULT_APP_FLOW, MODE_PRIVATE).edit().putBoolean(KEY_COMPLETING_DEFAULT_APP_SETUP, value);
-        if (!value) {
-            editor.putBoolean(KEY_AWAITING_DEFAULT_ROLE_RESULT, false);
-        }
-        editor.apply();
-    }
-
-    public static synchronized void releaseAfterDefaultFlowClaim() {
-        afterDefaultFlowClaimed = false;
-    }
-
-    public static void setAwaitingDefaultRoleResult(Context context, boolean value) {
-        if (context == null) {
-            return;
-        }
-        context.getApplicationContext().getSharedPreferences(PREFS_DEFAULT_APP_FLOW, MODE_PRIVATE).edit().putBoolean(KEY_AWAITING_DEFAULT_ROLE_RESULT, value).apply();
-    }
-
-    public static boolean isAwaitingDefaultRoleResult(Context context) {
-        if (context == null) {
-            return false;
-        }
-        return context.getApplicationContext().getSharedPreferences(PREFS_DEFAULT_APP_FLOW, MODE_PRIVATE).getBoolean(KEY_AWAITING_DEFAULT_ROLE_RESULT, false);
-    }
-
-    public static synchronized boolean tryClaimAfterDefaultFlow(Context context) {
-        if (!isCompletingDefaultAppSetup(context)) {
-            return false;
-        }
-        if (afterDefaultFlowClaimed) {
-            return false;
-        }
-        afterDefaultFlowClaimed = true;
-        return true;
-    }
-
-    public static boolean isCompletingDefaultAppSetup(Context context) {
-        if (context == null) {
-            return false;
-        }
-        return context.getApplicationContext().getSharedPreferences(PREFS_DEFAULT_APP_FLOW, MODE_PRIVATE).getBoolean(KEY_COMPLETING_DEFAULT_APP_SETUP, false);
-    }
-
-    public static void navigateAfterDefaultAppSetup(Context context) {
-        if (context == null) {
-            return;
-        }
-        // Resume after the flow step that started the setup, not always after DefaultHome: with DefaultHome
-        // first in Show_Screen_Flow, continuing after it would reset every later screen.
-        final String startedBy = getDefaultSetupStep(context);
-        setCompletingDefaultAppSetup(context, false);
-        if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equals(startedBy)) {
-            setDefaultSettingHomeScreenCompleted(context, true);
-        } else {
-            setDefaultHomeScreenCompleted(context, true);
-        }
-        if (isDefaultHomeApp(context)) {
-            TrackOnce.trackScreenOnce(context, "DEFAULT_HOME_APP_SET");
-        } else {
-            TrackOnce.trackScreenOnce(context, "DEFAULT_HOME_APP_CANCEL");
-        }
-        if (context instanceof Activity) {
-            Activity activity = (Activity) context;
-            if (!activity.isFinishing() && !activity.isDestroyed()) {
-                AdPlacement.loadAfterDefaultAd(activity, () -> ScreenFlowNavigation.continueAfter(activity, startedBy));
-            }
-        }
-    }
-
-    /** Which flow step (DefaultHome or DefultSettingHome) started the current default-app setup. */
-    public static void setDefaultSetupStep(Context context, String step) {
-        if (context == null) {
-            return;
-        }
-        context.getApplicationContext().getSharedPreferences(PREFS_DEFAULT_APP_FLOW, MODE_PRIVATE).edit().putString("default_setup_step", step).apply();
-    }
-
-    public static String getDefaultSetupStep(Context context) {
-        String step = context == null ? null : context.getApplicationContext().getSharedPreferences(PREFS_DEFAULT_APP_FLOW, MODE_PRIVATE).getString("default_setup_step", null);
-        return step == null || step.isEmpty() ? ScreenFlowConfig.SCREEN_DEFAULT_HOME : step;
     }
 
     /** Furthest flow position reached in this onboarding run. Completed screens before it are never cleared again. */
@@ -307,15 +180,6 @@ public final class AppUtils {
             return;
         }
         screenFlowPrefs(context).edit().putInt("flow_progress_index", position).apply();
-    }
-
-    public static Intent buildLauncherHomeIntent(Context context) {
-        Intent intent = new Intent(context, LauncherHomeActivity.class);
-        intent.setAction(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        return intent;
     }
 
     public static void openPrivacyPolicy(Context context) {
@@ -342,179 +206,8 @@ public final class AppUtils {
         return context.getApplicationContext().getSharedPreferences(PREF_SCREEN_FLOW, MODE_PRIVATE);
     }
 
-    public static boolean isDefaultHomeApp(Context context) {
-        if (context == null) {
-            return false;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Boolean roleHeld = roleHomeHeldOrNull(context);
-            if (roleHeld != null) {
-                return roleHeld;
-            }
-        }
-        return isDefaultHomeByResolve(context);
-    }
-
-    public static Intent createDefaultHomeRoleRequestIntent(Context context) {
-        if (context == null || Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-            return null;
-        }
-        return createRoleHomeRequestIntent(context);
-    }
-
-    public static boolean openDefaultHomeChooser(Activity activity) {
-        if (activity == null) {
-            return false;
-        }
-        try {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(intent);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private static Boolean roleHomeHeldOrNull(Context context) {
-        RoleManager roleManager = context.getSystemService(RoleManager.class);
-        if (roleManager != null && roleManager.isRoleAvailable(RoleManager.ROLE_HOME)) {
-            return roleManager.isRoleHeld(RoleManager.ROLE_HOME);
-        }
-        return null;
-    }
-
-    private static Intent createRoleHomeRequestIntent(Context context) {
-        RoleManager roleManager = context.getSystemService(RoleManager.class);
-        if (roleManager == null || !roleManager.isRoleAvailable(RoleManager.ROLE_HOME) || roleManager.isRoleHeld(RoleManager.ROLE_HOME)) {
-            return null;
-        }
-        return roleManager.createRequestRoleIntent(RoleManager.ROLE_HOME);
-    }
-
-    private static boolean isDefaultHomeByResolve(Context context) {
-        PackageManager packageManager = context.getPackageManager();
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        ResolveInfo resolveInfo = packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (resolveInfo == null || resolveInfo.activityInfo == null) {
-            return false;
-        }
-        return context.getPackageName().equals(resolveInfo.activityInfo.packageName);
-    }
-
     public static int dpToPx(Context context, int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
-    }
-
-    public static boolean isOwnApp(Context context, String packageName) {
-        if (context == null || TextUtils.isEmpty(packageName)) {
-            return false;
-        }
-        return packageName.equals(context.getApplicationContext().getPackageName());
-    }
-
-    public static void openAppInfo(Context context, String packageName) {
-        if (context == null || packageName == null || packageName.isEmpty()) {
-            return;
-        }
-        try {
-            Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-            intent.setData(Uri.parse("package:" + packageName));
-            // Coming back from a system Settings screen is not an app return: no Welcome screen / App Open ad.
-            ProcessAppOpen.skipNextAppOpen();
-            if (!(context instanceof Activity)) {
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            }
-            context.startActivity(intent);
-        } catch (Exception e) {
-            Toast.makeText(context, "Unable to open app info", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public static String getApplicationLabelEnglish(Context context, ApplicationInfo applicationInfo) {
-        if (context == null || applicationInfo == null) {
-            return "";
-        }
-        try {
-            if (applicationInfo.nonLocalizedLabel != null) {
-                String nonLocalized = applicationInfo.nonLocalizedLabel.toString().trim();
-                if (!nonLocalized.isEmpty()) {
-                    return nonLocalized;
-                }
-            }
-            if (applicationInfo.labelRes != 0) {
-                String englishLabel = loadPackageStringEnglish(context, applicationInfo.packageName, applicationInfo.labelRes);
-                if (!englishLabel.isEmpty()) {
-                    return englishLabel;
-                }
-            }
-        } catch (Exception ignored) {
-        }
-        try {
-            CharSequence label = context.getPackageManager().getApplicationLabel(applicationInfo);
-            return label != null ? label.toString().trim() : "";
-        } catch (Exception ignored) {
-            return "";
-        }
-    }
-
-    public static String getResolveInfoLabelEnglish(Context context, ResolveInfo resolveInfo) {
-        if (context == null || resolveInfo == null) {
-            return "";
-        }
-        try {
-            if (resolveInfo.nonLocalizedLabel != null) {
-                String nonLocalized = resolveInfo.nonLocalizedLabel.toString().trim();
-                if (!nonLocalized.isEmpty()) {
-                    return nonLocalized;
-                }
-            }
-            if (resolveInfo.activityInfo != null) {
-                ApplicationInfo applicationInfo = resolveInfo.activityInfo.applicationInfo;
-                int labelRes = resolveInfo.activityInfo.labelRes;
-                if (labelRes == 0 && applicationInfo != null) {
-                    labelRes = applicationInfo.labelRes;
-                }
-                if (labelRes != 0 && applicationInfo != null && applicationInfo.packageName != null) {
-                    String englishLabel = loadPackageStringEnglish(context, applicationInfo.packageName, labelRes);
-                    if (!englishLabel.isEmpty()) {
-                        return englishLabel;
-                    }
-                }
-                if (applicationInfo != null) {
-                    String appLabel = getApplicationLabelEnglish(context, applicationInfo);
-                    if (!appLabel.isEmpty()) {
-                        return appLabel;
-                    }
-                }
-            }
-            CharSequence label = resolveInfo.loadLabel(context.getPackageManager());
-            return label != null ? label.toString().trim() : "";
-        } catch (Exception ignored) {
-            return "";
-        }
-    }
-
-    @NonNull
-    private static String loadPackageStringEnglish(@NonNull Context context, @NonNull String packageName, int labelRes) {
-        if (labelRes == 0 || packageName.isEmpty()) {
-            return "";
-        }
-        try {
-            Configuration configuration = new Configuration();
-            configuration.setLocale(Locale.ENGLISH);
-            Context packageContext = context.createPackageContext(packageName, 0);
-            Context englishContext = packageContext.createConfigurationContext(configuration);
-            CharSequence label = englishContext.getResources().getText(labelRes);
-            if (label == null) {
-                return "";
-            }
-            return label.toString().trim();
-        } catch (Exception ignored) {
-            return "";
-        }
     }
 
     public static void applyDialogPadding(Activity activity, android.app.Dialog dialog) {
@@ -526,28 +219,15 @@ public final class AppUtils {
     }
 
     /**
-     * Everything the Permission screen asks for is already allowed: phone state, camera, notifications (Android 13+)
-     * and Display over other apps (or this app is the default Home app, which needs no overlay). Used to skip that
-     * screen when the flow runs again.
+     * Everything the Permission screen asks for is already allowed: camera and notifications (Android 13+). Used to skip
+     * that screen when the flow runs again.
      */
     public static boolean areOnboardingPermissionsAllowed(Context context) {
         if (context == null) {
             return false;
         }
         boolean notification = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU || AdPlacement.isNotificationGranted(context);
-        return hasPhoneStatePermission(context) && hasCameraPermission(context) && notification
-                && (hasOverlayPermission(context) || isDefaultHomeApp(context));
-    }
-
-    public static boolean hasPhoneStatePermission(Context context) {
-        if (context == null) {
-            return false;
-        }
-        return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static void trackPhoneStatePermissionGrantedOnce(Context context) {
-        trackScreenOnce(context, "READ_PHONE_STATE_GRANTED");
+        return hasCameraPermission(context) && notification;
     }
 
     public static boolean hasCameraPermission(Context context) {
@@ -559,21 +239,6 @@ public final class AppUtils {
 
     public static void trackCameraPermissionGrantedOnce(Context context) {
         trackScreenOnce(context, "CAMERA_GRANTED");
-    }
-
-    public static boolean hasOverlayPermission(Context context) {
-        if (context == null) {
-            return false;
-        }
-        try {
-            return Settings.canDrawOverlays(context);
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public static void trackOverlayPermissionGrantedOnce(Context context) {
-        trackScreenOnce(context, "OVERLAY_PERMISSION_GRANTED");
     }
 
     public static void trackScreenOnce(Context context, String screenName) {

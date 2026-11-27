@@ -569,7 +569,6 @@
     <string name="event_fast">RÁPIDO</string>
     <string name="event_optimized_sub">Tudo funcionando sem problemas.</string>
     <string name="event_done">Concluído</string>
-    <string name="launcher_settings">Configurações do launcher</string>
     <string name="serialize">Ordenar</string>
     <string name="by_name_asc_a_to_z">Por nome ASC (A a Z)</string>
     <string name="by_name_desc_z_to_a">Por nome DESC (Z a A)</string>

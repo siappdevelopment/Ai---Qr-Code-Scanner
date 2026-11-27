@@ -1,13 +1,8 @@
 package com.qrcode.scanner.launcher.activities;
 
 import android.Manifest;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.provider.Settings;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
@@ -30,26 +25,15 @@ import com.qrcode.scanner.launcher.common.ScreenFlowNavigation;
 import com.qrcode.scanner.launcher.remote.ScreenFlowConfig;
 
 /**
- * Source permission screen. Order is phone, then camera, then overlay settings.
- * A denial continues to the next step. Overlay is granted only when Settings.canDrawOverlays is true.
+ * Permission screen. Order is camera, then notifications (Android 13+). A denial continues to the next step.
  */
 public class PermissionActivity extends AppCompatActivity {
     private AppCompatTextView btnAllowPermission;
 
     private static final String KEY_PERMISSION_FLOW_ACTIVE = "key_permission_flow_active";
-    private static final String KEY_PHONE_STEP_COMPLETED = "key_phone_step_completed";
     private static final String KEY_CAMERA_STEP_COMPLETED = "key_camera_step_completed";
-    private static final String KEY_WAITING_OVERLAY_SETTINGS = "key_waiting_overlay_settings";
-    private static final String KEY_PAUSED_FOR_OVERLAY_SETTINGS = "key_paused_for_overlay_settings";
-    private static final long OVERLAY_PERMISSION_POLL_INTERVAL_MS = 400L;
-    private final Handler overlayPermissionHandler = new Handler(Looper.getMainLooper());
     private boolean permissionFlowActive;
-    private boolean phoneStepCompleted;
     private boolean cameraStepCompleted;
-    private boolean waitingForOverlaySettings;
-    private boolean pausedForOverlaySettings;
-    /** Set when the Overlay settings screen is launched; the guide card starts once it takes over (onPause). */
-    private boolean overlayGuidePending;
     private boolean hasNavigated;
 
     @Override
@@ -70,105 +54,17 @@ public class PermissionActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             permissionFlowActive = savedInstanceState.getBoolean(KEY_PERMISSION_FLOW_ACTIVE, false);
-            phoneStepCompleted = savedInstanceState.getBoolean(KEY_PHONE_STEP_COMPLETED, false);
             cameraStepCompleted = savedInstanceState.getBoolean(KEY_CAMERA_STEP_COMPLETED, false);
-            waitingForOverlaySettings = savedInstanceState.getBoolean(KEY_WAITING_OVERLAY_SETTINGS, false);
-            pausedForOverlaySettings = savedInstanceState.getBoolean(KEY_PAUSED_FOR_OVERLAY_SETTINGS, false);
         }
 
         findIDs();
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (overlayGuidePending) {
-            overlayGuidePending = false;
-            OverlayPermissionGuideActivity.show(this);
-        }
-        if (waitingForOverlaySettings) {
-            pausedForOverlaySettings = true;
-            startOverlayPermissionMonitor();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        stopOverlayPermissionMonitor();
-        if (!waitingForOverlaySettings || !pausedForOverlaySettings || hasNavigated) {
-            return;
-        }
-        if (AppUtils.hasOverlayPermission(this)) {
-            completeOverlayGrantAndContinue();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopOverlayPermissionMonitor();
-        super.onDestroy();
-    }
-
-    private final Runnable overlayPermissionMonitorRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (hasNavigated || !waitingForOverlaySettings || isFinishing()) {
-                stopOverlayPermissionMonitor();
-                return;
-            }
-            if (AppUtils.hasOverlayPermission(PermissionActivity.this)) {
-                handleOverlayPermissionGrantedFromBackground();
-                return;
-            }
-            overlayPermissionHandler.postDelayed(this, OVERLAY_PERMISSION_POLL_INTERVAL_MS);
-        }
-    };
-
-    private void startOverlayPermissionMonitor() {
-        stopOverlayPermissionMonitor();
-        overlayPermissionHandler.postDelayed(overlayPermissionMonitorRunnable, OVERLAY_PERMISSION_POLL_INTERVAL_MS);
-    }
-
-    private void stopOverlayPermissionMonitor() {
-        overlayPermissionHandler.removeCallbacks(overlayPermissionMonitorRunnable);
-    }
-
-    private void handleOverlayPermissionGrantedFromBackground() {
-        if (hasNavigated || !waitingForOverlaySettings) {
-            stopOverlayPermissionMonitor();
-            return;
-        }
-        stopOverlayPermissionMonitor();
-        waitingForOverlaySettings = false;
-        pausedForOverlaySettings = false;
-        try {
-            Intent returnIntent = new Intent(this, PermissionActivity.class);
-            returnIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-            startActivity(returnIntent);
-        } catch (Exception ignored) {
-        }
-        finishOverlayStepAndNavigate();
-    }
-
-    private void completeOverlayGrantAndContinue() {
-        if (hasNavigated) {
-            return;
-        }
-        waitingForOverlaySettings = false;
-        pausedForOverlaySettings = false;
-        stopOverlayPermissionMonitor();
-        finishOverlayStepAndNavigate();
-    }
-
-    @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(KEY_PERMISSION_FLOW_ACTIVE, permissionFlowActive);
-        outState.putBoolean(KEY_PHONE_STEP_COMPLETED, phoneStepCompleted);
         outState.putBoolean(KEY_CAMERA_STEP_COMPLETED, cameraStepCompleted);
-        outState.putBoolean(KEY_WAITING_OVERLAY_SETTINGS, waitingForOverlaySettings);
-        outState.putBoolean(KEY_PAUSED_FOR_OVERLAY_SETTINGS, pausedForOverlaySettings);
     }
 
     private void findIDs() {
@@ -187,19 +83,12 @@ public class PermissionActivity extends AppCompatActivity {
     }
 
     private void initialClicks() {
-        if (permissionFlowActive && !hasNavigated) {
-            if (phoneStepCompleted && cameraStepCompleted) {
-                scheduleOverlayPermissionRequest();
-                return;
-            }
-            if (phoneStepCompleted) {
-                scheduleCameraPermissionRequest();
-                return;
-            }
+        if (permissionFlowActive && !hasNavigated && cameraStepCompleted) {
+            scheduleNotificationPermissionRequest();
+            return;
         }
 
-        if (!permissionFlowActive && areAllRuntimePermissionsGranted() && isNotificationStepSatisfied()
-                && (AppUtils.hasOverlayPermission(this) || AppUtils.isDefaultHomeApp(this))) {
+        if (!permissionFlowActive && AppUtils.hasCameraPermission(this) && isNotificationStepSatisfied()) {
             completePermissionScreenAndNavigate();
         }
 
@@ -213,17 +102,8 @@ public class PermissionActivity extends AppCompatActivity {
         });
     }
 
-    private void scheduleCameraPermissionRequest() {
-        View decorView = getWindow() != null ? getWindow().getDecorView() : null;
-        if (decorView != null) {
-            decorView.post(this::requestCameraPermission);
-        } else {
-            requestCameraPermission();
-        }
-    }
-
     /**
-     * Notifications: asked here when Splash did not get them (Android 13+). Runs between Camera and Overlay.
+     * Notifications: asked here when Splash did not get them (Android 13+). Runs after Camera.
      * A denial (also a permanent one, which returns at once) just continues; nothing is marked granted.
      */
     private boolean isNotificationStepSatisfied() {
@@ -244,7 +124,7 @@ public class PermissionActivity extends AppCompatActivity {
             return;
         }
         if (isNotificationStepSatisfied()) {
-            scheduleOverlayPermissionRequest();
+            completePermissionScreenAndNavigate();
             return;
         }
         notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
@@ -254,31 +134,12 @@ public class PermissionActivity extends AppCompatActivity {
         if (hasNavigated) {
             return;
         }
-        scheduleOverlayPermissionRequest();
+        completePermissionScreenAndNavigate();
     });
 
-    private void scheduleOverlayPermissionRequest() {
-        View decorView = getWindow() != null ? getWindow().getDecorView() : null;
-        if (decorView != null) {
-            decorView.post(this::requestOverlayPermission);
-        } else {
-            requestOverlayPermission();
-        }
-    }
-
-    private boolean areAllRuntimePermissionsGranted() {
-        return AppUtils.hasPhoneStatePermission(this) && AppUtils.hasCameraPermission(this);
-    }
-
     private void completePermissionScreenAndNavigate() {
-        if (AppUtils.hasPhoneStatePermission(this)) {
-            AppUtils.trackPhoneStatePermissionGrantedOnce(this);
-        }
         if (AppUtils.hasCameraPermission(this)) {
             AppUtils.trackCameraPermissionGrantedOnce(this);
-        }
-        if (AppUtils.hasOverlayPermission(this)) {
-            AppUtils.trackOverlayPermissionGrantedOnce(this);
         }
         navigateToNextScreen();
     }
@@ -287,44 +148,13 @@ public class PermissionActivity extends AppCompatActivity {
         if (hasNavigated || permissionFlowActive) {
             return;
         }
-        startPermissionFlow();
-    }
-
-    private void startPermissionFlow() {
-        if (hasNavigated) {
-            return;
-        }
         permissionFlowActive = true;
-        phoneStepCompleted = false;
         cameraStepCompleted = false;
-        requestPhonePermission();
+        requestCameraPermission();
     }
-
-    private void requestPhonePermission() {
-        if (hasNavigated) {
-            return;
-        }
-        if (AppUtils.hasPhoneStatePermission(this)) {
-            phoneStepCompleted = true;
-            scheduleCameraPermissionRequest();
-            return;
-        }
-        phonePermissionLauncher.launch(Manifest.permission.READ_PHONE_STATE);
-    }
-
-    private final ActivityResultLauncher<String> phonePermissionLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), granted -> {
-        if (hasNavigated) {
-            return;
-        }
-        phoneStepCompleted = true;
-        if (granted) {
-            AppUtils.trackPhoneStatePermissionGrantedOnce(this);
-        }
-        scheduleCameraPermissionRequest();
-    });
 
     private void requestCameraPermission() {
-        if (hasNavigated || !phoneStepCompleted || cameraStepCompleted) {
+        if (hasNavigated || cameraStepCompleted) {
             return;
         }
         if (AppUtils.hasCameraPermission(this)) {
@@ -347,56 +177,13 @@ public class PermissionActivity extends AppCompatActivity {
         scheduleNotificationPermissionRequest();
     });
 
-    private void requestOverlayPermission() {
-        if (hasNavigated || !phoneStepCompleted || !cameraStepCompleted) {
-            return;
-        }
-        // A default launcher can already start screens from the background, so skip the overlay step.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || AppUtils.hasOverlayPermission(this) || AppUtils.isDefaultHomeApp(this)) {
-            finishOverlayStepAndNavigate();
-            return;
-        }
-        Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-        waitingForOverlaySettings = true;
-        overlayGuidePending = true;
-        try {
-            overlaySettingsLauncher.launch(intent);
-        } catch (Exception ignored) {
-            overlayGuidePending = false;
-            waitingForOverlaySettings = false;
-            finishOverlayStepAndNavigate();
-        }
-    }
-
-    private final ActivityResultLauncher<Intent> overlaySettingsLauncher =
-            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                if (hasNavigated) {
-                    return;
-                }
-                stopOverlayPermissionMonitor();
-                waitingForOverlaySettings = false;
-                pausedForOverlaySettings = false;
-                finishOverlayStepAndNavigate();
-            });
-
-    private void finishOverlayStepAndNavigate() {
-        if (hasNavigated) {
-            return;
-        }
-        completePermissionScreenAndNavigate();
-    }
-
     private void navigateToNextScreen() {
         if (hasNavigated || isFinishing()) {
             return;
         }
         hasNavigated = true;
         permissionFlowActive = false;
-        phoneStepCompleted = false;
         cameraStepCompleted = false;
-        waitingForOverlaySettings = false;
-        pausedForOverlaySettings = false;
-        stopOverlayPermissionMonitor();
         ScreenFlowNavigation.continueAfter(this, ScreenFlowConfig.SCREEN_PERMISSION);
     }
 }

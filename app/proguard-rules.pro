@@ -14,7 +14,6 @@
 
 # ---- Gson models ----
 # Field names are the JSON keys persisted in SharedPreferences, so they must not be renamed.
--keep class com.qrcode.scanner.launcher.models.ReminderModel { <init>(...); <fields>; }
 
 # ---- Parcelable ----
 -keepclassmembers class com.qrcode.scanner.launcher.** implements android.os.Parcelable {
@@ -26,7 +25,7 @@
 -keep class com.facebook.ads.** { *; }
 -dontwarn com.facebook.ads.**
 
-# ---- WorkManager (default launcher reminder) ----
+# ---- WorkManager (used by SDKs) ----
 # R8 stripped OverwritingInputMerger's constructor ("Could not create Input Merger"), so no work ever ran.
 # WorkManager creates mergers and workers by reflection.
 -keep class * extends androidx.work.InputMerger { <init>(); }

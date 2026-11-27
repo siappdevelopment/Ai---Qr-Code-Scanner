@@ -5,11 +5,7 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import com.qrcode.scanner.ui.theme.enableThemedEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import com.qrcode.scanner.launcher.common.AdPlacement
 import com.qrcode.scanner.launcher.common.StartupFlow
-import com.qrcode.scanner.launcher.common.WidgetNavigation
-import com.qrcode.scanner.launcher.helpers.DefaultHomePopupHost
-import com.qrcode.scanner.launcher.helpers.ReminderAlarmHelper
 import com.qrcode.scanner.ui.navigation.ScanPulseNavHost
 import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
 
@@ -19,21 +15,14 @@ import com.qrcode.scanner.ui.theme.QRCodeScannerTheme
  */
 class MainActivity : AppCompatActivity() {
     private var showStartupSplash = false
-    private val defaultHomePopupHost = DefaultHomePopupHost(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
             com.qrcode.scanner.launcher.common.AnalyticsEvents.log(this, com.qrcode.scanner.launcher.common.AnalyticsEvents.MAIN_VIEW)
         }
-        defaultHomePopupHost.register()
-        AdPlacement.requestCallEndIpCountryIfNeeded(this)
         enableThemedEdgeToEdge()
         showStartupSplash = StartupFlow.shouldShowSplash(intent)
-        ReminderAlarmHelper.handleReminderLaunchIntent(this, intent)
-        if (!showStartupSplash) {
-            WidgetNavigation.openComposeDestinationFromIntent(this)
-        }
         setContent {
             QRCodeScannerTheme {
                 ScanPulseNavHost(showStartupSplash = showStartupSplash)
@@ -41,22 +30,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (!showStartupSplash) {
-            defaultHomePopupHost.onHostResume()
-        }
-    }
-
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        ReminderAlarmHelper.handleReminderLaunchIntent(this, intent)
-        if (showStartupSplash) {
-            WidgetNavigation.captureTargetScreen(this, intent)
-        } else {
-            WidgetNavigation.openComposeDestinationFromIntent(this)
-        }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -65,7 +41,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        defaultHomePopupHost.release()
         StartupFlow.onHostDestroy(this)
         super.onDestroy()
     }

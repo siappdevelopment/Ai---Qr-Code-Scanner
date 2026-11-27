@@ -521,7 +521,6 @@
     <string name="event_fast">FAST</string>
     <string name="event_optimized_sub">Keeping things running smoothly.</string>
     <string name="event_done">Done</string>
-    <string name="launcher_settings">Launcher Settings</string>
     <string name="serialize">Serialize</string>
     <string name="by_name_asc_a_to_z">By Name ASC (A to Z)</string>
     <string name="by_name_desc_z_to_a">By Name DESC (Z to A)</string>

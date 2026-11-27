@@ -45,11 +45,9 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.qrcode.scanner.MainActivity
 import com.qrcode.scanner.launcher.activities.LanguageActivity
-import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
 import com.qrcode.scanner.launcher.common.ScreenInterAds
 import com.qrcode.scanner.launcher.common.StartupFlow
 import com.qrcode.scanner.launcher.common.StartupNavigation
-import com.qrcode.scanner.launcher.common.WidgetNavigation
 import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars
 import com.qrcode.scanner.ui.components.HomeBottomAdSlot
 import com.qrcode.scanner.ui.components.ScanPulseBottomBar
@@ -97,45 +95,7 @@ fun ScanPulseNavHost(
         currentRoute != AppDestination.Splash.route
     val hostActivity = LocalContext.current.findHostActivity()
     val useDark = ScanPulseThemeState.palette == ScanPulsePalette.Dark
-    val inLauncher = hostActivity is LauncherHomeActivity
-    // Launcher QR page: original bar behavior only (do not change LauncherScreen).
-    SideEffect {
-        val launcher = hostActivity as? LauncherHomeActivity ?: return@SideEffect
-        if (launcher.launcherCurrentItem != com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter.PAGE_RIGHT) {
-            return@SideEffect
-        }
-        if (isScan) {
-            LauncherQrSystemBars.applyScanStatusBar(launcher)
-        } else if (matchHeaderStatus) {
-            LauncherQrSystemBars.applyHeaderStatusBar(launcher, useDark)
-        }
-    }
-    // After a theme change the activity is recreated and the launcher resets its bars to transparent
-    // (Redmi/MIUI keeps that state). Re-apply the header bar when this page resumes, after the window settles.
-    val barsOwner = LocalLifecycleOwner.current
-    DisposableEffect(hostActivity, barsOwner, isScan, matchHeaderStatus, useDark) {
-        val launcher = hostActivity as? LauncherHomeActivity
-        if (launcher == null || isScan || !matchHeaderStatus) {
-            return@DisposableEffect onDispose { }
-        }
-        fun applyHeaderBar() {
-            if (launcher.launcherCurrentItem ==
-                com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter.PAGE_RIGHT
-            ) {
-                LauncherQrSystemBars.applyHeaderStatusBar(launcher, useDark)
-            }
-        }
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                applyHeaderBar()
-                launcher.window.decorView.post { applyHeaderBar() }
-            }
-        }
-        barsOwner.lifecycle.addObserver(observer)
-        launcher.window.decorView.post { applyHeaderBar() }
-        onDispose { barsOwner.lifecycle.removeObserver(observer) }
-    }
-    // MainActivity only (default launcher not set): camera under status bar + swipe system nav.
+    // Scan: camera under the status bar + swipe system nav.
     DisposableEffect(hostActivity, isScan, showBottomBar, useDark, matchHeaderStatus) {
         val activity = hostActivity as? MainActivity
         if (activity == null || !showBottomBar) {
@@ -212,18 +172,10 @@ fun ScanPulseNavHost(
 
     Box(modifier = Modifier.fillMaxSize()) {
         Scaffold(
-            containerColor = when {
-                isScan && !inLauncher -> Color.Black
-                isScan -> Color.Transparent
-                else -> PageBackground
-            },
+            containerColor = if (isScan) Color.Black else PageBackground,
             contentColor = Color.Unspecified,
-            // Launcher unchanged; MainActivity Scan draws camera under transparent status bar.
-            contentWindowInsets = when {
-                isScan && !inLauncher -> WindowInsets(0, 0, 0, 0)
-                inLauncher -> WindowInsets.statusBars
-                else -> WindowInsets.statusBars
-            },
+            // Scan draws the camera under the transparent status bar.
+            contentWindowInsets = if (isScan) WindowInsets(0, 0, 0, 0) else WindowInsets.statusBars,
             bottomBar = {
                 if (showBottomBar) {
                     Column(modifier = Modifier.fillMaxWidth()) {
@@ -285,7 +237,6 @@ fun ScanPulseNavHost(
                     StartupFlow.begin(activity, root) {
                         val stayInQrApp = StartupNavigation.continueAfterVisibleSplash(activity)
                         if (stayInQrApp) {
-                            WidgetNavigation.openPendingComposeDestination(activity)
                             navController.navigate(MAIN_GRAPH_ROUTE) {
                                 popUpTo(AppDestination.Splash.route) { inclusive = true }
                             }
@@ -356,12 +307,8 @@ fun ScanPulseNavHost(
                 composable(AppDestination.Scan.route) {
                     ScanScreen(
                         onClose = { openRootTab(tabBeforeScan) },
-                        safeContentPadding = if (inLauncher) {
-                            innerPadding
-                        } else {
-                            // Standalone app: camera under status bar; HUD only needs bottom bar clearance.
-                            PaddingValues(bottom = innerPadding.calculateBottomPadding())
-                        }
+                        // Camera under the status bar; the HUD only needs bottom bar clearance.
+                        safeContentPadding = PaddingValues(bottom = innerPadding.calculateBottomPadding())
                     )
                 }
                 composable(AppDestination.Settings.route) {

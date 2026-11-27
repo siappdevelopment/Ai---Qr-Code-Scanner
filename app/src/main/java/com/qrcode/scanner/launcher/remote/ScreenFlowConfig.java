@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 
 import androidx.annotation.Nullable;
 
-import com.qrcode.scanner.launcher.common.AdGates;
 import com.qrcode.scanner.launcher.common.AppUtils;
 
 import org.json.JSONArray;
@@ -25,18 +24,12 @@ public final class ScreenFlowConfig {
     public static final String SCREEN_LANGUAGE = "Language";
     public static final String SCREEN_COLLECTION = "Collection";
     public static final String SCREEN_PERMISSION = "Permission";
-    public static final String SCREEN_DEFAULT_HOME = "DefaultHome";
-    public static final String SCREEN_DEFAULT_SETTING_HOME = "DefultSettingHome";
     public static final String SCREEN_INTRO = "Intro";
 
     private static final String PREF_SHOW_SCREEN_FLOW = "show_screen_flow";
 
     private static List<String> showScreenFlow = new ArrayList<>();
     private static int introScreenCount;
-    private static boolean redirectHomeLauncher;
-    private static final String PREF_FORCE_DEFAULT = "force_default_launcher_prefs";
-    private static boolean forceDefaultLauncher;
-    private static boolean forceDefaultLoaded;
     private static String privacyPolicy = "";
 
     private ScreenFlowConfig() {
@@ -48,41 +41,6 @@ public final class ScreenFlowConfig {
 
     public static void setIntroScreenCount(int count) {
         introScreenCount = count;
-    }
-
-    public static boolean getRedirectHomeLauncher() {
-        return redirectHomeLauncher;
-    }
-
-    public static void setRedirectHomeLauncher(boolean redirect) {
-        redirectHomeLauncher = redirect;
-    }
-
-    /**
-     * Force_Default_Launcher_Show: true = the DefaultHome step cannot be passed until this app really is the Home app.
-     * Saved, so the value is known on a cold start before Remote Config is fetched.
-     */
-    public static void setForceDefaultLauncher(@Nullable Context context, boolean force) {
-        forceDefaultLauncher = force;
-        forceDefaultLoaded = true;
-        if (context != null) {
-            context.getApplicationContext().getSharedPreferences(PREF_FORCE_DEFAULT, MODE_PRIVATE)
-                    .edit().putBoolean("force_default_launcher", force).apply();
-        }
-    }
-
-    public static boolean isForceDefaultLauncher(@Nullable Context context) {
-        if (!forceDefaultLoaded && context != null) {
-            forceDefaultLauncher = context.getApplicationContext().getSharedPreferences(PREF_FORCE_DEFAULT, MODE_PRIVATE)
-                    .getBoolean("force_default_launcher", false);
-            forceDefaultLoaded = true;
-        }
-        return forceDefaultLauncher;
-    }
-
-    /** Forced mode is on only when the flag is true and this place is allowed by the common ads country rule. */
-    public static boolean isForceDefaultActive(@Nullable Context context) {
-        return isForceDefaultLauncher(context) && AdGates.adsLocationAllowed(context);
     }
 
     public static String getPrivacyPolicy() {
@@ -109,7 +67,6 @@ public final class ScreenFlowConfig {
         defaults.add(SCREEN_LANGUAGE);
         defaults.add(SCREEN_COLLECTION);
         defaults.add(SCREEN_PERMISSION);
-        defaults.add(SCREEN_DEFAULT_HOME);
         defaults.add(SCREEN_INTRO);
         return defaults;
     }
@@ -200,8 +157,6 @@ public final class ScreenFlowConfig {
         return SCREEN_LANGUAGE.equalsIgnoreCase(screen)
                 || SCREEN_COLLECTION.equalsIgnoreCase(screen)
                 || SCREEN_PERMISSION.equalsIgnoreCase(screen)
-                || SCREEN_DEFAULT_HOME.equalsIgnoreCase(screen)
-                || SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screen)
                 || SCREEN_INTRO.equalsIgnoreCase(screen);
     }
 
@@ -247,12 +202,6 @@ public final class ScreenFlowConfig {
         }
         if (value.equalsIgnoreCase(SCREEN_PERMISSION)) {
             return SCREEN_PERMISSION;
-        }
-        if (value.equalsIgnoreCase(SCREEN_DEFAULT_HOME) || value.equalsIgnoreCase("Default") || value.equalsIgnoreCase("DefaultApp") || value.equalsIgnoreCase("Default_Home")) {
-            return SCREEN_DEFAULT_HOME;
-        }
-        if (value.equalsIgnoreCase(SCREEN_DEFAULT_SETTING_HOME) || value.equalsIgnoreCase("DefaultSettingHome")) {
-            return SCREEN_DEFAULT_SETTING_HOME;
         }
         if (value.equalsIgnoreCase(SCREEN_INTRO) || value.equalsIgnoreCase("IntroActivity") || value.equalsIgnoreCase("IntroScreen") || value.equalsIgnoreCase("Onboarding")) {
             return SCREEN_INTRO;

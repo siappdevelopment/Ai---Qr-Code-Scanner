@@ -569,7 +569,6 @@
     <string name="event_fast">RAPIDE</string>
     <string name="event_optimized_sub">Tout fonctionne sans problème.</string>
     <string name="event_done">Terminé</string>
-    <string name="launcher_settings">Paramètres du lanceur</string>
     <string name="serialize">Trier</string>
     <string name="by_name_asc_a_to_z">Par nom ASC (A à Z)</string>
     <string name="by_name_desc_z_to_a">Par nom DESC (Z à A)</string>

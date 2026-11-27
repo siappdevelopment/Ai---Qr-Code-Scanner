@@ -147,14 +147,6 @@ public final class AdGates {
         return inc.isEmpty() || anyMatch(places, inc);
     }
 
-    /**
-     * True when one of the device's places is in {@code list}; an empty list is "no restriction" (true).
-     * Used by screens that have their own include list (Call End, charging, install).
-     */
-    public static boolean matchesAnyPlace(@Nullable Context context, @Nullable List<String> list) {
-        return isLocationAllowed(context, list, null);
-    }
-
     private static boolean anyMatch(@NonNull Set<String> places, @NonNull List<String> list) {
         for (String entry : list) {
             if (places.contains(entry)) {
@@ -244,33 +236,11 @@ public final class AdGates {
 
     /** True when any list that needs state / city / IP country is set. */
     public static boolean usesLocationLists() {
-        if (!includeLocations.isEmpty() || !excludeLocations.isEmpty()) {
-            return true;
-        }
-        if (!normalize(RemoteConfigValues.getClEndBackAdShowCountryList()).isEmpty()
-                || !normalize(RemoteConfigValues.getNotificationCountryList()).isEmpty()
-                || !normalize(RemoteConfigValues.getNotificationCallCountryList()).isEmpty()
-                || !normalize(RemoteConfigValues.getNotificationCallOverlayCountryList()).isEmpty()
-                || !normalize(RemoteConfigValues.getClEndBackAdShowExcludeList()).isEmpty()
-                || !normalize(RemoteConfigValues.getNotificationExcludeList()).isEmpty()
-                || !normalize(RemoteConfigValues.getNotificationCallExcludeList()).isEmpty()
-                || !normalize(RemoteConfigValues.getNotificationCallOverlayExcludeList()).isEmpty()
-                || !normalize(AdPlacement.getRecentBackAdShowCountryList()).isEmpty()
-                || !normalize(AdPlacement.getRecentBackAdShowExcludeLocationList()).isEmpty()
-                || AdPlacement.getRecentBackAdCountryIP()) {
-            return true;
-        }
-        return hasScreenList(RemoteConfigValues.EVENT_SCREEN_CHARGING)
-                || hasScreenList(RemoteConfigValues.EVENT_SCREEN_INSTALL_UNINSTALL);
-    }
-
-    private static boolean hasScreenList(@NonNull String screenKey) {
-        RemoteConfigValues.EventScreenConfig config = RemoteConfigValues.getEventScreenConfig(screenKey);
-        return config != null && (!normalize(config.backAdCountryList).isEmpty() || !normalize(config.backAdExcludeList).isEmpty());
+        return !includeLocations.isEmpty() || !excludeLocations.isEmpty();
     }
 
     /**
-     * Starts the IP lookup when it is needed: a list is set (or Call End asks for the IP country), the URL is not
+     * Starts the IP lookup when it is needed: a list is set, the URL is not
      * blank and no lookup is running or finished in this run. A failure allows the next trigger to retry.
      */
     public static void requestIpCountryIfNeeded(@Nullable Context context) {
@@ -279,8 +249,7 @@ public final class AdGates {
         if (app == null) {
             return;
         }
-        RemoteConfigValues.ensureLoaded(app);
-        if (!RemoteConfigValues.getClEndBackAdCountryIP() && !usesLocationLists()) {
+        if (!usesLocationLists()) {
             return;
         }
         final String url = ipCheckerUrl();

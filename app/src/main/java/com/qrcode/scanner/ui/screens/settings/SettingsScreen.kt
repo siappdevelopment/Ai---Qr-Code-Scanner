@@ -51,7 +51,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.qrcode.scanner.spapp.R
-import com.qrcode.scanner.launcher.activities.LauncherSettingsActivity
 import com.qrcode.scanner.data.history.HistoryRepositoryProvider
 import com.qrcode.scanner.ui.navigation.ThemeNavigation
 import com.qrcode.scanner.data.settings.AppThemeMode
@@ -139,16 +138,6 @@ fun SettingsScreen(
                     icon = Icons.Outlined.Language,
                     enabled = true,
                     onClick = onOpenLanguage
-                )
-                SettingsRowDivider()
-                SettingsNavRow(
-                    title = stringResource(R.string.settings_launcher_title),
-                    subtitle = stringResource(R.string.settings_launcher_subtitle),
-                    icon = Icons.Outlined.Apps,
-                    enabled = true,
-                    onClick = {
-                        context.startActivity(Intent(context, LauncherSettingsActivity::class.java))
-                    }
                 )
             }
 

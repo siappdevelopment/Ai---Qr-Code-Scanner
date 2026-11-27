@@ -67,43 +67,7 @@ public final class ScreenNativeAds {
             // No refresh seconds here: every time the Create hub opens it requests its own ad.
             state.lastCycleAt = 0L;
         }
-        if (!HomeBottomAd.isQrPageOpen(activity)) {
-            hideSlot(state);
-            return;
-        }
         showOrLoad(activity, slot);
-    }
-
-    public static void onPageVisible() {
-        Activity activity = null;
-        for (Slot slot : Slot.values()) {
-            if (slot == Slot.CREATE_HUB) {
-                continue; // Create hub is its own activity, not part of the pager
-            }
-            SlotState state = state(slot);
-            if (currentHost(state) == null) {
-                continue;
-            }
-            if (activity == null) {
-                activity = state.activity == null ? null : state.activity.get();
-            }
-            if (activity == null || activity.isFinishing()) {
-                return;
-            }
-            showOrLoad(activity, slot);
-        }
-    }
-
-    public static void onPageHidden() {
-        for (Slot slot : Slot.values()) {
-            if (slot == Slot.CREATE_HUB) {
-                continue;
-            }
-            SlotState state = state(slot);
-            if (currentHost(state) != null) {
-                hideSlot(state);
-            }
-        }
     }
 
     private static void showOrLoad(Activity activity, Slot slot) {

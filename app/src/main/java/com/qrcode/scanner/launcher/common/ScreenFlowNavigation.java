@@ -9,11 +9,8 @@ import android.os.SystemClock;
 
 import com.qrcode.scanner.MainActivity;
 import com.qrcode.scanner.launcher.activities.CollectionActivity;
-import com.qrcode.scanner.launcher.activities.DefaultActivity;
-import com.qrcode.scanner.launcher.activities.DefaultSettingHomeActivity;
 import com.qrcode.scanner.launcher.activities.IntroActivity;
 import com.qrcode.scanner.launcher.activities.LanguageActivity;
-import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
 import com.qrcode.scanner.launcher.activities.PermissionActivity;
 import com.qrcode.scanner.launcher.remote.ScreenFlowConfig;
 
@@ -79,10 +76,8 @@ public final class ScreenFlowNavigation {
         List<String> flow = ScreenFlowConfig.getShowScreenFlow();
         String next = findNextIncomplete(context, flow, startIndex);
         if (next == null) {
-            // Flow finished: also close the last onboarding screen. The launcher opens in its own task
-            // (taskAffinity ""), so CLEAR_TASK would leave this activity alive in the app task, and it would
-            // show again when an Event/Charging screen is closed.
-            if (context instanceof Activity && !(context instanceof LauncherHomeActivity)) {
+            // Flow finished: also close the last onboarding screen.
+            if (context instanceof Activity) {
                 openMain((Activity) context);
             } else {
                 openMain(context);
@@ -136,16 +131,6 @@ public final class ScreenFlowNavigation {
             // Shown again whenever a permission is missing; skipped only when everything is already allowed.
             return AppUtils.areOnboardingPermissionsAllowed(context);
         }
-        if (ScreenFlowConfig.SCREEN_DEFAULT_HOME.equalsIgnoreCase(screenName)) {
-            // Shown again until this app really is the default Home app (the saved flag does not skip it).
-            if (AppUtils.isDefaultHomeApp(context) && !AppUtils.isDefaultHomeScreenCompleted(context)) {
-                AppUtils.setDefaultHomeScreenCompleted(context, true);
-            }
-            return AppUtils.isDefaultHomeApp(context);
-        }
-        if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screenName)) {
-            return AppUtils.isDefaultHomeApp(context);
-        }
         if (ScreenFlowConfig.SCREEN_INTRO.equalsIgnoreCase(screenName)) {
             return AppUtils.getIntroCompleted(context);
         }
@@ -163,10 +148,6 @@ public final class ScreenFlowNavigation {
             AppUtils.setCollectionScreenCompleted(context, true);
         } else if (ScreenFlowConfig.SCREEN_PERMISSION.equalsIgnoreCase(screen)) {
             AppUtils.setPermissionScreenCompleted(context, true);
-        } else if (ScreenFlowConfig.SCREEN_DEFAULT_HOME.equalsIgnoreCase(screen)) {
-            AppUtils.setDefaultHomeScreenCompleted(context, true);
-        } else if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screen)) {
-            AppUtils.setDefaultSettingHomeScreenCompleted(context, true);
         } else if (ScreenFlowConfig.SCREEN_INTRO.equalsIgnoreCase(screen)) {
             AppUtils.setIntroCompleted(context, true);
         }
@@ -184,10 +165,6 @@ public final class ScreenFlowNavigation {
                 AppUtils.setCollectionScreenCompleted(context, false);
             } else if (ScreenFlowConfig.SCREEN_PERMISSION.equalsIgnoreCase(screen)) {
                 AppUtils.setPermissionScreenCompleted(context, false);
-            } else if (ScreenFlowConfig.SCREEN_DEFAULT_HOME.equalsIgnoreCase(screen)) {
-                AppUtils.setDefaultHomeScreenCompleted(context, false);
-            } else if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screen)) {
-                AppUtils.setDefaultSettingHomeScreenCompleted(context, false);
             } else if (ScreenFlowConfig.SCREEN_INTRO.equalsIgnoreCase(screen)) {
                 AppUtils.setIntroCompleted(context, false);
             }
@@ -221,20 +198,8 @@ public final class ScreenFlowNavigation {
             openMain(activity);
             return;
         }
-        if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screenName)
-                && !(activity instanceof LauncherHomeActivity)) {
-            // Invisible step: keep the current screen alive underneath (no CLEAR_TASK, no finish) so
-            // nothing blinks before the system settings page. continueAfter() clears it afterwards.
-            intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            activity.startActivity(intent);
-            activity.overridePendingTransition(0, 0);
-            return;
-        }
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         activity.startActivity(intent);
-        if (activity instanceof LauncherHomeActivity) {
-            return;
-        }
         new Handler(Looper.getMainLooper()).post(() -> {
             if (!activity.isFinishing() && !activity.isDestroyed()) {
                 activity.finish();
@@ -265,12 +230,6 @@ public final class ScreenFlowNavigation {
         }
         if (ScreenFlowConfig.SCREEN_PERMISSION.equalsIgnoreCase(screen)) {
             return new Intent(context, PermissionActivity.class);
-        }
-        if (ScreenFlowConfig.SCREEN_DEFAULT_HOME.equalsIgnoreCase(screen)) {
-            return new Intent(context, DefaultActivity.class);
-        }
-        if (ScreenFlowConfig.SCREEN_DEFAULT_SETTING_HOME.equalsIgnoreCase(screen)) {
-            return new Intent(context, DefaultSettingHomeActivity.class);
         }
         if (ScreenFlowConfig.SCREEN_INTRO.equalsIgnoreCase(screen)) {
             return new Intent(context, IntroActivity.class);
@@ -333,25 +292,13 @@ public final class ScreenFlowNavigation {
         lastFinalNavigationElapsedMs = now;
         Intent intent = buildFinalDestinationIntent(context);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        if (AppUtils.isDefaultHomeApp(context)) {
-            intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-        }
         context.startActivity(intent);
         return true;
     }
 
     private static Intent buildFinalDestinationIntent(Context context) {
-        if (AppUtils.isDefaultHomeApp(context)) {
-            return AppUtils.buildLauncherHomeIntent(context);
-        }
-        if (ScreenFlowConfig.getRedirectHomeLauncher()) {
-            Intent intent = AppUtils.buildLauncherHomeIntent(context);
-            WidgetNavigation.attachPendingTargetScreen(context, intent);
-            return intent;
-        }
         Intent intent = new Intent(context, MainActivity.class);
         intent.putExtra(EXTRA_SKIP_STARTUP_SPLASH, true);
-        WidgetNavigation.attachPendingTargetScreen(context, intent);
         return intent;
     }
 }

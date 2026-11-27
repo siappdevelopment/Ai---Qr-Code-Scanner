@@ -18,10 +18,6 @@ public final class StartupNavigation {
         if (activity == null || activity.isFinishing()) {
             return false;
         }
-        // Tap on the "make this app your default launcher" reminder: go to the Default screen when it applies.
-        if (DefaultLauncherReminder.handleSplashEntry(activity)) {
-            return false;
-        }
         ScreenFlowConfig.ensureShowScreenFlow(activity);
         // Repeat count: decides once per launch if Language + Intro are due again (intro_show_every_launch).
         IntroConfig.prepareLaunch(activity);
@@ -29,14 +25,6 @@ public final class StartupNavigation {
             ScreenFlowNavigation.openFirstScreen(activity);
             return false;
         }
-        if (staysInQrApp(activity)) {
-            return true;
-        }
-        ScreenFlowNavigation.openMain(activity);
-        return false;
-    }
-
-    private static boolean staysInQrApp(Activity activity) {
-        return !AppUtils.isDefaultHomeApp(activity) && !ScreenFlowConfig.getRedirectHomeLauncher();
+        return true;
     }
 }

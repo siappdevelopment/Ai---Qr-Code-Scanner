@@ -569,7 +569,6 @@
     <string name="event_fast">高速</string>
     <string name="event_optimized_sub">快適に動作しています。</string>
     <string name="event_done">完了</string>
-    <string name="launcher_settings">ランチャー設定</string>
     <string name="serialize">並べ替え</string>
     <string name="by_name_asc_a_to_z">名前の昇順 (A から Z)</string>
     <string name="by_name_desc_z_to_a">名前の降順 (Z から A)</string>

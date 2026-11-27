@@ -569,7 +569,6 @@
     <string name="event_fast">HIZLI</string>
     <string name="event_optimized_sub">Her şey sorunsuz çalışıyor.</string>
     <string name="event_done">Tamam</string>
-    <string name="launcher_settings">Başlatıcı Ayarları</string>
     <string name="serialize">Sırala</string>
     <string name="by_name_asc_a_to_z">Ada göre ARTAN (A\'dan Z\'ye)</string>
     <string name="by_name_desc_z_to_a">Ada göre AZALAN (Z\'den A\'ya)</string>

@@ -26,7 +26,6 @@ import com.qrcode.scanner.data.settings.SettingsPreferences
 import com.qrcode.scanner.data.settings.SettingsRepositoryProvider
 import com.qrcode.scanner.data.settings.readAppNightMode
 import com.qrcode.scanner.MainActivity
-import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
 
 /**
  * Electric Cobalt theme driven by Settings → Theme (Phase 12.20).
@@ -111,7 +110,7 @@ fun QRCodeScannerTheme(
         SideEffect {
             val activity = view.context.findHostActivity() ?: return@SideEffect
             // Launcher owns its bars. MainActivity Scan bars are applied in ScanPulseNavHost.
-            if (activity is LauncherHomeActivity || activity is MainActivity) {
+            if (activity is MainActivity) {
                 return@SideEffect
             }
             val window = activity.window

@@ -569,7 +569,6 @@
     <string name="event_fast">快速</string>
     <string name="event_optimized_sub">保持流畅运行。</string>
     <string name="event_done">完成</string>
-    <string name="launcher_settings">启动器设置</string>
     <string name="serialize">排序</string>
     <string name="by_name_asc_a_to_z">按名称升序（A 到 Z）</string>
     <string name="by_name_desc_z_to_a">按名称降序（Z 到 A）</string>

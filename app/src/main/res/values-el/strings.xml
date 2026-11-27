@@ -569,7 +569,6 @@
     <string name="event_fast">ΓΡΗΓΟΡΟ</string>
     <string name="event_optimized_sub">Όλα λειτουργούν ομαλά.</string>
     <string name="event_done">Έτοιμο</string>
-    <string name="launcher_settings">Ρυθμίσεις εκκινητή</string>
     <string name="serialize">Ταξινόμηση</string>
     <string name="by_name_asc_a_to_z">Κατά όνομα ASC (A έως Z)</string>
     <string name="by_name_desc_z_to_a">Κατά όνομα DESC (Z έως A)</string>

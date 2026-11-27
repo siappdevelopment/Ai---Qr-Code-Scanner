@@ -569,7 +569,6 @@
     <string name="event_fast">БЫСТРО</string>
     <string name="event_optimized_sub">Всё работает плавно.</string>
     <string name="event_done">Готово</string>
-    <string name="launcher_settings">Настройки лаунчера</string>
     <string name="serialize">Сортировать</string>
     <string name="by_name_asc_a_to_z">По имени ASC (A–Z)</string>
     <string name="by_name_desc_z_to_a">По имени DESC (Z–A)</string>

@@ -17,8 +17,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdView;
 import com.qrcode.scanner.spapp.R;
-import com.qrcode.scanner.launcher.activities.LauncherHomeActivity;
-import com.qrcode.scanner.launcher.adapters.LauncherPagerAdapter;
 import com.qrcode.scanner.launcher.remote.RemoteConfigValues;
 
 import java.lang.ref.WeakReference;
@@ -59,11 +57,6 @@ public final class HomeBottomAd {
             return;
         }
         bindChrome(activity, host);
-        if (!isQrPageOpen(activity)) {
-            log("qr page is not open, request waits until swipe");
-            hideSlot();
-            return;
-        }
         present();
     }
 
@@ -82,47 +75,12 @@ public final class HomeBottomAd {
     }
 
     public static void onHostResume() {
-        Activity activity = currentActivity();
-        if (!isQrPageOpen(activity)) {
-            log("resume ignored, qr page is not open");
-            return;
-        }
         STATE.resumed = true;
         if (currentHost() == null || !isEnabled()) {
             return;
         }
         log("qr page visible");
         present();
-    }
-
-    public static void onPageVisible() {
-        STATE.resumed = true;
-        log("swiped to qr page");
-        if (currentHost() != null && isEnabled() && swipeReturnRefreshDue()) {
-            if (STATE.loading) {
-                log("right swipe back, request still in flight");
-                showShimmer();
-            } else {
-                log("auto refresh false, right swipe after " + refreshSeconds() + "s, load new ad");
-                beginLoad();
-            }
-        } else if (currentHost() != null && isEnabled()) {
-            present();
-        }
-        ScreenNativeAds.onPageVisible();
-    }
-
-    public static void onPageHidden() {
-        log("left qr page");
-        onHostPause();
-        ScreenNativeAds.onPageHidden();
-    }
-
-    static boolean isQrPageOpen(@Nullable Activity activity) {
-        if (!(activity instanceof LauncherHomeActivity)) {
-            return true;
-        }
-        return ((LauncherHomeActivity) activity).getLauncherCurrentItem() == LauncherPagerAdapter.PAGE_RIGHT;
     }
 
     public static void onHostPause() {
@@ -426,23 +384,6 @@ public final class HomeBottomAd {
             return false;
         }
         return System.currentTimeMillis() - STATE.lastShownAt >= seconds * 1000L;
-    }
-
-    /** Auto-refresh off: a new request only after leaving to the launcher home and swiping back. */
-    private static boolean swipeReturnRefreshDue() {
-        if (RemoteConfigValues.getMainBottomAdAutoRefresh() || STATE.lastShownAt <= 0L) {
-            return false;
-        }
-        int seconds = refreshSeconds();
-        if (seconds <= 0) {
-            return false;
-        }
-        long elapsed = System.currentTimeMillis() - STATE.lastShownAt;
-        if (elapsed < seconds * 1000L) {
-            log("right swipe before " + seconds + "s, keep current ad");
-            return false;
-        }
-        return true;
     }
 
     private static boolean hasDisplayable() {

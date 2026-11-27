@@ -569,7 +569,6 @@
     <string name="event_fast">VELOCE</string>
     <string name="event_optimized_sub">Tutto funziona senza intoppi.</string>
     <string name="event_done">Fatto</string>
-    <string name="launcher_settings">Impostazioni launcher</string>
     <string name="serialize">Ordina</string>
     <string name="by_name_asc_a_to_z">Per nome ASC (A-Z)</string>
     <string name="by_name_desc_z_to_a">Per nome DESC (Z-A)</string>

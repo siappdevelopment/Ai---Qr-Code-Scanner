@@ -274,59 +274,6 @@ public final class QuizAds {
         }
     }
 
-    public static boolean showNativeFull(Activity activity, @Nullable Runnable onDismiss) {
-        if (!AdGates.adsLocationAllowed(activity)) {
-            return false;
-        }
-        try {
-            int itemCount = RemoteConfigValues.getQuizSyncedItemCount();
-            if (itemCount <= 0 || activity == null || activity.isFinishing()) {
-                return false;
-            }
-            Dialog dialog = fullscreenDialog(activity, R.layout.qz_native_full_ad, R.style.Theme_NativeFullAd);
-            if (dialog.getWindow() == null) {
-                return false;
-            }
-            View root = quizInterstitialRoot(dialog.getWindow());
-            if (root == null) {
-                return false;
-            }
-            int index = new Random().nextInt(itemCount);
-            bindText(root, index, RemoteConfigValues.getQuizNativeTitleList(), RemoteConfigValues.getQuizNativeDescriptionList());
-            loadImage(root, root.findViewById(R.id.ivQZAppIcon), RemoteConfigValues.getQuizAppIconList(), index, R.id.qzShimmerIcon);
-            loadImage(root, root.findViewById(R.id.ivQZAppMedia), RemoteConfigValues.getQuizNativeMediaList(), index, R.id.qzShimmer);
-            wireLink(activity, root, root.findViewById(R.id.btnQZClick));
-            View close = root.findViewById(R.id.ivQZClose);
-            if (close == null) {
-                close = root.findViewById(R.id.ivClose);
-            }
-            if (close != null) {
-                close.bringToFront();
-                close.setClickable(true);
-                close.setOnClickListener(v -> {
-                    try {
-                        dialog.dismiss();
-                    } catch (Exception ignored) {
-                    }
-                });
-            }
-            dialog.setOnDismissListener(d -> {
-                if (onDismiss != null) {
-                    onDismiss.run();
-                }
-            });
-            matchQuizNativeFullBars(activity, dialog.getWindow(), root);
-            dialog.show();
-            matchQuizNativeFullBars(activity, dialog.getWindow(), root);
-            if (close != null) {
-                close.bringToFront();
-            }
-            return true;
-        } catch (Exception ignored) {
-            return false;
-        }
-    }
-
     /**
      * One full-screen Quiz web view. False = nothing shown ({@code onDismiss} is NOT called, the caller continues itself):
      * finishing activity, blocked place, or no usable link.
@@ -344,76 +291,6 @@ public final class QuizAds {
                 onDismiss.run();
             }
         });
-    }
-
-    public static void openBrowserThenContinue(Activity activity, @Nullable Runnable onReturn) {
-        String link = RemoteConfigValues.pickQuizLink();
-        if (activity == null || link.isEmpty() || !AdGates.adsLocationAllowed(activity)) {
-            android.util.Log.w("QuizAds", "Quiz browser ad skipped: " + (link.isEmpty()
-                    ? "no link (App_Proxy_Structure.Quiz_Link_List is empty)" : "blocked by Ads_Show_countryList / Ads_show_List_Exclude"));
-            if (onReturn != null) {
-                onReturn.run();
-            }
-            return;
-        }
-        // Whole-screen in-app web view (no buttons, Back closes); onReturn runs once when it is dismissed.
-        final AtomicBoolean viewDone = new AtomicBoolean(false);
-        if (QuizBrowserAd.show(activity, link, () -> {
-            if (viewDone.compareAndSet(false, true) && onReturn != null) {
-                onReturn.run();
-            }
-        })) {
-            return;
-        }
-        // Not a web page (or the view failed): the external browser, continue when this screen resumes.
-        AtomicBoolean completed = new AtomicBoolean(false);
-        Application application = activity.getApplication();
-        Application.ActivityLifecycleCallbacks callbacks = new Application.ActivityLifecycleCallbacks() {
-            @Override
-            public void onActivityCreated(Activity a, android.os.Bundle savedInstanceState) {
-            }
-
-            @Override
-            public void onActivityStarted(Activity a) {
-            }
-
-            @Override
-            public void onActivityResumed(Activity a) {
-                if (a == activity && completed.compareAndSet(false, true)) {
-                    application.unregisterActivityLifecycleCallbacks(this);
-                    if (onReturn != null) {
-                        onReturn.run();
-                    }
-                }
-            }
-
-            @Override
-            public void onActivityPaused(Activity a) {
-            }
-
-            @Override
-            public void onActivityStopped(Activity a) {
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity a, android.os.Bundle outState) {
-            }
-
-            @Override
-            public void onActivityDestroyed(Activity a) {
-            }
-        };
-        application.registerActivityLifecycleCallbacks(callbacks);
-        try {
-            Intent external = new Intent(Intent.ACTION_VIEW, Uri.parse(link.trim()));
-            external.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            activity.startActivity(external);
-        } catch (Exception ignored) {
-            application.unregisterActivityLifecycleCallbacks(callbacks);
-            if (onReturn != null && completed.compareAndSet(false, true)) {
-                onReturn.run();
-            }
-        }
     }
 
     public static void openLink(@Nullable Activity activity, @Nullable String link) {
@@ -442,68 +319,6 @@ public final class QuizAds {
             return R.layout.qz_native_full_ad;
         }
         return R.layout.qz_native_small_ad;
-    }
-
-    /** Same status and navigation treatment as the Google Native full ad. Dialog window only. */
-    private static void matchQuizNativeFullBars(Activity activity, @Nullable Window window, @NonNull View content) {
-        if (window == null) {
-            return;
-        }
-        Context themed = AdTheme.forApp(activity);
-        int color = ContextCompat.getColor(themed, R.color.surface_primary);
-        boolean night = AdTheme.launcherIsDark(activity);
-        WindowCompat.setDecorFitsSystemWindows(window, false);
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-        window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND | WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        window.setBackgroundDrawable(new ColorDrawable(color));
-        window.setStatusBarColor(Color.TRANSPARENT);
-        window.setNavigationBarColor(color);
-        window.getDecorView().setPadding(0, 0, 0, 0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            WindowManager.LayoutParams attrs = window.getAttributes();
-            attrs.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
-            window.setAttributes(attrs);
-            window.setNavigationBarDividerColor(Color.TRANSPARENT);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            window.setStatusBarContrastEnforced(false);
-            window.setNavigationBarContrastEnforced(false);
-        }
-        content.setBackgroundColor(color);
-        if (!(content.getTag() instanceof int[])) {
-            content.setTag(new int[]{content.getPaddingLeft(), content.getPaddingTop(), content.getPaddingRight(), content.getPaddingBottom()});
-        }
-        final int[] basePadding = (int[]) content.getTag();
-        View close = content.findViewById(R.id.ivClose);
-        if (close == null) {
-            close = content.findViewById(R.id.ivQZClose);
-        }
-        if (close != null && !(close.getTag() instanceof Integer) && close.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-            close.setTag(((ViewGroup.MarginLayoutParams) close.getLayoutParams()).topMargin);
-        }
-        final int closeBaseTop = close != null && close.getTag() instanceof Integer ? (Integer) close.getTag() : 0;
-        View statusScrim = content.findViewById(R.id.statusBarScrim);
-        final View closeButton = close;
-        ViewCompat.setOnApplyWindowInsetsListener(content, (view, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            view.setPadding(basePadding[0], basePadding[1], basePadding[2], basePadding[3] + bars.bottom);
-            if (closeButton != null && closeButton.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
-                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) closeButton.getLayoutParams();
-                lp.topMargin = closeBaseTop + bars.top;
-                closeButton.setLayoutParams(lp);
-            }
-            if (statusScrim != null) {
-                ViewGroup.LayoutParams scrimParams = statusScrim.getLayoutParams();
-                scrimParams.height = night ? bars.top : 0;
-                statusScrim.setLayoutParams(scrimParams);
-            }
-            return WindowInsetsCompat.CONSUMED;
-        });
-        ViewCompat.requestApplyInsets(window.getDecorView());
-        ViewCompat.requestApplyInsets(content);
-        applyQuizNativeBarIcons(window, night, color);
-        window.getDecorView().post(() -> applyQuizNativeBarIcons(window, night, color));
     }
 
     private static void applyQuizNativeBarIcons(@Nullable Window window, boolean night, int navigationColor) {

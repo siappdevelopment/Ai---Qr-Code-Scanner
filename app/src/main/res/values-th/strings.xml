@@ -569,7 +569,6 @@
     <string name="event_fast">เร็ว</string>
     <string name="event_optimized_sub">ทุกอย่างทำงานราบรื่น</string>
     <string name="event_done">เสร็จสิ้น</string>
-    <string name="launcher_settings">การตั้งค่าตัวเรียกใช้</string>
     <string name="serialize">จัดเรียง</string>
     <string name="by_name_asc_a_to_z">ตามชื่อจากน้อยไปมาก (A ถึง Z)</string>
     <string name="by_name_desc_z_to_a">ตามชื่อจากมากไปน้อย (Z ถึง A)</string>

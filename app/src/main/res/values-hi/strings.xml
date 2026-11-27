@@ -569,7 +569,6 @@
     <string name="event_fast">तेज़</string>
     <string name="event_optimized_sub">सब कुछ सुचारू रूप से चल रहा है।</string>
     <string name="event_done">हो गया</string>
-    <string name="launcher_settings">लॉन्चर सेटिंग्स</string>
     <string name="serialize">क्रमबद्ध करें</string>
     <string name="by_name_asc_a_to_z">नाम से ASC (A से Z)</string>
     <string name="by_name_desc_z_to_a">नाम से DESC (Z से A)</string>

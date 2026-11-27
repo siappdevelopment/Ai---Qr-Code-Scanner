@@ -569,7 +569,6 @@
     <string name="event_fast">SNEL</string>
     <string name="event_optimized_sub">Alles werkt soepel.</string>
     <string name="event_done">Klaar</string>
-    <string name="launcher_settings">Launcher-instellingen</string>
     <string name="serialize">Sorteren</string>
     <string name="by_name_asc_a_to_z">Op naam ASC (A tot Z)</string>
     <string name="by_name_desc_z_to_a">Op naam DESC (Z tot A)</string>

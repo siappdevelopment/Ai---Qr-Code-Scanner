@@ -25,8 +25,6 @@ public final class AnalyticsEvents {
     public static final String INTRO_3_VIEW = "intro_3_view";
     public static final String MAIN_VIEW = "main_view";
     public static final String PERMISSION_VIEW = "permission_view";
-    public static final String LAUNCHER_HOME_VIEW = "launcher_home_view";
-    public static final String LAUNCHER_SETTINGS_VIEW = "launcher_settings_view";
     public static final String SETTINGS_VIEW = "settings_view";
 
     // QR scanner

@@ -569,7 +569,6 @@
     <string name="event_fast">MABILIS</string>
     <string name="event_optimized_sub">Maayos ang takbo ng lahat.</string>
     <string name="event_done">Tapos</string>
-    <string name="launcher_settings">Mga Setting ng Launcher</string>
     <string name="serialize">Ayusin</string>
     <string name="by_name_asc_a_to_z">Ayon sa Pangalan ASC (A hanggang Z)</string>
     <string name="by_name_desc_z_to_a">Ayon sa Pangalan DESC (Z hanggang A)</string>

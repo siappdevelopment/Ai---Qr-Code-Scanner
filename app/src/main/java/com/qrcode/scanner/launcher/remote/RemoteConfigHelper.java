@@ -30,7 +30,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * paid_user is selected only when the stored install referrer matches the source markers.
  */
 public final class RemoteConfigHelper {
-    private static final long REFRESH_AFTER_MS = 12L * 60L * 60L * 1000L;
     private static final String PREFS_LAUNCHER_REMOTE = "launcher_remote_config";
     private static final String KEY_LAST_REMOTE_FETCH_TIME = "last_remote_fetch_time";
     private static final AtomicBoolean IS_FETCHING = new AtomicBoolean(false);
@@ -140,18 +139,6 @@ public final class RemoteConfigHelper {
                 waitingForNetwork.set(!AdPlacement.isNetworkAvailable(appContext));
             }
         });
-    }
-
-    public static void refreshIfDue(@Nullable Context context, @Nullable FetchCallback onComplete) {
-        if (context == null) {
-            return;
-        }
-        long lastFetch = context.getApplicationContext()
-                .getSharedPreferences(PREFS_LAUNCHER_REMOTE, Context.MODE_PRIVATE)
-                .getLong(KEY_LAST_REMOTE_FETCH_TIME, 0L);
-        if (lastFetch == 0L || System.currentTimeMillis() - lastFetch >= REFRESH_AFTER_MS) {
-            fetchRemoteConfig(context, onComplete);
-        }
     }
 
     private static void saveFetchTime(Context context) {
@@ -265,8 +252,6 @@ public final class RemoteConfigHelper {
         ScreenFlowConfig.applyShowScreenFlowFromConfig(jsonObject, topLevelFlowJson);
         ScreenFlowConfig.cacheShowScreenFlow(context);
         ScreenFlowConfig.setPrivacyPolicy(jsonObject.optString("Privacy_Policy", ""));
-        ScreenFlowConfig.setRedirectHomeLauncher(jsonObject.optBoolean("Redirect_Home_Launcher", false));
-        ScreenFlowConfig.setForceDefaultLauncher(context, jsonObject.optBoolean("Force_Default_Launcher_Show", false));
         JSONObject screen = jsonObject.optJSONObject("Screen");
         if (screen == null) {
             screen = new JSONObject();
@@ -279,70 +264,7 @@ public final class RemoteConfigHelper {
         // Repeat count + the two full-screen native slots, all inside the IntroScreen block.
         com.qrcode.scanner.launcher.common.IntroConfig.applyConfig(context, introScreen);
         applyAdFields(jsonObject, screen);
-        applyRecentScreen(context, jsonObject, screen);
-        applyDefaultLauncherReminder(context, jsonObject);
-        AdPlacement.persistLauncherBackConfig(context);
         RemoteConfigValues.apply(context, jsonObject, screen);
-    }
-
-    /**
-     * "Make this app your default launcher" reminder. Keys: launcher_notification_push_show / _time / _title /
-     * _description, read from the launcher_home_screen object when present, else from the config root.
-     * Missing keys fall back to OFF / 24 / blank and never break the rest of the config apply.
-     */
-    private static void applyDefaultLauncherReminder(Context context, JSONObject jsonObject) {
-        try {
-            JSONObject source = jsonObject.optJSONObject("launcher_home_screen");
-            if (source == null) {
-                source = jsonObject;
-            }
-            com.qrcode.scanner.launcher.common.DefaultLauncherReminder.Config.apply(
-                    context,
-                    source.optBoolean("launcher_notification_push_show", false),
-                    source.optInt("launcher_notification_push_time", 24),
-                    source.optString("launcher_notification_push_title", ""),
-                    source.optString("launcher_notification_push_description", ""));
-        } catch (Exception ignored) {
-        }
-    }
-
-    /**
-     * Recent screen: master switch Recent_Screen_Show at the profile root, everything else in Screen.RecentScreen.
-     * A missing block means everything off. Saved on the phone so a cold-start Recents key press already works.
-     */
-    private static void applyRecentScreen(Context context, JSONObject jsonObject, JSONObject screen) {
-        JSONObject recent = screen == null ? null : screen.optJSONObject("RecentScreen");
-        if (recent == null) {
-            recent = new JSONObject();
-        }
-        AdPlacement.setRecentScreenShow(jsonObject.optBoolean("Recent_Screen_Show", false));
-        AdPlacement.setRecentAdShow(recent.optBoolean("Recent_Ad_Show", false));
-        AdPlacement.setRecentAdType(recent.optString("Recent_Ad_Type", "native"));
-        AdPlacement.setRecentBannerId(recent.optString("Recent_Banner_Id", ""));
-        AdPlacement.setRecentNativeId(recent.optString("Recent_Native_Id", ""));
-        AdPlacement.setRecentLoadTypes(recent.optString("Recent_Ad_Load_Type", "Load"), recent.optString("Recent_Back_Ad_Load_Type", "PreLoad"));
-        AdPlacement.setRecentBackAdShow(recent.optBoolean("Recent_Back_Ad_Show", false));
-        AdPlacement.setRecentBackAdSequence(recent.optJSONArray("Recent_Back_Ad_Sequence"));
-        AdPlacement.setRecentBackAdShowAfterDay(recent.optInt("Recent_Back_Ad_Show_After_Day", 0));
-        AdPlacement.setRecentBackAdShowPerDay(recent.optInt("Recent_Back_Ad_Show_Per_Day", 0));
-        AdPlacement.setRecentBackAdInterstitialId(recent.optString("Recent_Back_Ad_Interstitial_Id", ""));
-        AdPlacement.setRecentBackAdCountryIP(recent.optBoolean("Recent_Back_Ad_Country_IP", false));
-        AdPlacement.setRecentBackAdShowCountryList(readLowerStringList(recent.optJSONArray("Recent_Back_Ad_Show_Country")));
-        AdPlacement.setRecentBackAdShowExcludeLocationList(readLowerStringList(recent.optJSONArray("Recent_Back_Ad_Show_Exclude_Location")));
-        AdPlacement.saveRecentConfig(context);
-    }
-
-    private static ArrayList<String> readLowerStringList(@Nullable JSONArray array) {
-        ArrayList<String> list = new ArrayList<>();
-        if (array != null) {
-            for (int i = 0; i < array.length(); i++) {
-                String item = array.optString(i, "").trim().toLowerCase(java.util.Locale.ROOT);
-                if (!item.isEmpty() && !list.contains(item)) {
-                    list.add(item);
-                }
-            }
-        }
-        return list;
     }
 
     private static void applyAdFields(JSONObject jsonObject, JSONObject screen) {
@@ -402,7 +324,6 @@ public final class RemoteConfigHelper {
         AdPlacement.setPermissionDefaultAdType(permissionDefaultScreen.optString("PermissionDefault_Ad_Type", "banner"));
         AdPlacement.setPermissionDefaultBannerId(permissionDefaultScreen.optString("PermissionDefault_Banner_Id", ""));
         AdPlacement.setPermissionDefaultNativeId(permissionDefaultScreen.optString("PermissionDefault_Native_Id", ""));
-        AdPlacement.applyAfterDefaultAdConfig(permissionDefaultScreen);
         JSONObject intro = screen.optJSONObject("IntroScreen");
         if (intro == null) {
             intro = new JSONObject();
@@ -412,44 +333,6 @@ public final class RemoteConfigHelper {
         AdPlacement.setIntroBannerId(intro.optString("Intro_Banner_Id", ""));
         AdPlacement.setIntroNativeId(intro.optString("Intro_Native_Id", ""));
         AdPlacement.setIntroInterstitialAdShow(intro.optBoolean("Intro_Interstitial_Ad_Show", false));
-        JSONObject launcherAppScreen = screen.optJSONObject("LauncherAppScreen");
-        if (launcherAppScreen == null) {
-            launcherAppScreen = new JSONObject();
-        }
-        AdPlacement.setLauncherAppNativeListAdShow(launcherAppScreen.optBoolean("LauncherApp_Native_List_Ad_Show", false));
-        AdPlacement.setLauncherAppNativeListAdShowPerDay(launcherAppScreen.optInt("LauncherApp_Native_List_Ad_Show_Per_Day", 0));
-        AdPlacement.setLauncherAppNativeListId(launcherAppScreen.optString("LauncherApp_Native_List_Id", ""));
-        AdPlacement.setLauncherAppClickAdShow(launcherAppScreen.optBoolean("LauncherApp_Click_Ad_Show", false));
-        AdPlacement.setLauncherAppCount(launcherAppScreen.optInt("LauncherApp_Count", 0));
-        AdPlacement.setLauncherAppAdSequence(readAdTypeSequence(launcherAppScreen, "LauncherApp_Ad_Type"));
-        AdPlacement.setLauncherAppInterstitialId(launcherAppScreen.optString("LauncherApp_Interstitial_Id", ""));
-        AdPlacement.setLauncherAppBackClickAdShow(launcherAppScreen.optBoolean("LauncherApp_Back_Click_Ad_Show", false));
-        AdPlacement.setLauncherAppBackCount(launcherAppScreen.optInt("LauncherApp_Back_Count", 0));
-        AdPlacement.setLauncherAppBackAdSequence(readAdTypeSequence(launcherAppScreen, "LauncherApp_Back_Ad_Type"));
-        AdPlacement.setLauncherAppBackInterstitialId(launcherAppScreen.optString("LauncherApp_Back_Interstitial_Id", ""));
-        // LauncherAppScreen often omits this key — fall back to root Google_Ad_Failed_Show_Quiz.
-        boolean launcherQuizOnFail = launcherAppScreen.has("Google_Ad_Failed_Show_Quiz")
-                ? launcherAppScreen.optBoolean("Google_Ad_Failed_Show_Quiz", false)
-                : googleAdFailedShowQuiz;
-        AdPlacement.setLauncherGoogleAdFailedShowQuiz(launcherQuizOnFail);
     }
 
-    private static ArrayList<String> readAdTypeSequence(JSONObject screen, String key) {
-        ArrayList<String> types = new ArrayList<>();
-        JSONArray array = screen.optJSONArray(key);
-        if (array != null) {
-            for (int i = 0; i < array.length(); i++) {
-                String type = array.optString(i, "").trim();
-                if (!type.isEmpty()) {
-                    types.add(type);
-                }
-            }
-            return types;
-        }
-        String single = screen.optString(key, "").trim();
-        if (!single.isEmpty() && !single.startsWith("[")) {
-            types.add(single);
-        }
-        return types;
-    }
 }

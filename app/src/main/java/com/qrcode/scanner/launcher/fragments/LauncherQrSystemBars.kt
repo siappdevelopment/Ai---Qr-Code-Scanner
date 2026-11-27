@@ -67,8 +67,8 @@ object LauncherQrSystemBars {
     }
 
     /**
-     * MainActivity only (app not set as default launcher): transparent status bar,
-     * camera edge-to-edge, system nav swipe-to-show. Must not be used on LauncherHomeActivity.
+     * MainActivity only: transparent status bar,
+     * camera edge-to-edge, system nav swipe-to-show.
      */
     fun applyStandaloneAppScanBars(activity: Activity) {
         val window = activity.window

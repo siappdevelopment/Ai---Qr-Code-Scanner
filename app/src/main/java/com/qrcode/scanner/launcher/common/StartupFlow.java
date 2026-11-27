@@ -59,13 +59,7 @@ public final class StartupFlow {
         if (intent.getBooleanExtra(ScreenFlowNavigation.EXTRA_SKIP_STARTUP_SPLASH, false)) {
             return false;
         }
-        if (Intent.ACTION_MAIN.equals(intent.getAction()) && intent.hasCategory(Intent.CATEGORY_LAUNCHER)) {
-            return true;
-        }
-        if (intent.hasExtra(WidgetNavigation.EXTRA_TARGET_SCREEN)) {
-            return true;
-        }
-        return intent.getBooleanExtra(com.qrcode.scanner.launcher.helpers.ReminderAlarmHelper.EXTRA_FROM_REMINDER_NOTIFICATION, false);
+        return Intent.ACTION_MAIN.equals(intent.getAction()) && intent.hasCategory(Intent.CATEGORY_LAUNCHER);
     }
 
     public static void begin(Activity activity, View root, Runnable finished) {
@@ -86,7 +80,6 @@ public final class StartupFlow {
             showVpnDialog(activity);
             return;
         }
-        WidgetNavigation.captureTargetScreen(activity, activity.getIntent());
         startSplashFlow(activity);
     }
 
@@ -118,7 +111,7 @@ public final class StartupFlow {
         if (dialogVPN != null && dialogVPN.isShowing()) {
             return;
         }
-        Context themed = new ContextThemeWrapper(activity, R.style.Theme_LauncherSettings);
+        Context themed = new ContextThemeWrapper(activity, R.style.Theme_Onboarding);
         dialogVPN = new Dialog(themed);
         dialogVPN.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialogVPN.setContentView(R.layout.dialog_vpn_detect);

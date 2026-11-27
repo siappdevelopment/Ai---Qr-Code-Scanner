@@ -569,7 +569,6 @@
     <string name="event_fast">고속</string>
     <string name="event_optimized_sub">원활하게 실행되고 있습니다.</string>
     <string name="event_done">완료</string>
-    <string name="launcher_settings">런처 설정</string>
     <string name="serialize">정렬</string>
     <string name="by_name_asc_a_to_z">이름 오름차순 (A~Z)</string>
     <string name="by_name_desc_z_to_a">이름 내림차순 (Z~A)</string>

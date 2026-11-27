@@ -35,7 +35,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.qrcode.scanner.MainActivity
-import com.qrcode.scanner.launcher.activities.LauncherHomeActivity
 import com.qrcode.scanner.launcher.common.ScreenInterAds
 import com.qrcode.scanner.launcher.common.ScreenLoadAd
 import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars
@@ -163,7 +162,7 @@ private fun BindScreenBackInterAd(
 @Composable
 private fun HideNavigationBarOnAdScreen() {
     val activity = LocalContext.current.findActivity() ?: return
-    if (activity is LauncherHomeActivity || activity is MainActivity) {
+    if (activity is MainActivity) {
         return
     }
     DisposableEffect(activity) {

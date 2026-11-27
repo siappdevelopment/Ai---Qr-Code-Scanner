@@ -103,6 +103,8 @@ dependencies {
     implementation(libs.play.services.ads)
     implementation(libs.facebook)
     implementation(libs.audience.network.sdk)
+    implementation(libs.liftoff)
+    implementation(libs.unity.ads)
     implementation(libs.installreferrer)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.config)

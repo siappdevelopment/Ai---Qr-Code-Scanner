@@ -33,6 +33,8 @@ crashlyticsGradle = "3.0.7"
 firebaseCrashlytics = "18.6.1"
 facebook = "6.21.0.0"
 audienceNetworkSdk = "6.21.0"
+vungle = "7.6.1.0"
+unity = "4.16.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -81,6 +83,8 @@ firebase-messaging = { module = "com.google.firebase:firebase-messaging" }
 firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics", version.ref = "firebaseCrashlytics" }
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 facebook = { module = "com.google.ads.mediation:facebook", version.ref = "facebook" }
+liftoff = { module = "com.google.ads.mediation:vungle", version.ref = "vungle" }
+unity-ads = { module = "com.google.ads.mediation:unity", version.ref = "unity" }
 audience-network-sdk = { module = "com.facebook.android:audience-network-sdk", version.ref = "audienceNetworkSdk" }
 
 [plugins]

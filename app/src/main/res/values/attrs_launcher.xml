@@ -4,5 +4,4 @@
     <attr name="textPrimaryColor" format="color" />
     <attr name="textSecondaryColor" format="color" />
     <attr name="borderColor" format="color" />
-    <attr name="launcherBackgroundColor" format="color" />
 </resources>

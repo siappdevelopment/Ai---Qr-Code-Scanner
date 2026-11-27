@@ -212,7 +212,10 @@ public class LauncherHomeActivity extends AppCompatActivity {
         RemoteConfigHelper.refreshIfDue(this, this::saveRemoteFetchTimestampIfSuccessful);
         LauncherAppsBottomSheet.clearSuppressBackgroundDismiss();
         returnHomeForThemeChangeIfNeeded();
-        if (ComposeScanRequest.INSTANCE.isPending()) {
+        if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_SWIPE_TO_SCAN, false)) {
+            getIntent().removeExtra(EXTRA_SWIPE_TO_SCAN);
+            swipeToScanPage();
+        } else if (ComposeScanRequest.INSTANCE.isPending()) {
             openQrShell(false);
         }
     }
@@ -351,6 +354,30 @@ public class LauncherHomeActivity extends AppCompatActivity {
 
     public void openQrShell() {
         openQrShell(true);
+    }
+
+    /** Intent extra (Recent screen "Scan"): open the scan page exactly as a right swipe on the Home page does. */
+    public static final String EXTRA_SWIPE_TO_SCAN = "extra_swipe_to_scan";
+    private static final long SWIPE_TO_SCAN_DELAY_MS = 150L;
+
+    /**
+     * The very same path as a right swipe: from the wallpaper Home page the pager slides to the QR page, so the same
+     * page, camera, bars, popup / permission rule and right swipe ad apply.
+     */
+    private void swipeToScanPage() {
+        if (vpLauncher == null) {
+            return;
+        }
+        if (vpLauncher.getCurrentItem() != LauncherPagerAdapter.PAGE_HOME) {
+            vpLauncher.setCurrentItem(LauncherPagerAdapter.PAGE_HOME, false);
+        }
+        vpLauncher.postDelayed(() -> {
+            if (isFinishing() || isDestroyed()) {
+                return;
+            }
+            notifyRightSwipeTutorialCompleted();
+            openQrShell(true);
+        }, SWIPE_TO_SCAN_DELAY_MS);
     }
 
     /**

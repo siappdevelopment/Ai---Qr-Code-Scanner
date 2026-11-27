@@ -30,6 +30,8 @@ public class QrScannerApplication extends Application {
         AdPlacement.loadRecentConfig(this);
         com.qrcode.scanner.launcher.common.RecentsKey.install(this);
         registerActivityLifecycleCallbacks(new com.qrcode.scanner.launcher.common.RecentsVisibilitySync());
+        // Screens stay in place while Interstitial / App Open ads hide the status bar.
+        registerActivityLifecycleCallbacks(new com.qrcode.scanner.launcher.common.StableStatusBarInsets());
         AdGates.init(this);
         com.qrcode.scanner.launcher.common.UnlockAppOpenAds.get().start(this);
         AdGates.requestIpCountryIfNeeded(this);

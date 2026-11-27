@@ -35,8 +35,27 @@ object ComposeScanRequest {
      * Host: the launcher when it is the default Home (or redirects to it), otherwise MainActivity.
      */
     fun openScan(context: Context) {
+        context.startActivity(scanIntent(context))
+    }
+
+    /**
+     * Recent screen "Scan": the launcher opens the page exactly as a right swipe does (from its Home page, sliding). When
+     * the app is not hosted by the launcher, the app's Scan page is opened as usual.
+     */
+    fun swipeScanIntent(context: Context): Intent {
+        if (AppUtils.isDefaultHomeApp(context) || ScreenFlowConfig.getRedirectHomeLauncher()) {
+            return Intent(context, LauncherHomeActivity::class.java).apply {
+                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                putExtra(LauncherHomeActivity.EXTRA_SWIPE_TO_SCAN, true)
+            }
+        }
+        return scanIntent(context)
+    }
+
+    /** Asks for the Scan page and returns the intent that opens its host (for callers that start it themselves). */
+    fun scanIntent(context: Context): Intent {
         request()
-        val intent = if (AppUtils.isDefaultHomeApp(context) || ScreenFlowConfig.getRedirectHomeLauncher()) {
+        return if (AppUtils.isDefaultHomeApp(context) || ScreenFlowConfig.getRedirectHomeLauncher()) {
             // Plain intent to the launcher, not the HOME intent: a HOME intent makes LauncherHomeActivity first
             // return to its wallpaper Home page (and clear the task) before it slides to the QR page, which showed
             // a white/black frame. Without the HOME category it goes straight to the QR page (see onResume).
@@ -49,6 +68,5 @@ object ComposeScanRequest {
                 addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             }
         }
-        context.startActivity(intent)
     }
 }

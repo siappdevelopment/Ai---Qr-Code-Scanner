@@ -22,7 +22,6 @@ import com.qrcode.scanner.launcher.activities.LauncherSettingsActivity;
 import com.qrcode.scanner.spapp.R;
 import com.qrcode.scanner.ui.screens.create.CreateQrIntents;
 import com.qrcode.scanner.ui.screens.history.HistoryIntents;
-import com.qrcode.scanner.ui.screens.scan.ScanIntents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +78,8 @@ public final class RecentPage {
     private static final List<Option> OPTIONS = new ArrayList<>();
 
     static {
-        OPTIONS.add(new Option(R.string.scan_qr, R.drawable.ic_home_action_scan, ScanIntents.INSTANCE::openScanner));
+        // Scan opens the very page a right swipe on the Home opens (same slide, same page), not a separate scanner screen.
+        OPTIONS.add(new Option(R.string.scan_qr, R.drawable.ic_home_action_scan, com.qrcode.scanner.ui.navigation.ComposeScanRequest.INSTANCE::swipeScanIntent));
         OPTIONS.add(new Option(R.string.create_qr, R.drawable.ic_home_action_create, CreateQrIntents.INSTANCE::openHub));
         OPTIONS.add(new Option(R.string.history_title, R.drawable.ic_home_action_history, HistoryIntents.INSTANCE::openHistory));
         OPTIONS.add(new Option(R.string.favorites_title, R.drawable.ic_star_filled, HistoryIntents.INSTANCE::openFavorites));

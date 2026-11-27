@@ -424,29 +424,48 @@ private fun CameraPreviewHost(
         }
     }
 
+    // The camera is shared by the whole process: another scanner screen (e.g. ScannerActivity) takes it over and this
+    // preview would stay black when the user comes back. So every resume binds it again, and leaving only releases the
+    // use cases this screen bound itself (never unbindAll, which would also close the camera of the screen behind).
+    val ownUseCases = remember { mutableListOf<androidx.camera.core.UseCase>() }
+    var resumeCount by remember { androidx.compose.runtime.mutableIntStateOf(0) }
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                resumeCount++
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
+
     DisposableEffect(Unit) {
         onDispose {
             val cam = boundCamera.value
             val provider = cameraProviderHolder.value
             boundCamera.value = null
+            val release = Runnable {
+                if (ownUseCases.isNotEmpty()) {
+                    provider?.unbind(*ownUseCases.toTypedArray())
+                    ownUseCases.clear()
+                }
+            }
             val executor = ContextCompat.getMainExecutor(context)
             try {
                 if (cam != null) {
-                    cam.cameraControl.enableTorch(false).addListener({
-                        provider?.unbindAll()
-                    }, executor)
+                    cam.cameraControl.enableTorch(false).addListener(release, executor)
                 } else {
-                    provider?.unbindAll()
+                    release.run()
                 }
             } catch (_: Throwable) {
-                provider?.unbindAll()
+                release.run()
             }
             analysisExecutor.shutdown()
             onCameraReady(null)
         }
     }
 
-    LaunchedEffect(lensFacing, scanMode, lifecycleOwner) {
+    LaunchedEffect(lensFacing, scanMode, lifecycleOwner, resumeCount) {
         val cameraProvider = context.getCameraProvider()
         if (!isActive) return@LaunchedEffect
         cameraProviderHolder.value = cameraProvider
@@ -493,9 +512,12 @@ private fun CameraPreviewHost(
             )
             if (!isActive) {
                 boundCamera.value = null
-                cameraProvider.unbindAll()
+                cameraProvider.unbind(preview, analysis)
                 return@LaunchedEffect
             }
+            ownUseCases.clear()
+            ownUseCases.add(preview)
+            ownUseCases.add(analysis)
             boundCamera.value = bound
             onCameraReady(bound)
         } catch (t: Throwable) {

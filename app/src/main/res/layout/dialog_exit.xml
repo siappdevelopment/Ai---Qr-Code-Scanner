@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Exit dialog: title, text, "Tap To exit" and a medium native ad below it. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/surface_primary"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:fontFamily="@font/sans_trial_semi_bold"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/exit_dialog_title"
+        android:textColor="@color/text_primary"
+        android:textSize="@dimen/_15sdp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:fontFamily="@font/sans_trial_regular"
+        android:gravity="center"
+        android:text="@string/exit_dialog_desc"
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/_10sdp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvExitButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@drawable/bg_exit_button"
+        android:fontFamily="@font/sans_trial_medium"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingVertical="@dimen/_10sdp"
+        android:text="@string/exit_dialog_button"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/_13sdp" />
+
+    <!-- Clear gap above the ad, so nobody taps the ad while meaning to exit. -->
+    <RelativeLayout
+        android:id="@+id/rlExitAd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_6sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:visibility="gone">
+
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerExitAd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:shimmer_auto_start="true"
+            app:shimmer_base_alpha="0.9"
+            app:shimmer_highlight_alpha="1.0">
+
+            <include layout="@layout/shimmer_medium_ad" />
+        </com.facebook.shimmer.ShimmerFrameLayout>
+
+        <FrameLayout
+            android:id="@+id/flExitAd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <!-- bottom breathing room, also when there is no ad -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_8sdp" />
+</LinearLayout>

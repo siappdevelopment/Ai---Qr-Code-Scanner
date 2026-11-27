@@ -49,6 +49,7 @@ import com.qrcode.scanner.launcher.common.ScreenInterAds
 import com.qrcode.scanner.launcher.common.StartupFlow
 import com.qrcode.scanner.launcher.common.StartupNavigation
 import com.qrcode.scanner.launcher.fragments.LauncherQrSystemBars
+import com.qrcode.scanner.ui.components.ExitDialogBackHandler
 import com.qrcode.scanner.ui.components.HomeBottomAdSlot
 import com.qrcode.scanner.ui.components.ScanPulseBottomBar
 import com.qrcode.scanner.ui.components.ScreenWithAd
@@ -255,6 +256,7 @@ fun ScanPulseNavHost(
             ) {
                 composable(AppDestination.Home.route) {
                     val context = LocalContext.current
+                    ExitDialogBackHandler(enabled = navController.previousBackStackEntry == null)
                     HomeScreen(
                         onOpenScanner = {
                             navController.navigate(AppDestination.Scan.route) {
@@ -305,6 +307,7 @@ fun ScanPulseNavHost(
                     )
                 }
                 composable(AppDestination.Scan.route) {
+                    ExitDialogBackHandler(enabled = navController.previousBackStackEntry == null)
                     ScanScreen(
                         onClose = { openRootTab(tabBeforeScan) },
                         // Camera under the status bar; the HUD only needs bottom bar clearance.
@@ -313,6 +316,7 @@ fun ScanPulseNavHost(
                 }
                 composable(AppDestination.Settings.route) {
                     val context = LocalContext.current
+                    ExitDialogBackHandler(enabled = navController.previousBackStackEntry == null)
                     SettingsScreen(
                         onOpenAbout = {
                             navController.navigate(AppDestination.About.route)

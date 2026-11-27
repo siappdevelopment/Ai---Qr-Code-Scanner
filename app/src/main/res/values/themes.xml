@@ -42,4 +42,9 @@
         <item name="android:windowLightNavigationBar">true</item>
     </style>
 
+    <style name="ExitDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/anim_item_from_bottom_anim</item>
+        <item name="android:windowExitAnimation">@anim/anim_topbottom_anim</item>
+    </style>
+
 </resources>

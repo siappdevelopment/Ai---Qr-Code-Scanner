@@ -129,6 +129,7 @@ public final class RemoteConfigValues {
                 welcomeBlock = root.optJSONObject("welcome_back_screen");
             }
             com.qrcode.scanner.launcher.common.WelcomeBackConfig.apply(context, welcomeBlock, root);
+            com.qrcode.scanner.launcher.common.ExitDialogConfig.apply(context, root);
         }
 
         JSONObject quizAdsDesign = screenObject.optJSONObject("QuizAdsDesign");

@@ -530,4 +530,8 @@
     <string name="welcome_back_continue">Continue</string>
     <string name="welcome_back_continue_in">Continue in %1$d</string>
 
+    <string name="exit_dialog_title">Are you sure, you want to exit?</string>
+    <string name="exit_dialog_desc">Scan and create QR codes whenever you need. Come back anytime.</string>
+    <string name="exit_dialog_button">Tap To exit</string>
+
 </resources>

@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         StartupFlow.onHostDestroy(this)
+        com.qrcode.scanner.launcher.common.ExitDialog.dismiss(this)
         super.onDestroy()
     }
 }
